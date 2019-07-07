@@ -1,3 +1,5 @@
+// this is ripped from ssb-ooo
+
 var pull = require('pull-stream')
 var GQ = require('gossip-query')
 var hash = require('ssb-keys/util').hash
