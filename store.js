@@ -1,12 +1,11 @@
 var Flume = require('flumedb')
 var OffsetLog = require('flumelog-aligned-offset')
 var OffsetLogCompat = require('flumelog-aligned-offset/compat')
-var mkdirp = require('mkdirp')
 var ViewHashTable = require('flumeview-hashtable')
-
 var codec = require('flumecodec/json')
-var path = require('path')
 var hash = require('ssb-keys/util').hash
+
+var path = require('path')
 
 function getId(msg) {
   return '%'+hash(JSON.stringify(msg, null, 2))
