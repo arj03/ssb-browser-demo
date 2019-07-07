@@ -4,8 +4,6 @@ var ssbKeys = require('ssb-keys')
 
 var pull = require('pull-stream')
 
-var muxrpc = require('muxrpc')
-
 var os = require('os')
 var path = require('path')
 
@@ -17,16 +15,12 @@ var db = DB.init(dir)
 
 var app = SecretStack({
   caps: { shs: Buffer.from(caps.shs, 'base64') },
-  keys,
-  manifest: {
-    createHistoryStream: 'source',
-    get: 'async'
-  }
+  keys
 })
+.use(require('./hist'))
 .use(require('./simple-ooo'))
 //    .use(require('ssb-onion'))
 ()
-
 
 var msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
 var feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
@@ -35,7 +29,7 @@ var remoteAddress = "net:ssb.celehner.com:8008~shs:5XaVcAJ5DklwuuIkjGz4lwm2rOnMH
 
 app.connect(remoteAddress, (err, rpc) => {
 
-  console.log(rpc)
+  //console.log(rpc)
   
   /*
   app.ooo.get(msgId, (err, msg) => {
@@ -44,6 +38,7 @@ app.connect(remoteAddress, (err, rpc) => {
   })
   */
 
+  /*
   pull(
     rpc.createHistoryStream({id: feedId, seq: 4000, keys: false}),
     pull.drain((msg) => {
@@ -52,4 +47,5 @@ app.connect(remoteAddress, (err, rpc) => {
       console.log("done", err)
     })
   )
+  */
 })
