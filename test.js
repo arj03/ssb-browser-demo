@@ -1,36 +1,15 @@
-var SecretStack = require('secret-stack')
-var caps = require('ssb-caps')
-var ssbKeys = require('ssb-keys')
-
 var pull = require('pull-stream')
 
 var os = require('os')
 var path = require('path')
 
 var dir = path.join(os.homedir(), ".ssb-lite")
-var keys = ssbKeys.loadOrCreateSync(path.join(dir, 'secret'))
 
-var DB = require("./db")
+var server = require('./server')
+var app = server.init(dir)
+
+var DB = require('./db')
 var db = DB.init(dir)
-
-var app = SecretStack({
-  caps: { shs: Buffer.from(caps.shs, 'base64') },
-  keys,
-  connections: {
-    outgoing: {
-      net: [{ transform: 'shs' }],
-      onion: [{ transform: 'shs' }],
-      ws: [{ transform: 'shs' }],
-    }
-  },
-  path: dir
-})
-.use(require('./hist'))
-.use(require('./simple-ooo'))
-.use(require('ssb-onion'))
-.use(require('ssb-ws'))
-.use(require('ssb-blobs'))
-()
 
 var msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
 var feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
