@@ -23,6 +23,6 @@ exports.init = function(dir) {
   .use(require('./simple-ooo'))
   .use(require('ssb-onion'))
   .use(require('ssb-ws'))
-  .use(require('ssb-blobs'))
+  //.use(require('ssb-blobs'))
   ()
 }

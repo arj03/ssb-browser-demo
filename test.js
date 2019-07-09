@@ -8,8 +8,8 @@ var dir = path.join(os.homedir(), ".ssb-lite")
 var server = require('./server')
 var app = server.init(dir)
 
-var DB = require('./db')
-var db = DB.init(dir)
+//var DB = require('./db')
+//var db = DB.init(dir)
 
 var msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
 var feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
@@ -20,34 +20,37 @@ var remoteAddress = "net:ssb.celehner.com:8008~shs:5XaVcAJ5DklwuuIkjGz4lwm2rOnMH
 remoteAddress = "net:eight45.net:8008~shs:eM4e8pmRiZpeCBitqp6vq3lT8EwC5UjjKuajHbpWnNI="
 remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
 
-app.connect(remoteAddress, (err, rpc) => {
-  if (err) throw(err)
+var s = require('sodium-browserify')
+s.events.on('sodium-browserify:wasm loaded', function() {
+  console.log("wasm was loaded!")
 
-  //console.log(rpc)
+  app.connect(remoteAddress, (err, rpc) => {
+    if (err) throw(err)
 
-  /*
-  pull(
-    rpc.blobs.get({key: blobId}),
-    app.blobs.add(blobId) // save locally
-  )
-  */
+    //console.log(rpc)
 
-  /*
-  // you call this on yourself and it will try to get the message from all connected peers
-  app.ooo.get(msgId, (err, msg) => {
+    /*
+      pull(
+      rpc.blobs.get({key: blobId}),
+      app.blobs.add(blobId) // save locally
+      )
+    */
+
+    /*
+    // you call this on yourself and it will try to get the message from all connected peers
+    app.ooo.get(msgId, (err, msg) => {
     console.log("err", err)
     console.log("msg", msg)
-  })
-  */
-
-  /*
-  pull(
-    rpc.createHistoryStream({id: feedId, seq: 4000, keys: false}),
-    pull.drain((msg) => {
-      console.log(msg)
-    }, (err) => {
-      console.log("done", err)
     })
-  )
-  */
+    */
+
+    pull(
+      rpc.createHistoryStream({id: feedId, seq: 6400, keys: false}),
+      pull.drain((msg) => {
+	console.log(msg)
+      }, (err) => {
+	console.log("done", err)
+      })
+    )
+  })
 })
