@@ -19,7 +19,8 @@ var app = SecretStack({
   connections: {
     outgoing: {
       net: [{ transform: 'shs' }],
-      onion: [{ transform: 'shs' }]
+      onion: [{ transform: 'shs' }],
+      ws: [{ transform: 'shs' }],
     }
   },
   path: dir
@@ -27,6 +28,7 @@ var app = SecretStack({
 .use(require('./hist'))
 .use(require('./simple-ooo'))
 .use(require('ssb-onion'))
+.use(require('ssb-ws'))
 .use(require('ssb-blobs'))
 ()
 
@@ -37,6 +39,7 @@ var blobId = "&Il2SFDKScJcqt3CTl+ZaeIJLXGwmPbQHUTi9lVaUH5c=.sha256"
 //var remoteAddress = "onion:4fqstkswahy3n7mupr2gvvp2qcsp6juwzn3mnqvhkaixxepvxrrtfbid.onion:8008~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8="
 var remoteAddress = "net:ssb.celehner.com:8008~shs:5XaVcAJ5DklwuuIkjGz4lwm2rOnMHHovhNg7BFFnyJ8="
 remoteAddress = "net:eight45.net:8008~shs:eM4e8pmRiZpeCBitqp6vq3lT8EwC5UjjKuajHbpWnNI="
+remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
 
 app.connect(remoteAddress, (err, rpc) => {
   if (err) throw(err)
@@ -51,6 +54,7 @@ app.connect(remoteAddress, (err, rpc) => {
   */
 
   /*
+  // you call this on yourself and it will try to get the message from all connected peers
   app.ooo.get(msgId, (err, msg) => {
     console.log("err", err)
     console.log("msg", msg)
