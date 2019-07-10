@@ -17,7 +17,6 @@ module.exports = function () {
         else log.get(value[key], cb)
       })
     }
-    console.log(index)
     return index
   }
 }

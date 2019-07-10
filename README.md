@@ -1,4 +1,4 @@
-Tested in Chrome that has file api.
+Tested in Chrome which provides a file api.
 
 Chrome needs to be run with: --allow-file-access-from-files to work!
 
@@ -22,10 +22,28 @@ browserify --full-paths -g uglifyify test.js > bundle.js
 
 # Other
 
+## check contents of db
+
+```
+var pull = require("pull-stream")
+
+pull(
+  store.stream(),
+  pull.drain((msg) => {
+    console.log(msg)
+  })
+)
+```
+
 ## remove db
 
-window.localStorage.removeItem('/.ssb-lite/keys.ht')
-window.localStorage.removeItem('/.ssb-lite/log.offset')
+```
+const createFile = require('random-access-chrome-file')
+const file = createFile(path.join(dir, 'log.offset'))
+file.open((err, done) => {
+  file.destroy()
+})
+```
 
 ## oasis
 

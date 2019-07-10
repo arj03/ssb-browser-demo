@@ -10,7 +10,7 @@ exports.init = function (path) {
   store = Store(path)
 
   function get(id, cb) {
-    store.keys.get(id, function (err, data) {
+    store.keys.get(id, (err, data) => {
       if (data)
 	cb(null, data.value)
       else
@@ -20,7 +20,8 @@ exports.init = function (path) {
 
   function add(msg, cb) {
     var id = getId(msg)
-    store.keys.get(id, function (err, data) {
+    // FIXME: this doesn't work with an empty db?
+    store.keys.get(id, (err, data) => {
       if (data)
 	cb(null, data.value)
       else
