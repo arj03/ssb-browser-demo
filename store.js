@@ -4,15 +4,9 @@ if (process.title == 'node')
 else // this will use IDBMutableFile in firefox, file system api in chrome
   var OffsetLog = require('flumelog-aligned-offset/browser')
 var OffsetLogCompat = require('flumelog-aligned-offset/compat')
-var ViewHashTable = require('flumeview-hashtable')
 var codec = require('flumecodec/json')
-var hash = require('ssb-keys/util').hash
 
 var path = require('path')
-
-function getId(msg) {
-  return '%'+hash(JSON.stringify(msg, null, 2))
-}
 
 module.exports = function (dir) {
   console.log("dir:", dir)
@@ -25,9 +19,9 @@ module.exports = function (dir) {
   var store = Flume(log)
     .use('keys', require('./indexes/keys')())
 
-  store.add = function (msg, cb) {
+  store.add = function (id, msg, cb) {
     var data = {
-      key: getId(msg),
+      key: id,
       value: msg,
       timestamp: Date.now()
     }
