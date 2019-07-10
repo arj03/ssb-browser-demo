@@ -1,5 +1,8 @@
 var Flume = require('flumedb')
-var OffsetLog = require('flumelog-aligned-offset')
+if (process.title == 'node')
+  var OffsetLog = require('flumelog-aligned-offset')
+else // this will use IDBMutableFile in firefox, file system api in chrome
+  var OffsetLog = require('flumelog-aligned-offset/browser')
 var OffsetLogCompat = require('flumelog-aligned-offset/compat')
 var ViewHashTable = require('flumeview-hashtable')
 var codec = require('flumecodec/json')
@@ -12,6 +15,8 @@ function getId(msg) {
 }
 
 module.exports = function (dir) {
+  console.log("dir:", dir)
+
   var log = OffsetLogCompat(OffsetLog(
     path.join(dir, 'log.offset'),
     {blockSize:1024*64, codec:codec}

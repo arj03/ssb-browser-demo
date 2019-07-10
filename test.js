@@ -3,13 +3,14 @@ var pull = require('pull-stream')
 var os = require('os')
 var path = require('path')
 
+// in browser this will be local storage
 var dir = path.join(os.homedir(), ".ssb-lite")
 
 var server = require('./server')
 var app = server.init(dir)
 
-//var DB = require('./db')
-//var db = DB.init(dir)
+var DB = require('./db')
+var db = DB.init(dir)
 
 var msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
 var feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
@@ -22,10 +23,14 @@ remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+U
 
 var s = require('sodium-browserify')
 s.events.on('sodium-browserify:wasm loaded', function() {
-  console.log("wasm was loaded!")
+  console.log("wasm loaded")
+
+  console.log("my id: ", app.id)
 
   app.connect(remoteAddress, (err, rpc) => {
     if (err) throw(err)
+
+    console.log("connected to: ", rpc.id)
 
     //console.log(rpc)
 
@@ -44,13 +49,22 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     })
     */
 
+    db.get("%AJX/ZPTgqchv8w6Kph0Zc9cYjVfwVn+dEVfDs+ATmTo=.sha256", (err, msg) => {
+      console.log("msg:", msg)
+    })
+
+    /*
     pull(
-      rpc.createHistoryStream({id: feedId, seq: 6400, keys: false}),
+      rpc.createHistoryStream({id: feedId, seq: 6450, keys: false}),
       pull.drain((msg) => {
-	console.log(msg)
+	db.add(msg, (err, resp) => {
+	  console.log("err ", err)
+	  console.log("added ", msg)
+	})
       }, (err) => {
 	console.log("done", err)
       })
     )
+    */
   })
 })

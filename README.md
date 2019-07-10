@@ -14,6 +14,10 @@ browserify --full-paths -g uglifyify test.js > bundle.js
 
 # Other
 
+## oasis
+
+%owvZa0OwPBH2olaKUiex1wqyBO/+AeBlxEHcH7jORtA=.sha256
+
 ## mcss generate css
 
 mcss plugs/app/page/books.mcss -o books.css

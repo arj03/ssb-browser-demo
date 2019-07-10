@@ -12,12 +12,12 @@ exports.init = function (path) {
     })
   }
 
-  function put(msg, cb) {
+  function add(msg, cb) {
     store.add(msg, cb)
   }
   
   return {
-    get: get,
-    put: put
+    get,
+    add
   }
 }
