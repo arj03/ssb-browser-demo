@@ -23,10 +23,7 @@ module.exports = function (dir) {
   ))
 
   var store = Flume(log)
-    .use('keys', ViewHashTable(2, function (key) {
-      var b = new Buffer(key.substring(1,7), 'base64').readUInt32BE(0)
-      return b
-    }))
+    .use('keys', require('./indexes/keys')())
 
   store.add = function (msg, cb) {
     var data = {
