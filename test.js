@@ -15,7 +15,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   var app = server.init(dir)
 
   var DB = require('./db')
-  var db = DB.init(dir)
+  var db = DB.init(dir, app.id)
 
   var msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
   var feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
@@ -53,6 +53,16 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     db.get("%AJX/ZPTgqchv8w6Kph0Zc9cYjVfwVn+dEVfDs+ATmTo=.sha256", (err, msg) => {
       console.log("msg:", msg)
     })
+
+    /*
+    pull(
+      store.backlinks.read({
+	query: [{$filter: {dest: "%sgI5ru51jP2gNXxDIaPgoVL8Uo99gVTd1FXEBM6uzck=.sha256"}}],
+	index: 'DTA'
+      }),
+      pull.drain(console.log)
+    )
+    */
 
     /*
     pull(

@@ -6,8 +6,8 @@ function getId(msg) {
   return '%'+hash(JSON.stringify(msg, null, 2))
 }
 
-exports.init = function (path) {
-  store = Store(path)
+exports.init = function (dir, ssbId) {
+  store = Store(dir, ssbId)
 
   function get(id, cb) {
     store.keys.get(id, (err, data) => {
@@ -31,6 +31,8 @@ exports.init = function (path) {
   
   return {
     get,
-    add
+    add,
+    // indexes
+    backlinks: store.backlinks
   }
 }

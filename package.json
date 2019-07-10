@@ -15,6 +15,7 @@
     "gossip-query": "^2.0.2",
     "pull-stream": "^3.6.1",
     "secret-stack": "^6.2.1",
+    "ssb-backlinks": "^0.7.3",
     "ssb-blobs": "^1.2.1",
     "ssb-caps": "^1.0.1",
     "ssb-keys": "^7.1.3",

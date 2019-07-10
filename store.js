@@ -8,7 +8,7 @@ var codec = require('flumecodec/json')
 
 var path = require('path')
 
-module.exports = function (dir) {
+module.exports = function (dir, ssbId) {
   console.log("dir:", dir)
 
   var log = OffsetLogCompat(OffsetLog(
@@ -18,6 +18,16 @@ module.exports = function (dir) {
 
   var store = Flume(log)
     .use('keys', require('./indexes/keys')())
+
+  // ssb-db convention used by plugins
+  store._flumeUse = function (name, flumeview) {
+    store.use(name, flumeview)
+    return store[name]
+  }
+  store.id = ssbId
+
+  var backlinks = require('ssb-backlinks')
+  store.backlinks = backlinks.init(store)
 
   store.add = function (id, msg, cb) {
     var data = {
