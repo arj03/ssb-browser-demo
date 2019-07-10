@@ -12,6 +12,8 @@ browserify --full-paths -g uglifyify test.js > bundle.js
 
 => 1.2mb
 
+Chrome needs to be run with: --allow-file-access-from-files to work!
+
 # Other
 
 ## oasis
