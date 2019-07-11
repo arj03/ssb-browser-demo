@@ -88,15 +88,33 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     */
 
     /*
+    console.time("history stream validate")
+
+    var validate = require('ssb-validate')
+    var hmac_key = null
+    var state = validate.initial()
+
     pull(
-      rpc.createHistoryStream({id: feedId, seq: 6460, keys: false}),
+      rpc.createHistoryStream({id: feedId, seq: 0, keys: false}),
       pull.drain((msg) => {
-	console.log("adding msg")
-	db.add(msg, (err, resp) => {
-	  console.log("err ", err)
-	  console.log("added ", msg)
-	})
+	// validate all
+	//state = validate.append(state, hmac_key, msg)
+
+	// validate end only
+	//state = validate.queue(state, msg)
+	//if(state.error) console.error(state.error)
+
+	//console.log("adding msg")
+	//db.add(msg, (err, resp) => {
+	//  console.log("err ", err)
+	//  console.log("added ", msg)
+	//})
       }, (err) => {
+	// validate end only
+	//for(var feed_id in state.feeds)
+	//  state = validate.validate(state, hmac_key, feed_id)
+
+	console.timeEnd("history stream validate")
 	console.log("done", err)
       })
     )
