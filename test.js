@@ -87,12 +87,15 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     )
     */
 
-    /*
     console.time("history stream validate")
 
     var validate = require('ssb-validate')
     var hmac_key = null
     var state = validate.initial()
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
 
     pull(
       rpc.createHistoryStream({id: feedId, seq: 0, keys: false}),
@@ -101,8 +104,15 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 	//state = validate.append(state, hmac_key, msg)
 
 	// validate end only
-	//state = validate.queue(state, msg)
-	//if(state.error) console.error(state.error)
+	state = validate.queue(state, msg)
+	if(state.error) console.error(state.error)
+
+	if (msg.sequence % 50 == getRandomInt(50)) {
+	  //console.log("doing random validation check")
+	  for(var feed_id in state.feeds)
+	    state = validate.validate(state, hmac_key, feed_id)
+	  state = validate.queue(state, msg)
+	}
 
 	//console.log("adding msg")
 	//db.add(msg, (err, resp) => {
@@ -111,13 +121,12 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 	//})
       }, (err) => {
 	// validate end only
-	//for(var feed_id in state.feeds)
-	//  state = validate.validate(state, hmac_key, feed_id)
+	for(var feed_id in state.feeds)
+	  state = validate.validate(state, hmac_key, feed_id)
 
 	console.timeEnd("history stream validate")
 	console.log("done", err)
       })
     )
-    */
   })
 })
