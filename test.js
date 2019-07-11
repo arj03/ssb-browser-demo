@@ -56,6 +56,29 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 
     /*
     pull(
+      store.query.read({
+	reverse: true,
+	limit: 2,
+	// live: true,
+	// old: false // good with live: true
+	query: [
+	  {
+	    $filter: {
+              value: {
+		content: { type: 'git-update' }
+              }
+	    }
+	  }
+	]
+      }),
+      pull.drain((msg) => {
+	console.log(msg)
+      })
+    )
+    */
+
+    /*
+    pull(
       store.backlinks.read({
 	query: [{$filter: {dest: "%sgI5ru51jP2gNXxDIaPgoVL8Uo99gVTd1FXEBM6uzck=.sha256"}}],
 	index: 'DTA'

@@ -29,6 +29,9 @@ module.exports = function (dir, ssbId) {
   var backlinks = require('ssb-backlinks')
   store.backlinks = backlinks.init(store)
 
+  var query = require('ssb-query')
+  store.query = query.init(store)
+
   store.add = function (id, msg, cb) {
     var data = {
       key: id,
