@@ -21,22 +21,20 @@ exports.init = function (dir, ssbId) {
   function add(msg, cb) {
     var id = getId(msg)
 
-    store.since((status) => {
-      if (status == 0)
-      {
-	// empty db, keys.get will block, just add anyways
-	store.add(id, msg, cb)
-      }
-      else
-      {
-	store.keys.get(id, (err, data) => {
-	  if (data)
-	    cb(null, data.value)
-	  else
-	    store.add(id, msg, cb)
-	})
-      }
-    })
+    if (store.since.value == 0)
+    {
+      // empty db, keys.get will block, just add anyways
+      store.add(id, msg, cb)
+    }
+    else
+    {
+      store.keys.get(id, (err, data) => {
+	if (data)
+	  cb(null, data.value)
+	else
+	  store.add(id, msg, cb)
+      })
+    }
   }
   
   return {

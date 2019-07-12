@@ -1,0 +1,11 @@
+--- node_modules/flumelog-aligned-offset/inject.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/flumelog-aligned-offset/inject.js	2019-07-10 09:23:11.194043811 +0200
+@@ -8,7 +8,7 @@
+   var _codec = {encode: id, decode: id, buffer: true}
+   return function (file, opts) {
+     var cache = new Cache(1024)
+-    var raf = RAF(file)
++    var raf = RAF()(file)
+     var closed = false
+     var block = opts && opts.block || opts.blockSize || 65536
+     var length = null, waiting = [], waitingDrain = [], self, state

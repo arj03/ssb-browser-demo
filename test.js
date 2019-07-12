@@ -1,12 +1,12 @@
-var pull = require('pull-stream')
+const pull = require('pull-stream')
 
-var os = require('os')
-var path = require('path')
+const os = require('os')
+const path = require('path')
 
 // in browser this will be local storage
-var dir = path.join(os.homedir(), ".ssb-lite")
+const dir = path.join(os.homedir(), ".ssb-lite")
 
-var s = require('sodium-browserify')
+const s = require('sodium-browserify')
 s.events.on('sodium-browserify:wasm loaded', function() {
 
   console.log("wasm loaded")
@@ -17,16 +17,24 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   var DB = require('./db')
   var db = DB.init(dir, app.id)
 
-  var msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
-  var feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-  var blobId = "&Il2SFDKScJcqt3CTl+ZaeIJLXGwmPbQHUTi9lVaUH5c=.sha256"
+  console.log("my id: ", app.id)
+
+  var helpers = require("./test-helpers")
+  helpers.init(dir, db, app)
+
+  return
+
+
+  // playground
+
+  const msgId = "%IwG4GtadWmHUhsn+YJZBXs9D7/wnPtlTuVOTVrPl+0o=.sha256"
+  const feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
+  const blobId = "&Il2SFDKScJcqt3CTl+ZaeIJLXGwmPbQHUTi9lVaUH5c=.sha256"
 
   //var remoteAddress = "onion:4fqstkswahy3n7mupr2gvvp2qcsp6juwzn3mnqvhkaixxepvxrrtfbid.onion:8008~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8="
   var remoteAddress = "net:ssb.celehner.com:8008~shs:5XaVcAJ5DklwuuIkjGz4lwm2rOnMHHovhNg7BFFnyJ8="
   remoteAddress = "net:eight45.net:8008~shs:eM4e8pmRiZpeCBitqp6vq3lT8EwC5UjjKuajHbpWnNI="
   remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-
-  console.log("my id: ", app.id)
 
   app.connect(remoteAddress, (err, rpc) => {
     if (err) throw(err)
@@ -50,9 +58,11 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     })
     */
 
+    /*
     db.get("%AJX/ZPTgqchv8w6Kph0Zc9cYjVfwVn+dEVfDs+ATmTo=.sha256", (err, msg) => {
       console.log("msg:", msg)
     })
+    */
 
     /*
     pull(
@@ -87,6 +97,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     )
     */
 
+    /*
     console.time("history stream validate")
 
     var validate = require('ssb-validate')
@@ -128,5 +139,6 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 	console.log("done", err)
       })
     )
+    */
   })
 })

@@ -32,6 +32,20 @@ module.exports = function (dir, ssbId) {
   var query = require('ssb-query')
   store.query = query.init(store)
 
+  store.getStatus = function() {
+    // index status, FIXME: ssb compatible
+    // https://github.com/ssbc/ssb-db/blob/80af97584f7700661a63fa6065885641911443ae/index.js#L66
+
+    console.log("log.offset status", store.since.value)
+
+    // indexes
+    console.log("keys status", store.keys.since.value)
+    console.log("query status", store.query.since.value)
+    console.log("backlinks status", store['backlinks-VIOn-8a_v'].since.value)
+  }
+
+  window.getDbStatus = store.getStatus
+
   store.add = function (id, msg, cb) {
     var data = {
       key: id,

@@ -12,6 +12,15 @@ See:
  - https://github.com/random-access-storage/random-access-web/issues/4
  - https://github.com/dominictarr/sodium-browserify/pull/6
 
+# Onboarding file
+
+Generate a file of all feeds following with seq nos. The perspective
+(user) can be changed in top.
+
+```
+node generate-onboarding-json.js > onboard.json
+```
+
 # Force WASM locally (outside browser)
 
 rm -rf node_modules/sodium-chloride/
