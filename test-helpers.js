@@ -12,11 +12,11 @@ exports.init = function(dir, db, app) {
       const status = db.getStatus()
 
       var statusHTML = "<b>DB status</b>"
-      if (status.since == 0)
+      if (status.since == 0) // sleeping
 	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256\"/>"
-      else if (!status.sync)
+      else if (!status.sync) // hammer time
 	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256\"/>"
-      else {
+      else { // dancing
 	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256\"/>"
 	if (!rendered) {
 	  window.renderMessages()
@@ -85,12 +85,14 @@ exports.init = function(dir, db, app) {
       var onemonthsago = d.setMonth(d.getMonth() - 1)
 
       var totalMessages = 0
+      var totalFeeds = 0
       console.time("downloading messages")
 
       function getMessagesForUser(index)
       {
 	if (index >= Object.keys(onboard).length) {
-	  console.log(totalMessages)
+	  console.log("messages", totalMessages)
+	  console.log("feeds", totalFeeds)
 	  console.timeEnd("downloading messages")
 	  return
 	}
@@ -113,6 +115,7 @@ exports.init = function(dir, db, app) {
 	if (seqStart < 0)
 	  seqStart = 0
 
+	++totalFeeds
 	console.log("Downloading messages for: ", onboard[user].name)
 
 	pull(
