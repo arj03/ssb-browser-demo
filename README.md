@@ -54,6 +54,8 @@ file.open((err, done) => {
 })
 ```
 
+And then remove indexdb databases for indexes in `Application`
+
 ## oasis
 
 %owvZa0OwPBH2olaKUiex1wqyBO/+AeBlxEHcH7jORtA=.sha256
