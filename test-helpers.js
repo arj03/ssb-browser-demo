@@ -4,10 +4,30 @@ exports.init = function(dir, db, app) {
 
   const onboard = require("./onboard.json")
 
+  var rendered = false
+
   function updateDBStatus() {
+
     setTimeout(() => {
       const status = db.getStatus()
-      document.getElementById("status").innerHTML = "<b>DB status</b><br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
+
+      var statusHTML = "<b>DB status</b>"
+      if (status.since == 0)
+	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256\"/>"
+      else if (!status.sync)
+	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256\"/>"
+      else {
+	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256\"/>"
+	if (!rendered) {
+	  window.renderMessages()
+	  rendered = true
+	}
+      }
+
+      statusHTML += "<br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
+
+      document.getElementById("status").innerHTML = statusHTML
+
       updateDBStatus()
     }, 1000)
   }
