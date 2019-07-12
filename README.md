@@ -32,6 +32,8 @@ this back to 2mb because of level.
 
 browserify --full-paths test.js > bundle.js
 
+ssb-markdown increases the size quite substantially
+
 ## uglifyify
 
 browserify --full-paths -g uglifyify test.js > bundle.js

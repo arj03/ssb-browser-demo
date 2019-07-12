@@ -18,7 +18,6 @@
     "ssb-backlinks": "^0.7.3",
     "ssb-blobs": "^1.2.1",
     "ssb-caps": "^1.0.1",
-    "ssb-client": "^4.7.7",
     "ssb-keys": "^7.1.3",
     "ssb-markdown": "^5.0.1",
     "ssb-onion": "^1.0.0",
@@ -28,7 +27,7 @@
     "ssb-ws": "^6.2.3"
   },
   "devDependencies": {
-    "tape": "^4.8.0"
+    "ssb-client": "^4.7.7"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"

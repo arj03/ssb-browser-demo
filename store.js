@@ -33,15 +33,26 @@ module.exports = function (dir, ssbId) {
   store.query = query.init(store)
 
   store.getStatus = function() {
-    // index status, FIXME: ssb compatible
+    // taken from ssb-db:
     // https://github.com/ssbc/ssb-db/blob/80af97584f7700661a63fa6065885641911443ae/index.js#L66
 
-    console.log("log.offset status", store.since.value)
+    function isObject(o) { return 'object' === typeof o }
+    function isFunction (f) { return 'function' === typeof f }
 
-    // indexes
-    console.log("keys status", store.keys.since.value)
-    console.log("query status", store.query.since.value)
-    console.log("backlinks status", store['backlinks-VIOn-8a_v'].since.value)
+    var plugs = {}
+    var sync = true
+    for(var k in store) {
+      if(store[k] && isObject(store[k]) && isFunction(store[k].since)) {
+        plugs[k] = store[k].since.value
+        sync = sync && (plugs[k] === store.since.value)
+      }
+    }
+
+    console.log(JSON.stringify({
+      since: store.since.value,
+      plugins: plugs,
+      sync: sync,
+    }))
   }
 
   window.getDbStatus = store.getStatus

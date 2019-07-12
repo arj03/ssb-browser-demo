@@ -51,13 +51,19 @@ exports.init = function(dir, db, app) {
 
       console.log("connected to: ", rpc.id)
 
-      var d = new Date();
-      var onemonthsago = d.setMonth(d.getMonth() - 1);
+      var d = new Date()
+      var onemonthsago = d.setMonth(d.getMonth() - 1)
+
+      var totalMessages = 0
+      console.time("downloading messages")
 
       function getMessagesForUser(index)
       {
-	if (index >= Object.keys(onboard).length)
+	if (index >= Object.keys(onboard).length) {
+	  console.log(totalMessages)
+	  console.timeEnd("downloading messages")
 	  return
+	}
 
 	var user = Object.keys(onboard)[index]
 
@@ -73,15 +79,16 @@ exports.init = function(dir, db, app) {
 	  return
 	}
 
-	var last50 = onboard[user].latestMsg.seq - 50
-	if (last50 < 0)
-	  last50 = 0
+	var seqStart = onboard[user].latestMsg.seq - 25
+	if (seqStart < 0)
+	  seqStart = 0
 
 	console.log("Downloading messages for: ", onboard[user].name)
 
 	pull(
-	  rpc.createHistoryStream({id: user, seq: last50, keys: false}),
+	  rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
 	  pull.drain((msg) => {
+	    ++totalMessages
 	    db.add(msg, (err, resp) => {
 	      if (err)
 		console.log("err ", err)
