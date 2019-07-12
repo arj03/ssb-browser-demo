@@ -86,7 +86,12 @@ exports.init = function(dir, db, app) {
 
       var totalMessages = 0
       var totalFeeds = 0
+
       console.time("downloading messages")
+
+      var validate = require('ssb-validate')
+      var hmac_key = null
+      var state = validate.initial()
 
       function getMessagesForUser(index)
       {
@@ -116,11 +121,20 @@ exports.init = function(dir, db, app) {
 	  seqStart = 0
 
 	++totalFeeds
+
 	console.log("Downloading messages for: ", onboard[user].name)
 
 	pull(
 	  rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
 	  pull.drain((msg) => {
+	    if (msg.sequence == seqStart)
+	      state = validate.appendOOO(state, hmac_key, msg)
+	    else
+	      state = validate.append(state, hmac_key, msg)
+
+	    if (state.error)
+	      throw state.error
+
 	    ++totalMessages
 	    db.add(msg, (err, resp) => {
 	      if (err)
@@ -129,6 +143,9 @@ exports.init = function(dir, db, app) {
 	    })
 	  }, (err) => {
 	    if (err) throw err
+
+	    state.queue = []
+
 	    getMessagesForUser(index+1)
 	  })
 	)
