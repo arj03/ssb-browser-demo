@@ -4,6 +4,16 @@ exports.init = function(dir, db, app) {
 
   const onboard = require("./onboard.json")
 
+  function updateDBStatus() {
+    setTimeout(() => {
+      const status = db.getStatus()
+      document.getElementById("status").innerHTML = "<b>DB status</b><br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
+      updateDBStatus()
+    }, 1000)
+  }
+
+  updateDBStatus()
+
   window.removeDB = function() {
     const createFile = require('random-access-chrome-file')
     const file = createFile(path.join(dir, 'log.offset'))

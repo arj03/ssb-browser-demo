@@ -48,11 +48,11 @@ module.exports = function (dir, ssbId) {
       }
     }
 
-    console.log(JSON.stringify({
+    return {
       since: store.since.value,
       plugins: plugs,
       sync: sync,
-    }))
+    }
   }
 
   window.getDbStatus = store.getStatus

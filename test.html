@@ -1,19 +1,26 @@
 <html>
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <style>
+      body {
+	  max-width: 38rem;
+	  padding: 2rem;
+	  margin: auto;
+      }
+    </style>
   </head>
   <body>
     <h1>Check console.log ;-)</h1>
-    <div>
+    <div style="float: left;">
       <b>Available commands:</b>
       <ul>
-	<li>window.getDbStatus()</li>
 	<li>window.removeDB()</li>
 	<li>window.initialSync()</li>
 	<li>window.renderMessages()</li>
       </ul>
     </div>
-    <div id="messages"></div>
+    <div id="status" style="float: right;"></div>
+    <div id="messages" style="clear: both;"></div>
   </body>
 
   <script src="bundle.js"></script>
