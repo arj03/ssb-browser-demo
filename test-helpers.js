@@ -43,7 +43,7 @@ exports.init = function(dir, db, app) {
 	]
       }),
       pull.collect((err, msgs) => {
-	var html = ""
+	var html = "<b>Last 10 messages</b><br><br>"
 	msgs.forEach((msg) => {
 	  html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text) + " <br>"
 	})
