@@ -1,4 +1,4 @@
-exports.init = function(dir, db, app) {
+exports.init = function(dir, db, net) {
   const pull = require('pull-stream')
   const path = require('path')
 
@@ -76,7 +76,7 @@ exports.init = function(dir, db, app) {
   window.initialSync = function()
   {
     const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-    app.connect(remoteAddress, (err, rpc) => {
+    net.connect(remoteAddress, (err, rpc) => {
       if (err) throw(err)
 
       console.log("connected to: ", rpc.id)

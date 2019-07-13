@@ -12,15 +12,15 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   console.log("wasm loaded")
 
   var server = require('./server')
-  var app = server.init(dir)
+  var net = server.init(dir)
 
   var DB = require('./db')
-  var db = DB.init(dir, app.id)
+  var db = DB.init(dir, net.id)
 
-  console.log("my id: ", app.id)
+  console.log("my id: ", net.id)
 
   var helpers = require("./test-helpers")
-  helpers.init(dir, db, app)
+  helpers.init(dir, db, net)
 
   return
 
@@ -36,7 +36,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   remoteAddress = "net:eight45.net:8008~shs:eM4e8pmRiZpeCBitqp6vq3lT8EwC5UjjKuajHbpWnNI="
   remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
 
-  app.connect(remoteAddress, (err, rpc) => {
+  net.connect(remoteAddress, (err, rpc) => {
     if (err) throw(err)
 
     console.log("connected to: ", rpc.id)
@@ -46,13 +46,13 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     /*
       pull(
       rpc.blobs.get({key: blobId}),
-      app.blobs.add(blobId) // save locally
+      net.blobs.add(blobId) // save locally
       )
     */
 
     /*
     // you call this on yourself and it will try to get the message from all connected peers
-    app.ooo.get(msgId, (err, msg) => {
+    net.ooo.get(msgId, (err, msg) => {
     console.log("err", err)
     console.log("msg", msg)
     })
