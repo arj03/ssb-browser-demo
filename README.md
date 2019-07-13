@@ -57,17 +57,10 @@ pull(
 )
 ```
 
-## remove db
+## indexes
 
-```
-const createFile = require('random-access-chrome-file')
-const file = createFile(path.join(dir, 'log.offset'))
-file.open((err, done) => {
-  file.destroy()
-})
-```
-
-And then remove indexdb databases for indexes in `Application`
+Backlinks & query uses flumeview-level that stores it's db in indexdb
+in the browser. These indexes are much slower in the browser.
 
 ## oasis
 
