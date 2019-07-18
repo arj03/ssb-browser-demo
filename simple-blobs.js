@@ -45,8 +45,7 @@ module.exports = function (dir) {
       file.stat((err, stat) => {
 	if (stat.size == 0) {
 	  httpGet(remoteURL(hash), (err, data) => {
-	    console.log(data.lengh)
-	    if (data.length < maxSize)
+	    if (data.size < maxSize)
 	      add(hash, data, cb)
 	    else
 	      cb(null, remoteURL(hash))
@@ -54,7 +53,7 @@ module.exports = function (dir) {
 	}
 	else
 	{
-	  console.log("reading from local filesystem")
+	  //console.log("reading from local filesystem")
 	  cb(null, fsURL(hash))
 	}
       })

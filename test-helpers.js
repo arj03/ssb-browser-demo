@@ -5,11 +5,19 @@ exports.init = function(dir, db, net) {
   const onboard = require("./onboard.json")
 
   var rendered = false
+  var lastStatus = null
 
   function updateDBStatus() {
 
     setTimeout(() => {
       const status = db.getStatus()
+
+      if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
+	updateDBStatus()
+	return
+      }
+
+      lastStatus = status
 
       var statusHTML = "<b>DB status</b>"
       if (status.since == 0) // sleeping
