@@ -14,6 +14,8 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   var server = require('./server')
   var net = server.init(dir)
 
+  net.blobs = require("./simple-blobs")(dir)
+
   var DB = require('./db')
   var db = DB.init(dir, net.id)
 
@@ -31,6 +33,21 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   const feedId = "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
   const blobId = "&Il2SFDKScJcqt3CTl+ZaeIJLXGwmPbQHUTi9lVaUH5c=.sha256"
 
+  console.log("blob id", "&Il2SFDKScJcqt3CTl+ZaeIJLXGwmPbQHUTi9lVaUH5c=.sha256")
+
+  var remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
+  net.connect(remoteAddress, (err, rpc) => {
+    if (err) throw(err)
+
+    console.log("connected to: ", rpc.id)
+
+    net.blobs.get(blobId, (err, url) => {
+      var img = document.createElement('img');
+      img.src = url
+      document.getElementById("commands").appendChild(img);
+    })
+  })
+
   //var remoteAddress = "onion:4fqstkswahy3n7mupr2gvvp2qcsp6juwzn3mnqvhkaixxepvxrrtfbid.onion:8008~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8="
   var remoteAddress = "net:ssb.celehner.com:8008~shs:5XaVcAJ5DklwuuIkjGz4lwm2rOnMHHovhNg7BFFnyJ8="
   remoteAddress = "net:eight45.net:8008~shs:eM4e8pmRiZpeCBitqp6vq3lT8EwC5UjjKuajHbpWnNI="
@@ -44,10 +61,10 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     //console.log(rpc)
 
     /*
-      pull(
+    pull(
       rpc.blobs.get({key: blobId}),
       net.blobs.add(blobId) // save locally
-      )
+    )
     */
 
     /*
