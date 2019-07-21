@@ -93,6 +93,7 @@ exports.init = function(dir, db, net) {
       var onemonthsago = d.setMonth(d.getMonth() - 1)
 
       var totalMessages = 0
+      var totalFilteredMessages = 0
       var totalFeeds = 0
 
       console.time("downloading messages")
@@ -105,6 +106,7 @@ exports.init = function(dir, db, net) {
       {
 	if (index >= Object.keys(onboard).length) {
 	  console.log("messages", totalMessages)
+	  console.log("filtered", totalFilteredMessages)
 	  console.log("feeds", totalFeeds)
 	  console.timeEnd("downloading messages")
 	  return
@@ -144,6 +146,12 @@ exports.init = function(dir, db, net) {
 	      throw state.error
 
 	    ++totalMessages
+
+	    if (typeof (msg.content) === 'string' || msg.content.type != 'post')
+	      return
+
+	    ++totalFilteredMessages
+
 	    db.add(msg, (err, resp) => {
 	      if (err)
 		console.log("err ", err)
