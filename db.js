@@ -43,6 +43,7 @@ exports.init = function (dir, ssbId) {
     // indexes
     backlinks: store.backlinks,
     query: store.query,
+    last: store.last,
     getStatus: store.getStatus
   }
 }

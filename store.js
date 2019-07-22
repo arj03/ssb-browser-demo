@@ -18,6 +18,7 @@ module.exports = function (dir, ssbId) {
 
   var store = Flume(log)
     .use('keys', require('./indexes/keys')())
+    .use('last', require('./indexes/last')())
 
   // ssb-db convention used by plugins
   store._flumeUse = function (name, flumeview) {

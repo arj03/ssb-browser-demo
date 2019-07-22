@@ -13,6 +13,7 @@
     "flumelog-aligned-offset": "^1.0.4",
     "flumeview-reduce": "^1.3.16",
     "gossip-query": "^2.0.2",
+    "pull-cont": "^0.1.1",
     "pull-stream": "^3.6.1",
     "secret-stack": "^6.2.1",
     "ssb-backlinks": "^0.7.3",
