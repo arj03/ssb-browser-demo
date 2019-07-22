@@ -27,7 +27,9 @@
     "ssb-ws": "^6.2.3"
   },
   "devDependencies": {
-    "ssb-client": "^4.7.7"
+    "common-shakeify": "^0.6.2",
+    "ssb-client": "^4.7.7",
+    "uglifyify": "^5.0.1"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"

@@ -7,7 +7,7 @@ var path = require('path')
 exports.init = function(dir) {
   var keys = ssbKeys.loadOrCreateSync(path.join(dir, 'secret'))
 
-  return SecretStack({
+  var r = SecretStack({
     caps: { shs: Buffer.from(caps.shs, 'base64') },
     keys,
     connections: {
@@ -25,4 +25,8 @@ exports.init = function(dir) {
   .use(require('ssb-ws'))
   //.use(require('ssb-blobs'))
   ()
+
+  r.blobs = require("./simple-blobs")(dir)
+
+  return r
 }

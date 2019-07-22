@@ -32,13 +32,15 @@ rm -rf node_modules/sodium-chloride/
 Removing blobs means that we go down to 1.6mb. ssb-backlinks brings
 this back to 2mb because of level.
 
-browserify --full-paths test.js > bundle.js
+browserify --full-paths core.js > bundle-core.js
+browserify --full-paths browser-test.js > bundle-test.js
 
 ssb-markdown increases the size quite substantially
 
 ## uglifyify
 
-browserify --full-paths -g uglifyify test.js > bundle.js
+browserify --full-paths -g uglifyify -p common-shakeify core.js > bundle-core.js
+browserify --full-paths -g uglifyify -p common-shakeify browser-test.js > bundle-test.js
 
 => 1.2mb
 
