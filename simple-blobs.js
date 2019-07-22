@@ -46,7 +46,9 @@ module.exports = function (dir) {
 	if (stat.size == 0) {
 	  httpGet(remoteURL(hash), (err, data) => {
 	    if (data.size < maxSize)
-	      add(hash, data, cb)
+	      add(hash, data, () => {
+		cb(null, fsURL(hash))
+	      })
 	    else
 	      cb(null, remoteURL(hash))
 	  })

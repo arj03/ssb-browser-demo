@@ -1,5 +1,6 @@
 exports.init = function(dir, db, net) {
   const pull = require('pull-stream')
+  const paramap = require('pull-paramap')
   const path = require('path')
 
   const onboard = require("./onboard.json")
@@ -72,11 +73,26 @@ exports.init = function(dir, db, net) {
       }),
       pull.collect((err, msgs) => {
 	var html = "<b>Last 10 messages</b><br><br>"
-	msgs.forEach((msg) => {
-	  html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text) + " <br>"
-	})
-
-	document.getElementById("messages").innerHTML = html
+	pull(
+	  pull.values(msgs),
+	  paramap((msg, cb) => {
+	    if (onboard[msg.value.author].image) {
+	      net.blobs.get(onboard[msg.value.author].image, (err, url) => {
+		html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
+		html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text) + " <br>"
+		cb()
+	      })
+	    }
+	    else
+	    {
+	      html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text) + " <br>"
+	      cb()
+	    }
+	  }, 1),
+	  pull.collect(() => {
+	    document.getElementById("messages").innerHTML = html
+	  })
+	)
       })
     )
   }

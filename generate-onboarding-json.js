@@ -97,6 +97,10 @@ require('ssb-client')(function (err, sbot) {
             
             latestValue(sbot, 'image', friend, (err, res) => {
               data[friend].imageAbout = res.msgKey
+	      if (typeof(res.value) == 'string')
+		data[friend].image = res.value
+	      else if (res.value && res.value.link)
+		data[friend].image = res.value.link
               check_async()
             })
 
