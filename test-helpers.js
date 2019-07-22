@@ -55,6 +55,16 @@ exports.init = function(dir, db, net) {
 
   window.renderMessages = function() {
     const md = require("ssb-markdown")
+    const ref = require("ssb-ref")
+
+    const mdOpts = {
+      toUrl: (id) => {
+	if (ref.isBlob(id))
+	  return net.blobs.remoteURL(id)
+	else
+	  return id
+      }
+    }
 
     pull(
       db.query.read({
@@ -79,13 +89,13 @@ exports.init = function(dir, db, net) {
 	    if (onboard[msg.value.author].image) {
 	      net.blobs.get(onboard[msg.value.author].image, (err, url) => {
 		html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
-		html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text) + " <br>"
+		html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text, mdOpts) + " <br>"
 		cb()
 	      })
 	    }
 	    else
 	    {
-	      html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text) + " <br>"
+	      html += onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text, mdOpts) + " <br>"
 	      cb()
 	    }
 	  }, 1),

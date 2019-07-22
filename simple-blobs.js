@@ -11,7 +11,6 @@ module.exports = function (dir) {
   function httpGet(url, cb) {
     var req = new XMLHttpRequest()
     req.onreadystatechange = function() {
-      console.log(req)
       if (req.readyState == 4 && req.status == 200)
         cb(null, req.response)
     }
@@ -61,6 +60,7 @@ module.exports = function (dir) {
       })
     },
 
-    fsURL
+    fsURL,
+    remoteURL
   }
 }
