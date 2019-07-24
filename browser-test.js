@@ -28,6 +28,7 @@
 	    $filter: {
 	      value: {
 		timestamp: { $gt: 0 },
+		//author: '@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
 		content: { type: 'post' }
 	      }
 	    }
@@ -39,16 +40,21 @@
 	pull(
 	  pull.values(msgs),
 	  paramap((msg, cb) => {
-	    if (SSB.onboard[msg.value.author].image) {
-	      SSB.net.blobs.get(SSB.onboard[msg.value.author].image, (err, url) => {
+	    const onboardingUser = SSB.onboard[msg.value.author]
+	    if (onboardingUser && onboardingUser.image) {
+	      SSB.net.blobs.get(onboardingUser.image, (err, url) => {
 		html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
-		html += SSB.onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text, mdOpts) + " <br>"
+		if (onboardingUser)
+		  html += onboardingUser.name + " posted "
+		html += md.block(msg.value.content.text, mdOpts) + " <br>"
 		cb()
 	      })
 	    }
 	    else
 	    {
-	      html += SSB.onboard[msg.value.author].name + " posted " + md.block(msg.value.content.text, mdOpts) + " <br>"
+	      if (onboardingUser)
+		html += onboardingUser.name + " posted "
+	      html += md.block(msg.value.content.text, mdOpts) + " <br>"
 	      cb()
 	    }
 	  }, 1),
@@ -62,7 +68,7 @@
 
   function updateDBStatus() {
     setTimeout(() => {
-      if (SSB === undefined) {
+      if (typeof SSB === 'undefined') {
 	updateDBStatus()
 	return
       }
@@ -101,5 +107,18 @@
   }
 
   updateDBStatus()
+
+  document.getElementById("postMessage").addEventListener("click", function(){
+    var text = document.getElementById("message").value
+    if (text != '')
+    {
+      var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
+      console.log(state.queue[0])
+      SSB.db.add(state.queue[0].value, (err, data) => {
+	console.log(err)
+	console.log(data)
+      })
+    }
+  })
 
 })()

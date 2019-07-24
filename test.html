@@ -16,10 +16,15 @@
       <ul>
 	<li>SSB.removeDB()</li>
 	<li>SSB.initialSync()</li>
+	<li>SSB.sync()</li>
       </ul>
     </div>
     <div id="status" style="float: right; width: 55%"></div>
-    <div id="messages" style="clear: both;"></div>
+    <div style="clear: both; padding-bottom: 20px;">
+      <textarea id="message" style="height: 10rem; width: 40rem;"></textarea>
+      <input type="submit" id="postMessage" value="Post message" />
+    </div>
+    <div id="messages"></div>
   </body>
 
   <script src="bundle-core.js"></script>

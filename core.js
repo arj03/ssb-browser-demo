@@ -18,6 +18,9 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 
   var helpers = require('./core-helpers')
 
+  var validate = require('ssb-validate')
+  var state = validate.initial()
+
   // global object
   SSB = {
     db,
@@ -26,7 +29,23 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 
     // helpers
     removeDB: helpers.removeDB,
-    initialSync: helpers.initialSync
+    initialSync: helpers.initialSync,
+    sync: helpers.sync,
+    appendNewMessage: validate.appendNew,
+    state
     // onboard will get added on load time
   }
+
+  db.last.get(function (_, last) {
+    // copy to so we avoid weirdness, because this object
+    // tracks the state coming in to the database.
+    for (var k in last) {
+      SSB.state.feeds[k] = {
+        id: last[k].id,
+        timestamp: last[k].ts || last[k].timestamp,
+        sequence: last[k].sequence,
+        queue: []
+      }
+    }
+  })
 })

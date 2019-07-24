@@ -10,6 +10,68 @@ exports.removeDB = function() {
   console.log("remember to delete indexdb indexes as well!")
 }
 
+exports.sync = function()
+{
+  const pull = require('pull-stream')
+  const validate = require('ssb-validate')
+
+  const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
+  SSB.net.connect(remoteAddress, (err, rpc) => {
+    if (err) throw(err)
+
+    console.log("connected to: ", rpc.id)
+
+    var totalMessages = 0
+    var totalFilteredMessages = 0
+    var totalFeeds = 0
+
+    console.time("downloading messages")
+
+    function getMessagesForUser(index)
+    {
+      if (index >= Object.keys(SSB.state.feeds).length) {
+	console.log("messages", totalMessages)
+	console.log("filtered", totalFilteredMessages)
+	console.log("feeds", totalFeeds)
+	console.timeEnd("downloading messages")
+	return
+      }
+
+      var user = Object.keys(SSB.state.feeds)[index]
+      var seq = SSB.state.feeds[user].sequence + 1
+
+      pull(
+	rpc.createHistoryStream({id: user, seq, keys: false}),
+	pull.drain((msg) => {
+	  SSB.state = validate.append(SSB.state, null, msg)
+
+	  if (SSB.state.error)
+	    throw SSB.state.error
+
+	  ++totalMessages
+
+	  if (typeof (msg.content) === 'string' || msg.content.type != 'post')
+	    return
+
+	  ++totalFilteredMessages
+
+	  SSB.db.add(msg, (err, resp) => {
+	    if (err)
+	      console.log("err ", err)
+	    //console.log("added ", msg)
+	  })
+	}, (err) => {
+	  if (err) throw err
+
+	  getMessagesForUser(index+1)
+	})
+      )
+    }
+
+    getMessagesForUser(0)
+  })
+}
+
 exports.initialSync = function()
 {
   const pull = require('pull-stream')
@@ -30,8 +92,8 @@ exports.initialSync = function()
 
     console.time("downloading messages")
 
-    var validate = require('ssb-validate')
-    var hmac_key = null
+    const validate = require('ssb-validate')
+    const hmac_key = null
     var state = validate.initial()
 
     function getMessagesForUser(index)
