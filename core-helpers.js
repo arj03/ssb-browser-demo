@@ -19,6 +19,9 @@ exports.sync = function()
   SSB.net.connect(remoteAddress, (err, rpc) => {
     if (err) throw(err)
 
+    // replicate our own feed
+    SSB.net.ebt.request(SSB.net.id, true)
+
     console.log("connected to: ", rpc.id)
 
     var totalMessages = 0

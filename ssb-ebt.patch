@@ -1,0 +1,52 @@
+--- node_modules/ssb-ebt/index.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/ssb-ebt/index.js	2019-07-24 23:03:31.624049783 +0200
+@@ -50,7 +50,7 @@
+   var store = Store(dir, null, toUrlFriendly)
+ 
+   var ebt = EBT({
+-    logging: config.ebt && config.ebt.logging,
++    logging: true,
+     id: sbot.id,
+     getClock: function (id, cb) {
+       store.ensure(id, function () {
+@@ -81,6 +81,7 @@
+     ebt.update()
+   })
+ 
++  /*
+   sbot.post(function (msg) {
+     ebt.onAppend(msg.value)
+   })
+@@ -100,6 +101,7 @@
+     ebt.request(id, replicate)
+     return fn.apply(this, args)
+   })
++  */
+ 
+ //  hook(sbot.status, function (fn) {
+ //    var _status = fn(), feeds = 0
+@@ -152,6 +154,7 @@
+       sbot.gossip && sbot.gossip.disconnect(to, function () {})
+   }
+ 
++  /*
+   if(sbot.replicate.block)
+     sbot.replicate.block.hook(function (fn, args) {
+       block.apply(this, args)
+@@ -159,13 +162,15 @@
+     })
+   else
+     Legacy(sbot, ebt) //remove this on next breaking change
+-
++  */
++  
+   return {
+     replicate: function (opts) {
+       if(opts.version !== 2 && opts.version != 3)
+         throw new Error('expected ebt.replicate({version: 3 or 2})')
+       return toPull.duplex(ebt.createStream(this.id, opts.version, false))
+     },
++    request: ebt.request,
+     //get replication status for feeds for this id.
+     peerStatus: function (id) {
+       id = id || sbot.id

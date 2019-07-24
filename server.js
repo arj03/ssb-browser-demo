@@ -19,10 +19,11 @@ exports.init = function(dir) {
     },
     path: dir
   })
-  .use(require('./hist'))
+  .use(require('./ssb-db'))
   .use(require('./simple-ooo'))
   .use(require('ssb-onion'))
   .use(require('ssb-ws'))
+  .use(require('ssb-ebt'))
   //.use(require('ssb-blobs'))
   ()
 

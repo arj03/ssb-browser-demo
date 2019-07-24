@@ -41,9 +41,10 @@ exports.init = function (dir, ssbId) {
     get,
     add,
     // indexes
-    backlinks: store.backlinks,
+    //backlinks: store.backlinks,
     query: store.query,
     last: store.last,
+    clock: store.clock,
     getStatus: store.getStatus
   }
 }
