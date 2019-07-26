@@ -73,13 +73,15 @@
 	return
       }
 
-      if (!SSB.onboard)
-	SSB.onboard = require("./onboard.json")
-      
       const status = SSB.db.getStatus()
 
       if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
+	if (!rendered && SSB.onboard) {
+	  renderMessages()
+	  rendered = true
+	}
 	updateDBStatus()
+
 	return
       }
 
@@ -92,7 +94,7 @@
 	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256\"/>"
       else { // dancing
 	statusHTML += "<img style=\"float: right;\" src=\"http://localhost:8989/blobs/get/&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256\"/>"
-	if (!rendered) {
+	if (!rendered && SSB.onboard) {
 	  renderMessages()
 	  rendered = true
 	}
@@ -117,6 +119,17 @@
       SSB.db.add(state.queue[0].value, (err, data) => {
 	console.log(err)
 	console.log(data)
+      })
+    }
+  })
+
+  document.getElementById("useBlobId").addEventListener("click", function(){
+    var text = document.getElementById("blobId").value
+    if (text != '')
+    {
+      SSB.net.blobs.remoteGet(text, (err, data) => {
+	SSB.onboard = JSON.parse(data)
+	alert("Loaded onboarding blob")
       })
     }
   })

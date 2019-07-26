@@ -8,7 +8,7 @@ module.exports = function (dir) {
   const blobsDir = path.join(dir, "blobs")
   console.log("blobs dir:", blobsDir)
   
-  function httpGet(url, cb) {
+  function httpGet(url, useBlob, cb) {
     var req = new XMLHttpRequest()
     req.onreadystatechange = function() {
       if (req.readyState == 4 && req.status == 200)
@@ -16,7 +16,8 @@ module.exports = function (dir) {
     }
 
     req.open("GET", url, true)
-    req.responseType = 'blob'
+    if (useBlob)
+      req.responseType = 'blob'
     req.send()
   }
 
@@ -43,7 +44,7 @@ module.exports = function (dir) {
       const file = ras(path.join(blobsDir, hash))
       file.stat((err, stat) => {
 	if (stat.size == 0) {
-	  httpGet(remoteURL(hash), (err, data) => {
+	  httpGet(remoteURL(hash), true, (err, data) => {
 	    if (data.size < maxSize)
 	      add(hash, data, () => {
 		cb(null, fsURL(hash))
@@ -58,6 +59,10 @@ module.exports = function (dir) {
 	  cb(null, fsURL(hash))
 	}
       })
+    },
+
+    remoteGet: function(hash, cb) {
+      httpGet(remoteURL(hash), false, cb)
     },
 
     fsURL,

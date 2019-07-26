@@ -23,6 +23,16 @@ Generate a file of all feeds following with seq nos. The perspective
 node generate-onboarding-json.js > onboard.json
 ```
 
+Add it as a blob to the network:
+
+```
+cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
+```
+
+=> something like
+
+&Y2F+H91zVsblcW43KY3OdyI3yiu5H4iydRcysSpnTGc=.sha256
+
 # Force WASM locally (outside browser)
 
 rm -rf node_modules/sodium-chloride/
