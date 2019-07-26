@@ -34,7 +34,7 @@ exports.sync = function()
     {
       if (index >= Object.keys(SSB.state.feeds).length) {
 	console.log("messages", totalMessages)
-	console.log("filtered", totalFilteredMessages)
+	console.log("posts", totalFilteredMessages)
 	console.log("feeds", totalFeeds)
 	console.timeEnd("downloading messages")
 	return
@@ -103,7 +103,7 @@ exports.initialSync = function()
     {
       if (index >= Object.keys(onboard).length) {
 	console.log("messages", totalMessages)
-	console.log("filtered", totalFilteredMessages)
+	console.log("posts", totalFilteredMessages)
 	console.log("feeds", totalFeeds)
 	console.timeEnd("downloading messages")
 	return
