@@ -161,6 +161,9 @@
 
       SSB.renderThread = renderThread
 
+      if (!SSB.onboard)
+	loadOnboardBlob()
+
       const status = SSB.db.getStatus()
 
       if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
@@ -227,8 +230,6 @@
     if (e.keyCode == 13) // enter
       loadOnboardBlob()
   })
-
-  loadOnboardBlob()
 
   document.getElementById("threadId").addEventListener('keydown', function(e) {
     if (e.keyCode == 13) // enter
