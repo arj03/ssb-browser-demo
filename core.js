@@ -31,6 +31,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     removeDB: helpers.removeDB,
     initialSync: helpers.initialSync,
     sync: helpers.sync,
+    getThread: helpers.getThread,
     appendNewMessage: validate.appendNew,
     state
     // onboard will get added on load time

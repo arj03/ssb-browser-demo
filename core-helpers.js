@@ -1,3 +1,6 @@
+const validate = require('ssb-validate')
+const pull = require('pull-stream')
+
 exports.removeDB = function() {
   const createFile = require('random-access-chrome-file')
   const path = require('path')
@@ -10,11 +13,46 @@ exports.removeDB = function() {
   console.log("remember to delete indexdb indexes as well!")
 }
 
+// FIXME: maybe something with check if root id exists
+
+exports.getThread = function(msgId, cb)
+{
+  const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
+  SSB.net.connect(remoteAddress, (err, rpc) => {
+    if (err) throw(err)
+
+    rpc.getThread.get(msgId, (err, messages) => {
+      if (err) return cb(err)
+
+      exports.syncThread(messages, cb)
+    })
+  })
+}
+
+exports.syncThread = function(messages, cb) {
+  const hmac_key = null
+  var state = validate.initial()
+
+  pull(
+    pull.values(messages),
+    pull.filter((msg) => msg.content.type == "post"),
+    pull.drain((msg) => {
+      state = validate.appendOOO(state, hmac_key, msg)
+
+      if (SSB.state.error)
+	throw SSB.state.error
+
+      SSB.db.add(msg, (err) => {
+	if (err)
+	  console.log("err ", err)
+	//console.log("added ", msg)
+      })
+    }, cb)
+  )
+}
+
 exports.sync = function()
 {
-  const pull = require('pull-stream')
-  const validate = require('ssb-validate')
-
   const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
   SSB.net.connect(remoteAddress, (err, rpc) => {
     if (err) throw(err)
@@ -58,7 +96,7 @@ exports.sync = function()
 
 	  ++totalFilteredMessages
 
-	  SSB.db.add(msg, (err, resp) => {
+	  SSB.db.add(msg, (err) => {
 	    if (err)
 	      console.log("err ", err)
 	    //console.log("added ", msg)
@@ -77,7 +115,6 @@ exports.sync = function()
 
 exports.initialSync = function()
 {
-  const pull = require('pull-stream')
   const onboard = SSB.onboard
 
   const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
@@ -95,7 +132,6 @@ exports.initialSync = function()
 
     console.time("downloading messages")
 
-    const validate = require('ssb-validate')
     const hmac_key = null
     var state = validate.initial()
 
@@ -149,7 +185,7 @@ exports.initialSync = function()
 
 	  ++totalFilteredMessages
 
-	  SSB.db.add(msg, (err, resp) => {
+	  SSB.db.add(msg, (err) => {
 	    if (err)
 	      console.log("err ", err)
 	    //console.log("added ", msg)

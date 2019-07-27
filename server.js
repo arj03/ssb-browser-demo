@@ -20,6 +20,7 @@ exports.init = function(dir) {
     path: dir
   })
   .use(require('./ssb-db'))
+  .use(require('./ssb-get-thread'))
   .use(require('./simple-ooo'))
   .use(require('ssb-onion'))
   .use(require('ssb-ws'))

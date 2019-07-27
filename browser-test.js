@@ -3,22 +3,54 @@
   const paramap = require('pull-paramap')
   const path = require('path')
 
+  const md = require("ssb-markdown")
+  const ref = require("ssb-ref")
+
+  const mdOpts = {
+    toUrl: (id) => {
+      if (ref.isBlob(id))
+	return SSB.net.blobs.remoteURL(id)
+      else
+	return id
+    }
+  }
+
   var rendered = false
   var lastStatus = null
 
-  function renderMessages() {
-    const md = require("ssb-markdown")
-    const ref = require("ssb-ref")
+  function renderMessage(msg, cb)
+  {
+    var html = ""
 
-    const mdOpts = {
-      toUrl: (id) => {
-	if (ref.isBlob(id))
-	  return SSB.net.blobs.remoteURL(id)
-	else
-	  return id
-      }
+    function render(onboardUser)
+    {
+      if (onboardingUser)
+	html += onboardingUser.name + " posted "
+
+      // FIXME: hook all click handlers instead
+      if (msg.value.content.root && msg.value.content.root != msg.key)
+	html += " in reply <a onclick='SSB.renderThread(\"" + msg.value.content.root + "\")'>to</a>"
+
+      html += md.block(msg.value.content.text, mdOpts) + " <br>"
+
+      cb(null, html)
     }
 
+    const onboardingUser = SSB.onboard[msg.value.author]
+    if (onboardingUser && onboardingUser.image) {
+      SSB.net.blobs.get(onboardingUser.image, (err, url) => {
+	html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
+
+	render(onboardingUser)
+      })
+    }
+    else
+    {
+      render(onboardingUser)
+    }
+  }
+
+  function renderMessages() {
     pull(
       SSB.db.query.read({
 	reverse: true,
@@ -37,33 +69,46 @@
       }),
       pull.collect((err, msgs) => {
 	var html = "<b>Last 10 messages</b><br><br>"
+
 	pull(
 	  pull.values(msgs),
-	  paramap((msg, cb) => {
-	    const onboardingUser = SSB.onboard[msg.value.author]
-	    if (onboardingUser && onboardingUser.image) {
-	      SSB.net.blobs.get(onboardingUser.image, (err, url) => {
-		html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
-		if (onboardingUser)
-		  html += onboardingUser.name + " posted "
-		html += md.block(msg.value.content.text, mdOpts) + " <br>"
-		cb()
-	      })
-	    }
-	    else
-	    {
-	      if (onboardingUser)
-		html += onboardingUser.name + " posted "
-	      html += md.block(msg.value.content.text, mdOpts) + " <br>"
-	      cb()
-	    }
-	  }, 1),
-	  pull.collect(() => {
-	    document.getElementById("messages").innerHTML = html
+	  paramap(renderMessage, 1),
+	  pull.collect((err, rendered) => {
+	    document.getElementById("messages").innerHTML = html + rendered.join()
 	  })
 	)
       })
     )
+  }
+
+  function renderThread(rootId) {
+    SSB.getThread(rootId, (err) => {
+      if (err) return console.error(err)
+
+      var html = "<b>Thread " + rootId + "</b><br><br>"
+
+      SSB.db.get(rootId, (err, rootMsg) => {
+	renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
+	  pull(
+	    SSB.db.query.read({
+	      query: [
+		{
+		  $filter: {
+		    value: {
+		      content: { root: rootId },
+		    }
+		  }
+		}
+	      ]
+	    }),
+	    paramap(renderMessage, 1),
+	    pull.collect((err, rendered) => {
+	      document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join()
+	    })
+	  )
+	})
+      })
+    })
   }
 
   function updateDBStatus() {
@@ -72,6 +117,8 @@
 	updateDBStatus()
 	return
       }
+
+      SSB.renderThread = renderThread
 
       const status = SSB.db.getStatus()
 
@@ -132,6 +179,12 @@
 	alert("Loaded onboarding blob")
       })
     }
+  })
+
+  document.getElementById("getThread").addEventListener("click", function(){
+    var msgId = document.getElementById("threadId").value
+    if (msgId != '')
+      SSB.renderThread(msgId)
   })
 
 })()
