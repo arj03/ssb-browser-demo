@@ -39,7 +39,8 @@
     const onboardingUser = SSB.onboard[msg.value.author]
     if (onboardingUser && onboardingUser.image) {
       SSB.net.blobs.get(onboardingUser.image, (err, url) => {
-	html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
+	if (!err)
+	  html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
 
 	render(onboardingUser)
       })
@@ -55,17 +56,15 @@
       SSB.db.query.read({
 	reverse: true,
 	limit: 10,
-	query: [
-	  {
-	    $filter: {
-	      value: {
-		timestamp: { $gt: 0 },
-		//author: '@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
-		content: { type: 'post' }
-	      }
+	query: [{
+	  $filter: {
+	    value: {
+	      timestamp: { $gt: 0 },
+	      //author: '@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
+	      content: { type: 'post' }
 	    }
 	  }
-	]
+	}]
       }),
       pull.collect((err, msgs) => {
 	var html = "<b>Last 10 messages</b><br><br>"
@@ -82,33 +81,46 @@
   }
 
   function renderThread(rootId) {
-    SSB.getThread(rootId, (err) => {
-      if (err) return console.error(err)
-
+    function render(rootMsg)
+    {
       var html = "<b>Thread " + rootId + "</b><br><br>"
 
-      SSB.db.get(rootId, (err, rootMsg) => {
-	renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
-	  pull(
-	    SSB.db.query.read({
-	      query: [
-		{
-		  $filter: {
-		    value: {
-		      content: { root: rootId },
-		    }
-		  }
+      renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
+	pull(
+	  SSB.db.query.read({
+	    query: [{
+	      $filter: {
+		value: {
+		  content: { root: rootId },
 		}
-	      ]
-	    }),
-	    paramap(renderMessage, 1),
-	    pull.collect((err, rendered) => {
-	      document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join()
-	      window.scrollTo(0, 450)
-	    })
-	  )
-	})
+	      }
+	    }]
+	  }),
+	  paramap(renderMessage, 1),
+	  pull.collect((err, rendered) => {
+	    document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join()
+	    window.scrollTo(0, 450)
+	  })
+	)
       })
+    }
+
+    SSB.db.get(rootId, (err, rootMsg) => {
+      console.log("get root err", err)
+      console.log("get root msg", rootMsg)
+      
+      if (err) {
+	SSB.getThread(rootId, (err) => {
+	  if (err) return console.error(err)
+
+	  SSB.db.get(rootId, (err, rootMsg) => {
+	    if (err) return console.error(err)
+
+	    render(rootMsg)
+	  })
+	})
+      } else
+	render(rootMsg)
     })
   }
 

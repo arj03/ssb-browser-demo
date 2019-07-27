@@ -14,10 +14,14 @@ module.exports = function (dir) {
       if (req.readyState == 4 && req.status == 200)
         cb(null, req.response)
     }
+    req.onerror = function() {
+      cb("Error requesting blob")
+    }
 
     req.open("GET", url, true)
     if (useBlob)
       req.responseType = 'blob'
+
     req.send()
   }
 
@@ -45,7 +49,8 @@ module.exports = function (dir) {
       file.stat((err, stat) => {
 	if (stat.size == 0) {
 	  httpGet(remoteURL(hash), true, (err, data) => {
-	    if (data.size < maxSize)
+	    if (err) cb(err)
+	    else if (data.size < maxSize)
 	      add(hash, data, () => {
 		cb(null, fsURL(hash))
 	      })
