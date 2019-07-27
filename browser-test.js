@@ -104,6 +104,7 @@
 	    paramap(renderMessage, 1),
 	    pull.collect((err, rendered) => {
 	      document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join()
+	      window.scrollTo(0, 450)
 	    })
 	  )
 	})
@@ -170,21 +171,33 @@
     }
   })
 
-  document.getElementById("useBlobId").addEventListener("click", function(){
+  function loadOnboardBlob(autoload)
+  {
     var text = document.getElementById("blobId").value
     if (text != '')
     {
       SSB.net.blobs.remoteGet(text, (err, data) => {
 	SSB.onboard = JSON.parse(data)
-	alert("Loaded onboarding blob")
+	if (!autoload)
+	  alert("Loaded onboarding blob")
       })
     }
+  }
+
+  document.getElementById("blobId").addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) // enter
+      loadOnboardBlob(false)
   })
 
-  document.getElementById("getThread").addEventListener("click", function(){
-    var msgId = document.getElementById("threadId").value
-    if (msgId != '')
-      SSB.renderThread(msgId)
+  loadOnboardBlob(true)
+
+  document.getElementById("threadId").addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) // enter
+    {
+      var msgId = document.getElementById("threadId").value
+      if (msgId != '')
+	SSB.renderThread(msgId)
+    }
   })
 
 })()
