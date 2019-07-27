@@ -25,7 +25,7 @@
     function render(onboardUser)
     {
       if (onboardingUser)
-	html += onboardingUser.name + " posted "
+	html += "<a href=\"" + msg.value.author + "\" target=\"_blank\">" + onboardingUser.name + "</a> posted:"
 
       if (msg.value.content.root && msg.value.content.root != msg.key)
 	html += " in reply <a href=\"" + msg.value.content.root + "\" target=\"_blank\">to</a>"
@@ -120,6 +120,38 @@
     })
   }
 
+  function renderProfile(author) {
+    pull(
+      SSB.db.query.read({
+	reverse: true,
+	limit: 10,
+	query: [{
+	  $filter: {
+	    value: {
+	      author: author
+	    }
+	  }
+	}]
+      }),
+      pull.collect((err, msgs) => {
+	var name = author
+	if (SSB.onboard[author])
+	  name = SSB.onboard[author].name
+
+	var html = "<b>Last 10 messages for " + name + "</b><br><br>"
+
+	pull(
+	  pull.values(msgs),
+	  paramap(renderMessage, 1),
+	  pull.collect((err, rendered) => {
+	    document.getElementById("messages").innerHTML = html + rendered.join('')
+	    window.scrollTo(0, 450)
+	  })
+	)
+      })
+    )
+  }
+
   function updateDBStatus() {
     setTimeout(() => {
       if (typeof SSB === 'undefined') {
@@ -212,7 +244,13 @@
     {
       ev.stopPropagation()
       ev.preventDefault()
-      SSB.renderThread(ev.target.getAttribute('href'))
+      renderThread(ev.target.getAttribute('href'))
+    }
+    else if (ev.target.tagName === 'A' && ev.target.getAttribute('href').startsWith("@"))
+    {
+      ev.stopPropagation()
+      ev.preventDefault()
+      renderProfile(ev.target.getAttribute('href'))
     }
   })
 
