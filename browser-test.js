@@ -255,4 +255,8 @@
     }
   })
 
+  document.getElementById("header").addEventListener("click", function() {
+    renderMessages()
+  })
+
 })()
