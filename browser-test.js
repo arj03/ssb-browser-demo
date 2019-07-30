@@ -219,12 +219,19 @@
     var text = document.getElementById("blobId").value
     if (text != '' && typeof SSB !== 'undefined')
     {
+      SSB.remoteAddress = document.getElementById("remoteAddress").value
+
       SSB.net.blobs.remoteGet(text, (err, data) => {
 	SSB.onboard = JSON.parse(data)
 	console.log("Loaded onboarding blob")
       })
     }
   }
+
+  document.getElementById("remoteAddress").addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) // enter
+      SSB.remoteAddress = document.getElementById("remoteAddress").value
+  })
 
   document.getElementById("blobId").addEventListener('keydown', function(e) {
     if (e.keyCode == 13) // enter

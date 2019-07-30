@@ -34,7 +34,9 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     getThread: helpers.getThread,
     appendNewMessage: validate.appendNew,
     state
-    // onboard will get added on load time
+    // will get added on load time:
+    // - onboard
+    // - remote
   }
 
   db.last.get(function (_, last) {

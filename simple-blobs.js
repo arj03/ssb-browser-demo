@@ -38,7 +38,7 @@ module.exports = function (dir) {
   }
 
   function remoteURL(hash) {
-    return 'http://localhost:8989/blobs/get/' + hash
+    return SSB.remoteAddress.split("~")[0].replace("ws:", "http://") + '/blobs/get/' + hash
   }
   
   return {

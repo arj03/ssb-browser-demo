@@ -17,8 +17,7 @@ exports.removeDB = function() {
 
 exports.getThread = function(msgId, cb)
 {
-  const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-  SSB.net.connect(remoteAddress, (err, rpc) => {
+  SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) return cb(err)
 
     rpc.getThread.get(msgId, (err, messages) => {
@@ -53,8 +52,7 @@ exports.syncThread = function(messages, cb) {
 
 exports.sync = function()
 {
-  const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-  SSB.net.connect(remoteAddress, (err, rpc) => {
+  SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) throw(err)
 
     // replicate our own feed
@@ -117,8 +115,7 @@ exports.initialSync = function()
 {
   const onboard = SSB.onboard
 
-  const remoteAddress = "ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519"
-  SSB.net.connect(remoteAddress, (err, rpc) => {
+  SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) throw(err)
 
     console.log("connected to: ", rpc.id)
