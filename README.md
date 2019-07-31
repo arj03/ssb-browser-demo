@@ -79,6 +79,32 @@ pull(
 )
 ```
 
+List all files in browser
+
+``` javascript
+function listDir(fs, path)
+{
+	fs.root.getDirectory(path, {}, function(dirEntry){
+		var dirReader = dirEntry.createReader();
+		dirReader.readEntries(function(entries) {
+		for(var i = 0; i < entries.length; i++) {
+			var entry = entries[i];
+			if (entry.isDirectory) {
+				console.log('Directory: ' + entry.fullPath);
+				listDir(fs, entry.fullPath)
+			}
+			else if (entry.isFile)
+                console.log('File: ' + entry.fullPath);
+			}
+		})
+	})
+}
+
+window.webkitRequestFileSystem(window.PERSISTENT, 0, function (fs) {
+	listDir(fs, '/.ssb-lite/')
+})
+```
+
 ## indexes
 
 Backlinks & query uses flumeview-level that stores it's db in indexdb
