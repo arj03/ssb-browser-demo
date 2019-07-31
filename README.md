@@ -5,14 +5,18 @@ Chrome needs to be run with: --allow-file-access-from-files to work!
 Also be sure to enable all 3 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
 
-Apply sodium-browserify.patch, flumelog-hax.patch,
-flumeview-level-mkdirp.patch & ssb-validate-ooo.patch for this to
-work.
+The following patches from patches folder are needed:
+ - flumelog-hax.patch
+ - flumeview-level-mkdirp.patch
+ - ssb-validate-ooo.patch
+ - ssb-ebt.patch
 
 See:
  - https://github.com/random-access-storage/random-access-web/issues/4
- - https://github.com/dominictarr/sodium-browserify/pull/6
  - https://github.com/ssbc/ssb-validate/pull/16
+
+For a smaller bundle file, you can also apply
+patches/sodium-browserify.patch
 
 # Onboarding file
 

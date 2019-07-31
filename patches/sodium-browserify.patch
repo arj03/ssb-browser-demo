@@ -1,14 +1,10 @@
---- ../dominic-sodium-browserify/index.js	2019-07-09 22:37:08.889331405 +0200
-+++ node_modules/sodium-browserify/index.js	2019-07-09 22:33:38.521145239 +0200
-@@ -1,9 +1,30 @@
--
- //only exports browser api. use chloride module
+--- node_modules/sodium-browserify/index.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/sodium-browserify/index.js	2019-07-31 12:00:37.728121669 +0200
+@@ -2,7 +2,27 @@
  //to get automatic fallbacks!
  
  //load tweetnacl first, so that it works sync, and everything is there.
 -var exports = require('sodium-browserify-tweetnacl')
-+//var exports = require('sodium-browserify-tweetnacl')
-+
 +var exports = {
 +  crypto_auth: function() {},
 +  crypto_auth_verify: function() {},
@@ -31,21 +27,5 @@
 +  randombytes: function() {}
 +}
  
- for(var k in exports) (function (k) {
-   if('function' == typeof exports[k])
-@@ -15,11 +36,15 @@
-     }
- })(k)
- 
-+var EventEmitter = require('events')
-+module.exports.events = new EventEmitter()
-+
- //now load wasm which has to be async, ugh.
- var libsodium = require('libsodium-wrappers')
- libsodium.ready.then(function (value, what) {
-   require('./browser') (libsodium, exports)
-   //set module.exports so that it 
-+  module.exports.events.emit("sodium-browserify:wasm loaded")
-   module.exports = exports
- }).catch(function (err) {
-   //escape from promise land, ugh
+ var EventEmitter = require('events')
+ module.exports.events = new EventEmitter()
