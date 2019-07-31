@@ -14,8 +14,7 @@ exports.init = function(dir) {
       outgoing: {
 	net: [{ transform: 'shs' }],
 	onion: [{ transform: 'shs' }],
-	ws: [{ transform: 'shs' }],
-	ws: [{ transform: 'noauth' }],
+	ws: [{ transform: 'shs' }, { transform: 'noauth' }],
       }
     },
     path: dir
