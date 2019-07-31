@@ -10,12 +10,16 @@ module.exports = function (dir) {
   
   function httpGet(url, useBlob, cb) {
     var req = new XMLHttpRequest()
+    req.timeout = 1000;
     req.onreadystatechange = function() {
       if (req.readyState == 4 && req.status == 200)
         cb(null, req.response)
     }
     req.onerror = function() {
       cb("Error requesting blob")
+    }
+    req.ontimeout = function () {
+      cb("Timeout requesting blob")
     }
 
     req.open("GET", url, true)
