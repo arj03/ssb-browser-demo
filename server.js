@@ -15,6 +15,7 @@ exports.init = function(dir) {
 	net: [{ transform: 'shs' }],
 	onion: [{ transform: 'shs' }],
 	ws: [{ transform: 'shs' }],
+	ws: [{ transform: 'noauth' }],
       }
     },
     path: dir
@@ -23,6 +24,7 @@ exports.init = function(dir) {
   .use(require('./ssb-get-thread'))
   .use(require('./simple-ooo'))
   .use(require('ssb-onion'))
+  .use(require('ssb-no-auth'))
   .use(require('ssb-ws'))
   .use(require('ssb-ebt'))
   //.use(require('ssb-blobs'))

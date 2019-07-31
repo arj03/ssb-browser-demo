@@ -153,7 +153,7 @@ exports.initialSync = function()
       }
 
       if (onboard[user].latestMsg.timestamp < onemonthsago) {
-	console.log("skipping older posts for", onboard[user].name)
+	//console.log("skipping older posts for", onboard[user].name)
 	getMessagesForUser(index+1)
 	return
       }
@@ -164,7 +164,7 @@ exports.initialSync = function()
 
       ++totalFeeds
 
-      console.log("Downloading messages for: ", onboard[user].name)
+      //console.log("Downloading messages for: ", onboard[user].name)
 
       pull(
 	rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
