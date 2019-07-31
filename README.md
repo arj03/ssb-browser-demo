@@ -18,6 +18,12 @@ See:
 For a smaller bundle file, you can also apply
 patches/sodium-browserify.patch
 
+# Server
+
+Server needs to have ws enabled. Futhermore as a test I've used the
+https://github.com/arj03/ssb-get-thread plugin. This is not needed for
+initial sync but only for browsing threads.
+
 # Onboarding file
 
 Generate a file of all feeds following with seq nos. The perspective
