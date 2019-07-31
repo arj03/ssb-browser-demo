@@ -13,10 +13,10 @@ exports.removeDB = function() {
   console.log("remember to delete indexdb indexes as well!")
 }
 
-// FIXME: maybe something with check if root id exists
-
+// this uses the https://github.com/arj03/ssb-get-thread plugin
 exports.getThread = function(msgId, cb)
 {
+  SSB.isInitialSync = false // for ssb-ebt
   SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) return cb(err)
 
@@ -52,6 +52,7 @@ exports.syncThread = function(messages, cb) {
 
 exports.sync = function()
 {
+  SSB.isInitialSync = false // for ssb-ebt
   SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) throw(err)
 
@@ -115,6 +116,7 @@ exports.initialSync = function()
 {
   const onboard = SSB.onboard
 
+  SSB.isInitialSync = true // for ssb-ebt
   SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) throw(err)
 

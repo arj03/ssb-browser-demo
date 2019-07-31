@@ -1,5 +1,5 @@
 --- node_modules/ssb-ebt/index.js~	1985-10-26 09:15:00.000000000 +0100
-+++ node_modules/ssb-ebt/index.js	2019-07-24 23:03:31.624049783 +0200
++++ node_modules/ssb-ebt/index.js	2019-07-31 11:15:26.095015455 +0200
 @@ -50,7 +50,7 @@
    var store = Store(dir, null, toUrlFriendly)
  
@@ -25,7 +25,18 @@
  
  //  hook(sbot.status, function (fn) {
  //    var _status = fn(), feeds = 0
-@@ -152,6 +154,7 @@
+@@ -118,9 +120,8 @@
+     sbot.emit('replicate:finish', ebt.state.clock)
+   }
+ 
+-
+   sbot.on('rpc:connect', function (rpc, isClient) {
+-    if(isClient) {
++    if(isClient && !SSB.isInitialSync) {
+       var opts = {version: 3}
+       var a = toPull.duplex(ebt.createStream(rpc.id, opts.version, true))
+       var b = rpc.ebt.replicate(opts, function (err) {
+@@ -152,6 +153,7 @@
        sbot.gossip && sbot.gossip.disconnect(to, function () {})
    }
  
@@ -33,7 +44,7 @@
    if(sbot.replicate.block)
      sbot.replicate.block.hook(function (fn, args) {
        block.apply(this, args)
-@@ -159,13 +162,15 @@
+@@ -159,13 +161,15 @@
      })
    else
      Legacy(sbot, ebt) //remove this on next breaking change

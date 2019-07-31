@@ -81,4 +81,3 @@ in the browser. These indexes are much slower in the browser.
 ## mcss generate css
 
 mcss plugs/app/page/books.mcss -o books.css
-
