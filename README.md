@@ -13,6 +13,7 @@ The following patches from patches folder are needed:
 
 See:
  - https://github.com/random-access-storage/random-access-web/issues/4
+ - https://github.com/flumedb/flumeview-level/pull/22
  - https://github.com/ssbc/ssb-validate/pull/16
 
 For a smaller bundle file, you can also apply
