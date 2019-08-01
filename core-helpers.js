@@ -1,4 +1,5 @@
 const validate = require('ssb-validate')
+const keys = require('ssb-keys')
 const pull = require('pull-stream')
 
 exports.removeDB = function() {
@@ -48,6 +49,10 @@ exports.syncThread = function(messages, cb) {
       })
     }, cb)
   )
+}
+
+exports.decryptMessage = function(msg) {
+  return keys.unbox(msg.content, SSB.net.config.keys.private)
 }
 
 exports.sync = function()
@@ -127,6 +132,7 @@ exports.initialSync = function()
 
     var totalMessages = 0
     var totalFilteredMessages = 0
+    var totalPrivateMessages = 0
     var totalFeeds = 0
 
     console.time("downloading messages")
@@ -137,9 +143,10 @@ exports.initialSync = function()
     function getMessagesForUser(index)
     {
       if (index >= Object.keys(onboard).length) {
-	console.log("messages", totalMessages)
-	console.log("posts", totalFilteredMessages)
 	console.log("feeds", totalFeeds)
+	console.log("messages", totalMessages)
+	console.log("private", totalPrivateMessages)
+	console.log("filtered", totalFilteredMessages)
 	console.timeEnd("downloading messages")
 	return
       }
@@ -179,8 +186,21 @@ exports.initialSync = function()
 
 	  ++totalMessages
 
-	  if (typeof (msg.content) === 'string' || msg.content.type != 'post')
+	  var isPrivate = (typeof (msg.content) === 'string')
+
+	  if (isPrivate && !SSB.privateMessages)
 	    return
+	  else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type))
+	    return
+
+	  if (isPrivate)
+	  {
+	    ++totalPrivateMessages
+
+            var decrypted = exports.decryptMessage(msg)
+            if (!decrypted) // not for us
+              return
+	  }
 
 	  ++totalFilteredMessages
 

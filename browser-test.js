@@ -30,6 +30,9 @@
       if (msg.value.content.root && msg.value.content.root != msg.key)
 	html += " in reply <a href=\"" + msg.value.content.root + "\" target=\"_blank\">to</a>"
 
+      if (msg.value.content.subject) // private
+	html += "<h2><a href='" +  msg.key + "'>" + msg.value.content.subject + "</a></h2>"
+
       html += md.block(msg.value.content.text, mdOpts) + " <br>"
 
       cb(null, html)
@@ -65,6 +68,7 @@
 	  }
 	}]
       }),
+      pull.filter((msg) => !msg.value.meta),
       pull.collect((err, msgs) => {
 	var html = "<b>Last 10 messages</b><br><br>"
 
@@ -73,16 +77,100 @@
 	  paramap(renderMessage, 1),
 	  pull.collect((err, rendered) => {
 	    document.getElementById("messages").innerHTML = html + rendered.join('')
+
+	    document.getElementById("top").innerHTML = `
+	      <textarea id="message" style="height: 10rem; width: 40rem;"></textarea><br>
+	      <input type="submit" id="postMessage" value="Post message" />`
+
+	    document.getElementById("postMessage").addEventListener("click", function(){
+	      var text = document.getElementById("message").value
+	      if (text != '')
+	      {
+		var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
+		console.log(state.queue[0])
+		SSB.db.add(state.queue[0].value, (err, data) => {
+		  if (!err)
+		    state.queue = []
+
+		  console.log(err)
+		  console.log(data)
+		})
+	      }
+	    })
 	  })
 	)
       })
     )
   }
 
+  function renderPrivate() {
+    pull(
+      SSB.db.query.read({
+	reverse: true,
+	limit: 10,
+	query: [{
+	  $filter: {
+	    value: {
+	      timestamp: { $gt: 0 },
+	      content: { recps: { $truthy: true } }
+	    }
+	  }
+	}]
+      }),
+      pull.collect((err, msgs) => {
+	var html = "<b>Last 10 private messages</b><br><br>"
+
+	pull(
+	  pull.values(msgs),
+	  pull.filter((msg) => !msg.value.content.root), // top posts
+	  paramap(renderMessage, 1),
+	  pull.collect((err, rendered) => {
+	    document.getElementById("top").innerHTML = ''
+	    document.getElementById("messages").innerHTML = html + rendered.join('')
+	    document.getElementById("bottom").innerHTML = ''
+	  })
+	)
+      })
+    )
+  }
+
+  function addReply(rootId, lastMsgId, recps) {
+    document.getElementById("bottom").innerHTML = `
+      <textarea id="message" style="height: 10rem; width: 40rem;"></textarea><br>
+      <input type="submit" id="postReply" value="Post reply" />`
+
+    document.getElementById("postReply").addEventListener("click", function(){
+      var text = document.getElementById("message").value
+      if (text != '')
+      {
+	var content = { type: 'post', text, root: rootId, branch: lastMsgId }
+	var originalContent = content
+	if (recps) {
+	  content.recps = recps
+	  content = SSB.box(content, recps.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
+	}
+	var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
+
+	var msg = state.queue[0].value
+
+	SSB.db.add(msg, (err, data) => {
+	  if (!err)
+	    state.queue = []
+
+	  console.log(err)
+	  console.log(data)
+
+	  renderThread(rootId)
+	})
+      }
+    })
+  }
+
   function renderThread(rootId) {
     function render(rootMsg)
     {
       var html = "<b>Thread " + rootId + "</b><br><br>"
+      var lastMsgId = rootId
 
       renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
 	pull(
@@ -95,9 +183,16 @@
 	      }
 	    }]
 	  }),
+	  pull.filter((msg) => {
+	    lastMsgId = msg.key
+	    return true
+	  }),
 	  paramap(renderMessage, 1),
 	  pull.collect((err, rendered) => {
+	    document.getElementById("top").innerHTML = ''
 	    document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join('')
+	    addReply(rootId, lastMsgId, rootMsg.content.recps)
+
 	    window.scrollTo(0, 450)
 	  })
 	)
@@ -105,7 +200,7 @@
     }
 
     SSB.db.get(rootId, (err, rootMsg) => {
-      if (err) {
+      if (err) { // FIXME: make this configurable
 	SSB.getThread(rootId, (err) => {
 	  if (err) return console.error(err)
 
@@ -201,19 +296,6 @@
 
   updateDBStatus()
 
-  document.getElementById("postMessage").addEventListener("click", function(){
-    var text = document.getElementById("message").value
-    if (text != '')
-    {
-      var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
-      console.log(state.queue[0])
-      SSB.db.add(state.queue[0].value, (err, data) => {
-	console.log(err)
-	console.log(data)
-      })
-    }
-  })
-
   function loadOnboardBlob()
   {
     var text = document.getElementById("blobId").value
@@ -262,8 +344,16 @@
     }
   })
 
-  document.getElementById("header").addEventListener("click", function() {
+  document.getElementById("goToPublic").addEventListener("click", function(ev) {
+    ev.stopPropagation()
+    ev.preventDefault()
     renderMessages()
+  })
+
+  document.getElementById("goToPrivate").addEventListener("click", function(ev) {
+    ev.stopPropagation()
+    ev.preventDefault()
+    renderPrivate()
   })
 
 })()

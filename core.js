@@ -21,24 +21,6 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   var validate = require('ssb-validate')
   var state = validate.initial()
 
-  // global object
-  SSB = {
-    db,
-    net,
-    dir,
-
-    // helpers
-    removeDB: helpers.removeDB,
-    initialSync: helpers.initialSync,
-    sync: helpers.sync,
-    getThread: helpers.getThread,
-    appendNewMessage: validate.appendNew,
-    state
-    // will get added on load time:
-    // - onboard
-    // - remote
-  }
-
   db.last.get(function (_, last) {
     // copy to so we avoid weirdness, because this object
     // tracks the state coming in to the database.
@@ -51,4 +33,28 @@ s.events.on('sodium-browserify:wasm loaded', function() {
       }
     }
   })
+
+  // global object
+  SSB = {
+    db,
+    net,
+    dir,
+
+    // helpers
+    removeDB: helpers.removeDB,
+    initialSync: helpers.initialSync,
+    sync: helpers.sync,
+    getThread: helpers.getThread,
+    appendNewMessage: validate.appendNew,
+    box: require('ssb-keys').box,
+    state,
+
+    // config
+    validMessageTypes: ['post'],
+    privateMessages: true
+
+    // will get added on load time:
+    // - onboard
+    // - remoteAddress
+  }
 })

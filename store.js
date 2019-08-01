@@ -5,7 +5,7 @@ else // this will use IDBMutableFile in firefox, file system api in chrome
   var OffsetLog = require('flumelog-aligned-offset/browser')
 var OffsetLogCompat = require('flumelog-aligned-offset/compat')
 var codec = require('flumecodec/json')
-
+var keys = require('ssb-keys')
 var path = require('path')
 
 module.exports = function (dir, ssbId) {
@@ -16,7 +16,26 @@ module.exports = function (dir, ssbId) {
     {blockSize:1024*64, codec:codec}
   ))
 
-  var store = Flume(log)
+  var store = Flume(log, true, (msg, cb) => {
+    if (msg && msg.value && typeof (msg.value.content) === 'string') {
+      var decrypted = keys.unbox(msg.value.content, SSB.net.config.keys.private)
+      if (!decrypted) // not for us
+        cb(null, msg)
+
+      var cyphertext = msg.value.content
+
+      msg.value.content = decrypted
+      msg.value.meta = {
+	private: true,
+	original: {
+	  content: cyphertext
+	}
+      }
+
+      cb(null, msg)
+    } else
+      cb(null, msg)
+  })
     .use('keys', require('./indexes/keys')())
     .use('last', require('./indexes/last')())
     .use('clock', require('./indexes/clock')())

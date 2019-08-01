@@ -21,19 +21,19 @@
 	<li>SSB.initialSync()</li>
 	<li>SSB.sync()</li>
       </ul>
-      <input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:192.168.4.1:8989~shs:pWGz4AHE8/jnFjvsZ/5BIy3Cj9HaYVs/CYSMepxqSNw=.ed25519" value="" id="remoteAddress" />
+      <input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519" value="" id="remoteAddress" />
       <br><br>
       <input type="text" style="width: 300px; padding: 5px" placeholder="onboard blob url" value="&Y2F+H91zVsblcW43KY3OdyI3yiu5H4iydRcysSpnTGc=.sha256" id="blobId" />
       <br><br>
       <input type="text" style="width: 300px; padding: 5px" placeholder="thread msg id" value="" id="threadId" />
       <br><br>
+      <a id="goToPublic" href="">Public</a> | <a id="goToPrivate" href="">Private</a>
+      <br><br>
     </div>
     <div id="status" style="float: right; width: 55%"></div>
-    <div style="clear: both; padding-bottom: 20px;">
-      <textarea id="message" style="height: 10rem; width: 40rem;"></textarea>
-      <input type="submit" id="postMessage" value="Post message" />
-    </div>
+    <div id="top" style="clear: both; padding-bottom: 20px;"></div>
     <div id="messages"></div>
+    <div id="bottom"></div>
   </body>
 
   <script src="bundle-core.js"></script>
