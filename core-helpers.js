@@ -95,8 +95,19 @@ exports.sync = function()
 
 	  ++totalMessages
 
-	  if (typeof (msg.content) === 'string' || msg.content.type != 'post')
+	  var isPrivate = (typeof (msg.content) === 'string')
+
+	  if (isPrivate && !SSB.privateMessages)
 	    return
+	  else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type))
+	    return
+
+	  if (isPrivate)
+	  {
+            var decrypted = exports.decryptMessage(msg)
+            if (!decrypted) // not for us
+              return
+	  }
 
 	  ++totalFilteredMessages
 

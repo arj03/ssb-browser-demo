@@ -34,7 +34,8 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     }
   })
 
-  // global object
+
+  // FIXME: refactor this into its own module instead of global object
   SSB = {
     db,
     net,

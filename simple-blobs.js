@@ -3,12 +3,14 @@
 
 const path = require('path')
 const ras = require('random-access-chrome-file')
+const pull = require('pull-stream')
+const BoxStream = require('pull-box-stream')
 
 module.exports = function (dir) {
   const blobsDir = path.join(dir, "blobs")
   console.log("blobs dir:", blobsDir)
   
-  function httpGet(url, useBlob, cb) {
+  function httpGet(url, responseType, cb) {
     var req = new XMLHttpRequest()
     req.timeout = 1000;
     req.onreadystatechange = function() {
@@ -23,8 +25,8 @@ module.exports = function (dir) {
     }
 
     req.open("GET", url, true)
-    if (useBlob)
-      req.responseType = 'blob'
+    if (responseType)
+      req.responseType = responseType
 
     req.send()
   }
@@ -45,22 +47,55 @@ module.exports = function (dir) {
     return SSB.remoteAddress.split("~")[0].replace("ws:", "http://") + '/blobs/get/' + hash
   }
   
+  var zeros = new Buffer(24); zeros.fill(0)
+
+  function unboxBlob(unbox) {
+    var key = new Buffer(unbox.replace(/\s/g, '+'), 'base64')
+    return BoxStream.createUnboxStream(
+      new Buffer(key, 'base64'),
+      zeros
+    )
+  }
+
   return {
     add,
 
-    get: function (hash, cb) {
+    get: function (hash, unbox, cb) {
       const file = ras(path.join(blobsDir, hash))
       file.stat((err, stat) => {
 	if (stat.size == 0) {
-	  httpGet(remoteURL(hash), true, (err, data) => {
-	    if (err) cb(err)
-	    else if (data.size < maxSize)
-	      add(hash, data, () => {
-		cb(null, fsURL(hash))
-	      })
-	    else
-	      cb(null, remoteURL(hash))
-	  })
+	  if (unbox)
+	  {
+	    httpGet(remoteURL(hash), 'arraybuffer', (err, data) => {
+	      pull(
+		pull.once(Buffer.from(data)),
+		unboxBlob(unbox),
+		pull.collect((err, decrypted) => {
+		  if (decrypted) {
+		    add(hash, new Blob(decrypted), () => {
+		      console.log("wrote private blob")
+		    })
+		  }
+		  else
+		  {
+		    console.log("failed to decrypt", err)
+		  }
+		})
+	      )
+	    })
+	  }
+	  else
+	  {
+	    httpGet(remoteURL(hash), 'blob', (err, data) => {
+	      if (err) cb(err)
+	      else if (data.size < maxSize)
+		add(hash, data, () => {
+		  cb(null, fsURL(hash))
+		})
+	      else
+		cb(null, remoteURL(hash))
+	    })
+	  }
 	}
 	else
 	{
@@ -70,8 +105,8 @@ module.exports = function (dir) {
       })
     },
 
-    remoteGet: function(hash, cb) {
-      httpGet(remoteURL(hash), false, cb)
+    remoteGet: function(hash, type, cb) {
+      httpGet(remoteURL(hash), type, cb)
     },
 
     fsURL,

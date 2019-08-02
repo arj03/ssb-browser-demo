@@ -8,8 +8,18 @@
 
   const mdOpts = {
     toUrl: (id) => {
-      if (ref.isBlob(id))
-	return SSB.net.blobs.remoteURL(id)
+      var link = ref.parseLink(id)
+      if (link && ref.isBlob(link.link))
+      {
+	if (link.query && link.query.unbox) // private
+	{
+	  // FIXME: doesn't work the first time
+	  SSB.net.blobs.get(link.link, link.query.unbox, () => {})
+	  return SSB.net.blobs.fsURL(link.link)
+	}
+	else
+	  return SSB.net.blobs.remoteURL(link.link)
+      }
       else
 	return id
     }
@@ -40,7 +50,7 @@
 
     const onboardingUser = SSB.onboard[msg.value.author]
     if (onboardingUser && onboardingUser.image) {
-      SSB.net.blobs.get(onboardingUser.image, (err, url) => {
+      SSB.net.blobs.get(onboardingUser.image, null, (err, url) => {
 	if (!err)
 	  html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
 
@@ -183,10 +193,7 @@
 	      }
 	    }]
 	  }),
-	  pull.filter((msg) => {
-	    lastMsgId = msg.key
-	    return true
-	  }),
+	  pull.through((msg) => lastMsgId = msg.key),
 	  paramap(renderMessage, 1),
 	  pull.collect((err, rendered) => {
 	    document.getElementById("top").innerHTML = ''
@@ -303,7 +310,7 @@
     {
       SSB.remoteAddress = document.getElementById("remoteAddress").value
 
-      SSB.net.blobs.remoteGet(text, (err, data) => {
+      SSB.net.blobs.remoteGet(text, "text", (err, data) => {
 	SSB.onboard = JSON.parse(data)
 	console.log("Loaded onboarding blob")
       })
