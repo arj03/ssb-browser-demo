@@ -199,8 +199,6 @@
 	    document.getElementById("top").innerHTML = ''
 	    document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join('')
 	    addReply(rootId, lastMsgId, rootMsg.content.recps)
-
-	    window.scrollTo(0, 450)
 	  })
 	)
       })
@@ -247,7 +245,7 @@
 	  paramap(renderMessage, 1),
 	  pull.collect((err, rendered) => {
 	    document.getElementById("messages").innerHTML = html + rendered.join('')
-	    window.scrollTo(0, 450)
+	    window.scrollTo(0, 0)
 	  })
 	)
       })
@@ -354,13 +352,25 @@
   document.getElementById("goToPublic").addEventListener("click", function(ev) {
     ev.stopPropagation()
     ev.preventDefault()
+    document.getElementById("settings").style="display:none"
     renderMessages()
   })
 
   document.getElementById("goToPrivate").addEventListener("click", function(ev) {
     ev.stopPropagation()
     ev.preventDefault()
+    document.getElementById("settings").style="display:none"
     renderPrivate()
+  })
+
+  document.getElementById("goToSettings").addEventListener("click", function(ev) {
+    ev.stopPropagation()
+    ev.preventDefault()
+    document.getElementById("settings").style=""
+
+    document.getElementById("top").innerHTML = ''
+    document.getElementById("messages").innerHTML = ''
+    document.getElementById("bottom").innerHTML = ''
   })
 
 })()

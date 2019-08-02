@@ -15,24 +15,26 @@
   </head>
   <body>
     <h1 id="header" title="back to overview">SSB browser demo</h1>
-    <div id="commands" style="float: left;">
-      <b>Available commands:</b>
-      <ul>
-	<li>SSB.removeDB()</li>
-	<li>SSB.initialSync()</li>
-	<li>SSB.sync()</li>
-      </ul>
-      <input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519" value="" id="remoteAddress" />
-      <br><br>
-      <input type="text" style="width: 300px; padding: 5px" placeholder="onboard blob url" value="&Y2F+H91zVsblcW43KY3OdyI3yiu5H4iydRcysSpnTGc=.sha256" id="blobId" />
-      <br><br>
-      <input type="text" style="width: 300px; padding: 5px" placeholder="thread msg id" value="" id="threadId" />
-      <br><br>
-      <a id="goToPublic" href="">Public</a> | <a id="goToPrivate" href="">Private</a>
-      <br><br>
+    <div id="navigation" style="padding: 0 20 20 20px;">
+      <a id="goToPublic" href="">Public</a> | <a id="goToPrivate" href="">Private</a> | <a id="goToSettings" href="">Settings</a>
+      <input type="text" style="width: 300px; padding: 5px; float: right;" placeholder="thread msg id" value="" id="threadId" />
     </div>
-    <div id="status" style="float: right; width: 55%"></div>
-    <div id="top" style="clear: both; padding-bottom: 20px;"></div>
+    <div id="settings" style="display:none;">
+      <div style="float: left;">
+	<b>Available commands:</b>
+	<ul>
+	  <li>SSB.removeDB()</li>
+	  <li>SSB.initialSync()</li>
+	  <li>SSB.sync()</li>
+	</ul>
+	<input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:localhost:8989~shs:6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519" value="" id="remoteAddress" />
+	<br><br>
+	<input type="text" style="width: 300px; padding: 5px" placeholder="onboard blob url" value="&Y2F+H91zVsblcW43KY3OdyI3yiu5H4iydRcysSpnTGc=.sha256" id="blobId" />
+	<br><br>
+      </div>
+      <div id="status" style="float: right; width: 55%"></div>
+    </div>
+    <div id="top" style="clear: both; padding: 0 20 20 20px;"></div>
     <div id="messages"></div>
     <div id="bottom"></div>
   </body>
