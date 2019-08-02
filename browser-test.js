@@ -80,7 +80,7 @@
       }),
       pull.filter((msg) => !msg.value.meta),
       pull.collect((err, msgs) => {
-	var html = "<b>Last 10 messages</b><br><br>"
+	var html = "<h2>Last 10 messages</h2>"
 
 	pull(
 	  pull.values(msgs),
@@ -128,7 +128,7 @@
 	}]
       }),
       pull.collect((err, msgs) => {
-	var html = "<b>Last 10 private messages</b><br><br>"
+	var html = "<h2>Last 10 private messages</h2>"
 
 	pull(
 	  pull.values(msgs),
@@ -179,7 +179,7 @@
   function renderThread(rootId) {
     function render(rootMsg)
     {
-      var html = "<b>Thread " + rootId + "</b><br><br>"
+      var html = "<h2>Thread " + rootId + "</h2>"
       var lastMsgId = rootId
 
       renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
