@@ -55,6 +55,7 @@ exports.decryptMessage = function(msg) {
   return keys.unbox(msg.content, SSB.net.config.keys.private)
 }
 
+// FIXME: this is a mess, will be replaced with ssb-conn & ssb-ebt instead
 exports.sync = function()
 {
   SSB.isInitialSync = false // for ssb-ebt
