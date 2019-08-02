@@ -36,7 +36,6 @@ exports.syncThread = function(messages, cb) {
     pull.values(messages),
     pull.filter((msg) => msg.content.type == "post"),
     pull.drain((msg) => {
-      console.log("got msg!")
       state = validate.appendOOO(SSB.state, hmac_key, msg)
 
       if (SSB.state.error)
