@@ -199,6 +199,7 @@
 	    document.getElementById("top").innerHTML = ''
 	    document.getElementById("messages").innerHTML = html + rootMsgHTML + rendered.join('')
 	    addReply(rootId, lastMsgId, rootMsg.content.recps)
+	    window.scrollTo(0, 0)
 	  })
 	)
       })
@@ -267,7 +268,7 @@
       const status = SSB.db.getStatus()
 
       if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
-	if (!rendered && SSB.onboard) {
+	if (!rendered && SSB.onboard && status.sync) {
 	  renderMessages()
 	  rendered = true
 	}

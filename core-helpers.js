@@ -2,6 +2,8 @@ const validate = require('ssb-validate')
 const keys = require('ssb-keys')
 const pull = require('pull-stream')
 
+const hmac_key = null
+
 exports.removeDB = function() {
   const createFile = require('random-access-chrome-file')
   const path = require('path')
@@ -30,14 +32,12 @@ exports.getThread = function(msgId, cb)
 }
 
 exports.syncThread = function(messages, cb) {
-  const hmac_key = null
-  var state = validate.initial()
-
   pull(
     pull.values(messages),
     pull.filter((msg) => msg.content.type == "post"),
     pull.drain((msg) => {
-      state = validate.appendOOO(state, hmac_key, msg)
+      console.log("got msg!")
+      state = validate.appendOOO(SSB.state, hmac_key, msg)
 
       if (SSB.state.error)
 	throw SSB.state.error
@@ -149,9 +149,6 @@ exports.initialSync = function()
 
     console.time("downloading messages")
 
-    const hmac_key = null
-    var state = validate.initial()
-
     function getMessagesForUser(index)
     {
       if (index >= Object.keys(onboard).length) {
@@ -160,6 +157,7 @@ exports.initialSync = function()
 	console.log("private", totalPrivateMessages)
 	console.log("filtered", totalFilteredMessages)
 	console.timeEnd("downloading messages")
+	SSB.isInitialSync = false
 	return
       }
 
@@ -189,12 +187,12 @@ exports.initialSync = function()
 	rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
 	pull.drain((msg) => {
 	  if (msg.sequence == seqStart)
-	    state = validate.appendOOO(state, hmac_key, msg)
+	    SSB.state = validate.appendOOO(SSB.state, hmac_key, msg)
 	  else
-	    state = validate.append(state, hmac_key, msg)
+	    SSB.state = validate.append(SSB.state, hmac_key, msg)
 
-	  if (state.error)
-	    throw state.error
+	  if (SSB.state.error)
+	    throw SSB.state.error
 
 	  ++totalMessages
 
@@ -224,7 +222,7 @@ exports.initialSync = function()
 	}, (err) => {
 	  if (err) throw err
 
-	  state.queue = []
+	  SSB.state.queue = []
 
 	  getMessagesForUser(index+1)
 	})
