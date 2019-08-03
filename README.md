@@ -6,13 +6,13 @@ Also be sure to enable all 3 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
 
 The following patches from patches folder are needed:
- - flumelog-hax.patch
+ - raw-chrome-fix.patch
  - flumeview-level-mkdirp.patch
  - ssb-validate-ooo.patch
  - ssb-ebt.patch
 
 See:
- - https://github.com/random-access-storage/random-access-web/issues/4
+ - https://github.com/random-access-storage/random-access-web/pull/5
  - https://github.com/flumedb/flumeview-level/pull/22
  - https://github.com/ssbc/ssb-validate/pull/16
 
