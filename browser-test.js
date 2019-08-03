@@ -1,7 +1,6 @@
 (function() {
   const pull = require('pull-stream')
   const paramap = require('pull-paramap')
-  const path = require('path')
 
   const md = require("ssb-markdown")
   const ref = require("ssb-ref")
@@ -96,7 +95,7 @@
 	      var text = document.getElementById("message").value
 	      if (text != '')
 	      {
-		var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
+		var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
 		console.log(state.queue[0])
 		SSB.db.add(state.queue[0].value, (err, data) => {
 		  if (!err)
@@ -161,7 +160,7 @@
 		  content.recps = recipients
 		  content = SSB.box(content, recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
 		}
-		var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
+		var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
 		console.log(state.queue[0])
 
 		SSB.db.add(state.queue[0].value, (err, data) => {
@@ -198,7 +197,7 @@
 	  content.recps = recps
 	  content = SSB.box(content, recps.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
 	}
-	var state = SSB.appendNewMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
+	var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
 
 	var msg = state.queue[0].value
 
