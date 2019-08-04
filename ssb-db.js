@@ -1,6 +1,9 @@
 // name is blank as in ssb-db to merge into global namespace
 // most of this stuff is from ssb-db
 
+const validate = require('ssb-validate')
+const keys = require('ssb-keys')
+
 exports.manifest =  {
   createHistoryStream: 'source'
 }
@@ -10,6 +13,8 @@ exports.permissions = {
 }
 
 exports.init = function (sbot, config) {
+  // ebt stuff
+
   sbot.getVectorClock = function (_, cb) {
     if (!cb) cb = _
 
@@ -61,6 +66,38 @@ exports.init = function (sbot, config) {
       if (err) cb(err)
       else cb(null, originalData(value))
     })
+  }
+
+  function decryptMessage(msg) {
+    return keys.unbox(msg.content, SSB.net.config.keys.private)
+  }
+
+  const hmac_key = null
+
+  sbot.add = function(msg, cb) {
+    if (!(msg.author in SSB.state.feeds))
+      SSB.state = validate.appendOOO(SSB.state, hmac_key, msg)
+    else
+      SSB.state = validate.append(SSB.state, null, msg)
+
+    if (SSB.state.error)
+      return cb(SSB.state.error)
+
+    var isPrivate = (typeof (msg.content) === 'string')
+
+    if (isPrivate && !SSB.privateMessages)
+      return cb()
+    else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type))
+      return cb()
+
+    if (isPrivate)
+    {
+      var decrypted = decryptMessage(msg)
+      if (!decrypted) // not for us
+        return cb()
+    }
+
+    SSB.db.add(msg, cb)
   }
 
   return {}

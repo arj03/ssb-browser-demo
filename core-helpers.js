@@ -2,7 +2,22 @@ const validate = require('ssb-validate')
 const keys = require('ssb-keys')
 const pull = require('pull-stream')
 
-const hmac_key = null
+var remote
+
+function connected(cb)
+{
+  if (!remote || remote.closed)
+  {
+    SSB.isInitialSync = false // for ssb-ebt
+    SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
+      if (err) throw(err)
+
+      remote = rpc
+      cb(remote)
+    })
+  } else
+    cb(remote)
+}
 
 exports.removeDB = function() {
   const createFile = require('random-access-chrome-file')
@@ -19,10 +34,7 @@ exports.removeDB = function() {
 // this uses the https://github.com/arj03/ssb-get-thread plugin
 exports.getThread = function(msgId, cb)
 {
-  SSB.isInitialSync = false // for ssb-ebt
-  SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
-    if (err) return cb(err)
-
+  connected((rpc) => {
     rpc.getThread.get(msgId, (err, messages) => {
       if (err) return cb(err)
 
@@ -32,6 +44,8 @@ exports.getThread = function(msgId, cb)
 }
 
 exports.syncThread = function(messages, cb) {
+  const hmac_key = null
+
   pull(
     pull.values(messages),
     pull.filter((msg) => msg.content.type == "post"),
@@ -44,87 +58,16 @@ exports.syncThread = function(messages, cb) {
       SSB.db.add(msg, (err) => {
 	if (err)
 	  console.log("err ", err)
-	//console.log("added ", msg)
       })
     }, cb)
   )
 }
 
-exports.decryptMessage = function(msg) {
-  return keys.unbox(msg.content, SSB.net.config.keys.private)
-}
-
-// FIXME: this is a mess, will be replaced with ssb-conn & ssb-ebt instead
 exports.sync = function()
 {
-  SSB.isInitialSync = false // for ssb-ebt
-  SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
-    if (err) throw(err)
-
-    // replicate our own feed
-    SSB.net.ebt.request(SSB.net.id, true)
-
-    console.log("connected to: ", rpc.id)
-
-    var totalMessages = 0
-    var totalFilteredMessages = 0
-    var totalFeeds = 0
-
-    console.time("downloading messages")
-
-    function getMessagesForUser(index)
-    {
-      if (index >= Object.keys(SSB.state.feeds).length) {
-	console.log("messages", totalMessages)
-	console.log("posts", totalFilteredMessages)
-	console.log("feeds", totalFeeds)
-	console.timeEnd("downloading messages")
-	return
-      }
-
-      var user = Object.keys(SSB.state.feeds)[index]
-      var seq = SSB.state.feeds[user].sequence + 1
-
-      pull(
-	rpc.createHistoryStream({id: user, seq, keys: false}),
-	pull.drain((msg) => {
-	  SSB.state = validate.append(SSB.state, null, msg)
-
-	  if (SSB.state.error)
-	    throw SSB.state.error
-
-	  ++totalMessages
-
-	  var isPrivate = (typeof (msg.content) === 'string')
-
-	  if (isPrivate && !SSB.privateMessages)
-	    return
-	  else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type))
-	    return
-
-	  if (isPrivate)
-	  {
-            var decrypted = exports.decryptMessage(msg)
-            if (!decrypted) // not for us
-              return
-	  }
-
-	  ++totalFilteredMessages
-
-	  SSB.db.add(msg, (err) => {
-	    if (err)
-	      console.log("err ", err)
-	    //console.log("added ", msg)
-	  })
-	}, (err) => {
-	  if (err) throw err
-
-	  getMessagesForUser(index+1)
-	})
-      )
-    }
-
-    getMessagesForUser(0)
+  connected(() => {
+    for (var k in SSB.state.feeds)
+      SSB.net.ebt.request(k, true)
   })
 }
 
@@ -135,8 +78,6 @@ exports.initialSync = function()
   SSB.isInitialSync = true // for ssb-ebt
   SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
     if (err) throw(err)
-
-    console.log("connected to: ", rpc.id)
 
     var d = new Date()
     var onemonthsago = d.setMonth(d.getMonth() - 1)
@@ -153,7 +94,6 @@ exports.initialSync = function()
       if (index >= Object.keys(onboard).length) {
 	console.log("feeds", totalFeeds)
 	console.log("messages", totalMessages)
-	console.log("private", totalPrivateMessages)
 	console.log("filtered", totalFilteredMessages)
 	console.timeEnd("downloading messages")
 	SSB.isInitialSync = false
@@ -185,38 +125,10 @@ exports.initialSync = function()
       pull(
 	rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
 	pull.drain((msg) => {
-	  if (msg.sequence == seqStart)
-	    SSB.state = validate.appendOOO(SSB.state, hmac_key, msg)
-	  else
-	    SSB.state = validate.append(SSB.state, hmac_key, msg)
-
-	  if (SSB.state.error)
-	    throw SSB.state.error
-
 	  ++totalMessages
-
-	  var isPrivate = (typeof (msg.content) === 'string')
-
-	  if (isPrivate && !SSB.privateMessages)
-	    return
-	  else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type))
-	    return
-
-	  if (isPrivate)
-	  {
-	    ++totalPrivateMessages
-
-            var decrypted = exports.decryptMessage(msg)
-            if (!decrypted) // not for us
-              return
-	  }
-
-	  ++totalFilteredMessages
-
-	  SSB.db.add(msg, (err) => {
-	    if (err)
-	      console.log("err ", err)
-	    //console.log("added ", msg)
+	  SSB.net.add(msg, (err, res) => {
+	    if (res)
+	      ++totalFilteredMessages
 	  })
 	}, (err) => {
 	  if (err) throw err

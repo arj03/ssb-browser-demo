@@ -78,8 +78,6 @@ module.exports = function (dir, ssbId) {
     }
   }
 
-  window.getDbStatus = store.getStatus
-
   store.add = function (id, msg, cb) {
     var data = {
       key: id,
