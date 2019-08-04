@@ -255,12 +255,14 @@
     SSB.db.get(rootId, (err, rootMsg) => {
       if (err) { // FIXME: make this configurable
 	SSB.getThread(rootId, (err) => {
-	  if (err) return console.error(err)
+	  if (err) console.error(err)
 
 	  SSB.db.get(rootId, (err, rootMsg) => {
-	    if (err) return console.error(err)
-
-	    render(rootMsg)
+	    if (err) {
+	      console.error(err)
+	      render({ content: { text: 'Unknown message type' }})
+	    } else
+	      render(rootMsg)
 	  })
 	})
       } else
