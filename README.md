@@ -5,14 +5,12 @@ Chrome needs to be run with: --allow-file-access-from-files to work!
 Also be sure to enable all 3 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
 
-The following patches from patches folder are needed:
- - raw-chrome-fix.patch
+The following patches from the patches folder are needed:
  - flumeview-level-mkdirp.patch
- - ssb-validate-ooo.patch
  - ssb-ebt.patch
 
-See:
- - https://github.com/random-access-storage/random-access-web/pull/5
+The following branches are references directly until patches are merged:
+ - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
  - https://github.com/flumedb/flumeview-level/pull/22
  - https://github.com/ssbc/ssb-validate/pull/16
 

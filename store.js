@@ -1,8 +1,5 @@
 var Flume = require('flumedb')
-if (process.title == 'node')
-  var OffsetLog = require('flumelog-aligned-offset')
-else // this will use IDBMutableFile in firefox, file system api in chrome
-  var OffsetLog = require('flumelog-aligned-offset/browser')
+var OffsetLog = require('flumelog-aligned-offset')
 var OffsetLogCompat = require('flumelog-aligned-offset/compat')
 var codec = require('flumecodec/json')
 var keys = require('ssb-keys')
