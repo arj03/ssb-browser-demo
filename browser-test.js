@@ -335,7 +335,7 @@
 	statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256') + "\"/>"
       else { // dancing
 	statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256') + "\"/>"
-	if (!rendered && SSB.onboard) {
+	if (!rendered && SSB.onboard && status.sync) {
 	  renderMessages()
 	  rendered = true
 	}
