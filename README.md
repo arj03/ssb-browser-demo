@@ -8,15 +8,18 @@ laptop. For this a blob (generate-onboarding-json.js) must be provided
 that serves as a trusted onboard mechanism and as such should only be
 used between friends.
 
-The code is really rough especially the UI code. This is a playground
-(for me!) so please treat it as such :-) I'm not interested in a fully
-working client.
+The code is really rough especially the UI code. The backend is not a
+full ssb implementation, it only implements the features needed for
+this demo.
+
+This is a playground (for me!) so please treat it as such :-) I'm not
+interested in a fully working client.
 
 Things that work:
  - viewing posts and threads
  - posting and replying to messages
  - private messages including private blobs
- - ooo
+ - ooo messages
 
 Tested in Chrome which provides a file api.
 
