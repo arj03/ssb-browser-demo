@@ -1,3 +1,23 @@
+# SSB browser demo
+
+Small playground for ssb in a browser. This was made as a demo for my
+bornhack talk. It plays around with only getting the last few `post`
+messages for users as a way of onboarding users quickly. It can
+download and index around 5k messages in 30 seconds on my really slow
+laptop. For this a blob (generate-onboarding-json.js) must be provided
+that serves as a trusted onboard mechanism and as such should only be
+used between friends.
+
+The code is really rough especially the UI code. This is a playground
+(for me!) so please treat it as such :-) I'm not interested in a fully
+working client.
+
+Things that work:
+ - viewing posts and threads
+ - posting and replying to messages
+ - private messages including private blobs
+ - ooo
+
 Tested in Chrome which provides a file api.
 
 Chrome needs to be run with: --allow-file-access-from-files to work!
@@ -9,7 +29,7 @@ The following patches from the patches folder are needed:
  - flumeview-level-mkdirp.patch
  - ssb-ebt.patch
 
-The following branches are references directly until patches are merged:
+The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
  - https://github.com/flumedb/flumeview-level/pull/22
  - https://github.com/ssbc/ssb-validate/pull/16
