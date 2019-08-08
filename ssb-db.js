@@ -78,7 +78,7 @@ exports.init = function (sbot, config) {
     if (!(msg.author in SSB.state.feeds))
       SSB.state = validate.appendOOO(SSB.state, hmac_key, msg)
     else
-      SSB.state = validate.append(SSB.state, null, msg)
+      SSB.state = validate.append(SSB.state, hmac_key, msg)
 
     if (SSB.state.error)
       return cb(SSB.state.error)

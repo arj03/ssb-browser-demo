@@ -25,6 +25,7 @@ exports.removeDB = function() {
 
   const file = raf(path.join(SSB.dir, 'log.offset'))
   file.open((err, done) => {
+    if (err) return console.error(err)
     file.destroy()
   })
 
