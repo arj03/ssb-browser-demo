@@ -20,10 +20,10 @@ function connected(cb)
 }
 
 exports.removeDB = function() {
-  const createFile = require('random-access-chrome-file')
+  const raf = require('polyraf')
   const path = require('path')
 
-  const file = createFile(path.join(SSB.dir, 'log.offset'))
+  const file = raf(path.join(SSB.dir, 'log.offset'))
   file.open((err, done) => {
     file.destroy()
   })

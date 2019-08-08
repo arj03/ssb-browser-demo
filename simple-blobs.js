@@ -2,7 +2,7 @@
 // this is a simple example of using chrome fs to store blobs
 
 const path = require('path')
-const ras = require('random-access-chrome-file')
+const raf = require('polyraf')
 const pull = require('pull-stream')
 const BoxStream = require('pull-box-stream')
 
@@ -33,7 +33,7 @@ module.exports = function (dir) {
 
   function add(hash, blob, cb) {
     console.log("wrote to local filesystem")
-    const file = ras(path.join(blobsDir, hash))
+    const file = raf(path.join(blobsDir, hash))
     file.write(0, blob, cb)
   }
 
@@ -61,7 +61,7 @@ module.exports = function (dir) {
     add,
 
     get: function (hash, unbox, cb) {
-      const file = ras(path.join(blobsDir, hash))
+      const file = raf(path.join(blobsDir, hash))
       file.stat((err, stat) => {
 	if (stat.size == 0) {
 	  if (unbox)

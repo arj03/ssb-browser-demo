@@ -21,7 +21,7 @@ Things that work:
  - private messages including private blobs
  - ooo messages
 
-Tested in Chrome which provides a file api.
+Tested with Chrome and firefix. Chrome seems faster.
 
 Chrome needs to be run with: --allow-file-access-from-files to work!
 

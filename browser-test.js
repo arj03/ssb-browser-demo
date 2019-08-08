@@ -359,6 +359,8 @@
       SSB.remoteAddress = document.getElementById("remoteAddress").value
 
       SSB.net.blobs.remoteGet(text, "text", (err, data) => {
+	if (err) return console.error(err)
+
 	SSB.onboard = JSON.parse(data)
 	console.log("Loaded onboarding blob")
       })
