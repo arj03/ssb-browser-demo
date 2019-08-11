@@ -3,6 +3,7 @@
 
 const validate = require('ssb-validate')
 const keys = require('ssb-keys')
+const pull = require('pull-stream')
 
 exports.manifest =  {
   createHistoryStream: 'source'
@@ -14,6 +15,10 @@ exports.permissions = {
 
 exports.init = function (sbot, config) {
   // ebt stuff
+
+  sbot.createHistoryStream = function() {
+    return pull.empty()
+  }
 
   sbot.getVectorClock = function (_, cb) {
     if (!cb) cb = _

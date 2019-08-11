@@ -21,9 +21,10 @@ Things that work:
  - private messages including private blobs
  - ooo messages
 
-Tested with Chrome and firefix. Chrome seems faster.
+Tested with Chrome and firefix. Chrome is faster because it uses fs
+instead of indexeddb.
 
-Chrome needs to be run with: --allow-file-access-from-files to work!
+Chrome locally needs to be run with: --allow-file-access-from-files to work!
 
 Also be sure to enable all 3 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
@@ -42,7 +43,15 @@ patches/sodium-browserify.patch
 
 # Server
 
-Server needs to have ws enabled. Futhermore as a test I've used the
+Server needs to have ws enabled.
+
+```
+"ws": [
+ { "port": 8989, "host": "::", "scope": "public", "transform": "shs" }
+]
+```
+
+Futhermore as a test I've used the
 https://github.com/arj03/ssb-get-thread plugin. This is not needed for
 initial sync but only for browsing threads.
 
