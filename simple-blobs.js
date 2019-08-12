@@ -40,6 +40,7 @@ module.exports = function (dir) {
   const maxSize = 256 * 1024
 
   function fsURL(hash) {
+    // FIXME: doesn't work in firefox
     return 'filesystem:file:///persistent/.ssb-lite/blobs/' + hash
   }
 
