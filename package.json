@@ -27,6 +27,7 @@
     "ssb-onion": "^1.0.0",
     "ssb-query": "^2.4.2",
     "ssb-ref": "^2.13.3",
+    "ssb-tunnel": "^1.4.1",
     "ssb-validate": "github:ssbc/ssb-validate#add-ooo-append",
     "ssb-ws": "^6.2.3"
   },

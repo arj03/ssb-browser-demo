@@ -11,15 +11,22 @@ exports.init = function(dir) {
     caps: { shs: Buffer.from(caps.shs, 'base64') },
     keys,
     connections: {
+      incoming: {
+	tunnel: [{ transform: 'shs' }]
+      },
       outgoing: {
 	net: [{ transform: 'shs' }],
 	onion: [{ transform: 'shs' }],
 	ws: [{ transform: 'shs' }, { transform: 'noauth' }],
+	tunnel: [{ transform: 'shs' }]
       }
     },
     path: dir,
     timers: {
       inactivity: 30e3
+    },
+    tunnel: {
+      logging: true
     }
   })
   .use(require('./ssb-db'))
@@ -29,6 +36,8 @@ exports.init = function(dir) {
   .use(require('ssb-no-auth'))
   .use(require('ssb-ws'))
   .use(require('ssb-ebt'))
+  .use(require('ssb-tunnel'))
+  .use(require('./tunnel-chat'))
   //.use(require('ssb-blobs'))
   ()
 
@@ -45,6 +54,13 @@ exports.init = function(dir) {
   r.on('replicate:finish', function () {
     console.log("finished ebt replicate")
   })
+
+  r.gossip = {
+    connect: function(addr, cb) {
+      // hack for ssb-tunnel
+      r.connect(SSB.remoteAddress, cb)
+    }
+  }
   
   return r
 }

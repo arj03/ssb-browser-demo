@@ -32,6 +32,7 @@ chrome://flags/. Otherwise crypto will be super slow (like validate).
 The following patches from the patches folder are needed:
  - flumeview-level-mkdirp.patch
  - ssb-ebt.patch
+ - ssb-tunnel.patch
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1

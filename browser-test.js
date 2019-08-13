@@ -1,5 +1,6 @@
 (function() {
   const pull = require('pull-stream')
+  const pullAbort = require('pull-abortable')
   const paramap = require('pull-paramap')
 
   const md = require("ssb-markdown")
@@ -26,6 +27,8 @@
 
   var rendered = false
   var lastStatus = null
+
+  var abortablePullStream = null
 
   function renderMessage(msg, cb)
   {
@@ -188,6 +191,44 @@
 	    document.getElementById("bottom").innerHTML = ''
 	  })
 	)
+      })
+    )
+  }
+
+  function renderChat() {
+    document.getElementById("top").innerHTML = "<div style='margin: 10px'>Your id: " + SSB.net.id + `</div>
+              <input type="text" id="chatMessage" style="padding: 5px; width: 40rem; margin: 0 0 10 0px" placeholder="type message, enter to send" />
+              <button id="acceptMessages" style="padding: 5px">Accept messages</button> or 
+              <input type="text" id="tunnelConnect" style="padding: 5px; width: 25rem; margin: 0 0 10 0px" placeholder="@remoteId to connect to" />
+              `
+
+    document.getElementById("acceptMessages").addEventListener("click", function() {
+      SSB.net.tunnelChat.acceptMessages()
+    })
+
+    document.getElementById("tunnelConnect").addEventListener('keydown', function(e) {
+      var text = document.getElementById("tunnelConnect").value
+      if (e.keyCode == 13 && text != '') { // enter
+	SSB.net.tunnelChat.connect(text.trim())
+      }
+    })
+
+    document.getElementById("chatMessage").addEventListener('keydown', function(e) {
+      var text = document.getElementById("chatMessage").value
+      if (e.keyCode == 13 && text != '') { // enter
+	SSB.net.tunnelChat.sendMessage(text)
+	document.getElementById("chatMessage").value = ''
+      }
+    })
+
+    document.getElementById("messages").innerHTML = '<h1>Offchain messages</h1>'
+
+    abortablePullStream = pullAbort()
+    pull(
+      SSB.net.tunnelChat.messages(),
+      abortablePullStream,
+      pull.drain((msg) => {
+	document.getElementById("messages").innerHTML += msg.user + "> " + msg.text + "<br>"
       })
     )
   }
@@ -405,6 +446,10 @@
     ev.stopPropagation()
     ev.preventDefault()
     document.getElementById("settings").style="display:none"
+    if (abortablePullStream != null) {
+      abortablePullStream.abort()
+      abortablePullStream = null
+    }
     renderMessages()
   })
 
@@ -412,13 +457,33 @@
     ev.stopPropagation()
     ev.preventDefault()
     document.getElementById("settings").style="display:none"
+    if (abortablePullStream != null) {
+      abortablePullStream.abort()
+      abortablePullStream = null
+    }
     renderPrivate()
+  })
+
+  document.getElementById("goToChat").addEventListener("click", function(ev) {
+    ev.stopPropagation()
+    ev.preventDefault()
+    document.getElementById("settings").style="display:none"
+    if (abortablePullStream != null) {
+      abortablePullStream.abort()
+      abortablePullStream = null
+    }
+    renderChat()
   })
 
   document.getElementById("goToSettings").addEventListener("click", function(ev) {
     ev.stopPropagation()
     ev.preventDefault()
     document.getElementById("settings").style=""
+
+    if (abortablePullStream != null) {
+      abortablePullStream.abort()
+      abortablePullStream = null
+    }
 
     document.getElementById("top").innerHTML = ''
     document.getElementById("messages").innerHTML = ''

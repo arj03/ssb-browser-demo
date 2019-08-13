@@ -1,0 +1,95 @@
+--- node_modules/ssb-tunnel/index.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/ssb-tunnel/index.js	2019-08-13 21:26:45.322100514 +0200
+@@ -20,7 +20,7 @@
+ function noop () { }
+ 
+ exports.name = 'tunnel'
+-exports.version = '1.0.0'
++exports.version = require('./package.json').version
+ 
+ exports.manifest = {
+   announce: 'sync',
+@@ -68,6 +68,7 @@
+   }
+ 
+   var handlers = {}
++  var setupRPC
+ 
+   sbot.multiserver.transport({
+     name: 'tunnel',
+@@ -79,61 +80,7 @@
+         name: 'tunnel',
+         scope: function () { return config.scope },
+         server: function (onConnect) {
+-          //now we are definitely creating a server. check that portal is configured.
+-          if(!portal) throw new Error('ssb-tunnel is configured, but a portal is missing')
+-          //just remember the reference, call it
+-          //when the tunnel api is called.
+-          var _rpc
+-          setImmediate(function again () {
+-            //todo: put this inside the server creator?
+-            //it would at least allow the tests to be fully ordered
+-            var timer
+-            function reconnect () {
+-              if(sbot.closed) return
+-              clearTimeout(timer)
+-              timer = setTimeout(again, 1000*Math.random())
+-            }
+-            //this plugin might be enabled, but a portal might not be set.
+-            if(!portal) {
+-              reconnect()
+-              return
+-            }
+-
+-            log('tunnel:listen - connecting to portal:'+portal)
+-            sbot.gossip.connect(portal, function (err, rpc) {
+-              if(err) {
+-                log('tunnel:listen - failed to connect to portal:'+portal+' '+err.message)
+-                reconnect()
+-                return
+-              }
+-              _rpc = rpc
+-              rpc.tunnel.announce(null, function (err) {
+-                if(err) {
+-                  log('tunnel:listen - error during announcement at '+portal+' '+err.message)
+-                  reconnect()
+-                  return
+-                }
+-                //emit an event here?
+-                log('tunnel:listen - SUCCESS establishing portal:'+portal)
+-                sbot.emit('tunnel:listening', portal)
+-              })
+-              rpc.on('closed', function (err) {
+-                _rpc = null
+-                log('tunnel:listen - portal closed:'+portal, err)
+-                sbot.emit('tunnel:closed')
+-                reconnect()
+-              })
+-            })
+-          })
+-
+-          handlers[instance] = function (stream, id) {
+-            stream.address = 'tunnel:'+portal+':'+id
+-            onConnect(stream)
+-          }
+-          //close server
+-          return function () {
+-            if(_rpc) _rpc.close()
+-          }
++	  setupRPC = onConnect
+         },
+         client: function (addr, cb) {
+           var opts = parse(addr)
+@@ -173,9 +120,10 @@
+         return endpoints[opts.target].tunnel.connect(opts, noop)
+       }
+       //if this connection is for us
+-      else if(opts.target === sbot.id && handlers[opts.port]) {
++      else if(opts.target === sbot.id) {
+         var streams = DuplexPair()
+-        handlers[opts.port](streams[0], this.id)
++        streams[0].address = 'tunnel:'+"@"+SSB.remoteAddress.split(":")[3]+':'+this.id //'@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
++	setupRPC(streams[0])
+         return streams[1]
+       }
+       else
