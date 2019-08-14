@@ -22,6 +22,13 @@ exports.init = function (sbot, config) {
   
   return {
     acceptMessages: function() {
+      SSB.net.tunnel.setupIsConnectionOkHandler((remoteId) => {
+	let isOk = confirm("Allow connection from: " + remoteId + "?")
+	if (isOk)
+	  messages({user: '', text: remoteId + " connected!"})
+	return isOk
+      })
+
       SSB.net.connect(SSB.remoteAddress, (err, rpc) => {
 	if (err) throw(err)
 

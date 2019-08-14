@@ -43,12 +43,26 @@ exports.init = function(dir) {
 
   r.blobs = require("./simple-blobs")(dir)
 
+  var timer
+
   r.on('rpc:connect', function (rpc, isClient) {
     console.log("connected to:", rpc.id)
+
+    function ping() {
+      rpc.tunnel.ping(function (err, _ts) {
+	if (err) return console.error(err)
+	clearTimeout(timer)
+	timer = setTimeout(ping, 10e3)
+      })
+    }
+
+    ping()
   })
 
   r.on('rpc:disconnect', function (rpc, isClient) {
     console.log("disconnected from:", rpc.id)
+
+    clearTimeout(timer)
   })
 
   r.on('replicate:finish', function () {
@@ -61,6 +75,6 @@ exports.init = function(dir) {
       r.connect(SSB.remoteAddress, cb)
     }
   }
-  
+
   return r
 }
