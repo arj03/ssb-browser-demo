@@ -45,8 +45,12 @@ exports.init = function (sbot, config) {
       })
     },
     sendMessage: function(text) {
-      remote.tunnelChat.tunnelMessage(text)
-      messages({user: 'me', text})
+      try {
+	remote.tunnelChat.tunnelMessage(text)
+	messages({user: 'me', text})
+      } catch (e) {
+	messages({user: '', text: 'remote end disconnected'})
+      }
     },
     tunnelMessage: function(text) {
       messages({user: 'remote', text})

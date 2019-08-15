@@ -59,12 +59,6 @@ exports.init = function(dir) {
     ping()
   })
 
-  r.on('rpc:disconnect', function (rpc, isClient) {
-    console.log("disconnected from:", rpc.id)
-
-    clearTimeout(timer)
-  })
-
   r.on('replicate:finish', function () {
     console.log("finished ebt replicate")
   })
