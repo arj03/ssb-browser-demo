@@ -25,9 +25,8 @@
     }
   }
 
-  var rendered = false
+  var screen = 'public'
   var lastStatus = null
-
   var abortablePullStream = null
 
   function renderMessage(msg, cb)
@@ -358,10 +357,6 @@
       const status = SSB.db.getStatus()
 
       if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
-	if (!rendered && SSB.onboard && status.sync) {
-	  renderMessages()
-	  rendered = true
-	}
 	updateDBStatus()
 
 	return
@@ -376,10 +371,6 @@
 	statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256') + "\"/>"
       else { // dancing
 	statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256') + "\"/>"
-	if (!rendered && SSB.onboard && status.sync) {
-	  renderMessages()
-	  rendered = true
-	}
       }
 
       statusHTML += "<br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
@@ -404,6 +395,9 @@
 
 	SSB.onboard = JSON.parse(data)
 	console.log("Loaded onboarding blob")
+
+	if (screen == 'public')
+	  renderMessages()
       })
     }
   }
@@ -416,15 +410,6 @@
   document.getElementById("blobId").addEventListener('keydown', function(e) {
     if (e.keyCode == 13) // enter
       loadOnboardBlob()
-  })
-
-  document.getElementById("threadId").addEventListener('keydown', function(e) {
-    if (e.keyCode == 13) // enter
-    {
-      var msgId = document.getElementById("threadId").value
-      if (msgId != '')
-	SSB.renderThread(msgId)
-    }
   })
 
   window.addEventListener('click', (ev) => {
@@ -442,48 +427,52 @@
     }
   })
 
-  document.getElementById("goToPublic").addEventListener("click", function(ev) {
+  document.getElementById("threadId").addEventListener('keydown', function(e) {
+    if (e.keyCode == 13) // enter
+    {
+      var msgId = document.getElementById("threadId").value
+      if (msgId != '') {
+	screen = 'thread'
+	SSB.renderThread(msgId)
+      }
+    }
+  })
+
+  function changeScreen(ev, name)
+  {
     ev.stopPropagation()
     ev.preventDefault()
-    document.getElementById("settings").style="display:none"
+
+    if (screen == 'settings')
+      document.getElementById("settings").style=""
+    else
+      document.getElementById("settings").style="display:none"
+
     if (abortablePullStream != null) {
       abortablePullStream.abort()
       abortablePullStream = null
     }
+
+    screen = name
+  }
+
+  document.getElementById("goToPublic").addEventListener("click", function(ev) {
+    changeScreen(ev, 'public')
     renderMessages()
   })
 
   document.getElementById("goToPrivate").addEventListener("click", function(ev) {
-    ev.stopPropagation()
-    ev.preventDefault()
-    document.getElementById("settings").style="display:none"
-    if (abortablePullStream != null) {
-      abortablePullStream.abort()
-      abortablePullStream = null
-    }
+    changeScreen(ev, 'private')
     renderPrivate()
   })
 
   document.getElementById("goToChat").addEventListener("click", function(ev) {
-    ev.stopPropagation()
-    ev.preventDefault()
-    document.getElementById("settings").style="display:none"
-    if (abortablePullStream != null) {
-      abortablePullStream.abort()
-      abortablePullStream = null
-    }
+    changeScreen(ev, 'chat')
     renderChat()
   })
 
   document.getElementById("goToSettings").addEventListener("click", function(ev) {
-    ev.stopPropagation()
-    ev.preventDefault()
-    document.getElementById("settings").style=""
-
-    if (abortablePullStream != null) {
-      abortablePullStream.abort()
-      abortablePullStream = null
-    }
+    changeScreen(ev, 'settings')
 
     document.getElementById("top").innerHTML = ''
     document.getElementById("messages").innerHTML = ''
