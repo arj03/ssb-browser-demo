@@ -37,6 +37,7 @@ exports.init = function (sbot, config) {
     },
     connect: function(remoteId) {
       var remoteKey = remoteId.substring(1, remoteId.indexOf('.'))
+      messages({user: '', text: "waiting for @" + remoteKey + ".ed25519 to accept"})
       SSB.net.connect('tunnel:@'+SSB.remoteAddress.split(':')[3]+ ':' + remoteId + '~shs:' + remoteKey, (err, rpc) => {
 	if (err) throw(err)
 
