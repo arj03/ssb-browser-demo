@@ -49,7 +49,9 @@
       cb(null, html)
     }
 
-    const onboardingUser = SSB.onboard[msg.value.author]
+    let onboardingUser = { author: msg.value.author, name: msg.value.author }
+    if (SSB.onboard)
+      onboardingUser = SSB.onboard[msg.value.author]
     if (onboardingUser && onboardingUser.image) {
       SSB.net.blobs.get(onboardingUser.image, null, (err, url) => {
 	if (!err)
@@ -325,7 +327,7 @@
       }),
       pull.collect((err, msgs) => {
 	var name = author
-	if (SSB.onboard[author])
+	if (SSB.onboard && SSB.onboard[author])
 	  name = SSB.onboard[author].name
 
 	var html = "<h2>Last 10 messages for " + name + " <div style=\"font-size: 15px\">(" + author + ")</div></h2>"
