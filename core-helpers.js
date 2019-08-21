@@ -54,11 +54,11 @@ exports.syncThread = function(messages, cb) {
       state = validate.appendOOO(SSB.state, hmac_key, msg)
 
       if (SSB.state.error)
-	throw SSB.state.error
+        throw SSB.state.error
 
       SSB.db.add(msg, (err) => {
-	if (err)
-	  console.log("err ", err)
+        if (err)
+          console.log("err ", err)
       })
     }, cb)
   )
@@ -77,33 +77,46 @@ exports.sync = function()
     function getMessagesForUser(index)
     {
       if (index >= Object.keys(SSB.state.feeds).length) {
-	console.log("messages", totalMessages)
-	console.log("filtered", totalFilteredMessages)
-	console.timeEnd("downloading messages")
-	return
+        console.log("messages", totalMessages)
+        console.log("filtered", totalFilteredMessages)
+        console.timeEnd("downloading messages")
+        return
       }
 
       var user = Object.keys(SSB.state.feeds)[index]
       var seq = SSB.state.feeds[user].sequence + 1
 
       pull(
-	rpc.createHistoryStream({id: user, seq, keys: false}),
-	pull.drain((msg) => {
-	  ++totalMessages
-	  SSB.net.add(msg, (err, res) => {
-	    if (res)
-	      ++totalFilteredMessages
-	  })
-	}, (err) => {
-	  if (err) throw err
+        rpc.createHistoryStream({id: user, seq, keys: false}),
+        pull.drain((msg) => {
+          ++totalMessages
+          SSB.net.add(msg, (err, res) => {
+            if (res)
+              ++totalFilteredMessages
+          })
+        }, (err) => {
+          if (err) throw err
 
-	  getMessagesForUser(index+1)
-	})
+          getMessagesForUser(index+1)
+        })
       )
     }
 
     getMessagesForUser(0)
   })
+}
+
+exports.writeProfiles = function()
+{
+  let cleaned = {}
+  for (var key in SSB.onboard)
+    cleaned[key] = { image: SSB.onboard[key].image, name: SSB.onboard[key].name }
+  localStorage['profiles.json'] = JSON.stringify(cleaned)
+}
+
+exports.loadProfiles = function() {
+  if (localStorage['profiles.json'])
+    SSB.profiles = JSON.parse(localStorage['profiles.json'])
 }
 
 exports.initialSync = function()
@@ -127,51 +140,54 @@ exports.initialSync = function()
     function getMessagesForUser(index)
     {
       if (index >= Object.keys(onboard).length) {
-	console.log("feeds", totalFeeds)
-	console.log("messages", totalMessages)
-	console.log("filtered", totalFilteredMessages)
-	console.timeEnd("downloading messages")
-	SSB.isInitialSync = false
-	return
+        console.log("feeds", totalFeeds)
+        console.log("messages", totalMessages)
+        console.log("filtered", totalFilteredMessages)
+        console.timeEnd("downloading messages")
+
+        SSB.isInitialSync = false
+        exports.writeProfiles()
+
+        return
       }
 
       var user = Object.keys(onboard)[index]
 
       // FIXME: filter out in script
       if (onboard[user].latestMsg == null) {
-	getMessagesForUser(index+1)
-	return
+        getMessagesForUser(index+1)
+        return
       }
 
       if (onboard[user].latestMsg.timestamp < onemonthsago) {
-	//console.log("skipping older posts for", onboard[user].name)
-	getMessagesForUser(index+1)
-	return
+        //console.log("skipping older posts for", onboard[user].name)
+        getMessagesForUser(index+1)
+        return
       }
 
       var seqStart = onboard[user].latestMsg.seq - 25
       if (seqStart < 0)
-	seqStart = 0
+        seqStart = 0
 
       ++totalFeeds
 
       //console.log("Downloading messages for: ", onboard[user].name)
 
       pull(
-	rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
-	pull.drain((msg) => {
-	  ++totalMessages
-	  SSB.net.add(msg, (err, res) => {
-	    if (res)
-	      ++totalFilteredMessages
-	  })
-	}, (err) => {
-	  if (err) throw err
+        rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
+        pull.drain((msg) => {
+          ++totalMessages
+          SSB.net.add(msg, (err, res) => {
+            if (res)
+              ++totalFilteredMessages
+          })
+        }, (err) => {
+          if (err) throw err
 
-	  SSB.state.queue = []
+          SSB.state.queue = []
 
-	  getMessagesForUser(index+1)
-	})
+          getMessagesForUser(index+1)
+        })
       )
     }
 

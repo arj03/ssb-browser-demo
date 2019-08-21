@@ -42,6 +42,9 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     dir,
 
     // helpers
+    writeProfiles: helpers.writeProfiles,
+    loadProfiles: helpers.loadProfiles,
+
     removeDB: helpers.removeDB,
     initialSync: helpers.initialSync,
     sync: helpers.sync,

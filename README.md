@@ -73,7 +73,7 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 => something like
 
-&1RE24scD1oVH4WGs9yku+YJ/HixF+dKyDYmSwUPqWfg=.sha256
+&W1cwGGkgKSJHYLr62TlGfFKiMZhRdP3Ce2pswdFvA+U=.sha256
 
 # Force WASM locally (outside browser)
 
