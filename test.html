@@ -3,13 +3,20 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <style>
       body {
-	  max-width: 45rem;
-	  padding: 2rem;
-	  margin: auto;
+          max-width: 45rem;
+          padding: 2rem;
+          margin: auto;
+          background-color: #fdf6e3;
+      }
+
+      #messages, #navigation, #settings {
+          font-weight: 400;
+          font-style: normal;
+          font-family: "Roboto", sans-serif;
       }
 
       img {
-	  max-width: 45rem;
+          max-width: 45rem;
       }
     </style>
   </head>
@@ -22,10 +29,10 @@
     <div id="settings" style="display:none;">
       <div style="float: left;">
         <button id="syncData" style="margin-bottom: 25px; padding: 10px;">Sync data</button><br>
-	<input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519" value="" id="remoteAddress" />
-	<br><br>
-	<input type="text" style="width: 300px; padding: 5px" placeholder="onboard blob url" value="" id="blobId" />
-	<br><br>
+        <input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519" value="" id="remoteAddress" />
+        <br><br>
+        <input type="text" style="width: 300px; padding: 5px" placeholder="onboard blob url" value="" id="blobId" />
+        <br><br>
       </div>
       <div id="status" style="float: right; width: 55%"></div>
     </div>

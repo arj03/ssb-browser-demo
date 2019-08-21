@@ -70,6 +70,7 @@ exports.sync = function()
     // replicate our own feed
     SSB.net.ebt.request(SSB.net.id, true)
 
+    var totalFeeds = 0
     var totalMessages = 0
     var totalFilteredMessages = 0
     console.time("downloading messages")
@@ -77,6 +78,7 @@ exports.sync = function()
     function getMessagesForUser(index)
     {
       if (index >= Object.keys(SSB.state.feeds).length) {
+        console.log("feeds", totalFeeds)
         console.log("messages", totalMessages)
         console.log("filtered", totalFilteredMessages)
         console.timeEnd("downloading messages")
@@ -85,6 +87,8 @@ exports.sync = function()
 
       var user = Object.keys(SSB.state.feeds)[index]
       var seq = SSB.state.feeds[user].sequence + 1
+
+      ++totalFeeds
 
       pull(
         rpc.createHistoryStream({id: user, seq, keys: false}),
