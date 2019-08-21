@@ -480,4 +480,17 @@
     document.getElementById("bottom").innerHTML = ''
   })
 
+  document.getElementById("syncData").addEventListener("click", function(ev) {
+    if (!SSB.onboard) {
+      alert("Must provide onboard blob url first")
+      return
+    }
+
+    if (SSB.db.getStatus().since <= 0) {
+      SSB.initialSync()
+      alert("Initial load can take a while")
+    } else
+      SSB.sync()
+  })
+
 })()
