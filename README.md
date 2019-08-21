@@ -4,9 +4,9 @@ Small playground for ssb in a browser. This was made as a demo for my
 bornhack talk. It plays around with only getting the last few `post`
 messages for users as a way of onboarding users quickly. It can
 download and index around 5k messages in 30 seconds on my really slow
-laptop. For this a blob (generate-onboarding-json.js) must be provided
-that serves as a trusted onboard mechanism and as such should only be
-used between friends.
+laptop. For this, a blob (generate-onboarding-json.js) must be
+provided that serves as a trusted onboard mechanism and as such should
+only be used between friends.
 
 The code is really rough especially the UI code. The backend is not a
 full ssb implementation, it only implements the features needed for
@@ -21,12 +21,12 @@ Things that work:
  - private messages including private blobs
  - ooo messages
 
-Tested with Chrome and firefix. Chrome is faster because it uses fs
+Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb.
 
 Chrome locally needs to be run with: --allow-file-access-from-files to work!
 
-Also be sure to enable all 3 WASM options in
+Also be sure to enable all 5 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
 
 The following patches from the patches folder are needed:
@@ -73,7 +73,7 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 => something like
 
-&Y2F+H91zVsblcW43KY3OdyI3yiu5H4iydRcysSpnTGc=.sha256
+&1RE24scD1oVH4WGs9yku+YJ/HixF+dKyDYmSwUPqWfg=.sha256
 
 # Force WASM locally (outside browser)
 
