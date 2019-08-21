@@ -351,6 +351,9 @@
 
       SSB.renderThread = renderThread
 
+      if (!SSB.remoteAddress)
+        SSB.remoteAddress = document.getElementById("remoteAddress").value
+
       if (!SSB.onboard)
 	loadOnboardBlob()
 
@@ -388,8 +391,6 @@
     var text = document.getElementById("blobId").value
     if (text != '' && typeof SSB !== 'undefined')
     {
-      SSB.remoteAddress = document.getElementById("remoteAddress").value
-
       SSB.net.blobs.remoteGet(text, "text", (err, data) => {
 	if (err) return console.error(err)
 
@@ -443,7 +444,7 @@
     ev.stopPropagation()
     ev.preventDefault()
 
-    if (screen == 'settings')
+    if (name == 'settings')
       document.getElementById("settings").style=""
     else
       document.getElementById("settings").style="display:none"
