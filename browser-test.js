@@ -25,7 +25,6 @@
         return id
     },
     emoji: (emoji) => {
-      console.log("emoji?")
       // https://github.com/omnidan/node-emoji/issues/76
       const emojiCharacter = nodeEmoji.get(emoji).replace(/:/g, '')
       return `<span class="Emoji">${emojiCharacter}</span>`

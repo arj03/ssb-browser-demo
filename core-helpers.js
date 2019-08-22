@@ -67,46 +67,9 @@ exports.syncThread = function(messages, cb) {
 exports.sync = function()
 {
   connected((rpc) => {
-    // replicate our own feed
-    SSB.net.ebt.request(SSB.net.id, true)
-
-    var totalFeeds = 0
-    var totalMessages = 0
-    var totalFilteredMessages = 0
-    console.time("downloading messages")
-
-    function getMessagesForUser(index)
-    {
-      if (index >= Object.keys(SSB.state.feeds).length) {
-        console.log("feeds", totalFeeds)
-        console.log("messages", totalMessages)
-        console.log("filtered", totalFilteredMessages)
-        console.timeEnd("downloading messages")
-        return
-      }
-
-      var user = Object.keys(SSB.state.feeds)[index]
-      var seq = SSB.state.feeds[user].sequence + 1
-
-      ++totalFeeds
-
-      pull(
-        rpc.createHistoryStream({id: user, seq, keys: false}),
-        pull.drain((msg) => {
-          ++totalMessages
-          SSB.net.add(msg, (err, res) => {
-            if (res)
-              ++totalFilteredMessages
-          })
-        }, (err) => {
-          if (err) throw err
-
-          getMessagesForUser(index+1)
-        })
-      )
+    for (var feed in SSB.state.feeds) {
+      SSB.net.ebt.request(feed, true)
     }
-
-    getMessagesForUser(0)
   })
 }
 
