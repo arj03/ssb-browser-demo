@@ -3,6 +3,7 @@
   const pullAbort = require('pull-abortable')
   const paramap = require('pull-paramap')
 
+  const nodeEmoji = require('node-emoji')
   const md = require("ssb-markdown")
   const ref = require("ssb-ref")
 
@@ -22,6 +23,12 @@
       }
       else
         return id
+    },
+    emoji: (emoji) => {
+      console.log("emoji?")
+      // https://github.com/omnidan/node-emoji/issues/76
+      const emojiCharacter = nodeEmoji.get(emoji).replace(/:/g, '')
+      return `<span class="Emoji">${emojiCharacter}</span>`
     }
   }
 
