@@ -46,6 +46,8 @@
 
       if (msg.value.content.root && msg.value.content.root != msg.key)
         html += " in reply <a href=\"" + msg.value.content.root + "\" target=\"_blank\">to</a>"
+      else
+        html += " a <a href=\"" + msg.key + "\" target=\"_blank\">thread</a>"
 
       if (msg.value.content.subject) // private
         html += "<h2><a href='" +  msg.key + "'>" + msg.value.content.subject + "</a></h2>"
@@ -84,11 +86,13 @@
   }
   */
 
-  function renderMessages() {
+  function renderMessages(onlyThreads) {
+    var enoughAbort = pullAbort()
+    let noMessages = 0
+    let rendered = false
     pull(
       SSB.db.query.read({
         reverse: true,
-        limit: 10,
         query: [{
           $filter: {
             value: {
@@ -99,15 +103,41 @@
           }
         }]
       }),
+      enoughAbort,
       pull.filter((msg) => !msg.value.meta),
+      pull.filter((msg) => {
+        let ok = true
+        if (onlyThreads)
+          ok = !msg.value.content.root
+
+        if (ok) {
+          ++noMessages
+          if (noMessages >= 10)
+            enoughAbort.abort()
+        }
+
+        return ok
+      }),
       pull.collect((err, msgs) => {
-        var html = "<h2>Last 10 messages</h2>"
+        if (!rendered) rendered = true
+        else return
+
+        var html = "<h2 style=\"margin-bottom: 5px\">Last 10 messages</h2>"
+        html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
+        if (onlyThreads)
+          html += " checked><br><br>"
+        else
+          html += "><br><br>"
 
         pull(
           pull.values(msgs),
           paramap(renderMessage, 1),
           pull.collect((err, rendered) => {
             document.getElementById("messages").innerHTML = html + rendered.join('')
+
+            document.getElementById("onlyThreads").addEventListener("click", function(ev) {
+              renderMessages(ev.target.checked)
+            })
 
             document.getElementById("top").innerHTML = `
               <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px;"></textarea><br>
