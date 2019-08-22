@@ -42,7 +42,7 @@
     function render(user)
     {
       if (user)
-        html += "<a href=\"" + msg.value.author + "\" target=\"_blank\">" + user.name + "</a> posted:"
+        html += "<a href=\"" + msg.value.author + "\" target=\"_blank\">" + user.name + "</a> posted"
 
       if (msg.value.content.root && msg.value.content.root != msg.key)
         html += " in reply <a href=\"" + msg.value.content.root + "\" target=\"_blank\">to</a>"
