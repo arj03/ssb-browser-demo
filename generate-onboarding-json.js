@@ -24,7 +24,7 @@ function latestValue (sbot, key, dest, cb) {
   pull(
     read(sbot, dest),
     pull.filter(msg => {
-      return msg.value.content && key in msg.value.content &&
+      return msg.value.content && msg.value.content[key] &&
         !(msg.value.content[key] && msg.value.content[key].remove) &&
         msg.value.author == dest
     }),
