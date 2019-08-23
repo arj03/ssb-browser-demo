@@ -13,6 +13,7 @@
     "flumelog-aligned-offset": "github:arj03/flumelog-aligned-offset#polyraf",
     "flumeview-reduce": "^1.3.16",
     "gossip-query": "^2.0.2",
+    "human-time": "0.0.2",
     "node-emoji": "^1.10.0",
     "polyraf": "^1.1.0",
     "pull-cont": "^0.1.1",

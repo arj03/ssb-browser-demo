@@ -2,6 +2,7 @@
   const pull = require('pull-stream')
   const pullAbort = require('pull-abortable')
   const paramap = require('pull-paramap')
+  const human = require('human-time')
 
   const nodeEmoji = require('node-emoji')
   const md = require("ssb-markdown")
@@ -37,10 +38,12 @@
 
   function renderMessage(msg, cb)
   {
-    var html = ""
+    var html = "<div style=\"display: table;\">"
 
     function render(user)
     {
+      html += "<span style=\"vertical-align: top; display: table-cell;\">"
+      html += "<div style=\"font-size: small; margin-bottom: 5px;\" title=\"" + new Date(msg.value.timestamp).toLocaleString("da-DK") + "\">" + human(new Date(msg.value.timestamp)) + "</div>"
       if (user)
         html += "<a href=\"" + msg.value.author + "\" target=\"_blank\">" + user.name + "</a> posted"
 
@@ -48,6 +51,8 @@
         html += " in reply <a href=\"" + msg.value.content.root + "\" target=\"_blank\">to</a>"
       else
         html += " a <a href=\"" + msg.key + "\" target=\"_blank\">thread</a>"
+
+      html += "</span></div>"
 
       if (msg.value.content.subject) // private
         html += "<h2><a href='" +  msg.key + "'>" + msg.value.content.subject + "</a></h2>"
@@ -63,7 +68,7 @@
     if (user && user.image) {
       SSB.net.blobs.get(user.image, null, (err, url) => {
         if (!err)
-          html += "<img style='width: 50px; height; 50px; padding-right: 5px;' src='" + url + "' />"
+          html += "<img style='width: 50px; height; 50px; padding-right: 10px; display: table-cell;' src='" + url + "' />"
 
         render(user)
       })
@@ -141,7 +146,7 @@
 
             document.getElementById("top").innerHTML = `
               <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px;"></textarea><br>
-              <input type="submit" id="postMessage" style="margin-top: 5px" value="Post message" />`
+              <input type="submit" id="postMessage" style="margin-top: 5px" value="Post new thread" />`
 
             document.getElementById("postMessage").addEventListener("click", function(){
               var text = document.getElementById("message").value
@@ -395,8 +400,11 @@
       if (!SSB.onboard)
         loadOnboardBlob()
 
-      if (!SSB.profiles)
+      if (!SSB.profiles) {
         SSB.loadProfiles()
+        if (screen == 'public')
+          renderMessages()
+      }
 
       const status = SSB.db.getStatus()
 
@@ -437,9 +445,6 @@
 
         SSB.onboard = JSON.parse(data)
         console.log("Loaded onboarding blob")
-
-        if (screen == 'public')
-          renderMessages()
       })
     }
   }
