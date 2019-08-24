@@ -29,6 +29,8 @@ exports.removeDB = function() {
     file.destroy()
   })
 
+  localStorage['last.json'] = JSON.stringify({})
+
   console.log("remember to delete indexdb indexes as well!")
 }
 
