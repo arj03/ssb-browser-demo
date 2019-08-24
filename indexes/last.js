@@ -1,37 +1,37 @@
-var pull = require('pull-stream')
-var pCont = require('pull-cont')
-var Reduce = require('flumeview-reduce')
+// this is a bit special because we don't store all messages we receive
+const validate = require('ssb-validate')
 
 module.exports = function () {
-  var createIndex = Reduce(1, function (acc, data) {
-    if (!acc) acc = {}
-    acc[data.value.author] = {
-      id: data.key,
-      sequence: data.value.sequence,
-      ts: data.value.timestamp
-    }
-    return acc
-  })
+  var state = {}
+  var writer = null;
 
-  return function (log, name) {
-    var index = createIndex(log, name)
-    index.methods.latest = 'source'
+  function load() {
+    if (localStorage['last.json'])
+      state = JSON.parse(localStorage['last.json'])
+  }
 
-    index.latest = function (opts) {
-      return pCont(function (cb) {
-        index.get([], function (err, val) {
-          if (err) return cb(err)
-          cb(null, pull.values(Object.keys(val || {}).map(function (author) {
-            return {
-              id: author,
-              sequence: val[author].sequence,
-              ts: val[author].ts
-            }
-          })))
-        })
-      })
-    }
+  return {
+    update: function(msg) {
+      state[msg.author] = {
+        id: validate.id(msg),
+        timestamp: msg.timestamp,
+        sequence: msg.sequence
+      }
 
-    return index
+      if (!writer) {
+        writer = setTimeout(() => {
+          writer = null
+          localStorage['last.json'] = JSON.stringify(state)
+        }, 1000)
+      }
+    },
+
+    get: function(cb) {
+      if (Object.keys(state).length == 0)
+        load()
+      cb(null, state)
+    },
+
+    load
   }
 }

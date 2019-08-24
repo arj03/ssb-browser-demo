@@ -88,6 +88,8 @@ exports.init = function (sbot, config) {
     if (SSB.state.error)
       return cb(SSB.state.error)
 
+    SSB.db.last.update(msg)
+
     var isPrivate = (typeof (msg.content) === 'string')
 
     if (isPrivate && !SSB.privateMessages)

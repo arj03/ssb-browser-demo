@@ -25,9 +25,9 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     // copy to so we avoid weirdness, because this object
     // tracks the state coming in to the database.
     for (var k in last) {
-      SSB.state.feeds[k] = {
+      state.feeds[k] = {
         id: last[k].id,
-        timestamp: last[k].ts || last[k].timestamp,
+        timestamp: last[k].timestamp,
         sequence: last[k].sequence,
         queue: []
       }

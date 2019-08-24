@@ -67,6 +67,9 @@ exports.syncThread = function(messages, cb) {
 exports.sync = function()
 {
   connected((rpc) => {
+    if (!SSB.state.feeds[SSB.net.id])
+      SSB.net.ebt.request(SSB.net.id, true)
+
     for (var feed in SSB.state.feeds) {
       SSB.net.ebt.request(feed, true)
     }
