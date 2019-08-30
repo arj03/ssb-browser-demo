@@ -38,10 +38,8 @@ exports.init = function(dir) {
   .use(require('ssb-ebt'))
   .use(require('ssb-tunnel'))
   .use(require('./tunnel-chat'))
-  //.use(require('ssb-blobs'))
+  .use(require("./simple-blobs"))
   ()
-
-  r.blobs = require("./simple-blobs")(dir)
 
   var timer
 

@@ -16,7 +16,7 @@
         if (link.query && link.query.unbox) // private
         {
           // FIXME: doesn't work the first time
-          SSB.net.blobs.get(link.link, link.query.unbox, () => {})
+          SSB.net.blobs.privateGet(link.link, link.query.unbox, () => {})
           return SSB.net.blobs.fsURL(link.link)
         }
         else
@@ -66,7 +66,7 @@
     if (SSB.profiles)
       user = SSB.profiles[msg.value.author]
     if (user && user.image) {
-      SSB.net.blobs.get(user.image, null, (err, url) => {
+      SSB.net.blobs.localGet(user.image, (err, url) => {
         if (!err)
           html += "<img style='width: 50px; height; 50px; padding-right: 10px; display: table-cell;' src='" + url + "' />"
 
@@ -146,13 +146,28 @@
 
             document.getElementById("top").innerHTML = `
               <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px;"></textarea><br>
+              <input type="file" id="file">
               <input type="submit" id="postMessage" style="margin-top: 5px" value="Post new thread" />`
 
-            document.getElementById("postMessage").addEventListener("click", function(){
+            document.getElementById("file").addEventListener("change", function(ev) {
+              const file = ev.target.files[0]
+
+              if (!file) return
+
+              file.arrayBuffer().then(function (buffer) {
+                SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
+                  SSB.net.blobs.add("&" + digest, file, (err) => {
+                    document.getElementById("message").value += " ![" + file.name + "](&" + digest + ")"
+                  })
+                })
+              })
+            })
+
+            document.getElementById("postMessage").addEventListener("click", function() {
               var text = document.getElementById("message").value
               if (text != '')
               {
-                state.queue = []
+                SSB.state.queue = []
                 var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
                 console.log(state.queue[0])
                 SSB.db.add(state.queue[0].value, (err, data) => {
@@ -194,7 +209,7 @@
               <input type="text" id="subject" style="padding: 5px; width: 40rem; margin: 0 0 10 0px" placeholder="subject" />
               <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px"></textarea><br>
               <input type="submit" id="postPrivateMessage" style="margin-top: 5px" value="Post private message" />`
-            document.getElementById("postPrivateMessage").addEventListener("click", function(){
+            document.getElementById("postPrivateMessage").addEventListener("click", function() {
               var text = document.getElementById("message").value
               var subject = document.getElementById("subject").value
               var recipients = document.getElementById("recipients").value.split(',').map(x => x.trim())
@@ -216,7 +231,7 @@
                   content = SSB.box(content, recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
                 }
 
-                state.queue = []
+                SSB.state.queue = []
                 var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
                 console.log(state.queue[0])
 
@@ -280,7 +295,7 @@
       <textarea id="message" style="height: 10rem; width: 40rem;"></textarea><br>
       <input type="submit" id="postReply" style="margin-top: 5px" value="Post reply" />`
 
-    document.getElementById("postReply").addEventListener("click", function(){
+    document.getElementById("postReply").addEventListener("click", function() {
       var text = document.getElementById("message").value
       if (text != '')
       {
@@ -289,8 +304,9 @@
           content.recps = recps
           content = SSB.box(content, recps.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
         }
-        var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
 
+        SSB.state.queue = []
+        var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
         var msg = state.queue[0].value
 
         SSB.db.add(msg, (err, data) => {
