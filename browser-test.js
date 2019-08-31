@@ -173,6 +173,10 @@
                 SSB.db.add(state.queue[0].value, (err, data) => {
                   console.log(err)
                   console.log(data)
+
+                  SSB.db.last.update(data.value)
+
+                  renderMessages()
                 })
               }
             })
@@ -238,6 +242,7 @@
                 SSB.db.add(state.queue[0].value, (err, data) => {
                   console.log(err)
                   console.log(data)
+                  SSB.db.last.update(data.value)
 
                   renderPrivate()
                 })
@@ -315,6 +320,7 @@
 
           console.log(err)
           console.log(data)
+          SSB.db.last.update(data.value)
 
           renderThread(rootId)
         })
