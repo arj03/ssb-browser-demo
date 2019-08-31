@@ -102,7 +102,7 @@ exports.init = function (sbot, config) {
 
   // FIXME: config
   //sympathy controls whether you'll replicate
-  var sympathy = 3
+  var sympathy = 0
   var stingy = false
   var pushy = 3
   var max = 256*1024
