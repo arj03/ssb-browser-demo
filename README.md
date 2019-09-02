@@ -18,7 +18,9 @@ interested in a fully working client.
 Things that work:
  - viewing posts and threads
  - posting and replying to messages
- - private messages including private blobs
+ - posting blobs
+ - private messages including decrypting private blobs
+ - off-chain chat messages using ssb-tunnel for e2e connection
  - ooo messages
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
@@ -33,6 +35,7 @@ The following patches from the patches folder are needed:
  - flumeview-level-mkdirp.patch
  - ssb-ebt.patch
  - ssb-tunnel.patch
+ - epidemic-broadcast-fix-replicate-multiple.patch
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1

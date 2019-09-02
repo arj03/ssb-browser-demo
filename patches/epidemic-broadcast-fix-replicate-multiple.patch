@@ -1,0 +1,34 @@
+diff --git a/events.js b/events.js
+index 52a82c1..7b893a4 100644
+--- a/events.js
++++ b/events.js
+@@ -383,7 +383,8 @@ exports.notes = function (state, ev) {
+       //in the case we are already ahead, get ready to send them messages.
+       rep.sent = seq
+       if(lseq > seq) {
+-        if(tx) peer.retrive.push(id)
++        // we can only send our own logs because we don't have full logs
++        if(tx && id == SSB.net.id) peer.retrive.push(id)
+         else if(isReplicate) setNotes(peer, id, lseq, rep.rx)
+       }
+     }
+diff --git a/stream.js b/stream.js
+index f4646ef..8ff95ee 100644
+--- a/stream.js
++++ b/stream.js
+@@ -110,6 +110,15 @@ EBTStream.prototype.resume = function () {
+         notes = _notes
+       }
+ 
++      // because we don't store full logs, we can't offer new messages other than our own
++      var theirClock = state.clock
++      var ourClock = this.peer.state.clock
++      for (var id in ourClock) {
++        if (id != SSB.net.id && ourClock[id] > theirClock[id]) {
++          delete notes[id]
++        }
++      }
++
+       if(this.peer.logging) console.error("EBT:send", notes)
+       this.sink.write(notes)
+     }
