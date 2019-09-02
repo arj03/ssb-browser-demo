@@ -91,7 +91,68 @@
   }
   */
 
-  function renderMessages(onlyThreads) {
+  function renderMessages(onlyThreads, messages) {
+    var html = "<h2 style=\"margin-bottom: 5px\">Last 10 messages</h2>"
+    html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
+    if (onlyThreads)
+      html += " checked><br><br>"
+    else
+      html += "><br><br>"
+
+    pull(
+      pull.values(messages),
+      paramap(renderMessage, 1),
+      pull.collect((err, rendered) => {
+        document.getElementById("messages").innerHTML = html + rendered.join('')
+
+        document.getElementById("onlyThreads").addEventListener("click", function(ev) {
+          renderPublic(ev.target.checked)
+        })
+
+        document.getElementById("top").innerHTML = `
+              <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px;"></textarea><br>
+              <input type="file" id="file">
+              <input type="submit" id="postMessage" style="margin-top: 5px" value="Post new thread" />`
+
+        document.getElementById("file").addEventListener("change", function(ev) {
+          const file = ev.target.files[0]
+
+          if (!file) return
+
+          file.arrayBuffer().then(function (buffer) {
+            SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
+              SSB.net.blobs.add("&" + digest, file, (err) => {
+                document.getElementById("message").value += " ![" + file.name + "](&" + digest + ")"
+              })
+            })
+          })
+        })
+
+        document.getElementById("postMessage").addEventListener("click", function() {
+          var text = document.getElementById("message").value
+          if (text != '')
+          {
+            SSB.state.queue = []
+            var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
+            console.log(state.queue[0])
+            SSB.db.add(state.queue[0].value, (err, data) => {
+              console.log(err)
+              console.log(data)
+
+              SSB.db.last.update(data.value)
+
+              renderPublic()
+            })
+          }
+        })
+      })
+    )
+  }
+
+  function renderPublic(onlyThreads) {
+    if (lastStatus && lastStatus.since == 0) // empty db
+      return renderMessages(onlyThreads, [])
+
     var enoughAbort = pullAbort()
     let noMessages = 0
     let rendered = false
@@ -127,66 +188,70 @@
         if (!rendered) rendered = true
         else return
 
-        var html = "<h2 style=\"margin-bottom: 5px\">Last 10 messages</h2>"
-        html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
-        if (onlyThreads)
-          html += " checked><br><br>"
-        else
-          html += "><br><br>"
+        renderMessages(onlyThreads, msgs)
+      })
+    )
+  }
 
-        pull(
-          pull.values(msgs),
-          paramap(renderMessage, 1),
-          pull.collect((err, rendered) => {
-            document.getElementById("messages").innerHTML = html + rendered.join('')
+  function renderPrivateMessages(messages) {
+    var html = "<h2>Last 10 private messages</h2>"
 
-            document.getElementById("onlyThreads").addEventListener("click", function(ev) {
-              renderMessages(ev.target.checked)
+    pull(
+      pull.values(messages),
+      pull.filter((msg) => !msg.value.content.root), // top posts
+      paramap(renderMessage, 1),
+      pull.collect((err, rendered) => {
+        document.getElementById("top").innerHTML = `
+              <input type="text" id="recipients" style="padding: 5px; width: 40rem; margin: 10 0 10 0px" placeholder="recipient ids (, seperator)" />
+              <input type="text" id="subject" style="padding: 5px; width: 40rem; margin: 0 0 10 0px" placeholder="subject" />
+              <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px"></textarea><br>
+              <input type="submit" id="postPrivateMessage" style="margin-top: 5px" value="Post private message" />`
+        document.getElementById("postPrivateMessage").addEventListener("click", function() {
+          var text = document.getElementById("message").value
+          var subject = document.getElementById("subject").value
+          var recipients = document.getElementById("recipients").value.split(',').map(x => x.trim())
+
+          if (!recipients.every(x => x.startsWith("@")))
+          {
+            alert("recipients must start with @")
+            return
+          }
+
+          if (!recipients.includes(SSB.net.id))
+            recipients.push(SSB.net.id)
+
+          if (text != '' && subject != '')
+          {
+            var content = { type: 'post', text, subject }
+            if (recipients) {
+              content.recps = recipients
+              content = SSB.box(content, recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
+            }
+
+            SSB.state.queue = []
+            var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
+            console.log(state.queue[0])
+
+            SSB.db.add(state.queue[0].value, (err, data) => {
+              console.log(err)
+              console.log(data)
+              SSB.db.last.update(data.value)
+
+              renderPrivate()
             })
+          }
+        })
 
-            document.getElementById("top").innerHTML = `
-              <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px;"></textarea><br>
-              <input type="file" id="file">
-              <input type="submit" id="postMessage" style="margin-top: 5px" value="Post new thread" />`
-
-            document.getElementById("file").addEventListener("change", function(ev) {
-              const file = ev.target.files[0]
-
-              if (!file) return
-
-              file.arrayBuffer().then(function (buffer) {
-                SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
-                  SSB.net.blobs.add("&" + digest, file, (err) => {
-                    document.getElementById("message").value += " ![" + file.name + "](&" + digest + ")"
-                  })
-                })
-              })
-            })
-
-            document.getElementById("postMessage").addEventListener("click", function() {
-              var text = document.getElementById("message").value
-              if (text != '')
-              {
-                SSB.state.queue = []
-                var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
-                console.log(state.queue[0])
-                SSB.db.add(state.queue[0].value, (err, data) => {
-                  console.log(err)
-                  console.log(data)
-
-                  SSB.db.last.update(data.value)
-
-                  renderMessages()
-                })
-              }
-            })
-          })
-        )
+        document.getElementById("messages").innerHTML = html + rendered.join('')
+        document.getElementById("bottom").innerHTML = ''
       })
     )
   }
 
   function renderPrivate() {
+    if (lastStatus && lastStatus.since == 0) // empty db
+      return renderPrivateMessages([])
+
     pull(
       SSB.db.query.read({
         reverse: true,
@@ -201,58 +266,7 @@
         }]
       }),
       pull.collect((err, msgs) => {
-        var html = "<h2>Last 10 private messages</h2>"
-
-        pull(
-          pull.values(msgs),
-          pull.filter((msg) => !msg.value.content.root), // top posts
-          paramap(renderMessage, 1),
-          pull.collect((err, rendered) => {
-            document.getElementById("top").innerHTML = `
-              <input type="text" id="recipients" style="padding: 5px; width: 40rem; margin: 10 0 10 0px" placeholder="recipient ids (, seperator)" />
-              <input type="text" id="subject" style="padding: 5px; width: 40rem; margin: 0 0 10 0px" placeholder="subject" />
-              <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px"></textarea><br>
-              <input type="submit" id="postPrivateMessage" style="margin-top: 5px" value="Post private message" />`
-            document.getElementById("postPrivateMessage").addEventListener("click", function() {
-              var text = document.getElementById("message").value
-              var subject = document.getElementById("subject").value
-              var recipients = document.getElementById("recipients").value.split(',').map(x => x.trim())
-
-              if (!recipients.every(x => x.startsWith("@")))
-              {
-                alert("recipients must start with @")
-                return
-              }
-
-              if (!recipients.includes(SSB.net.id))
-                recipients.push(SSB.net.id)
-
-              if (text != '' && subject != '')
-              {
-                var content = { type: 'post', text, subject }
-                if (recipients) {
-                  content.recps = recipients
-                  content = SSB.box(content, recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
-                }
-
-                SSB.state.queue = []
-                var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
-                console.log(state.queue[0])
-
-                SSB.db.add(state.queue[0].value, (err, data) => {
-                  console.log(err)
-                  console.log(data)
-                  SSB.db.last.update(data.value)
-
-                  renderPrivate()
-                })
-              }
-            })
-
-            document.getElementById("messages").innerHTML = html + rendered.join('')
-            document.getElementById("bottom").innerHTML = ''
-          })
-        )
+        renderPrivateMessages(msgs)
       })
     )
   }
@@ -426,7 +440,7 @@
       if (!SSB.profiles) {
         SSB.loadProfiles()
         if (screen == 'public')
-          renderMessages()
+          renderPublic()
       }
 
       const status = SSB.db.getStatus()
@@ -528,7 +542,7 @@
 
   document.getElementById("goToPublic").addEventListener("click", function(ev) {
     changeScreen(ev, 'public')
-    renderMessages()
+    renderPublic()
   })
 
   document.getElementById("goToPrivate").addEventListener("click", function(ev) {
