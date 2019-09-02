@@ -258,13 +258,13 @@
   }
 
   function renderChat() {
-    document.getElementById("top").innerHTML = "<div style='margin: 10px'>Your id: " + SSB.net.id + `</div>
-              <input type="text" id="chatMessage" style="padding: 5px; width: 40rem; margin: 0 0 10 0px" placeholder="type message, enter to send" />
-              <button id="acceptMessages" style="padding: 5px">Accept messages</button> or
-              <input type="text" id="tunnelConnect" style="padding: 5px; width: 25rem; margin: 0 0 10 0px" placeholder="@remoteId to connect to" />
+    document.getElementById("top").innerHTML = "<div style='margin-bottom: 10px'>Your id: " + SSB.net.id + `</div>
+              <button id="acceptConnections" style="padding: 5px; margin-right: 1rem;">Accept incoming connections</button>   or  
+              <input type="text" id="tunnelConnect" style="padding: 5px; width: 24rem; margin-bottom: 12px; margin-left: 1rem;" placeholder="@remoteId to connect to" />
+              <input type="text" id="chatMessage" style="padding: 5px; width: 40rem;" placeholder="type message, enter to send" />
               `
 
-    document.getElementById("acceptMessages").addEventListener("click", function() {
+    document.getElementById("acceptConnections").addEventListener("click", function() {
       SSB.net.tunnelChat.acceptMessages()
     })
 
@@ -283,7 +283,8 @@
       }
     })
 
-    document.getElementById("messages").innerHTML = '<h1>Offchain messages</h1>'
+    document.getElementById("messages").innerHTML = '<h2>Off-chain messages</h2>' +
+      '<div style="font-size: smaller; margin-bottom: 10px; margin-top: -10px;">Off-chain messages are messages sent encrypted between you and the other end through the magic of tunnels. These messages are ephemeral and will be gone forever when you change view!</div>'
 
     abortablePullStream = pullAbort()
     pull(
