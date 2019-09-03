@@ -92,7 +92,7 @@
   */
 
   function renderMessages(onlyThreads, messages) {
-    var html = "<h2 style=\"margin-bottom: 5px\">Last 10 messages</h2>"
+    var html = "<h2 style=\"margin-bottom: 5px\">Last 50 messages</h2>"
     html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
     if (onlyThreads)
       html += " checked><br><br>"
@@ -178,7 +178,7 @@
 
         if (ok) {
           ++noMessages
-          if (noMessages >= 10)
+          if (noMessages >= 50)
             enoughAbort.abort()
         }
 
@@ -194,7 +194,7 @@
   }
 
   function renderPrivateMessages(messages) {
-    var html = "<h2>Last 10 private messages</h2>"
+    var html = "<h2>Private messages</h2>"
 
     pull(
       pull.values(messages),
@@ -255,7 +255,6 @@
     pull(
       SSB.db.query.read({
         reverse: true,
-        limit: 10,
         query: [{
           $filter: {
             value: {
@@ -394,7 +393,7 @@
     pull(
       SSB.db.query.read({
         reverse: true,
-        limit: 10,
+        limit: 50,
         query: [{
           $filter: {
             value: {
@@ -408,7 +407,7 @@
         if (SSB.profiles && SSB.profiles[author])
           name = SSB.profiles[author].name
 
-        var html = "<h2>Last 10 messages for " + name + " <div style=\"font-size: 15px\">(" + author + ")</div></h2>"
+        var html = "<h2>Last 50 messages for " + name + " <div style=\"font-size: 15px\">(" + author + ")</div></h2>"
 
         pull(
           pull.values(msgs),
