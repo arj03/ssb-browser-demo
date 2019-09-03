@@ -10,20 +10,32 @@ module.exports = function () {
       state = JSON.parse(localStorage['last.json'])
   }
 
+  function save() {
+    if (!writer) {
+      writer = setTimeout(() => {
+        writer = null
+        localStorage['last.json'] = JSON.stringify(state)
+      }, 1000)
+    }
+  }
+
   return {
+    setPartialLog: function(author) {
+      if (state[author].partial !== true) {
+        state[author].partial = true
+        save()
+      }
+    },
+
     update: function(msg) {
       state[msg.author] = {
         id: validate.id(msg),
         timestamp: msg.timestamp,
-        sequence: msg.sequence
+        sequence: msg.sequence,
+        partial: state[msg.author] && state[msg.author].partial
       }
 
-      if (!writer) {
-        writer = setTimeout(() => {
-          writer = null
-          localStorage['last.json'] = JSON.stringify(state)
-        }, 1000)
-      }
+      save()
     },
 
     get: function(cb) {

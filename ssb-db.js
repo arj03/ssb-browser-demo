@@ -92,19 +92,24 @@ exports.init = function (sbot, config) {
 
     var isPrivate = (typeof (msg.content) === 'string')
 
-    if (isPrivate && !SSB.privateMessages)
-      return cb()
-    else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type))
-      return cb()
+    var ok = true
 
-    if (isPrivate)
-    {
+    if (isPrivate && !SSB.privateMessages) {
+      ok = false
+    } else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type)) {
+      ok = false
+    } else if (isPrivate) {
       var decrypted = decryptMessage(msg)
       if (!decrypted) // not for us
-        return cb()
+        ok = false
     }
 
-    SSB.db.add(msg, cb)
+    if (ok)
+      SSB.db.add(msg, cb)
+    else {
+      SSB.db.last.setPartialLog(msg.author)
+      cb()
+    }
   }
 
   return {}

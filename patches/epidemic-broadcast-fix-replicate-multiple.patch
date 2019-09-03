@@ -13,22 +13,31 @@ index 52a82c1..7b893a4 100644
        }
      }
 diff --git a/stream.js b/stream.js
-index f4646ef..8ff95ee 100644
+index f4646ef..f36ed89 100644
 --- a/stream.js
 +++ b/stream.js
-@@ -110,6 +110,15 @@ EBTStream.prototype.resume = function () {
+@@ -110,8 +110,22 @@ EBTStream.prototype.resume = function () {
          notes = _notes
        }
  
-+      // because we don't store full logs, we can't offer new messages other than our own
-+      var theirClock = state.clock
-+      var ourClock = this.peer.state.clock
-+      for (var id in ourClock) {
-+        if (id != SSB.net.id && ourClock[id] > theirClock[id]) {
-+          delete notes[id]
-+        }
-+      }
+-      if(this.peer.logging) console.error("EBT:send", notes)
+-      this.sink.write(notes)
++      var self = this
 +
-       if(this.peer.logging) console.error("EBT:send", notes)
-       this.sink.write(notes)
++      // hacky
++      SSB.db.last.get(function (err, h) {
++        // because we don't store full logs, we can't offer new messages other than our own
++        var theirClock = state.clock
++        var ourClock = self.peer.state.clock
++        for (var id in ourClock) {
++          if (h[id].partial && ourClock[id] > theirClock[id]) {
++            delete notes[id]
++          }
++        }
++
++        if(self.peer.logging) console.error("EBT:send 2", prettyPrintLogging(notes), null, 2)
++        self.sink.write(notes)
++      })
      }
+   }
+ }
