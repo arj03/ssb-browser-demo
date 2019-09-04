@@ -210,7 +210,7 @@ exports.init = function (sbot, config) {
           //respond with it's size, if we do.
           const file = raf(path.join(blobsDir, id))
           file.stat(function (err, stat) {
-            if(stat.size) res[id] = stat.size
+            if(stat && stat.size) res[id] = stat.size
             else wants(peer, id, data[id] - 1)
             next()
           })
