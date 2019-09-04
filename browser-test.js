@@ -1,6 +1,5 @@
 (function() {
   const pull = require('pull-stream')
-  const pullAbort = require('pull-abortable')
   const paramap = require('pull-paramap')
   const human = require('human-time')
 
@@ -153,42 +152,28 @@
     if (lastStatus && lastStatus.since == 0) // empty db
       return renderMessages(onlyThreads, [])
 
-    var enoughAbort = pullAbort()
-    let noMessages = 0
-    let rendered = false
+    let contentFilter = { type: 'post' }
+    if (onlyThreads)
+      contentFilter["root"] = undefined
+
     pull(
       SSB.db.query.read({
         reverse: true,
+        limit: 50,
         query: [{
           $filter: {
             value: {
               timestamp: { $gt: 0 },
               //author: '@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
-              content: { type: 'post' }
+              content: contentFilter
             }
           }
         }]
       }),
-      enoughAbort,
       pull.filter((msg) => !msg.value.meta),
-      pull.filter((msg) => {
-        let ok = true
-        if (onlyThreads)
-          ok = !msg.value.content.root
-
-        if (ok) {
-          ++noMessages
-          if (noMessages >= 50)
-            enoughAbort.abort()
-        }
-
-        return ok
-      }),
       pull.collect((err, msgs) => {
-        if (!rendered) rendered = true
-        else return
-
-        renderMessages(onlyThreads, msgs)
+        if (screen == 'public') // query might be delayed
+          renderMessages(onlyThreads, msgs)
       })
     )
   }
