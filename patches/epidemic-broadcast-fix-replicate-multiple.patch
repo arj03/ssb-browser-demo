@@ -1,7 +1,5 @@
-diff --git a/events.js b/events.js
-index 52a82c1..7b893a4 100644
---- a/events.js
-+++ b/events.js
+--- node_modules/epidemic-broadcast-trees/events.js~
++++ node_modules/epidemic-broadcast-trees/events.js
 @@ -383,7 +383,8 @@ exports.notes = function (state, ev) {
        //in the case we are already ahead, get ready to send them messages.
        rep.sent = seq
@@ -12,10 +10,8 @@ index 52a82c1..7b893a4 100644
          else if(isReplicate) setNotes(peer, id, lseq, rep.rx)
        }
      }
-diff --git a/stream.js b/stream.js
-index f4646ef..f36ed89 100644
---- a/stream.js
-+++ b/stream.js
+--- node_modules/epidemic-broadcast-trees/stream.js~
++++ node_modules/epidemic-broadcast-trees/stream.js
 @@ -110,8 +110,22 @@ EBTStream.prototype.resume = function () {
          notes = _notes
        }
