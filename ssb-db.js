@@ -25,12 +25,12 @@ exports.init = function (sbot, config) {
 
     function getClock()
     {
-      SSB.db.last.get(function (err, h) {
-	if (err) return cb(err)
-	var clock = {}
-	for (var k in h) { clock[k] = h[k].sequence }
-	cb(null, clock)
-      })
+      var last = SSB.db.last.get()
+      var clock = {}
+      for (var k in last) {
+        clock[k] = last[k].sequence
+      }
+      cb(null, clock)
     }
 
     // yay

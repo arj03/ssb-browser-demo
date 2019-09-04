@@ -21,18 +21,17 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   var validate = require('ssb-validate')
   var state = validate.initial()
 
-  db.last.get(function (_, last) {
-    // copy to so we avoid weirdness, because this object
-    // tracks the state coming in to the database.
-    for (var k in last) {
-      state.feeds[k] = {
-        id: last[k].id,
-        timestamp: last[k].timestamp,
-        sequence: last[k].sequence,
-        queue: []
-      }
+  var last = db.last.get()
+  // copy to so we avoid weirdness, because this object
+  // tracks the state coming in to the database.
+  for (var k in last) {
+    state.feeds[k] = {
+      id: last[k].id,
+      timestamp: last[k].timestamp,
+      sequence: last[k].sequence,
+      queue: []
     }
-  })
+  }
 
   // FIXME: refactor this into its own module instead of global object
   SSB = {

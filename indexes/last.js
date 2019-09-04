@@ -38,10 +38,10 @@ module.exports = function () {
       save()
     },
 
-    get: function(cb) {
+    get: function() {
       if (Object.keys(state).length == 0)
         load()
-      cb(null, state)
+      return state
     },
 
     load
