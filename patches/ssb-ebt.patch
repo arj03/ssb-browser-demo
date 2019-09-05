@@ -1,14 +1,5 @@
 --- node_modules/ssb-ebt/index.js~	1985-10-26 09:15:00.000000000 +0100
 +++ node_modules/ssb-ebt/index.js	2019-07-31 11:15:26.095015455 +0200
-@@ -50,7 +50,7 @@
-   var store = Store(dir, null, toUrlFriendly)
- 
-   var ebt = EBT({
--    logging: config.ebt && config.ebt.logging,
-+    logging: true,
-     id: sbot.id,
-     getClock: function (id, cb) {
-       store.ensure(id, function () {
 @@ -81,6 +81,7 @@
      ebt.update()
    })
