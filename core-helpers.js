@@ -1,6 +1,7 @@
 const validate = require('ssb-validate')
 const keys = require('ssb-keys')
 const pull = require('pull-stream')
+const raf = require('polyraf')
 
 var remote
 
@@ -20,7 +21,6 @@ function connected(cb)
 }
 
 exports.removeDB = function() {
-  const raf = require('polyraf')
   const path = require('path')
 
   const file = raf(path.join(SSB.dir, 'log.offset'))
@@ -32,6 +32,36 @@ exports.removeDB = function() {
   localStorage['last.json'] = JSON.stringify({})
 
   console.log("remember to delete indexdb indexes as well!")
+}
+
+exports.removeBlobs = function() {
+  function listDir(fs, path)
+  {
+    fs.root.getDirectory(path, {}, function(dirEntry) {
+      var dirReader = dirEntry.createReader()
+      dirReader.readEntries(function(entries) {
+	for(var i = 0; i < entries.length; i++) {
+	  var entry = entries[i]
+	  if (entry.isDirectory) {
+	    //console.log('Directory: ' + entry.fullPath);
+	    listDir(fs, entry.fullPath)
+	  }
+	  else if (entry.isFile) {
+            console.log('deleting file: ' + entry.fullPath)
+            const file = raf(entry.fullPath)
+            file.open((err, done) => {
+              if (err) return console.error(err)
+              file.destroy()
+            })
+          }
+	}
+      })
+    })
+  }
+
+  window.webkitRequestFileSystem(window.PERSISTENT, 0, function (fs) {
+    listDir(fs, '/.ssb-lite/blobs')
+  })
 }
 
 // this uses the https://github.com/arj03/ssb-get-thread plugin
