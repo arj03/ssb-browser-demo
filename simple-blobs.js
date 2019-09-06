@@ -55,12 +55,10 @@ exports.init = function (sbot, config) {
     console.log("wrote to local filesystem:", id)
     const file = raf(path.join(blobsDir, id))
     file.write(0, blob, (err) => {
-      if (!err) {
-        delete want[id]
-        pushBlob(id, cb)
-      }
-      else
-        cb(err)
+      if (err) return cb(err)
+
+      delete want[id]
+      cb()
     })
   }
 

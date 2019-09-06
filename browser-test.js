@@ -121,7 +121,11 @@
           file.arrayBuffer().then(function (buffer) {
             SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
               SSB.net.blobs.add("&" + digest, file, (err) => {
-                document.getElementById("message").value += " ![" + file.name + "](&" + digest + ")"
+                if (!err) {
+                  SSB.net.blobs.push("&" + digest, (err) => {
+                    document.getElementById("message").value += " ![" + file.name + "](&" + digest + ")"
+                  })
+                }
               })
             })
           })
