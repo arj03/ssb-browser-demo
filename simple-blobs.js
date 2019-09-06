@@ -71,9 +71,30 @@ exports.init = function (sbot, config) {
     cb()
   }
 
-  function fsURL(id) {
-    // FIXME: doesn't work in firefox
-    return 'filesystem:file:///persistent/.ssb-lite/blobs/' + id
+  function fsURL(id, cb) {
+    if (window.IDBMutableFile) // firefox
+    {
+      cb(null, remoteURL(id))
+      return
+
+      // this should be working, but is not?
+      // https://github.com/random-access-storage/random-access-idb-mutable-file/issues/6
+
+      const mutableAccess = require('random-access-idb-mutable-file')
+      mutableAccess.mount({}).then((requestFile) => {
+        var f = requestFile(path.join(blobsDir, id))
+        console.log(path.join(blobsDir, id))
+        f.open((err) => {
+          f.file.getFile().then((fileObj) => {
+            // blob:null/ae825970-3f3a-4834-bc5c-ada3789b83c5
+            console.log(URL.createObjectURL(fileObj))
+            cb(null, URL.createObjectURL(fileObj))
+          })
+        })
+      })
+    }
+    else
+      cb(null, 'filesystem:file:///persistent/.ssb-lite/blobs/' + id)
   }
 
   function remoteURL(id) {
@@ -332,11 +353,11 @@ exports.init = function (sbot, config) {
     localGet: function (id, cb) {
       const file = raf(path.join(blobsDir, id))
       file.stat((err, stat) => {
-	if (stat.size == 0) {
+	if (stat && stat.size == 0) {
 	  httpGet(remoteURL(id), 'blob', (err, data) => {
 	    if (err) cb(err)
 	    else if (data.size < max)
-	      add(id, data, () => { cb(null, fsURL(id)) })
+	      add(id, data, () => { fsURL(id, cb) })
 	    else
 	      cb(null, remoteURL(id))
 	  })
@@ -344,7 +365,7 @@ exports.init = function (sbot, config) {
 	else
 	{
 	  //console.log("reading from local filesystem")
-	  cb(null, fsURL(id))
+	  fsURL(id, cb)
 	}
       })
     },

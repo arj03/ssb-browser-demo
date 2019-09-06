@@ -16,7 +16,7 @@
         {
           // FIXME: doesn't work the first time
           SSB.net.blobs.privateGet(link.link, link.query.unbox, () => {})
-          return SSB.net.blobs.fsURL(link.link)
+          return '' //SSB.net.blobs.fsURL(link.link)
         }
         else
           return SSB.net.blobs.remoteURL(link.link)
