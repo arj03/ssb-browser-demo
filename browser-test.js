@@ -113,6 +113,8 @@
               <input type="file" id="file">
               <input type="submit" id="postMessage" style="margin-top: 5px" value="Post new thread" />`
 
+        document.getElementById("bottom").innerHTML = ""
+
         document.getElementById("file").addEventListener("change", function(ev) {
           const file = ev.target.files[0]
 
