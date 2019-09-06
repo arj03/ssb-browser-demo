@@ -55,8 +55,10 @@ exports.init = function (sbot, config) {
     console.log("wrote to local filesystem:", id)
     const file = raf(path.join(blobsDir, id))
     file.write(0, blob, (err) => {
-      if (!err)
+      if (!err) {
+        delete want[id]
         pushBlob(id, cb)
+      }
       else
         cb(err)
     })
@@ -303,7 +305,6 @@ exports.init = function (sbot, config) {
       const file = raf(path.join(privateBlobsDir, id))
       file.stat((err, stat) => {
 	if (stat.size == 0) {
-          // FIXME: use get
 	  httpGet(remoteURL(id), 'arraybuffer', (err, data) => {
 	    pull(
 	      pull.once(Buffer.from(data)),
@@ -333,13 +334,11 @@ exports.init = function (sbot, config) {
     localGet: function (id, cb) {
       const file = raf(path.join(blobsDir, id))
       file.stat((err, stat) => {
-	if (stat.size == 0) { // FIXME: use get
+	if (stat.size == 0) {
 	  httpGet(remoteURL(id), 'blob', (err, data) => {
 	    if (err) cb(err)
 	    else if (data.size < max)
-	      add(id, data, () => {
-		cb(null, fsURL(id))
-	      })
+	      add(id, data, () => { cb(null, fsURL(id)) })
 	    else
 	      cb(null, remoteURL(id))
 	  })
