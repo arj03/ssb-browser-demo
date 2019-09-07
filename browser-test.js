@@ -140,6 +140,7 @@
             SSB.state.queue = []
             var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
             console.log(state.queue[0])
+
             SSB.db.add(state.queue[0].value, (err, data) => {
               console.log(err)
               console.log(data)
@@ -317,9 +318,9 @@
 
         SSB.state.queue = []
         var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
-        var msg = state.queue[0].value
+        console.log(state.queue[0])
 
-        SSB.db.add(msg, (err, data) => {
+        SSB.db.add(state.queue[0].value, (err, data) => {
           if (!err)
             state.queue = []
 
