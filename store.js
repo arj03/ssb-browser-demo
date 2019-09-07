@@ -17,7 +17,7 @@ module.exports = function (dir, ssbId) {
     if (msg && msg.value && typeof (msg.value.content) === 'string') {
       var decrypted = keys.unbox(msg.value.content, SSB.net.config.keys.private)
       if (!decrypted) // not for us
-        cb(null, msg)
+        return cb(null, msg)
 
       var cyphertext = msg.value.content
 
