@@ -102,8 +102,16 @@ exports.sync = function()
     if (!SSB.state.feeds[SSB.net.id])
       SSB.net.ebt.request(SSB.net.id, true)
 
-    for (var feed in SSB.state.feeds)
-      SSB.net.ebt.request(feed, true)
+    if (!JSON.parse(localStorage["settings"]).syncOnlyFollows) {
+      for (var feed in SSB.state.feeds)
+        SSB.net.ebt.request(feed, true)
+    } else {
+      SSB.db.friends.hops((err, hops) => {
+        for (var feed in hops)
+          if (hops[feed] == 1)
+            SSB.net.ebt.request(feed, true)
+      })
+    }
   })
 }
 

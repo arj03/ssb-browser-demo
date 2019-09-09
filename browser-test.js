@@ -589,6 +589,8 @@
     document.getElementById("bottom").innerHTML = ''
   })
 
+  // settings
+
   document.getElementById("syncData").addEventListener("click", function(ev) {
     if (SSB.db.getStatus().since <= 0) {
       if (!SSB.onboard) {
@@ -600,6 +602,31 @@
       alert("Initial load can take a while")
     } else
       SSB.sync()
+  })
+
+  var settings = {
+    syncOnlyFollows: false,
+    remoteAddress: 'ws:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519'
+  }
+
+  if (localStorage['settings']) {
+    settings = JSON.parse(localStorage['settings'])
+    if (settings.syncOnlyFollows)
+      document.getElementById("syncOnlyFollows").checked = true
+    document.getElementById("remoteAddress").value = settings.remoteAddress
+  }
+
+  document.getElementById("syncOnlyFollows").addEventListener("click", function(ev) {
+    settings.syncOnlyFollows = ev.target.checked
+    localStorage['settings'] = JSON.stringify(settings)
+  })
+
+  document.getElementById("remoteAddress").addEventListener('keydown', function(e) {
+    var text = e.target.value
+    if (e.keyCode == 13 && text != '') { // enter
+      settings.remoteAddress = text
+      localStorage['settings'] = JSON.stringify(settings)
+    }
   })
 
 })()
