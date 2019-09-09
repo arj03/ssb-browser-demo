@@ -20,9 +20,17 @@ module.exports = function () {
   }
 
   return {
-    setPartialLog: function(author) {
-      if (state[author].partial !== true) {
+    setPartialLogState: function(author, isPartial) {
+      if (isPartial && !state[author]) {
+        state[author] = { partial: true }
+        save()
+      }
+      else if (isPartial && state[author].partial !== true) {
         state[author].partial = true
+        save()
+      }
+      else if (!isPartial && state[author].partial === true) {
+        delete state[author].partial
         save()
       }
     },
@@ -36,6 +44,8 @@ module.exports = function () {
       }
 
       save()
+
+      return state[msg.author]
     },
 
     get: function() {

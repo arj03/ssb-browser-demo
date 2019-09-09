@@ -6,7 +6,10 @@ const keys = require('ssb-keys')
 const pull = require('pull-stream')
 
 exports.manifest =  {
-  createHistoryStream: 'source'
+  createHistoryStream: 'source',
+  partialReplication: {
+    partialReplication: 'source'
+  }
 }
 
 exports.permissions = {
@@ -88,26 +91,28 @@ exports.init = function (sbot, config) {
     if (SSB.state.error)
       return cb(SSB.state.error)
 
-    SSB.db.last.update(msg)
-
-    var isPrivate = (typeof (msg.content) === 'string')
+    var last = SSB.db.last.update(msg)
 
     var ok = true
 
-    if (isPrivate && !SSB.privateMessages) {
-      ok = false
-    } else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type)) {
-      ok = false
-    } else if (isPrivate) {
-      var decrypted = decryptMessage(msg)
-      if (!decrypted) // not for us
+    if (last.partial) {
+      var isPrivate = (typeof (msg.content) === 'string')
+
+      if (isPrivate && !SSB.privateMessages) {
         ok = false
+      } else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type)) {
+        ok = false
+      } else if (isPrivate) {
+        var decrypted = decryptMessage(msg)
+        if (!decrypted) // not for us
+          ok = false
+      }
     }
 
     if (ok)
       SSB.db.add(msg, cb)
     else {
-      SSB.db.last.setPartialLog(msg.author)
+      SSB.db.last.setPartialLogState(msg.author, true)
       cb()
     }
   }

@@ -64,7 +64,7 @@ exports.removeBlobs = function() {
   })
 }
 
-// this uses the https://github.com/arj03/ssb-get-thread plugin
+// this uses https://github.com/arj03/ssb-get-thread plugin
 exports.getThread = function(msgId, cb)
 {
   connected((rpc) => {
@@ -120,6 +120,32 @@ exports.loadProfiles = function() {
     SSB.profiles = JSON.parse(localStorage['profiles.json'])
 }
 
+// this uses https://github.com/arj03/ssb-partial-replication
+exports.syncFeedAfterFollow = function(feedId) {
+  connected((rpc) => {
+    delete SSB.state.feeds[feedId]
+    SSB.db.last.setPartialLogState(feedId, false)
+
+    var seqStart = SSB.db.last.get()[feedId].sequence - 100
+    if (seqStart < 0)
+      seqStart = 0
+
+    console.time("downloading messages")
+
+    pull(
+      rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
+      pull.drain((msg) => {
+        SSB.net.add(msg, (err, res) => {})
+      }, (err) => {
+        if (err) throw err
+
+        console.timeEnd("downloading messages")
+        SSB.state.queue = []
+      })
+    )
+  })
+}
+
 exports.initialSync = function()
 {
   const onboard = SSB.onboard
@@ -169,6 +195,11 @@ exports.initialSync = function()
       var seqStart = onboard[user].latestMsg.seq - 25
       if (seqStart < 0)
         seqStart = 0
+
+      if (user == SSB.net.id) // always all
+        seqStart = 0
+      else
+        SSB.db.last.setPartialLogState(user, true)
 
       ++totalFeeds
 
