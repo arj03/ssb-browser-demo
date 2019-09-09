@@ -45,6 +45,7 @@ exports.init = function (dir, ssbId) {
     query: store.query,
     last: store.last,
     clock: store.clock,
+    friends: store.friends,
     getStatus: store.getStatus
   }
 }

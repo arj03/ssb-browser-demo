@@ -54,6 +54,26 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     box: require('ssb-keys').box,
     state,
 
+    // sbot convenience wrappers
+    publish: function(msg, cb) {
+      state.queue = []
+      state = validate.appendNew(state, null, net.config.keys, msg, Date.now())
+      console.log(state.queue[0])
+      db.add(state.queue[0].value, (err, data) => {
+        db.last.update(data.value)
+        cb(err, data)
+      })
+    },
+    messagesByType: function(opts) {
+      return pull(
+        db.query.read({
+          reverse: opts.reverse,
+          limit: opts.limit,
+          query: [{$filter: {value: { content: {type: opts.type}}}}, {$map: true}]
+        })
+      )
+    },
+
     // config
     validMessageTypes: ['post'],
     privateMessages: true

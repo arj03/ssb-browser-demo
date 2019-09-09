@@ -4,8 +4,10 @@
   const human = require('human-time')
 
   const nodeEmoji = require('node-emoji')
-  const md = require("ssb-markdown")
-  const ref = require("ssb-ref")
+  const md = require('ssb-markdown')
+  const ref = require('ssb-ref')
+
+  const SSBContactMsg = require('ssb-contact-msg/async/create')
 
   const mdOpts = {
     toUrl: (id) => {
@@ -84,7 +86,7 @@
       SSB.db.query.read(),
       pull.collect((err, msgs) => {
         console.log("err", err)
-        console.log(msgs)
+        console.log(msgs.length)
       })
     )
   }
@@ -398,6 +400,34 @@
         var name = author
         if (SSB.profiles && SSB.profiles[author])
           name = SSB.profiles[author].name
+
+        document.getElementById("top").innerHTML = ''
+        if (author != SSB.net.id) {
+          SSB.db.friends.isFollowing({source: SSB.net.id, dest: author }, (err, status) => {
+            if (status) {
+              document.getElementById("top").innerHTML = 'You are following - <input type="submit" id="unfollow" style="margin-top: 5px" value="Unfollow" />'
+              document.getElementById("unfollow").addEventListener("click", function(ev) {
+                ev.preventDefault()
+
+                var contact = SSBContactMsg(SSB)
+                contact.unfollow(author, () => {
+                  alert("unfollowed!") // FIXME: proper UI
+                })
+              })
+            } else {
+              document.getElementById("top").innerHTML = '<input type="submit" id="follow" style="margin-top: 5px" value="Follow" />'
+              document.getElementById("follow").addEventListener("click", function(ev) {
+                ev.preventDefault()
+
+                var contact = SSBContactMsg(SSB)
+                contact.follow(author, () => {
+                  SSB.syncFeedAfterFollow(author)
+                  alert("followed!") // FIXME: proper UI
+                })
+              })
+            }
+          })
+        }
 
         var html = "<h2>Last 50 messages for " + name + " <div style=\"font-size: 15px\">(" + author + ")</div></h2>"
 

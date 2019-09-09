@@ -13,6 +13,9 @@ module.exports = function (dir, ssbId) {
     {blockSize:1024*64, codec:codec}
   ))
 
+  var config = {
+  }
+
   var store = Flume(log, true, (msg, cb) => {
     if (msg && msg.value && typeof (msg.value.content) === 'string') {
       var decrypted = keys.unbox(msg.value.content, SSB.net.config.keys.private)
@@ -49,6 +52,9 @@ module.exports = function (dir, ssbId) {
   var backlinks = require('ssb-backlinks')
   store.backlinks = backlinks.init(store)
   */
+
+  var friends = require('ssb-friends')
+  store.friends = friends.init(store, config)
 
   var query = require('ssb-query')
   store.query = query.init(store)
