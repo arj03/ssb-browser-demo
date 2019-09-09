@@ -348,7 +348,10 @@
             query: [{
               $filter: {
                 value: {
-                  content: { root: rootId },
+                  content: {
+                    root: rootId,
+                    type: 'post'
+                  },
                 }
               }
             }]
@@ -391,7 +394,10 @@
         query: [{
           $filter: {
             value: {
-              author: author
+              author: author,
+              content: {
+                type: 'post'
+              }
             }
           }
         }]
@@ -449,8 +455,6 @@
         updateDBStatus()
         return
       }
-
-      SSB.renderThread = renderThread
 
       if (!SSB.remoteAddress)
         SSB.remoteAddress = document.getElementById("remoteAddress").value
@@ -520,25 +524,26 @@
   window.addEventListener('click', (ev) => {
     if (ev.target.tagName === 'A' && ev.target.getAttribute('href').startsWith("%"))
     {
-      ev.stopPropagation()
-      ev.preventDefault()
+      changeScreen(ev, 'thread')
       renderThread(ev.target.getAttribute('href'))
     }
     else if (ev.target.tagName === 'A' && ev.target.getAttribute('href').startsWith("@"))
     {
-      ev.stopPropagation()
-      ev.preventDefault()
+      changeScreen(ev, 'profile')
       renderProfile(ev.target.getAttribute('href'))
     }
   })
 
-  document.getElementById("threadId").addEventListener('keydown', function(e) {
-    if (e.keyCode == 13) // enter
+  document.getElementById("threadId").addEventListener('keydown', function(ev) {
+    if (ev.keyCode == 13) // enter
     {
-      var msgId = document.getElementById("threadId").value
-      if (msgId != '') {
-        screen = 'thread'
-        SSB.renderThread(msgId)
+      var text = document.getElementById("threadId").value
+      if (text != '' && text.startsWith('%')) {
+        changeScreen(ev, 'thread')
+        renderThread(text)
+      } else if (text != '' && text.startsWith('@')) {
+        changeScreen(ev, 'profile')
+        renderProfile(text)
       }
     }
   })
