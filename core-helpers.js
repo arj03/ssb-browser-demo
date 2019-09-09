@@ -206,7 +206,7 @@ exports.initialSync = function()
       //console.log("Downloading messages for: ", onboard[user].name)
 
       pull(
-        rpc.createHistoryStream({id: user, seq: seqStart, keys: false}),
+        rpc.partialReplication.partialReplication({id: user, seq: seqStart, keys: false}),
         pull.drain((msg) => {
           ++totalMessages
           SSB.net.add(msg, (err, res) => {
