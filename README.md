@@ -12,9 +12,6 @@ The code is really rough especially the UI code. The backend is not a
 full ssb implementation, it only implements the features needed for
 this demo.
 
-This is a playground (for me!) so please treat it as such :-) I'm not
-interested in a fully working client.
-
 Things that work:
  - viewing posts and threads
  - posting and replying to messages
@@ -32,10 +29,11 @@ Also be sure to enable all 5 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
 
 The following patches from the patches folder are needed:
+ - epidemic-broadcast-fix-replicate-multiple.patch
  - flumeview-level-mkdirp.patch
  - ssb-ebt.patch
+ - ssb-friends.patch
  - ssb-tunnel.patch
- - epidemic-broadcast-fix-replicate-multiple.patch
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
@@ -55,9 +53,13 @@ Server needs to have ws enabled.
 ]
 ```
 
-Futhermore as a test I've used the
-https://github.com/arj03/ssb-get-thread plugin. This is not needed for
-initial sync but only for browsing threads.
+The
+[ssb-partial-replication](https://github.com/arj03/ssb-partial-replication)
+plugin is needed for faster sync. Also the
+[ssb-get-thread](https://github.com/arj03/ssb-get-thread) plugin is
+used for browsing threads you don't currently have, such as from
+people outside the people you have synced or older messages because of
+the partial replication nature.
 
 # Onboarding file
 
