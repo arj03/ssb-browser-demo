@@ -18,7 +18,7 @@
         {
           // FIXME: doesn't work the first time
           SSB.net.blobs.privateGet(link.link, link.query.unbox, () => {})
-          return '' //SSB.net.blobs.fsURL(link.link)
+          return SSB.net.blobs.privateFsURL(link.link)
         }
         else
           return SSB.net.blobs.remoteURL(link.link)
@@ -66,6 +66,8 @@
     let user = { author: msg.value.author, name: msg.value.author }
     if (SSB.profiles)
       user = SSB.profiles[msg.value.author]
+    if (msg.value.author == SSB.net.id)
+      user.name = "You"
     if (user && user.image) {
       SSB.net.blobs.localGet(user.image, (err, url) => {
         if (!err)
@@ -348,14 +350,12 @@
             query: [{
               $filter: {
                 value: {
-                  content: {
-                    root: rootId,
-                    type: 'post'
-                  },
+                  content: { root: rootId },
                 }
               }
             }]
           }),
+          pull.filter((msg) => msg.value.content.type == 'post'),
           pull.through((msg) => lastMsgId = msg.key),
           paramap(renderMessage, 1),
           pull.collect((err, rendered) => {

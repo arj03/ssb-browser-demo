@@ -71,6 +71,10 @@ exports.init = function (sbot, config) {
     cb()
   }
 
+  function privateFsURL(id, cb) {
+    return 'filesystem:file:///persistent/.ssb-lite/private-blobs/' + id
+  }
+
   function fsURL(id, cb) {
     if (window.IDBMutableFile) // firefox
     {
@@ -375,6 +379,7 @@ exports.init = function (sbot, config) {
     },
 
     fsURL,
+    privateFsURL,
     remoteURL
   }
 }
