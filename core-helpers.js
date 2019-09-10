@@ -81,7 +81,7 @@ exports.syncThread = function(messages, cb) {
 
   pull(
     pull.values(messages),
-    pull.filter((msg) => msg.content.type == "post"),
+    pull.filter((msg) => msg && msg.content.type == "post"),
     pull.drain((msg) => {
       state = validate.appendOOO(SSB.state, hmac_key, msg)
 
