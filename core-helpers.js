@@ -102,7 +102,7 @@ exports.sync = function()
     if (!SSB.state.feeds[SSB.net.id])
       SSB.net.ebt.request(SSB.net.id, true)
 
-    if (!JSON.parse(localStorage["settings"]).syncOnlyFollows) {
+    if (localStorage["settings"] && !JSON.parse(localStorage["settings"]).syncOnlyFollows) {
       for (var feed in SSB.state.feeds)
         SSB.net.ebt.request(feed, true)
     } else {
