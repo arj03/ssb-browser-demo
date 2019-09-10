@@ -17,7 +17,7 @@ Things that work:
  - posting and replying to messages
  - posting blobs
  - private messages including decrypting private blobs
- - off-chain chat messages using ssb-tunnel for e2e connection
+ - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
