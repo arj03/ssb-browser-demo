@@ -4,6 +4,7 @@
 const validate = require('ssb-validate')
 const keys = require('ssb-keys')
 const pull = require('pull-stream')
+var Obv = require('obv')
 
 exports.manifest =  {
   createHistoryStream: 'source',
@@ -22,6 +23,8 @@ exports.init = function (sbot, config) {
   sbot.createHistoryStream = function() {
     return pull.empty()
   }
+
+  sbot.post = Obv()
 
   sbot.getVectorClock = function (_, cb) {
     if (!cb) cb = _

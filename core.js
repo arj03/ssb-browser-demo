@@ -61,6 +61,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
       console.log(state.queue[0])
       db.add(state.queue[0].value, (err, data) => {
         db.last.update(data.value)
+        net.post(data.value) // ebt
         cb(err, data)
       })
     },

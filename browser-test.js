@@ -141,15 +141,8 @@
           var text = document.getElementById("message").value
           if (text != '')
           {
-            SSB.state.queue = []
-            var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, { type: 'post', text }, Date.now())
-            console.log(state.queue[0])
-
-            SSB.db.add(state.queue[0].value, (err, data) => {
-              console.log(err)
-              console.log(data)
-
-              SSB.db.last.update(data.value)
+            SSB.publish({ type: 'post', text }, (err) => {
+              if (err) console.log(err)
 
               renderPublic()
             })
@@ -224,14 +217,8 @@
               content = SSB.box(content, recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
             }
 
-            SSB.state.queue = []
-            var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
-            console.log(state.queue[0])
-
-            SSB.db.add(state.queue[0].value, (err, data) => {
-              console.log(err)
-              console.log(data)
-              SSB.db.last.update(data.value)
+            SSB.publish(content, (err) => {
+              if (err) console.log(err)
 
               renderPrivate()
             })
@@ -320,17 +307,8 @@
           content = SSB.box(content, recps.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
         }
 
-        SSB.state.queue = []
-        var state = SSB.generateMessage(SSB.state, null, SSB.net.config.keys, content, Date.now())
-        console.log(state.queue[0])
-
-        SSB.db.add(state.queue[0].value, (err, data) => {
-          if (!err)
-            state.queue = []
-
-          console.log(err)
-          console.log(data)
-          SSB.db.last.update(data.value)
+        SSB.publish(content, (err) => {
+          if (err) console.log(err)
 
           renderThread(rootId)
         })
