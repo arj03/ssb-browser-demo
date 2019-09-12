@@ -16,6 +16,7 @@
     "human-time": "0.0.2",
     "node-emoji": "^1.10.0",
     "polyraf": "^1.1.0",
+    "pull-abortable": "^4.1.1",
     "pull-cont": "^0.1.1",
     "pull-defer": "^0.2.3",
     "pull-stream": "^3.6.1",

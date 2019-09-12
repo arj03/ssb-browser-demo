@@ -1,5 +1,6 @@
 (function() {
   const pull = require('pull-stream')
+  const pullAbort = require('pull-abortable')
   const paramap = require('pull-paramap')
   const human = require('human-time')
 
@@ -39,26 +40,31 @@
 
   function renderMessage(msg, cb)
   {
-    var html = "<div style=\"display: table;\">"
+    var html = "<div class='message'><div class='header'>"
 
     function render(user)
     {
-      html += "<span style=\"vertical-align: top; display: table-cell;\">"
-      html += "<div style=\"font-size: small; margin-bottom: 5px;\" title=\"" + new Date(msg.value.timestamp).toLocaleString("da-DK") + "\">" + human(new Date(msg.value.timestamp)) + "</div>"
+      var date = new Date(msg.value.timestamp).toLocaleString("da-DK")
+      var humandate = human(new Date(msg.value.timestamp))
+
+      html += "<span class='text'>"
+      html += `<div class='date' title='${date}'>${humandate}</div>`
       if (user)
-        html += "<a href=\"" + msg.value.author + "\" target=\"_blank\">" + user.name + "</a> posted"
+        html += `<a href='${msg.value.author}'>${user.name}</a> posted`
 
       if (msg.value.content.root && msg.value.content.root != msg.key)
-        html += " in reply <a href=\"" + msg.value.content.root + "\" target=\"_blank\">to</a>"
+        html += ` in reply <a href='${msg.value.content.root}'>to</a>`
       else
-        html += " a <a href=\"" + msg.key + "\" target=\"_blank\">thread</a>"
+        html += ` a <a href='${msg.key}'>thread</a>`
 
       html += "</span></div>"
 
       if (msg.value.content.subject) // private
-        html += "<h2><a href='" +  msg.key + "'>" + msg.value.content.subject + "</a></h2>"
+        html += `<h2><a href='${msg.key}'>${msg.value.content.subject}</a></h2>`
 
-      html += md.block(msg.value.content.text, mdOpts) + " <br>"
+      html += md.block(msg.value.content.text, mdOpts)
+
+      html += "</div>"
 
       cb(null, html)
     }
@@ -71,7 +77,7 @@
     if (user && user.image) {
       SSB.net.blobs.localGet(user.image, (err, url) => {
         if (!err)
-          html += "<img style='width: 50px; height; 50px; padding-right: 10px; display: table-cell;' src='" + url + "' />"
+          html += `<img class='avatar' src='${url}' />`
 
         render(user)
       })
@@ -97,7 +103,7 @@
   function renderMessages(onlyThreads, messages) {
     document.getElementById("newPublicMessages").innerHTML = ""
 
-    var html = "<h2 style=\"margin-bottom: 5px\">Last 50 messages</h2>"
+    var html = "<h2>Last 50 messages</h2>"
     html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
     if (onlyThreads)
       html += " checked><br><br>"
@@ -115,9 +121,9 @@
         })
 
         document.getElementById("top").innerHTML = `
-              <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px;"></textarea><br>
-              <input type="file" id="file">
-              <input type="submit" id="postMessage" style="margin-top: 5px" value="Post new thread" />`
+              <textarea class="messageText"></textarea><br>
+              <button id="postMessage">Post new thread</button>
+              <input type="file" id="file">`
 
         document.getElementById("bottom").innerHTML = ""
 
@@ -195,10 +201,10 @@
       paramap(renderMessage, 1),
       pull.collect((err, rendered) => {
         document.getElementById("top").innerHTML = `
-              <input type="text" id="recipients" style="padding: 5px; width: 40rem; margin: 10 0 10 0px" placeholder="recipient ids (, seperator)" />
-              <input type="text" id="subject" style="padding: 5px; width: 40rem; margin: 0 0 10 0px" placeholder="subject" />
-              <textarea id="message" style="height: 10rem; width: 40rem; padding: 5px"></textarea><br>
-              <input type="submit" id="postPrivateMessage" style="margin-top: 5px" value="Post private message" />`
+              <input type="text" id="recipients" placeholder="recipient ids (, seperator)" />
+              <input type="text" id="subject" placeholder="subject" />
+              <textarea class="messageText"></textarea><br>
+              <button id="postPrivateMessage">Post private message</button>`
         document.getElementById("postPrivateMessage").addEventListener("click", function() {
           var text = document.getElementById("message").value
           var subject = document.getElementById("subject").value
@@ -258,11 +264,10 @@
   }
 
   function renderChat() {
-    document.getElementById("top").innerHTML = "<div style='margin-bottom: 10px'>Your id: " + SSB.net.id + `</div>
-              <button id="acceptConnections" style="padding: 5px; margin-right: 1rem;">Accept incoming connections</button>   or  
-              <input type="text" id="tunnelConnect" style="padding: 5px; width: 24rem; margin-bottom: 12px; margin-left: 1rem;" placeholder="@remoteId to connect to" />
-              <input type="text" id="chatMessage" style="padding: 5px; width: 40rem;" placeholder="type message, enter to send" />
-              `
+    document.getElementById("top").innerHTML = `<div style='margin-bottom: 10px'>Your id: ${SSB.net.id} </div>
+              <button id="acceptConnections">Accept incoming connections</button>   or  
+              <input type="text" id="tunnelConnect" placeholder="@remoteId to connect to" />
+              <input type="text" id="chatMessage" placeholder="type message, enter to send" />`
 
     document.getElementById("acceptConnections").addEventListener("click", function() {
       SSB.net.tunnelChat.acceptMessages()
@@ -283,8 +288,11 @@
       }
     })
 
-    document.getElementById("messages").innerHTML = '<h2>Off-chain messages</h2>' +
-      '<div style="font-size: smaller; margin-bottom: 10px; margin-top: -10px;">Off-chain messages are messages sent encrypted between you and the other end through the magic of tunnels. These messages are ephemeral and will be gone forever when you change view!</div>'
+    document.getElementById("messages").innerHTML = `<h2>Off-chain messages</h2> 
+      <div id="chatDescription">Off-chain messages are messages sent
+      encrypted between you and the other end through the magic of
+      tunnels. These messages are ephemeral and will be gone forever
+      when you change view!</div>`
 
     abortablePullStream = pullAbort()
     pull(
@@ -298,8 +306,8 @@
 
   function addReply(rootId, lastMsgId, recps) {
     document.getElementById("bottom").innerHTML = `
-      <textarea id="message" style="height: 10rem; width: 40rem;"></textarea><br>
-      <input type="submit" id="postReply" style="margin-top: 5px" value="Post reply" />`
+      <textarea class="messageText"></textarea><br>
+      <button id="postReply">Post reply</button>`
 
     document.getElementById("postReply").addEventListener("click", function() {
       var text = document.getElementById("message").value
@@ -323,7 +331,7 @@
   function renderThread(rootId) {
     function render(rootMsg)
     {
-      var html = "<h2>Thread " + rootId + "</h2>"
+      var html = "<h2>Thread ${rootId}</h2>"
       var lastMsgId = rootId
 
       renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
@@ -393,7 +401,7 @@
         if (author != SSB.net.id) {
           SSB.db.friends.isFollowing({source: SSB.net.id, dest: author }, (err, status) => {
             if (status) {
-              document.getElementById("top").innerHTML = 'You are following - <input type="submit" id="unfollow" style="margin-top: 5px" value="Unfollow" />'
+              document.getElementById("top").innerHTML = 'You are following - <button id="unfollow">Unfollow</button>'
               document.getElementById("unfollow").addEventListener("click", function(ev) {
                 ev.preventDefault()
 
@@ -403,7 +411,7 @@
                 })
               })
             } else {
-              document.getElementById("top").innerHTML = '<input type="submit" id="follow" style="margin-top: 5px" value="Follow" />'
+              document.getElementById("top").innerHTML = '<button id="follow">Follow</button>'
               document.getElementById("follow").addEventListener("click", function(ev) {
                 ev.preventDefault()
 
@@ -506,11 +514,11 @@
 
       var statusHTML = "<b>DB status</b>"
       if (status.since == 0 || status.since == -1) // sleeping
-        statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256') + "\"/>"
+        statusHTML += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256')}'/>`
       else if (!status.sync) // hammer time
-        statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256') + "\"/>"
+        statusHTML += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256')}'/>`
       else { // dancing
-        statusHTML += "<img style=\"float: right;\" src=\"" + SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256') + "\"/>"
+        statusHTML += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256')}'/>`
       }
 
       statusHTML += "<br><pre>" + JSON.stringify(status, null, 2) + "</pre>"

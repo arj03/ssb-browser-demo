@@ -4,7 +4,7 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <style>
       body {
-          max-width: 45rem;
+          max-width: 48rem;
           padding: 2rem;
           margin: auto;
           background-color: #fdf6e3;
@@ -30,6 +30,111 @@
           font-size: 120%;
           line-height: 1;
       }
+
+      .message {
+          padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+          margin: 1rem 0;
+          border-radius: 2px;
+          border: 1px solid hsl(240, 12%, 92%);
+          word-wrap: break-word;
+          background-color: white;
+      }
+
+      .message > .header {
+          display: table;
+      }
+
+      .message > .header > .avatar {
+          width: 50px;
+          height; 50px;
+          padding-right: 10px;
+          display: table-cell;
+      }
+
+      .message > .header > .text {
+          vertical-align: top;
+          display: table-cell;
+      }
+
+      .message > .header > .text > .date {
+          font-size: small;
+          margin-bottom: 5px;
+      }
+
+      .messageText {
+          height: 10rem;
+          width: 48rem;
+          padding: 5px;
+      }
+
+      #postMessage {
+          margin-right: 2rem;
+      }
+
+      button {
+          margin-top: 5px;
+          text-transform: uppercase;
+          font-weight: bold;
+          font-size: .7rem;
+          letter-spacing: 1.4px;
+          color: #666;
+          background-color: #fff;
+          min-width: 6rem;
+          min-height: 1.8rem;
+          padding: .2rem 1rem;
+          cursor: pointer;
+          border: 1px solid rgb(169, 169, 169);
+          outline: none;
+          justify-content: center;
+          align-items: center;
+          transition: border, color, background .1s ease-in;
+          word-break: initial;
+      }
+
+      /* private */
+
+      #recipients {
+          padding: 5px;
+          width: 40rem;
+          margin: 10 0 10 0px;
+      }
+
+      #subject {
+          padding: 5px;
+          width: 40rem;
+          margin: 0 0 10 0px;
+      }
+
+      /* chat */
+
+      #acceptConnections {
+          padding: 5px;
+          margin-right: 1rem;
+      }
+
+      #tunnelConnect {
+          padding: 5px;
+          width: 24rem;
+          margin-bottom: 12px;
+          margin-left: 1rem;
+      }
+
+      #chatMessage {
+          padding: 5px;
+          width: 40rem;
+      }
+
+      #chatDescription {
+          font-size: smaller;
+          margin-bottom: 10px;
+          margin-top: -10px;
+      }
+
+      /* settings */
+
+      #status > .indexstatus {
+          float: right;
+      }
     </style>
   </head>
   <body>
@@ -50,7 +155,7 @@
       </div>
       <div id="status" style="float: right; width: 55%"></div>
     </div>
-    <div id="top" style="clear: both; padding: 0 20 0 20px;"></div>
+    <div id="top" style="clear: both;"></div>
     <div id="messages"></div>
     <div id="bottom"></div>
   </body>
