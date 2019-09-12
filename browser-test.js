@@ -446,7 +446,7 @@
         }]
       }),
       pull.filter((msg) => !msg.value.meta),
-      pull.drain((err) => {
+      pull.drain(() => {
         document.getElementById("newPublicMessages").innerHTML = "&#127881;"
       })
     )
@@ -461,12 +461,12 @@
           $filter: {
             value: {
               timestamp: { $gt: 0 },
-              content: { recps: { $truthy: true } }
+              content: { type: 'post', recps: { $truthy: true } }
             }
           }
         }]
       }),
-      pull.drain((err) => {
+      pull.drain(() => {
         document.getElementById("newPrivateMessages").innerHTML = "&#128274;"
       })
     )
