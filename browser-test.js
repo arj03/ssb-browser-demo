@@ -121,13 +121,15 @@
         })
 
         document.getElementById("top").innerHTML = `
-              <textarea class="messageText"></textarea><br>
+              <span id="publicMessageInput" style="display:none">
+              <textarea class="messageText" id="message"></textarea><br>
+              </span>
               <button id="postMessage">Post new thread</button>
-              <input type="file" id="file">`
+              <input type="file" id="publicMessageFileInput" style="display:none">`
 
         document.getElementById("bottom").innerHTML = ""
 
-        document.getElementById("file").addEventListener("change", function(ev) {
+        document.getElementById("publicMessageFileInput").addEventListener("change", function(ev) {
           const file = ev.target.files[0]
 
           if (!file) return
@@ -146,6 +148,12 @@
         })
 
         document.getElementById("postMessage").addEventListener("click", function() {
+          if (document.getElementById("publicMessageInput").style.display == "none") {
+            document.getElementById("publicMessageInput").style = ""
+            document.getElementById("publicMessageFileInput").style = ""
+            return
+          }
+
           var text = document.getElementById("message").value
           if (text != '')
           {
@@ -201,11 +209,18 @@
       paramap(renderMessage, 1),
       pull.collect((err, rendered) => {
         document.getElementById("top").innerHTML = `
+              <span id="privateMessageInput" style="display:none">
               <input type="text" id="recipients" placeholder="recipient ids (, seperator)" />
               <input type="text" id="subject" placeholder="subject" />
-              <textarea class="messageText"></textarea><br>
+              <textarea class="messageText" id="message"></textarea><br>
+              </span>
               <button id="postPrivateMessage">Post private message</button>`
         document.getElementById("postPrivateMessage").addEventListener("click", function() {
+          if (document.getElementById("privateMessageInput").style.display == "none") {
+            document.getElementById("privateMessageInput").style = ""
+            return
+          }
+
           var text = document.getElementById("message").value
           var subject = document.getElementById("subject").value
           var recipients = document.getElementById("recipients").value.split(',').map(x => x.trim())
@@ -306,7 +321,7 @@
 
   function addReply(rootId, lastMsgId, recps) {
     document.getElementById("bottom").innerHTML = `
-      <textarea class="messageText"></textarea><br>
+      <textarea class="messageText" id="message"></textarea><br>
       <button id="postReply">Post reply</button>`
 
     document.getElementById("postReply").addEventListener("click", function() {
