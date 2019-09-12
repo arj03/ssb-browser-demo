@@ -187,6 +187,8 @@
   function renderPrivateMessages(messages) {
     var html = "<h2>Private messages</h2>"
 
+    document.getElementById("newPrivateMessages").innerHTML = ""
+
     pull(
       pull.values(messages),
       pull.filter((msg) => !msg.value.content.root), // top posts
@@ -444,8 +446,28 @@
         }]
       }),
       pull.filter((msg) => !msg.value.meta),
-      pull.drain((err, msgs) => {
+      pull.drain((err) => {
         document.getElementById("newPublicMessages").innerHTML = "&#127881;"
+      })
+    )
+  }
+
+  function newPrivateMessagesNotify() {
+    pull(
+      SSB.db.query.read({
+        live: true,
+        old: false,
+        query: [{
+          $filter: {
+            value: {
+              timestamp: { $gt: 0 },
+              content: { recps: { $truthy: true } }
+            }
+          }
+        }]
+      }),
+      pull.drain((err) => {
+        document.getElementById("newPrivateMessages").innerHTML = "&#128274;"
       })
     )
   }
@@ -469,6 +491,7 @@
           renderPublic()
 
         newMessagesNotify()
+        newPrivateMessagesNotify()
       }
 
       const status = SSB.db.getStatus()
