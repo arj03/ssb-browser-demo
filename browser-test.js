@@ -104,7 +104,7 @@
     document.getElementById("newPublicMessages").innerHTML = ""
 
     var html = "<h2>Last 50 messages</h2>"
-    html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
+    html += "Threads only: <input id='onlyThreads' type='checkbox'"
     if (onlyThreads)
       html += " checked><br><br>"
     else
@@ -384,6 +384,7 @@
         query: [{
           $filter: {
             value: {
+              timestamp: { $gt: 0 },
               author: author,
               content: {
                 type: 'post'
@@ -425,7 +426,7 @@
           })
         }
 
-        var html = "<h2>Last 50 messages for " + name + " <div style=\"font-size: 15px\">(" + author + ")</div></h2>"
+        var html = "<h2>Last 50 messages for " + name + " <div style='font-size: 15px'>(" + author + ")</div></h2>"
 
         pull(
           pull.values(msgs),
