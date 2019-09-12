@@ -95,6 +95,8 @@
   */
 
   function renderMessages(onlyThreads, messages) {
+    document.getElementById("newPublicMessages").innerHTML = ""
+
     var html = "<h2 style=\"margin-bottom: 5px\">Last 50 messages</h2>"
     html += "Threads only: <input id=\"onlyThreads\" type=\"checkbox\""
     if (onlyThreads)
@@ -427,6 +429,27 @@
     )
   }
 
+  function newMessagesNotify() {
+    pull(
+      SSB.db.query.read({
+        live: true,
+        old: false,
+        query: [{
+          $filter: {
+            value: {
+              timestamp: { $gt: 0 },
+              content: { type: 'post' }
+            }
+          }
+        }]
+      }),
+      pull.filter((msg) => !msg.value.meta),
+      pull.drain((err, msgs) => {
+        document.getElementById("newPublicMessages").innerHTML = "&#127881;"
+      })
+    )
+  }
+
   function updateDBStatus() {
     setTimeout(() => {
       if (typeof SSB === 'undefined') {
@@ -444,6 +467,8 @@
         SSB.loadProfiles()
         if (screen == 'public')
           renderPublic()
+
+        newMessagesNotify()
       }
 
       const status = SSB.db.getStatus()
@@ -606,5 +631,5 @@
       localStorage['settings'] = JSON.stringify(settings)
     }
   })
-
+ 
 })()
