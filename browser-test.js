@@ -346,7 +346,7 @@
   function renderThread(rootId) {
     function render(rootMsg)
     {
-      var html = "<h2>Thread ${rootId}</h2>"
+      var html = `<h2>Thread ${rootId}</h2>`
       var lastMsgId = rootId
 
       renderMessage({ value: rootMsg }, (err, rootMsgHTML) => {
