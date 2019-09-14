@@ -10,10 +10,22 @@
           background-color: #fdf6e3;
       }
 
+      .router-link-exact-active {
+          font-weight: bold;
+          color: #000;
+          text-decoration: none;
+      }
+
       #messages, #navigation, #settings {
           font-weight: 400;
           font-style: normal;
           font-family: system-ui, sans-serif
+      }
+
+      #goTo {
+          width: 300px;
+          padding: 5px;
+          float: right;
       }
 
       img {
@@ -135,31 +147,51 @@
       #status > .indexstatus {
           float: right;
       }
+
+      #settingsleft {
+          float: left;
+      }
+
+      #syncData {
+          margin-bottom: 25px;
+          padding: 10px;
+      }
+
+      #remoteAddress {
+          width: 300px;
+          padding: 5px
+      }
+
+      #blobId {
+          width: 300px;
+          padding: 5px
+      }
+
+      #status {
+          float: right;
+          width: 55%;
+      }
     </style>
   </head>
   <body>
-    <h1 id="header" title="back to overview">SSB browser demo</h1>
-    <div id="navigation" style="padding: 0 20 20 20px;">
-      <a id="goToPublic" href="">Public</a> <span title="new messages" id="newPublicMessages"></span> | <a id="goToPrivate" href="">Private</a> <span title="new messages" id="newPrivateMessages"></span> | <a id="goToChat" href="">Off-chain chat</a> | <a id="goToSettings" href="">Settings</a>
-      <input type="text" style="width: 300px; padding: 5px; float: right;" placeholder="thread msg id / feedId" value="" id="threadId" />
+    <div id="app">
+      <h1>SSB browser demo</h1>
+      <p>
+        <router-link to="/public">Public</router-link><span title="new messages" id="newPublicMessages"></span> |
+        <router-link to="/private">Private</router-link><span title="new messages" id="newPrivateMessages"></span> |
+        <router-link to="/chat">Off-chain chat</router-link> |
+        <router-link to="/settings">Settings</router-link>
+        <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup.enter="goToTarget">
+      </p>
+
+      <router-view></router-view>
     </div>
-    <div id="settings" style="display:none;">
-      <div style="float: left;">
-        <button id="syncData" style="margin-bottom: 25px; padding: 10px;">Sync data</button><br>
-        <input type="text" style="width: 300px; padding: 5px" placeholder="remote peer" value="ws:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519" value="" id="remoteAddress" />
-        <br><br>
-        <input type="text" style="width: 300px; padding: 5px" placeholder="onboard blob url" value="" id="blobId" />
-        <br><br>
-        Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" />
-        <br><br>
-      </div>
-      <div id="status" style="float: right; width: 55%"></div>
-    </div>
-    <div id="top" style="clear: both;"></div>
-    <div id="messages"></div>
-    <div id="bottom"></div>
   </body>
 
+  <script src="node_modules/vue/dist/vue.min.js"></script>
+  <script src="node_modules/vue-router/dist/vue-router.min.js"></script>
+
+  <script src="bundle-ssb-msg.js"></script>
   <script src="bundle-core.js"></script>
   <script src="bundle-test.js"></script>
 </html>

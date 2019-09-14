@@ -91,6 +91,7 @@ this back to 2mb because of level.
 
 browserify --full-paths core.js > bundle-core.js
 browserify --full-paths browser-test.js > bundle-test.js
+browserify --full-paths ui/ssb-msg.js > bundle-ssb-msg.js
 
 ssb-markdown increases the size quite substantially
 
