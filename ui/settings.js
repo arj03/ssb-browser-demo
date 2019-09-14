@@ -10,14 +10,16 @@ module.exports = function () {
 	Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
         <br><br>
       </div>
-      <div id="status"></div>
+      <div id="status" v-html="statusHTML"></div>
     </div>`,
 
     data: function() {
       return {
         syncOnlyFollows: false,
         remoteAddress: 'ws:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
-        blobId: ''
+        blobId: '',
+        statusHTML: '',
+        running: true
       }
     },
 
@@ -50,34 +52,34 @@ module.exports = function () {
 
     watch: {
       syncOnlyFollows: function (newValue, oldValue) {
-        localStorage['settings'] = JSON.stringify(settings)
+        localStorage['settings'] = JSON.stringify({
+          syncOnlyFollows: this.syncOnlyFollows,
+          remoteAddress: this.remoteAddress
+        })
       },
       remoteAddress: function (newValue, oldValue) {
-        localStorage['settings'] = JSON.stringify(settings)
+        localStorage['settings'] = JSON.stringify({
+          syncOnlyFollows: this.syncOnlyFollows,
+          remoteAddress: this.remoteAddress
+        })
       }
     },
 
-    created: function () {
+    created: function() {
       if (localStorage['settings']) {
-        settings = JSON.parse(localStorage['settings'])
+        var settings = JSON.parse(localStorage['settings'])
         this.syncOnlyFollows = settings.syncOnlyFollows
         this.remoteAddress = settings.remoteAddress
       }
-    },
 
-    /*
-    beforeRouteEnter: function() {
+      var self = this
       
-      // FIXME:?
       var lastStatus = null
       
       function updateDBStatus() {
-        setTimeout(() => {
-          if (typeof SSB === 'undefined') {
-            updateDBStatus()
-            return
-          }
+        if (!self.running) return
 
+        setTimeout(() => {
           const status = SSB.db.getStatus()
 
           if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
@@ -88,27 +90,28 @@ module.exports = function () {
 
           lastStatus = status
 
-          var statusHTML = "<b>DB status</b>"
+          var html = "<b>DB status</b>"
           if (status.since == 0 || status.since == -1) // sleeping
-            statusHTML += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256')}'/>`
+            html += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256')}'/>`
           else if (!status.sync) // hammer time
-            statusHTML += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256')}'/>`
+            html += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256')}'/>`
           else { // dancing
-            statusHTML += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256')}'/>`
+            html += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256')}'/>`
           }
 
-          statusHTML += "<br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
-
-          //document.getElementById("status").innerHTML = statusHTML
+          html += "<br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
+          self.statusHTML = html
 
           updateDBStatus()
         }, 1000)
       }
+
+      updateDBStatus()
     },
     
-    beforeRouteLeave: function() {
-
+    beforeRouteLeave: function(from, to, next) {
+      this.running = false
+      next()
     }
-    */
   }
 }
