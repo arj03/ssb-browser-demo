@@ -70,6 +70,8 @@ module.exports = function () {
         var settings = JSON.parse(localStorage['settings'])
         this.syncOnlyFollows = settings.syncOnlyFollows
         this.remoteAddress = settings.remoteAddress
+
+        SSB.remoteAddress = settings.remoteAddress
       }
 
       var self = this

@@ -75,7 +75,7 @@ module.exports = function () {
           SSB.publish(content, (err) => {
             if (err) console.log(err)
 
-            renderPrivate()
+            this.renderPrivate()
           })
         }
       }

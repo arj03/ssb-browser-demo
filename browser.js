@@ -52,7 +52,6 @@
     const Chat = require('./ui/chat')()
     const Settings = require('./ui/settings')()
 
-    SSB.remoteAddress = Settings.data().remoteAddress
     SSB.loadProfiles()
 
     newMessagesNotify()
