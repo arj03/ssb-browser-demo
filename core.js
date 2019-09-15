@@ -6,6 +6,11 @@ const path = require('path')
 // in browser this will be local storage
 const dir = path.join(os.homedir(), ".ssb-lite")
 
+const EventEmitter = require('events')
+SSB = {
+  events: new EventEmitter()
+}
+
 const s = require('sodium-browserify')
 s.events.on('sodium-browserify:wasm loaded', function() {
 
@@ -34,7 +39,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
   }
 
   // FIXME: refactor this into its own module instead of global object
-  SSB = {
+  SSB = Object.assign(SSB, {
     db,
     net,
     dir,
@@ -82,5 +87,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     // will get added on load time:
     // - onboard
     // - remoteAddress
-  }
+  })
+
+  SSB.events.emit("SSB: loaded")
 })

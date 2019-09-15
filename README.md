@@ -80,19 +80,20 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 &S32C82lwHbaZdDJKvCgmQ4eURf1trWbBaUHL9zrxkMs=.sha256
 
-# Force WASM locally (outside browser)
-
-rm -rf node_modules/sodium-chloride/
-
 # browserify 2mb
 
 Removing blobs means that we go down to 1.6mb. ssb-backlinks brings
 this back to 2mb because of level.
 
 browserify --full-paths core.js > bundle-core.js
-browserify --full-paths browser-test.js > bundle-test.js
+browserify --full-paths browser.js > bundle-ui.js
+browserify --full-paths ui/ssb-msg.js > bundle-ssb-msg.js
 
 ssb-markdown increases the size quite substantially
+
+# TODO
+
+- port over ssb-friend-pub
 
 ## uglifyify
 
@@ -102,6 +103,10 @@ browserify --full-paths -g uglifyify -p common-shakeify browser-test.js > bundle
 => 1.2mb
 
 # Other
+
+## Force WASM locally (outside browser)
+
+rm -rf node_modules/sodium-chloride/
 
 ## check contents of db
 

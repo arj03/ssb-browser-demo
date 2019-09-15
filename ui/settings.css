@@ -1,0 +1,27 @@
+#settings > #status > .indexstatus {
+  float: right;
+}
+
+#settings > .settingsleft {
+  float: left;
+}
+
+#settings > .settingsleft > #syncData {
+  margin-bottom: 25px;
+  padding: 10px;
+}
+
+#settings > .settingsleft > #remoteAddress {
+  width: 300px;
+  padding: 5px
+}
+
+#settings > .settingsleft > #blobId {
+  width: 300px;
+  padding: 5px
+}
+
+#settings > #status {
+  float: right;
+  width: 55%;
+}

@@ -39,9 +39,7 @@ exports.init = function (sbot, config) {
       cb(null, clock)
     }
 
-    // yay
-    if (typeof(SSB) === 'undefined')
-      setTimeout(getClock, 1000)
+    SSB.events.on('SSB: loaded', getClock)
   }
 
   function isString (s) {
