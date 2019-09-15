@@ -44,16 +44,16 @@ Vue.component('ssb-msg', {
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
-              in reply <router-link :to="{name: 'thread', params: { rootId: this.rootId }}">to</router-link>
+              in reply <router-link :to="{name: 'thread', params: { rootId: rootId }}">to</router-link>
             </span>
             <span v-else>
-              a <router-link :to="{name: 'thread', params: { rootId: this.rootId }}">thread</router-link>
+              a <router-link :to="{name: 'thread', params: { rootId: rootId }}">thread</router-link>
             </span>
           </span>
         </div>
 
         <h2 v:if="msg.value.content.subject">
-          <a :href='msg.key'>{{ msg.value.content.subject }}</a>
+          <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.subject }}</router-link>
         </h2>
 
         <span v-html="body"></span>
