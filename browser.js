@@ -88,10 +88,10 @@
       methods: {
         goToTarget: function() {
           if (this.goToTargetText != '' && this.goToTargetText.startsWith('%')) {
-            router.push({ path: 'thread', params: { messageId: this.goToTargetText } })
+            router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
             this.goToTargetText = ""
           } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('@')) {
-            router.push({ path: 'profile', params: { feedId: this.goToTargetText } })
+            router.push({ name: 'profile', params: { feedId: this.goToTargetText } })
             this.goToTargetText = ""
           }
         }
