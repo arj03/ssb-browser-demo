@@ -34,10 +34,14 @@ module.exports = function () {
             content = SSB.box(content, this.recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
           }
 
+          var self = this
+
           SSB.publish(content, (err) => {
             if (err) console.log(err)
 
-            renderThread()
+            self.postText = ""
+
+            this.renderThread()
           })
         }
       },

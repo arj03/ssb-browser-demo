@@ -86,7 +86,7 @@ module.exports = function () {
 
             self.postText = ""
             
-            renderPublic()
+            this.renderPublic()
           })
         }
       }

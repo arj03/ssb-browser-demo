@@ -34,8 +34,9 @@ module.exports = function () {
             alert("unfollowed!") // FIXME: proper UI
           })
         } else {
+          var self = this
           contact.follow(this.feedId, () => {
-            SSB.syncFeedAfterFollow(this.feedId)
+            SSB.syncFeedAfterFollow(self.feedId)
             alert("followed!") // FIXME: proper UI
           })
         }
