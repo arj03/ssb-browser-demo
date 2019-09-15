@@ -35,11 +35,11 @@ Vue.component('ssb-msg', {
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
-            <span v:if="isThread">
-              in reply <router-link :to="{name: 'thread', params: { rootId: msg.value.content.root }}">to</router-link>
+            <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
+              in reply <router-link :to="{name: 'thread', params: { rootId: this.rootId }}">to</router-link>
             </span>
             <span v-else>
-              a <router-link :to="{name: 'thread', params: { rootId: msg.value.content.root }}">thread</router-link>
+              a <router-link :to="{name: 'thread', params: { rootId: this.rootId }}">thread</router-link>
             </span>
           </span>
         </div>
@@ -61,14 +61,17 @@ Vue.component('ssb-msg', {
   },
 
   computed: {
+    rootId: function() {
+      if (this.msg.value.content.root)
+        return this.msg.value.content.root.substring(1)
+      else
+        return this.msg.value.content.root
+    },
     date: function() {
       return new Date(this.msg.value.timestamp).toLocaleString("da-DK")
     },
     humandate: function() {
       return human(new Date(this.msg.value.timestamp))
-    },
-    isThread: function() {
-      return !(this.msg.value.content.root && this.msg.value.content.root != this.msg.key)
     },
     body: function() {
       return md.block(this.msg.value.content.text, mdOpts)

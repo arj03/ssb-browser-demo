@@ -14,12 +14,13 @@ module.exports = function () {
     props: ['rootId'],
     
     data: function() {
+      this.rootId = '%' + this.rootId
       return {
         latestMsgIdInThread: this.rootId,
         recipients: undefined, // for private messages only
         postText: '',
         messages: [],
-        rootMsg: undefined
+        rootMsg: { key: '', value: { content: {} } }
       }
     },
 
