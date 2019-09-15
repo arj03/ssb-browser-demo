@@ -62,6 +62,7 @@ module.exports = function () {
           syncOnlyFollows: this.syncOnlyFollows,
           remoteAddress: this.remoteAddress
         })
+        SSB.remoteAddress = this.remoteAddress
       }
     },
 

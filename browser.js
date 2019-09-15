@@ -52,6 +52,12 @@
     const Chat = require('./ui/chat')()
     const Settings = require('./ui/settings')()
 
+    if (localStorage['settings']) {
+      var settings = JSON.parse(localStorage['settings'])
+      SSB.remoteAddress = settings.remoteAddress
+    } else
+      SSB.remoteAddress = Settings.data().remoteAddress
+
     SSB.loadProfiles()
 
     newMessagesNotify()
