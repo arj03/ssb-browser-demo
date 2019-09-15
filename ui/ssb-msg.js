@@ -17,6 +17,14 @@ const mdOpts = {
       else
         return SSB.net.blobs.remoteURL(link.link)
     }
+    else if (ref.isFeed(id))
+    {
+      return `#/profile/${encodeURIComponent(id)}`
+    }
+    else if (ref.isMsg(id))
+    {
+      return `#/thread/${encodeURIComponent(id.substring(1))}`
+    }
     else
       return id
   },

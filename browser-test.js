@@ -44,18 +44,6 @@
     )
   }
 
-  // FIXME: use router instead
-  window.addEventListener('click', (ev) => {
-    if (ev.target.tagName === 'A' && ev.target.getAttribute('href').startsWith("%"))
-    {
-      router.push({ path: 'thread', params: { messageId: ev.target.getAttribute('href') } })
-    }
-    else if (ev.target.tagName === 'A' && ev.target.getAttribute('href').startsWith("@"))
-    {
-      router.push({ path: 'thread', params: { feedId: ev.target.getAttribute('href') } })
-    }
-  })
-
   SSB.events.on('SSB: loaded', function() {
     const Public = require('./ui/public')()
     const Profile = require('./ui/profile')()
