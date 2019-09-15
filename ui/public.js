@@ -57,12 +57,14 @@ module.exports = function () {
 
         if (!file) return
 
+        var self = this
+
         file.arrayBuffer().then(function (buffer) {
           SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
             SSB.net.blobs.add("&" + digest, file, (err) => {
               if (!err) {
                 SSB.net.blobs.push("&" + digest, (err) => {
-                  this.postText += " ![" + file.name + "](&" + digest + ")"
+                  self.postText += " ![" + file.name + "](&" + digest + ")"
                 })
               }
             })
@@ -78,10 +80,11 @@ module.exports = function () {
 
         if (this.postText != '')
         {
+          var self = this
           SSB.publish({ type: 'post', text: this.postText }, (err) => {
             if (err) console.log(err)
 
-            this.postText = ""
+            self.postText = ""
             
             renderPublic()
           })
