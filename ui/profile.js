@@ -6,34 +6,37 @@ const SSBContactMsg = require('ssb-contact-msg/async/create')
 module.exports = function () {
   return {
     template: `
-       <template v-if="following">You are following - </template>
-       <button v-on:click="changeFollowStatus">{{ followText }}</button>
-       <h2>Last 50 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
-       <div id="messages"></div>`,
+       <div id="profile">
+         <template v-if="following">You are following - </template>
+         <button v-on:click="changeFollowStatus">{{ followText }}</button>
+         <h2>Last 50 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
+         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+       </div>`,
 
     props: ['feedId'],
     
     data: function() {
       return {
         following: false,
-        name: ''
+        name: '',
+        messages: []
       }
     },
 
     computed: {
-      followText: function() { return following ? "Unfollow" : "Follow" }
+      followText: function() { return this.following ? "Unfollow" : "Follow" }
     },
     
     methods: {
       changeFollowStatus: function() {
         var contact = SSBContactMsg(SSB)
-        if (following) {
-          contact.unfollow(feedId, () => {
+        if (this.following) {
+          contact.unfollow(this.feedId, () => {
             alert("unfollowed!") // FIXME: proper UI
           })
         } else {
-          contact.follow(feedId, () => {
-            SSB.syncFeedAfterFollow(feedId)
+          contact.follow(this.feedId, () => {
+            SSB.syncFeedAfterFollow(this.feedId)
             alert("followed!") // FIXME: proper UI
           })
         }
@@ -48,7 +51,7 @@ module.exports = function () {
               $filter: {
                 value: {
                   timestamp: { $gt: 0 },
-                  author: feedId,
+                  author: this.feedId,
                   content: {
                     type: 'post'
                   }
@@ -57,27 +60,26 @@ module.exports = function () {
             }]
           }),
           pull.collect((err, msgs) => {
-            var name = feedId
-            if (SSB.profiles && SSB.profiles[feedId])
-              name = SSB.profiles[feedId].name
+            var self = this
 
-            if (feedId != SSB.net.id) {
-              SSB.db.friends.isFollowing({source: SSB.net.id, dest: feedId }, (err, status) => {
-                following = status
+            var name = this.feedId
+            if (SSB.profiles && SSB.profiles[this.feedId])
+              name = SSB.profiles[this.feedId].name
+
+            if (this.feedId != SSB.net.id) {
+              SSB.db.friends.isFollowing({source: SSB.net.id, dest: this.feedId }, (err, status) => {
+                self.following = status
               })
             }
 
-            pull(
-              pull.values(msgs),
-              paramap(renderMessage, 1),
-              pull.collect((err, rendered) => {
-                document.getElementById("messages").innerHTML = rendered.join('')
-                window.scrollTo(0, 0)
-              })
-            )
+            this.messages = msgs
           })
         )
       }
-    }
+    },
+
+    created: function () {
+      this.renderProfile()
+    },
   }
 }

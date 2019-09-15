@@ -72,8 +72,8 @@
 
     const routes = [
       { path: '/public', component: Public },
-      { path: '/thread/:rootId', component: Thread, props: true },
-      { path: '/profile/:feedId', component: Profile, props: true },
+      { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
+      { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { path: '/private', component: Private },
       { path: '/chat', component: Chat },
       { path: '/settings', component: Settings }

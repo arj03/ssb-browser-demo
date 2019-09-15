@@ -34,7 +34,7 @@ Vue.component('ssb-msg', {
           <img class='avatar' :src='imgURL' />
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
-            <a :href='msg.value.author'>{{ name }}</a> posted <span v-html="postType"></span>
+            <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted <span v-html="postType"></span>
           </span>
         </div>
 
