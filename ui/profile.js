@@ -1,5 +1,4 @@
 const pull = require('pull-stream')
-const paramap = require('pull-paramap')
 
 const SSBContactMsg = require('ssb-contact-msg/async/create')
 

@@ -1,5 +1,4 @@
 const pull = require('pull-stream')
-const paramap = require('pull-paramap')
 
 module.exports = function () {
   return {

@@ -34,7 +34,13 @@ Vue.component('ssb-msg', {
           <img class='avatar' :src='imgURL' />
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
-            <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted <span v-html="postType"></span>
+            <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
+            <span v:if="isThread">
+              in reply <router-link :to="{name: 'thread', params: { rootId: msg.value.content.root }}">to</router-link>
+            </span>
+            <span v-else>
+              a <router-link :to="{name: 'thread', params: { rootId: msg.value.content.root }}">thread</router-link>
+            </span>
           </span>
         </div>
 
@@ -61,11 +67,8 @@ Vue.component('ssb-msg', {
     humandate: function() {
       return human(new Date(this.msg.value.timestamp))
     },
-    postType: function() {
-      if (this.msg.value.content.root && this.msg.value.content.root != this.msg.key)
-        return ` in reply <a href='${this.msg.value.content.root}'>to</a>`
-      else
-        return ` a <a href='${this.msg.key}'>thread</a>`
+    isThread: function() {
+      return !(this.msg.value.content.root && this.msg.value.content.root != this.msg.key)
     },
     body: function() {
       return md.block(this.msg.value.content.text, mdOpts)
