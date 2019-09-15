@@ -73,7 +73,7 @@ Vue.component('ssb-msg', {
       if (this.msg.value.content.root)
         return this.msg.value.content.root.substring(1)
       else
-        return this.msg.value.content.root
+        return this.msg.key.substring(1)
     },
     date: function() {
       return new Date(this.msg.value.timestamp).toLocaleString("da-DK")
