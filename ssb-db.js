@@ -36,7 +36,6 @@ exports.init = function (sbot, config) {
       for (var k in last) {
         clock[k] = last[k].sequence
       }
-      console.log("getting clock!", clock)
       cb(null, clock)
     }
 
