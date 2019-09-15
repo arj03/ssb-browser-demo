@@ -3,7 +3,7 @@ const paramap = require('pull-paramap')
 
 module.exports = function () {
   return {
-    template: `
+    template: `<div id="public">
         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
         <br>
         <button id="postMessage" v-on:click="onPost">Post new thread</button>
@@ -11,7 +11,8 @@ module.exports = function () {
         <h2>Last 50 messages</h2>
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
         <br><br>
-        <ssb-post v-for="msg in messages" :key="msg.key"></ssb-post>`,
+        <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+    </div>`,
 
     data: function() {
       return {
@@ -24,12 +25,6 @@ module.exports = function () {
 
     methods: {
       renderPublic: function () {
-        /*
-        // hacky
-        if (lastStatus && lastStatus.since == 0) // empty db
-          return renderMessages([])
-        */
-        
         let contentFilter = { type: 'post' }
         if (this.onlyThreads)
           contentFilter["root"] = undefined
@@ -53,7 +48,7 @@ module.exports = function () {
             // hacky, own module instead
             document.getElementById("newPublicMessages").innerHTML = ""
 
-            this.messsages = msgs
+            this.messages = msgs
           })
         )
       },
@@ -96,17 +91,13 @@ module.exports = function () {
     },
 
     created: function () {
-      //this.renderPublic()
+      this.renderPublic()
     },
     
     watch: {
       onlyThreads: function (newValue, oldValue) {
         this.renderPublic()
-      },
-      '$route': function (newValue, oldValue) {
-        console.log("route changed!")
-        //this.renderPublic()
-      },
+      }
     }
   }
 }

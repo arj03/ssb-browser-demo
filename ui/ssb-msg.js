@@ -31,38 +31,44 @@ Vue.component('ssb-msg', {
   template: `
       <div class='message'>
         <div class='header'>
-          <img class='avatar' src='{{ imgURL }}' />
+          <img class='avatar' :src='imgURL' />
           <span class='text'>
-            <div class='date' title='{{ date }}'>{{ humandate }}</div>
-            <a href='{{ msg.value.author }}'>{{ name }}</a> posted {{ postType }}
+            <div class='date' :title='date'>{{ humandate }}</div>
+            <a :href='msg.value.author'>{{ name }}</a> posted <span v-html="postType"></span>
           </span>
         </div>
 
-        <h2 v:if="this.msg.value.content.subject">
-          <a href='{{ this.msg.key }}'>{{ this.msg.value.content.subject }}</a>
+        <h2 v:if="msg.value.content.subject">
+          <a :href='msg.key'>{{ msg.value.content.subject }}</a>
         </h2>
 
-        {{ body }}
-      </div>
-   `,
+        <span v-html="body"></span>
+      </div>`,
 
   props: ['msg'],
 
   data: function() {
     return {
-      date: new Date(this.msg.value.timestamp).toLocaleString("da-DK"),
-      humandate: human(new Date(this.msg.value.timestamp)),
       imgURL: '',
-      name: this.msg.value.author,
-      postType: function() {
-        if (this.msg.value.content.root && this.msg.value.content.root != msg.key)
-          return ` in reply <a href='${this.msg.value.content.root}'>to</a>`
-        else
-          return ` a <a href='${this.msg.key}'>thread</a>`
-      },
-      body: function() {
-        return md.block(this.msg.value.content.text, mdOpts)
-      }
+      name: this.msg.value.author
+    }
+  },
+
+  computed: {
+    date: function() {
+      return new Date(this.msg.value.timestamp).toLocaleString("da-DK")
+    },
+    humandate: function() {
+      return human(new Date(this.msg.value.timestamp))
+    },
+    postType: function() {
+      if (this.msg.value.content.root && this.msg.value.content.root != this.msg.key)
+        return ` in reply <a href='${this.msg.value.content.root}'>to</a>`
+      else
+        return ` a <a href='${this.msg.key}'>thread</a>`
+    },
+    body: function() {
+      return md.block(this.msg.value.content.text, mdOpts)
     }
   },
   
@@ -70,13 +76,16 @@ Vue.component('ssb-msg', {
     if (this.msg.value.author == SSB.net.id)
       this.name = "You"
     else if (SSB.profiles) {
-      var profile = SSB.profiles[msg.value.author]
-      this.name = profile.name
-      if (profile.image) {
-        SSB.net.blobs.localGet(user.image, (err, url) => {
-          if (!err)
-            this.imgURL = url
-        })
+      var profile = SSB.profiles[this.msg.value.author]
+      if (profile) {
+        this.name = profile.name
+        if (profile.image) {
+          var self = this
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            if (!err)
+              self.imgURL = url
+          })
+        }
       }
     }
   }
