@@ -41,10 +41,10 @@ module.exports = function () {
       {
         if (this.blobId != '') {
           SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
-            if (err) return console.error(err)
+            if (err) return alert(err)
 
             SSB.onboard = JSON.parse(data)
-            console.log("Loaded onboarding blob")
+            alert("Loaded onboarding blob")
           })
         }
       }

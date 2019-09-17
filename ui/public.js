@@ -9,7 +9,7 @@ module.exports = function () {
         <input type="file" id="publicMessageFileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
         <h2>Last 50 messages</h2>
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
-        <br><br>
+        <br>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
     </div>`,
 
