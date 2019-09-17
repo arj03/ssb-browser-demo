@@ -4,24 +4,6 @@
   // FIXME: move these two into their own two modules
   
   function newMessagesNotify() {
-    pull(
-      SSB.db.query.read({
-        live: true,
-        old: false,
-        query: [{
-          $filter: {
-            value: {
-              timestamp: { $gt: 0 },
-              content: { type: 'post' }
-            }
-          }
-        }]
-      }),
-      pull.filter((msg) => !msg.value.meta),
-      pull.drain(() => {
-        document.getElementById("newPublicMessages").innerHTML = "&#127881;"
-      })
-    )
   }
 
   function newPrivateMessagesNotify() {

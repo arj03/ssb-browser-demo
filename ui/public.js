@@ -1,6 +1,6 @@
-const pull = require('pull-stream')
-
 module.exports = function () {
+  const pull = require('pull-stream')
+
   return {
     template: `<div id="public">
         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
@@ -44,9 +44,6 @@ module.exports = function () {
           }),
           pull.filter((msg) => !msg.value.meta),
           pull.collect((err, msgs) => {
-            // hacky, own module instead
-            document.getElementById("newPublicMessages").innerHTML = ""
-
             this.messages = msgs
           })
         )

@@ -2,15 +2,16 @@
   <head>
     <title>SSB browser demo</title>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <link rel="stylesheet" type="text/css" href="ui/main.css">
-    <link rel="stylesheet" type="text/css" href="ui/chat.css">
-    <link rel="stylesheet" type="text/css" href="ui/settings.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/chat.css">
+    <link rel="stylesheet" type="text/css" href="css/private.css">
+    <link rel="stylesheet" type="text/css" href="css/settings.css">
   </head>
   <body>
     <div id="app">
       <h1>SSB browser demo</h1>
       <p>
-        <router-link to="/public">Public</router-link><span title="new messages" id="newPublicMessages"></span> |
+        <router-link to="/public">Public</router-link><new-public-messages></new-public-messages> |
         <router-link to="/private">Private</router-link><span title="new messages" id="newPrivateMessages"></span> |
         <router-link to="/chat">Off-chain chat</router-link> |
         <router-link to="/settings">Settings</router-link>
@@ -24,7 +25,7 @@
   <script src="node_modules/vue/dist/vue.min.js"></script>
   <script src="node_modules/vue-router/dist/vue-router.min.js"></script>
 
-  <script src="bundle-ssb-msg.js"></script>
   <script src="bundle-core.js"></script>
   <script src="bundle-ui.js"></script>
+  <script src="bundle-components.js"></script>
 </html>

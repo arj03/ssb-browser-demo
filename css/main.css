@@ -97,3 +97,7 @@ button {
   transition: border, color, background .1s ease-in;
   word-break: initial;
 }
+
+.newPublic {
+  cursor: pointer;
+}
