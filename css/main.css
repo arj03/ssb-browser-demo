@@ -98,6 +98,6 @@ button {
   word-break: initial;
 }
 
-.newPublic {
+.newPublic, .newPrivate {
   cursor: pointer;
 }

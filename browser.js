@@ -1,31 +1,6 @@
 (function() {
   const pull = require('pull-stream')
   
-  // FIXME: move these two into their own two modules
-  
-  function newMessagesNotify() {
-  }
-
-  function newPrivateMessagesNotify() {
-    pull(
-      SSB.db.query.read({
-        live: true,
-        old: false,
-        query: [{
-          $filter: {
-            value: {
-              timestamp: { $gt: 0 },
-              content: { type: 'post', recps: { $truthy: true } }
-            }
-          }
-        }]
-      }),
-      pull.drain(() => {
-        document.getElementById("newPrivateMessages").innerHTML = "&#128274;"
-      })
-    )
-  }
-
   SSB.events.on('SSB: loaded', function() {
     const Public = require('./ui/public')()
     const Profile = require('./ui/profile')()

@@ -12,7 +12,7 @@
       <h1>SSB browser demo</h1>
       <p>
         <router-link to="/public">Public</router-link><new-public-messages></new-public-messages> |
-        <router-link to="/private">Private</router-link><span title="new messages" id="newPrivateMessages"></span> |
+        <router-link to="/private">Private</router-link><new-private-messages></new-private-messages> |
         <router-link to="/chat">Off-chain chat</router-link> |
         <router-link to="/settings">Settings</router-link>
         <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup.enter="goToTarget">
