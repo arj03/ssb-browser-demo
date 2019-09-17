@@ -2,7 +2,7 @@ const pull = require('pull-stream')
 
 Vue.component('new-public-messages', {
     template: `
-        <span v-if="isActive" class="newPublic" v-on:click="reset">
+        <span v-if="isActive" class="newPublic" title="New messages" v-on:click="reset">
 	  &#127881;
 	</span>`,
 

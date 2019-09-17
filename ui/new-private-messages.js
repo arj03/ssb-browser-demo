@@ -2,7 +2,7 @@ const pull = require('pull-stream')
 
 Vue.component('new-private-messages', {
     template: `
-        <span v-if="isActive" class="newPrivate" v-on:click="reset">
+        <span v-if="isActive" class="newPrivate" title="New messages" v-on:click="reset">
 	  &#128274;
 	</span>`,
 

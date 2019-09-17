@@ -39,9 +39,6 @@ module.exports = function () {
           }),
           pull.filter((msg) => !msg.value.content.root), // top posts
           pull.collect((err, msgs) => {
-            // hacky, own module instead
-            document.getElementById("newPrivateMessages").innerHTML = ""
-
             this.messages = msgs
           })
         )
