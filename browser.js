@@ -17,9 +17,6 @@
 
     SSB.loadProfiles()
 
-    newMessagesNotify()
-    newPrivateMessagesNotify()
-
     const routes = [
       { path: '/public', component: Public },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
