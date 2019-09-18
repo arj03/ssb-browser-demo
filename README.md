@@ -28,7 +28,8 @@ Chrome locally needs to be run with: --allow-file-access-from-files to work!
 Also be sure to enable all 5 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
 
-The following patches from the patches folder are needed:
+The following patches (patch -p0 < x.patch) from the patches folder
+are needed:
  - epidemic-broadcast-fix-replicate-multiple.patch
  - flumeview-level-mkdirp.patch
  - ssb-ebt.patch
