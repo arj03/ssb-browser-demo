@@ -2,12 +2,12 @@
   const pull = require('pull-stream')
   
   SSB.events.on('SSB: loaded', function() {
-    const Public = require('./ui/public')()
-    const Profile = require('./ui/profile')()
-    const Thread = require('./ui/thread')()
-    const Private = require('./ui/private')()
-    const Chat = require('./ui/chat')()
-    const Settings = require('./ui/settings')()
+    const Public = require('./public')()
+    const Profile = require('./profile')()
+    const Thread = require('./thread')()
+    const Private = require('./private')()
+    const Chat = require('./chat')()
+    const Settings = require('./settings')()
 
     if (localStorage['settings']) {
       var settings = JSON.parse(localStorage['settings'])

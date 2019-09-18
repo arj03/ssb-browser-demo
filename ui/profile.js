@@ -6,8 +6,12 @@ module.exports = function () {
   return {
     template: `
        <div id="profile">
-         <template v-if="following">You are following - </template>
-         <button v-on:click="changeFollowStatus">{{ followText }}</button>
+         <span v-if="isSelf">
+         </span>
+         <span v-else>
+           <template v-if="following">You are following - </template>
+           <button v-on:click="changeFollowStatus">{{ followText }}</button>
+         </span>
          <h2>Last 50 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
        </div>`,
@@ -23,7 +27,8 @@ module.exports = function () {
     },
 
     computed: {
-      followText: function() { return this.following ? "Unfollow" : "Follow" }
+      followText: function() { return this.following ? "Unfollow" : "Follow" },
+      isSelf: function() { return SSB.net.id == this.feedId }
     },
     
     methods: {
