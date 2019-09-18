@@ -87,7 +87,7 @@ Removing blobs means that we go down to 1.6mb. ssb-backlinks brings
 this back to 2mb because of level.
 
 browserify --full-paths core.js > bundle-core.js
-browserify --full-paths browser.js > bundle-ui.js
+browserify --full-paths ui/browser.js > bundle-ui.js
 browserify --full-paths ui/components.js > bundle-components.js
 
 ssb-markdown increases the size quite substantially
