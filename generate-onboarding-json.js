@@ -108,6 +108,14 @@ require('ssb-client')(function (err, sbot) {
 
             asyncs += 1
             
+            latestValue(sbot, 'description', friend, (err, res) => {
+              data[friend].descriptionAbout = res.msgKey
+              data[friend].description = res.value
+              check_async()
+            })
+
+            asyncs += 1
+
             pull(
               sbot.createUserStream({
                 id: friend,

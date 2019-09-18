@@ -1,0 +1,17 @@
+#profile > span > .avatar {
+  float: left;
+}
+
+#profile > span > .avatar > img {
+  width: 15rem;
+  height: 15rem;
+}
+
+#profile > span > .description {
+  float: right;
+  width: 32rem;
+}
+
+#profile > h2 {
+  clear: both;
+}

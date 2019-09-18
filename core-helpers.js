@@ -118,8 +118,13 @@ exports.sync = function()
 exports.writeProfiles = function()
 {
   let cleaned = {}
-  for (var key in SSB.onboard)
-    cleaned[key] = { image: SSB.onboard[key].image, name: SSB.onboard[key].name }
+  for (var key in SSB.onboard) {
+    cleaned[key] = {
+      image: SSB.onboard[key].image,
+      name: SSB.onboard[key].name,
+      description: SSB.onboard[key].description
+    }
+  }
   localStorage['profiles.json'] = JSON.stringify(cleaned)
 }
 
