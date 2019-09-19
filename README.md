@@ -95,7 +95,7 @@ ssb-markdown increases the size quite substantially
 # TODO
 
 - about message for self (name, image, description)
-- fetch posts for user without following (#/profile/%40nFI7K8BdTK1lZkI%2F7blGu5dJ%2BaPnx5zG%2FS6Qy5IW0Hc%3D.ed25519)
+- exif stripping for images
 - port over ssb-friend-pub
 
 ## uglifyify
