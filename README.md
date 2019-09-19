@@ -94,7 +94,6 @@ ssb-markdown increases the size quite substantially
 
 # TODO
 
-- about message for self (name, image, description)
 - exif stripping for images
 - port over ssb-friend-pub
 

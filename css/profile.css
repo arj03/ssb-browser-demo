@@ -15,3 +15,21 @@
 #profile > h2 {
   clear: both;
 }
+
+/* edit */
+
+#profile > span > div > textarea {
+  width: 32rem;
+  height: 15rem;
+}
+
+#profile > span > div > button {
+  margin: 32px 0px 0px 0px;
+  float: right;
+}
+
+#profile > span > div > input#name {
+  width: 15rem;
+  padding: 5px;
+  margin: 10px 0px 10px 0px;
+}

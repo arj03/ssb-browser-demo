@@ -8,6 +8,16 @@ module.exports = function () {
     template: `
        <div id="profile">
          <span v-if="isSelf">
+           <div class="avatar">
+             <img :src='image'><br>
+             <input type="file" v-on:change="onFileSelect"><br>
+             <input id="name" type="text" v-model="name" placeholder="Your name / nick">
+             <br>
+           </div>
+           <div class="description">
+             <textarea placeholder="Description (markdown is supported)" v-model="descriptionText"></textarea><br>
+             <button v-on:click="saveProfile">Save profile</button>
+           </div>
          </span>
          <span v-else>
            <div class="avatar">
@@ -30,6 +40,7 @@ module.exports = function () {
         following: false,
         name: '',
         image: '',
+        imageBlobId: '',
         descriptionText: '',
         messages: []
       }
@@ -42,6 +53,60 @@ module.exports = function () {
     },
     
     methods: {
+      onFileSelect: function(ev) {
+        const file = ev.target.files[0]
+
+        if (!file) return
+
+        var self = this
+
+        file.arrayBuffer().then(function (buffer) {
+          SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
+            var blobId = "&" + digest
+            SSB.net.blobs.add(blobId, file, (err) => {
+              if (!err) {
+                SSB.net.blobs.push(blobId, (err) => {
+                  SSB.net.blobs.localGet(blobId, (err, url) => {
+                    if (!err) {
+                      self.image = url
+                      self.imageBlobId = blobId
+                    }
+                  })
+                })
+              } else
+                alert("failed to add img", err)
+            })
+          })
+        })
+      },
+
+      saveProfile: function() {
+        var msg = { type: 'about', about: SSB.net.id }
+        if (this.name)
+          msg.name = this.name
+        if (this.descriptionText)
+          msg.description = this.descriptionText
+        if (this.imageBlobId != '') {
+          msg.image = {
+            link: this.imageBlobId
+          }
+        }
+
+        SSB.publish(msg, (err) => {
+          if (err) return alert(err)
+
+          alert("Saved!")
+
+          SSB.profiles[this.feedId] = {
+            name: this.name,
+            description: this.descriptionText,
+            image: this.imageBlobId
+          }
+
+          SSB.saveProfiles()
+        })
+      },
+
       changeFollowStatus: function() {
         var contact = SSBContactMsg(SSB)
         if (this.following) {
@@ -76,12 +141,16 @@ module.exports = function () {
           }),
           pull.collect((err, msgs) => {
             if (SSB.profiles && SSB.profiles[this.feedId]) {
-              this.name = SSB.profiles[this.feedId].name
-              this.descriptionText = SSB.profiles[this.feedId].description
-              if (SSB.profiles[this.feedId].image) {
-                SSB.net.blobs.localGet(SSB.profiles[this.feedId].image, (err, url) => {
-                  if (!err)
-                    this.image = url
+              var profile = SSB.profiles[this.feedId]
+              this.name = profile.name
+              this.descriptionText = profile.description
+              if (profile.image) {
+                var self = this
+                SSB.net.blobs.localGet(profile.image, (err, url) => {
+                  if (!err) {
+                    self.image = url
+                    self.imageBlobId = profile.image
+                  }
                 })
               }
             }

@@ -115,7 +115,7 @@ exports.sync = function()
   })
 }
 
-exports.writeProfiles = function()
+function writeOnboardProfiles()
 {
   let cleaned = {}
   for (var key in SSB.onboard) {
@@ -126,6 +126,10 @@ exports.writeProfiles = function()
     }
   }
   localStorage['profiles.json'] = JSON.stringify(cleaned)
+}
+
+exports.saveProfiles = function() {
+  localStorage['profiles.json'] = JSON.stringify(SSB.profiles)
 }
 
 exports.loadProfiles = function() {
@@ -186,7 +190,7 @@ exports.initialSync = function()
         console.timeEnd("downloading messages")
 
         SSB.isInitialSync = false
-        exports.writeProfiles()
+        writeOnboardProfiles()
 
         return
       }

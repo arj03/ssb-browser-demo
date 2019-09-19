@@ -53,7 +53,7 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
-    if (this.msg.value.author == SSB.net.id)
+    if (SSB.profiles && !SSB.profiles[this.msg.value.author] && this.msg.value.author == SSB.net.id)
       this.name = "You"
     else if (SSB.profiles) {
       var profile = SSB.profiles[this.msg.value.author]
