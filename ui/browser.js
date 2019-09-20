@@ -1,6 +1,8 @@
 (function() {
   const pull = require('pull-stream')
-  
+
+  const components = require('./components')
+
   SSB.events.on('SSB: loaded', function() {
     const Public = require('./public')()
     const Profile = require('./profile')()
@@ -18,12 +20,13 @@
     SSB.loadProfiles()
 
     const routes = [
-      { path: '/public', component: Public },
+      { name: 'public', path: '/public', component: Public },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { path: '/private', component: Private },
       { path: '/chat', component: Chat },
-      { path: '/settings', component: Settings }
+      { path: '/settings', component: Settings },
+      { path: '/', redirect: 'public' },
     ]
 
     const router = new VueRouter({
