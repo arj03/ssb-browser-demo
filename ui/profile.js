@@ -4,6 +4,17 @@ const md = require('./markdown')
 const SSBContactMsg = require('ssb-contact-msg/async/create')
 
 module.exports = function () {
+  initialState = function() {
+    return {
+      following: false,
+      name: '',
+      image: '',
+      imageBlobId: '',
+      descriptionText: '',
+      messages: []
+    }
+  }
+
   return {
     template: `
        <div id="profile">
@@ -34,16 +45,9 @@ module.exports = function () {
        </div>`,
 
     props: ['feedId'],
-    
+
     data: function() {
-      return {
-        following: false,
-        name: '',
-        image: '',
-        imageBlobId: '',
-        descriptionText: '',
-        messages: []
-      }
+      return initialState()
     },
 
     computed: {
@@ -165,6 +169,13 @@ module.exports = function () {
           })
         )
       }
+    },
+
+    beforeRouteUpdate(to, from, next) {
+      this.feedId = to.params.feedId
+      Object.assign(this.$data, initialState())
+      this.renderProfile()
+      next()
     },
 
     created: function () {
