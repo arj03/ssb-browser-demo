@@ -102,7 +102,10 @@ exports.init = function (sbot, config) {
   }
 
   function remoteURL(id) {
-    return SSB.remoteAddress.split("~")[0].replace("ws:", "http://") + '/blobs/get/' + id
+    if (SSB.remoteAddress.includes("wss:"))
+      return SSB.remoteAddress.split("~")[0].replace("wss:", "https://") + '/blobs/get/' + id
+    else
+      return SSB.remoteAddress.split("~")[0].replace("ws:", "http://") + '/blobs/get/' + id
   }
   
   var zeros = new Buffer(24); zeros.fill(0)
