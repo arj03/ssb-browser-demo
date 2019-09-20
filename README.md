@@ -16,6 +16,7 @@ Things that work:
  - viewing posts and threads
  - posting and replying to messages
  - posting blobs
+ - viewing profiles and setting up your own profile
  - private messages including decrypting private blobs
  - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages
