@@ -98,7 +98,13 @@ exports.init = function (sbot, config) {
       })
     }
     else
-      cb(null, 'filesystem:file:///persistent/.ssb-lite/blobs/' + id)
+    {
+      const chromeFS = require('random-access-chrome-file')
+      var file = chromeFS(path.join(blobsDir, id))
+      file.stat((err, file) => {
+        cb(null, URL.createObjectURL(file))
+      })
+    }
   }
 
   function remoteURL(id) {
