@@ -5,6 +5,7 @@ const raf = require('polyraf')
 const pull = require('pull-stream')
 const defer = require('pull-defer')
 const BoxStream = require('pull-box-stream')
+const chromeFS = require('random-access-chrome-file')
 
 exports.manifest = {
   has: 'async',
@@ -72,7 +73,10 @@ exports.init = function (sbot, config) {
   }
 
   function privateFsURL(id, cb) {
-    return 'filesystem:file:///persistent/.ssb-lite/private-blobs/' + id
+    var file = chromeFS(path.join(privateBlobsDir, id))
+    file.stat((err, file) => {
+      cb(null, URL.createObjectURL(file))
+    })
   }
 
   function fsURL(id, cb) {
@@ -99,7 +103,6 @@ exports.init = function (sbot, config) {
     }
     else
     {
-      const chromeFS = require('random-access-chrome-file')
       var file = chromeFS(path.join(blobsDir, id))
       file.stat((err, file) => {
         cb(null, URL.createObjectURL(file))
@@ -357,8 +360,7 @@ exports.init = function (sbot, config) {
 	}
 	else
 	{
-	  //console.log("reading from local filesystem")
-	  cb(null, 'filesystem:file:///persistent/.ssb-lite/private-blobs/' + id)
+          privateFsURL(id, cb)
 	}
       })
     },
