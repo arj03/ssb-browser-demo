@@ -16,7 +16,7 @@ module.exports = function () {
     data: function() {
       return {
         syncOnlyFollows: false,
-        remoteAddress: 'ws:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
+        remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
         blobId: '',
         statusHTML: '',
         running: true
