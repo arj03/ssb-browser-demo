@@ -30,6 +30,7 @@ exports.removeDB = function() {
   })
 
   localStorage['last.json'] = JSON.stringify({})
+  localStorage['profiles.json'] = JSON.stringify({})
 
   console.log("remember to delete indexdb indexes as well!")
 }
@@ -125,7 +126,15 @@ function writeOnboardProfiles()
       description: SSB.onboard[key].description
     }
   }
+
+  // merge in user updates
+  for (var author in SSB.profiles) {
+    Object.assign(cleaned[author], SSB.profiles[author])
+  }
+
   localStorage['profiles.json'] = JSON.stringify(cleaned)
+
+  SSB.profiles = cleaned
 }
 
 exports.saveProfiles = function() {

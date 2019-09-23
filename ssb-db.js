@@ -101,6 +101,24 @@ exports.init = function (sbot, config) {
 
       if (isPrivate && !SSB.privateMessages) {
         ok = false
+      } else if (!isPrivate && msg.content.type == 'about' && msg.content.about == msg.author) {
+        ok = true
+
+        if (!SSB.profiles)
+          SSB.profiles = {}
+        if (!SSB.profiles[msg.author])
+          SSB.profiles[msg.author] = {}
+
+        if (msg.content.name)
+          SSB.profiles[msg.author].name = msg.content.name
+        if (msg.content.description)
+          SSB.profiles[msg.author].description = msg.content.description
+
+        if (msg.content.image && typeof msg.content.image.link === 'string')
+          SSB.profiles[msg.author].image = msg.content.image.link
+        else if (typeof msg.content.image === 'string')
+          SSB.profiles[msg.author].image = msg.content.image
+
       } else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type)) {
         ok = false
       } else if (isPrivate) {
@@ -108,6 +126,23 @@ exports.init = function (sbot, config) {
         if (!decrypted) // not for us
           ok = false
       }
+    }
+    else if (msg.content.type == 'about' && msg.content.about == msg.author)
+    {
+      if (!SSB.profiles)
+        SSB.profiles = {}
+      if (!SSB.profiles[msg.author])
+        SSB.profiles[msg.author] = {}
+
+      if (msg.content.name)
+        SSB.profiles[msg.author].name = msg.content.name
+      if (msg.content.description)
+        SSB.profiles[msg.author].description = msg.content.description
+
+      if (msg.content.image && typeof msg.content.image.link === 'string')
+        SSB.profiles[msg.author].image = msg.content.image.link
+      else if (typeof msg.content.image === 'string')
+        SSB.profiles[msg.author].image = msg.content.image
     }
 
     if (ok)
