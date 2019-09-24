@@ -16,7 +16,7 @@ really slow laptop (same speed on a phone). For this, a blob
 trusted onboard mechanism and as such should only be used between
 friends. Currently it can be hard to find new users of this client
 because one doesn't follow a pub. I plan on fixing this using
-[ssb-peer-invotes]. Another way this project tries to make partial
+[ssb-peer-invites]. Another way this project tries to make partial
 replication better is by using the [ssb-contact-msg] library where
 contact messages are linked together.
 
