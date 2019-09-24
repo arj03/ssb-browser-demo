@@ -95,6 +95,7 @@ ssb-markdown increases the size quite substantially
 # TODO
 
 - exif stripping for images
+- peer-invites
 - port over ssb-friend-pub
 
 ## uglifyify
