@@ -10,12 +10,16 @@ evaluating different partial replication strategies.
 
 Partial replication is done by only getting the last few `post`
 messages for users as a way of onboarding users quickly. The client
-can download and index around 5k messages in 30 seconds on my really
-slow laptop. For this, a blob (generate-onboarding-json.js) must be
-provided that serves as a trusted onboard mechanism and as such should
-only be used between friends. Currently it can be hard to find new
-users of this client because one doesn't follow a pub. I plan on
-fixing this using [peer invotes][ssb-peer-invites].
+can download and index around 5.000 messages in 30 seconds on my
+really slow laptop (same speed on a phone). For this, a blob
+(generate-onboarding-json.js) must be provided that serves as a
+trusted onboard mechanism and as such should only be used between
+friends. Currently it can be hard to find new users of this client
+because one doesn't follow a pub. I plan on fixing this using [peer
+invotes][ssb-peer-invites]. Another way this project tries to make
+partial replication better is by using the
+[ssb-contact-msg][ssb-contact-msg] library where contact messages are
+linked together.
 
 As a way to let people explore the messags of users outside this
 initial list of people, a server [plugin][ssb-get-thread] is used to
@@ -189,3 +193,4 @@ mcss plugs/app/page/books.mcss -o books.css
 [ssb-get-thread]: https://github.com/arj03/ssb-get-thread
 [ssb-peer-invites]: https://github.com/ssbc/ssb-peer-invites
 [test-server]: https://between-two-worlds.dk/browser.html
+[ssb-contact-msg]: https://github.com/ssbc/ssb-contact-msg
