@@ -52,8 +52,7 @@ module.exports = function () {
 
         var recps = this.recipients.value.split(',').map(x => x.trim())
 
-        if (!recps.every(x => x.startsWith("@")))
-        {
+        if (!recps.every(x => x.startsWith("@"))) {
           alert("recipients must start with @")
           return
         }
@@ -61,8 +60,7 @@ module.exports = function () {
         if (!recps.includes(SSB.net.id))
           recps.push(SSB.net.id)
 
-        if (this.postText != '' && this.subject != '')
-        {
+        if (this.postText != '' && this.subject != '') {
           var content = { type: 'post', text: this.postText, subject: this.subject }
           if (recps) {
             content.recps = recps

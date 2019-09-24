@@ -1,6 +1,4 @@
 (function() {
-  const pull = require('pull-stream')
-
   const components = require('./components')
 
   SSB.events.on('SSB: loaded', function() {

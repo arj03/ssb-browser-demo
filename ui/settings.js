@@ -1,13 +1,13 @@
 module.exports = function () {
   return {
     template: `<div id="settings">
-	<div class="settingsleft">
-	<button id="syncData" v-on:click="syncData">Sync data</button><br>
-	<input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
-	<br><br>
-	<input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" id="blobId" />
-	<br><br>
-	Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
+        <div class="settingsleft">
+        <button id="syncData" v-on:click="syncData">Sync data</button><br>
+        <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
+        <br><br>
+        <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" id="blobId" />
+        <br><br>
+        Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
         <br><br>
       </div>
       <div id="status" v-html="statusHTML"></div>
@@ -76,9 +76,9 @@ module.exports = function () {
       }
 
       var self = this
-      
+
       var lastStatus = null
-      
+
       function updateDBStatus() {
         if (!self.running) return
 
@@ -111,7 +111,7 @@ module.exports = function () {
 
       updateDBStatus()
     },
-    
+
     beforeRouteLeave: function(from, to, next) {
       this.running = false
       next()

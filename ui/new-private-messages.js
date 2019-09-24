@@ -3,8 +3,8 @@ const pull = require('pull-stream')
 Vue.component('new-private-messages', {
   template: `
         <span v-if="isActive" class="newPrivate" title="New messages" v-on:click="reset">
-	  &#128274;
-	</span>`,
+          &#128274;
+        </span>`,
 
   data: function() {
     return {
@@ -16,9 +16,9 @@ Vue.component('new-private-messages', {
     reset() {
       this.isActive = false
       if (this.$route.path == "/private")
-	this.$route.matched[0].instances.default.renderPrivate()
+        this.$route.matched[0].instances.default.renderPrivate()
       else
-	this.$router.push({ path: '/private'})
+        this.$router.push({ path: '/private'})
     }
   },
 
@@ -26,19 +26,19 @@ Vue.component('new-private-messages', {
     var self = this
     pull(
       SSB.db.query.read({
-	live: true,
-	old: false,
-	query: [{
-	  $filter: {
-	    value: {
-	      timestamp: { $gt: 0 },
-	      content: { type: 'post', recps: { $truthy: true } }
-	    }
-	  }
-	}]
+        live: true,
+        old: false,
+        query: [{
+          $filter: {
+            value: {
+              timestamp: { $gt: 0 },
+              content: { type: 'post', recps: { $truthy: true } }
+            }
+          }
+        }]
       }),
       pull.drain(() => {
-	self.isActive = true
+        self.isActive = true
       })
     )
   }

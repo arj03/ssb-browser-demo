@@ -75,8 +75,7 @@ module.exports = function () {
           return
         }
 
-        if (this.postText != '')
-        {
+        if (this.postText != '') {
           var self = this
           SSB.publish({ type: 'post', text: this.postText }, (err) => {
             if (err) console.log(err)
