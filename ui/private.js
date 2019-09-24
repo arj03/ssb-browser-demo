@@ -50,7 +50,7 @@ module.exports = function () {
           return
         }
 
-        var recps = this.recipients.value.split(',').map(x => x.trim())
+        var recps = this.recipients.split(',').map(x => x.trim())
 
         if (!recps.every(x => x.startsWith("@"))) {
           alert("recipients must start with @")
