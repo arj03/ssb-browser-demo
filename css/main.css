@@ -9,6 +9,11 @@ body {
   padding: 1rem;
   margin: auto;
   background-color: #fdf6e3;
+
+  /* mobile fix */
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
 }
 
 .router-link-exact-active {
