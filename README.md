@@ -1,16 +1,28 @@
 # SSB browser demo
 
-Small playground for ssb in a browser. This was made as a demo for my
-bornhack talk. It plays around with only getting the last few `post`
-messages for users as a way of onboarding users quickly. It can
-download and index around 5k messages in 30 seconds on my really slow
-laptop. For this, a blob (generate-onboarding-json.js) must be
+![Screenshot of ssb browser demo][screenshot]
+
+Playground [ssb-server][ssb-server] in a browser. This was originally
+made as a demo for my bornhack [talk][bornhack-talk].
+
+The client was made for two purposes: test ssb in a browser and for
+evaluating different partial replication strategies.
+
+Partial replication is done by only getting the last few `post`
+messages for users as a way of onboarding users quickly. The client
+can download and index around 5k messages in 30 seconds on my really
+slow laptop. For this, a blob (generate-onboarding-json.js) must be
 provided that serves as a trusted onboard mechanism and as such should
 only be used between friends.
 
-The code is really rough especially the UI code. The backend is not a
-full ssb implementation, it only implements the features needed for
-this demo.
+As a way to let people explore the messags of users outside this
+initial list of people, a server [plugin][ssb-get-thread] is used to
+get threads from the server. This has privacy implications so this
+need to be configurable, see TODO.
+
+The UI is written in vue.js and can display posts and self assigned
+profile about messages. Leaving out likes was done on purpose as an
+experiment. I don't plan on adding them.
 
 Things that work:
  - viewing posts and threads
@@ -24,7 +36,8 @@ Things that work:
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb.
 
-Chrome locally needs to be run with: --allow-file-access-from-files to work!
+For testing this in Chrome locally, one needs to be run it with:
+--allow-file-access-from-files
 
 Also be sure to enable all 5 WASM options in
 chrome://flags/. Otherwise crypto will be super slow (like validate).
@@ -97,6 +110,7 @@ ssb-markdown increases the size quite substantially
 - exif stripping for images
 - peer-invites
 - port over ssb-friend-pub
+- disable or trust pubs as a way to control when to fetch threads
 
 ## uglifyify
 
@@ -162,3 +176,8 @@ in the browser. These indexes are much slower in the browser.
 ## mcss generate css
 
 mcss plugs/app/page/books.mcss -o books.css
+
+[screenshot]: assets/screenshot.jpg
+[ssb-server]: https://github.com/ssbc/ssb-server
+[bornhack-talk]: https://people.iola.dk/arj/2019/08/11/bornhack-talk/
+[ssb-get-thread]: https://github.com/arj03/ssb-get-thread
