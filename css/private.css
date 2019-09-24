@@ -1,11 +1,11 @@
-#private > #recipients {
+#private > span > #recipients {
   padding: 5px;
-  width: 40rem;
+  width: 45rem;
   margin: 10 0 10 0px;
 }
 
-#private > #subject {
+#private > span > #subject {
   padding: 5px;
-  width: 40rem;
+  width: 45rem;
   margin: 0 0 10 0px;
 }
