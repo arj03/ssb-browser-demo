@@ -2,7 +2,7 @@
 
 ![Screenshot of ssb browser demo][screenshot]
 
-Playground [ssb-server][ssb-server] in a browser. This was originally
+Playground [ssb-server] in a browser. This was originally
 made as a demo for my bornhack [talk][bornhack-talk].
 
 The client was made for two purposes: test ssb in a browser and for
@@ -15,16 +15,15 @@ really slow laptop (same speed on a phone). For this, a blob
 (generate-onboarding-json.js) must be provided that serves as a
 trusted onboard mechanism and as such should only be used between
 friends. Currently it can be hard to find new users of this client
-because one doesn't follow a pub. I plan on fixing this using [peer
-invotes][ssb-peer-invites]. Another way this project tries to make
-partial replication better is by using the
-[ssb-contact-msg][ssb-contact-msg] library where contact messages are
-linked together.
+because one doesn't follow a pub. I plan on fixing this using
+[ssb-peer invotes]. Another way this project tries to make partial
+replication better is by using the [ssb-contact-msg] library where
+contact messages are linked together.
 
 As a way to let people explore the messags of users outside this
-initial list of people, a server [plugin][ssb-get-thread] is used to
-get threads from the server. This has privacy implications so this
-need to be configurable, see TODO.
+initial list of people, the [ssb-get-thread] plugin is used to get
+threads from the server. This has privacy implications so this need to
+be configurable, see TODO.
 
 The UI is written in vue.js and can display posts and self assigned
 profile about messages. Leaving out likes was done on purpose as an
