@@ -26,7 +26,7 @@ exports.init = function (sbot, config) {
   
   function httpGet(url, responseType, cb) {
     var req = new XMLHttpRequest()
-    req.timeout = 1000;
+    req.timeout = 2000;
     req.onreadystatechange = function() {
       if (req.readyState == 4 && req.status == 200)
         cb(null, req.response)
