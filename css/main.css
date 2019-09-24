@@ -6,7 +6,7 @@ html {
 
 body {
   max-width: 48rem;
-  padding: 2rem;
+  padding: 1rem;
   margin: auto;
   background-color: #fdf6e3;
 }
@@ -98,14 +98,9 @@ button {
   background-color: #fff;
   min-width: 6rem;
   min-height: 1.8rem;
-  padding: .2rem 1rem;
+  padding: .5rem 1rem;
   cursor: pointer;
   border: 1px solid rgb(169, 169, 169);
-  outline: none;
-  justify-content: center;
-  align-items: center;
-  transition: border, color, background .1s ease-in;
-  word-break: initial;
 }
 
 .newPublic, .newPrivate {

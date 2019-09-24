@@ -9,7 +9,7 @@
 
 #profile > span > .description {
   float: right;
-  width: 32rem;
+  width: 31rem;
 }
 
 #profile > h2 {
@@ -19,7 +19,7 @@
 /* edit */
 
 #profile > span > div > textarea {
-  width: 32rem;
+  width: 31rem;
   height: 15rem;
 }
 
