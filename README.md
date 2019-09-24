@@ -38,6 +38,10 @@ Things that work:
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb.
 
+An online version is available for testing [here][test-server]
+
+# Running locally
+
 For testing this in Chrome locally, one needs to be run it with:
 --allow-file-access-from-files
 
@@ -184,3 +188,4 @@ mcss plugs/app/page/books.mcss -o books.css
 [bornhack-talk]: https://people.iola.dk/arj/2019/08/11/bornhack-talk/
 [ssb-get-thread]: https://github.com/arj03/ssb-get-thread
 [ssb-peer-invites]: https://github.com/ssbc/ssb-peer-invites
+[test-server]: https://between-two-worlds.dk/browser.html
