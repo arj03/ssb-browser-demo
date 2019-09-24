@@ -3,13 +3,13 @@
 }
 
 #profile > span > .avatar > img {
-  width: 15rem;
-  height: 15rem;
+  width: 13rem;
+  height: 13rem;
 }
 
 #profile > span > .description {
   float: right;
-  width: 31rem;
+  width: 30rem;
 }
 
 #profile > h2 {
@@ -19,7 +19,7 @@
 /* edit */
 
 #profile > span > div > textarea {
-  width: 31rem;
+  width: 30rem;
   height: 15rem;
 }
 
@@ -29,7 +29,11 @@
 }
 
 #profile > span > div > input#name {
-  width: 15rem;
   padding: 5px;
   margin: 10px 0px 10px 0px;
+}
+
+#profile > span > div > input {
+  width: 13rem;
+
 }
