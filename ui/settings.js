@@ -26,13 +26,24 @@ module.exports = function () {
     methods: {
       syncData: function(ev) {
         if (SSB.db.getStatus().since <= 0) {
-          if (!SSB.onboard) {
+          if (!SSB.onboard && this.blobId != '') {
+            SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
+              if (err) return alert(err)
+
+              SSB.onboard = JSON.parse(data)
+
+              SSB.initialSync()
+              alert("Initial load can take a while")
+            })
+          }
+          else if (!SSB.onboard) {
             alert("Must provide onboard blob url first")
             return
           }
-
-          SSB.initialSync()
-          alert("Initial load can take a while")
+          else {
+            SSB.initialSync()
+            alert("Initial load can take a while")
+          }
         } else
           SSB.sync()
       },
