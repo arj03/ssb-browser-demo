@@ -38,13 +38,7 @@ exports.init = function (sbot, config) {
       return o && isObject(o)
     },
     check: function (key, cb) {
-      //console.log("checking key",key)
-      cb()
-      /*
-      sbot.get({id:key, ooo: false}, function (err, msg) {
-        cb(null, msg)
-      })
-      */
+      SSB.db.get(key, cb)
     },
     isUpdate: function (id, msg, value) {
       return value == null && getId(msg) == id
