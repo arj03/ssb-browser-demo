@@ -47,7 +47,7 @@ module.exports = function () {
       },
 
       render: function(rootMsg) {
-        this.rootMsg = { key: '', value: rootMsg }
+        this.rootMsg = { key: this.rootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
         pull(
