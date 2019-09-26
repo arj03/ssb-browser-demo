@@ -117,7 +117,6 @@ ssb-markdown increases the size quite substantially
 # TODO
 
 - split core into own module
-- show if messages are missing and allow fetching ooo
 - exif stripping for images
 - peer-invites
 - port over ssb-friend-pub
