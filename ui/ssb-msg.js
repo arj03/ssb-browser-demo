@@ -5,7 +5,9 @@ Vue.component('ssb-msg', {
   template: `
       <div class='message'>
         <div class='header'>
-          <img class='avatar' :src='imgURL' />
+          <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">
+            <img class='avatar' :src='imgURL' />
+          </router-link>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
@@ -18,11 +20,12 @@ Vue.component('ssb-msg', {
           </span>
         </div>
 
-        <h2 v:if="msg.value.content.subject">
+        <h2 v-if="msg.value.content.subject">
           <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.subject }}</router-link>
         </h2>
 
         <span v-html="body"></span>
+        <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
       </div>`,
 
   props: ['msg'],
@@ -47,8 +50,20 @@ Vue.component('ssb-msg', {
     humandate: function() {
       return human(new Date(this.msg.value.timestamp))
     },
+    isOOO: function() {
+      return this.msg.value.content.text == "Message outside follow graph" && !this.msg.value.author
+    },
     body: function() {
       return md.markdown(this.msg.value.content.text)
+    }
+  },
+
+  methods: {
+    getOOO: function() {
+      SSB.getOOO(this.msg.key, (err, msgValue) => {
+        if (err) return alert("Failed to get msg " + err)
+        this.msg = { key: this.msg.key, value: msgValue }
+      })
     }
   },
   

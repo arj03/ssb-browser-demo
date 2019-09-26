@@ -63,7 +63,44 @@ module.exports = function () {
           pull.filter((msg) => msg.value.content.type == 'post'),
           pull.through((msg) => this.latestMsgIdInThread = msg.key),
           pull.collect((err, msgs) => {
-            this.messages = msgs
+            var allMessages = []
+
+            // determine if messages exists outside our follow graph
+            var knownIds = [this.rootId, ...msgs.map(x => x.key)]
+            msgs.forEach((msg) => {
+              if (typeof msg.value.content.branch === 'string')
+              {
+                if (!knownIds.includes(msg.value.content.branch)) {
+                  allMessages.push({
+                    key: msg.value.content.branch,
+                    value: {
+                      content: {
+                        text: "Message outside follow graph"
+                      }
+                    }
+                  })
+                }
+              }
+              else if (Array.isArray(msg.value.content.branch))
+              {
+                msg.value.content.branch.forEach((branch) => {
+                  if (!knownIds.includes(branch)) {
+                    allMessages.push({
+                      key: branch,
+                      value: {
+                        content: {
+                          text: "Message outside follow graph"
+                        }
+                      }
+                    })
+                  }
+                })
+              }
+
+              allMessages.push(msg)
+            })
+
+            this.messages = allMessages
           })
         )
       },

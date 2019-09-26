@@ -55,6 +55,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     initialSync: helpers.initialSync,
     sync: helpers.sync,
     getThread: helpers.getThread,
+    getOOO: helpers.getOOO,
     generateMessage: validate.appendNew,
     box: require('ssb-keys').box,
     state,

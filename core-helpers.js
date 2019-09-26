@@ -77,6 +77,13 @@ exports.getThread = function(msgId, cb)
   })
 }
 
+exports.getOOO = function(msgId, cb)
+{
+  connected((rpc) => {
+    SSB.net.ooo.get(msgId, cb)
+  })
+}
+
 exports.syncThread = function(messages, cb) {
   const hmac_key = null
 

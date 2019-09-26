@@ -62,7 +62,7 @@ exports.init = function (sbot, config) {
         _cb(new Error('ooo.get: took more than timeout:'+timeout))
       }, timeout)
 
-    console.log("doing a query for ", id)
+    console.log("doing a query for", id)
     
     gq.query(id, function (err, msg) {
       if(err) return cb(err)
