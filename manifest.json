@@ -1,0 +1,12 @@
+{
+  "name": "SSB browser demo",
+  "short_name": "SSBBrowserDemo",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fdf6e3",
+  "icons": [{
+    "src": "hermies.png",
+    "type": "image/png",
+    "sizes": "256x256"
+  }]
+}
