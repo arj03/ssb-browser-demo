@@ -16,6 +16,12 @@ body {
   -ms-text-size-adjust: none;
 }
 
+@media (min-resolution: 2dppx) {
+  #public, #private {
+    font-size: 150%;
+  }
+}
+
 .router-link-exact-active {
   font-weight: bold;
   color: #000;
