@@ -1,6 +1,12 @@
 (function() {
   const components = require('./components')
 
+  if (location.protocol === 'https:' && 'serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js');
+    })
+  }
+
   SSB.events.on('SSB: loaded', function() {
     const Public = require('./public')()
     const Profile = require('./profile')()
