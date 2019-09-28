@@ -44,6 +44,10 @@ img {
   max-width: 42rem;
 }
 
+video {
+  max-width: 42rem;
+}
+
 code {
   white-space: pre-wrap;
 }
