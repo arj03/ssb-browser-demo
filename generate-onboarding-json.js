@@ -18,7 +18,7 @@ function read (sbot, dest) {
   )
 }
 
-function latestValue (sbot, key, dest, cb) {
+function latestValueSelf(sbot, key, dest, cb) {
   var value = null
   var msgKey = null
   pull(
@@ -27,6 +27,27 @@ function latestValue (sbot, key, dest, cb) {
       return msg.value.content && msg.value.content[key] &&
         !(msg.value.content[key] && msg.value.content[key].remove) &&
         msg.value.author == dest
+    }),
+    pull.take(1),
+    pull.drain(msg => {
+      value = msg.value.content[key]
+      msgKey = msg.key
+    }, (err) => {
+      if (err) return cb(err)
+      cb(null, { msgKey, value } )
+    })
+  )
+}
+
+function latestValueFriends(sbot, key, dest, friends, cb) {
+  var value = null
+  var msgKey = null
+  pull(
+    read(sbot, dest),
+    pull.filter(msg => {
+      return msg.value.content && msg.value.content[key] &&
+        !(msg.value.content[key] && msg.value.content[key].remove) &&
+        friends.includes(msg.value.author)
     }),
     pull.take(1),
     pull.drain(msg => {
@@ -89,7 +110,7 @@ require('ssb-client')(function (err, sbot) {
 
             asyncs += 1
 
-            latestValue(sbot, 'name', friend, (err, res) => {
+            latestValueSelf(sbot, 'name', friend, (err, res) => {
               data[friend].nameAbout = res.msgKey
               data[friend].name = res.value
               check_async()
@@ -97,18 +118,36 @@ require('ssb-client')(function (err, sbot) {
 
             asyncs += 1
             
-            latestValue(sbot, 'image', friend, (err, res) => {
-              data[friend].imageAbout = res.msgKey
-	      if (typeof(res.value) == 'string')
-		data[friend].image = res.value
-	      else if (res.value && res.value.link)
-		data[friend].image = res.value.link
+            latestValueSelf(sbot, 'image', friend, (err, res) => {
+              if (res.msgKey == null) {
+                asyncs += 1
+
+                latestValueFriends(sbot, 'image', friend, friends, (err, res) => {
+                  if (res.msgKey != null) {
+                    data[friend].imageAbout = res.msgKey
+	            if (typeof(res.value) == 'string')
+		      data[friend].image = res.value
+	            else if (res.value && res.value.link)
+		      data[friend].image = res.value.link
+                  }
+
+                  check_async()
+                })
+              }
+              else
+              {
+                data[friend].imageAbout = res.msgKey
+	        if (typeof(res.value) == 'string')
+		  data[friend].image = res.value
+	        else if (res.value && res.value.link)
+		  data[friend].image = res.value.link
+              }
               check_async()
             })
 
             asyncs += 1
             
-            latestValue(sbot, 'description', friend, (err, res) => {
+            latestValueSelf(sbot, 'description', friend, (err, res) => {
               data[friend].descriptionAbout = res.msgKey
               data[friend].description = res.value
               check_async()

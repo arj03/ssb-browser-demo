@@ -102,7 +102,7 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 => something like
 
-&YTbAj6FWYBZOyKLeGXb+Kb4wLIlEoryq9PL1nhlCek4=.sha256
+&sem3R7bj5rbJnNJkh+WTUskUWWtQt0tP2cBWFejBkY4=.sha256
 
 # browserify 2mb
 
