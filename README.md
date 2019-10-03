@@ -85,6 +85,12 @@ used for browsing threads you don't currently have, such as from
 people outside the people you have synced or older messages because of
 the partial replication nature.
 
+# Peer invites
+
+To create an invite, do something like this:
+
+sbot peerInvites.create --private 'this is only for receiver' --reveal 'the public' --allowWithoutPubs --pubs wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519
+
 # Onboarding file
 
 Generate a file of all feeds following with seq nos. The perspective

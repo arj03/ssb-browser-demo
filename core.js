@@ -60,6 +60,9 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     box: require('ssb-keys').box,
     state,
 
+    // peer invites
+    rawConnect: require('./raw-connect'),
+
     // sbot convenience wrappers
     publish: function(msg, cb) {
       state.queue = []

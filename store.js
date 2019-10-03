@@ -13,8 +13,7 @@ module.exports = function (dir, ssbId) {
     {blockSize:1024*64, codec:codec}
   ))
 
-  var config = {
-  }
+  var config = {}
 
   var store = Flume(log, true, (msg, cb) => {
     if (msg && msg.value && typeof (msg.value.content) === 'string') {
@@ -55,6 +54,10 @@ module.exports = function (dir, ssbId) {
 
   var friends = require('ssb-friends')
   store.friends = friends.init(store, config)
+
+  // depends on friends plugin
+  var peerInvites = require('ssb-peer-invites')
+  store.peerInvites = peerInvites.init(store, config)
 
   var query = require('ssb-query')
   store.query = query.init(store)

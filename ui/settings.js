@@ -5,7 +5,11 @@ module.exports = function () {
         <button id="syncData" v-on:click="syncData">Sync data</button><br>
         <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
         <br><br>
-        <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" id="blobId" />
+        <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
+        <br><br>
+        <input type="text" placeholder="open invite code" v-model="inviteCode" v-on:keyup.enter="openInvite" value="" class="textInput" />
+        <br><br>
+        <input type="text" placeholder="accept invite code" v-model="inviteCode" v-on:keyup.enter="acceptInvite" value="" class="textInput" />
         <br><br>
         Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
         <br><br>
@@ -19,6 +23,7 @@ module.exports = function () {
         remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
         blobId: '',
         statusHTML: '',
+        inviteCode: '',
         running: true
       }
     },
@@ -56,6 +61,31 @@ module.exports = function () {
 
             SSB.onboard = JSON.parse(data)
             alert("Loaded onboarding blob")
+          })
+        }
+      },
+
+      openInvite: function()
+      {
+        if (this.inviteCode != '') {
+          SSB.db.peerInvites.openInvite(this.inviteCode, (err, msg) => {
+            if (err) return alert(err)
+
+            var user = msg.value.author
+            if (SSB.profiles[msg.value.author])
+              user = SSB.profiles[msg.value.author].name
+            alert(`User ${user} has invited you, he included the following personal message: '${msg.opened.private}', and the following public message: '${msg.opened.reveal}'`)
+          })
+        }
+      },
+
+      acceptInvite: function()
+      {
+        if (this.inviteCode != '') {
+          SSB.db.peerInvites.acceptInvite(this.inviteCode, (err, msg) => {
+            if (err) return alert(err)
+
+            alert("Invite accepted!")
           })
         }
       }

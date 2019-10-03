@@ -16,7 +16,7 @@
   padding: 5px
 }
 
-#settings > .settingsleft > #blobId {
+#settings > .settingsleft > .textInput {
   width: 300px;
   padding: 5px
 }

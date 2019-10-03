@@ -1,0 +1,126 @@
+--- node_modules/ssb-peer-invites/index.js~	2019-09-30 21:58:14.331999286 +0200
++++ node_modules/ssb-peer-invites/index.js	2019-10-03 23:42:56.573974443 +0200
+@@ -4,7 +4,6 @@
+ var deepEquals = require('deep-equals')
+ var types      = require('./types')
+ var paramap    = require('pull-paramap')
+-var ssbClient  = require('ssb-client')
+ var crypto     = require('crypto')
+ var ssbKeys    = require('ssb-keys')
+ var u          = require('./util')
+@@ -150,22 +149,6 @@
+     }
+   })
+ 
+-  sbot.auth.hook(function (fn, args) {
+-    var id = args[0], cb = args[1]
+-    //currently a problem here where message may be confirmed,
+-    //but guest didn't get the welcome yet. they need to be able to connect
+-    //and request it again.
+-    invites.get(function (err, v) {
+-      if(err) return cb(err)
+-      if(v.guests[id])
+-        return cb(null, {
+-          allow: ['peerInvites.getInvite', 'peerInvites.confirm'],
+-          deny: null
+-        })
+-      fn.apply(null, args)
+-    })
+-  })
+-
+   //retrive full invitation.
+   invites.getInvite = function (invite_id, cb) {
+     var self = this
+@@ -194,18 +177,28 @@
+ 
+   function getResponse (invite_id, test, cb) {
+     return all(
+-      sbot.links({dest: invite_id, values: true, keys: false, meta: false}),
++      SSB.db.query.read({
++        query: [{
++          $filter: {
++            value: {
++              dest: invite_id,
++            }
++          }
++        }]
++      }),
++      //sbot.links({dest: invite_id, values: true, keys: false, meta: false}),
+       function (err, confirms) {
+         if(err) cb(err)
+-        else cb(null,
+-          confirms.filter(function (e) {
+-            try {
+-              return test(e)
+-            } catch (err) {
+-              return false
+-            }
+-          })[0]
+-        )
++        else
++          cb(null,
++             confirms.map(x => x.value).filter(function (e) {
++               try {
++                 return test(e)
++               } catch (err) {
++                 return false
++               }
++             })[0]
++            )
+       }
+     )
+   }
+@@ -326,7 +319,7 @@
+           paramap(function (pub, cb) {
+             //if opts.id != sbot.id connect using ssb client
+             //so that you ask willReplicate from the correct id.
+-            sbot.connect(pub.address, function (err, rpc) {
++            SSB.net.connect(pub.address, function (err, rpc) {
+               //skip pubs that were not contactable
+               if(err) {
+                 pushFound(pub, err)
+@@ -400,16 +393,13 @@
+       n++
+       //don't use sbot.connect here, because we are connecting
+       //with a different cap.
+-      ssbClient(keys, {
+-        remote: addr,
+-        caps: {shs: invite.cap || caps.shs},
+-        manifest: {
+-          peerInvites: {
+-            getInvite: 'async',
+-            confirm: 'async'
+-          }
++      var client = SSB.rawConnect.init(keys, {shs: invite.cap || caps.shs}, {
++        peerInvites: {
++          getInvite: 'async',
++          confirm: 'async'
+         }
+-      }, function (_err, rpc) {
++      })
++      client.connect(SSB.remoteAddress, function (_err, rpc) {
+         if(n > 0 && rpc) {
+           n = -1
+           cb(null, rpc)
+@@ -474,10 +464,8 @@
+           if(err) return cb(err)
+           var invite_msg = data.value
+           var opened = data.opened
+-          sbot.identities.publishAs({
+-            id: id,
+-            content: I.createAccept(invite_msg, invite.seed, id, caps)
+-          }, function (err, accept) {
++          // for browser UI, id is never different, so we don't need identities here
++          SSB.publish(I.createAccept(invite_msg, invite.seed, id, caps), function (err, accept) {
+             if(err) cb(err)
+             else {
+               state.set(reduce(state.value, accept, invites.since.value))
+@@ -506,7 +494,7 @@
+               pull.values(invite.pubs),
+               paramap(
+                 function (addr, cb) {
+-                  sbot.gossip.add(addr, function (err, something) {
++                  SSB.net.connect(addr, function (err, something) {
+                     if (err) cb(null, false)
+                     else cb(null, true)
+                   })
