@@ -58,6 +58,7 @@ are needed:
  - ssb-ebt.patch
  - ssb-friends.patch
  - ssb-tunnel.patch
+ - ssb-peer-invites.patch
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
