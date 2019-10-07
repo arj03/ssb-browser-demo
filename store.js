@@ -57,7 +57,7 @@ module.exports = function (dir, ssbId) {
 
   // depends on friends plugin
   var peerInvites = require('ssb-peer-invites')
-  store.peerInvites = peerInvites.init(store, config)
+  peerInvites.init(store, config)
 
   var query = require('ssb-query')
   store.query = query.init(store)

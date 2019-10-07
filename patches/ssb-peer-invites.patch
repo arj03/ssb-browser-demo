@@ -1,6 +1,6 @@
---- node_modules/ssb-peer-invites/index.js~	2019-09-30 21:58:14.331999286 +0200
-+++ node_modules/ssb-peer-invites/index.js	2019-10-03 23:42:56.573974443 +0200
-@@ -4,7 +4,6 @@
+--- node_modules/ssb-peer-invites/index.js~    2019-09-30 21:58:14.331999286 +0200
++++ node_modules/ssb-peer-invites/index.js     2019-10-03 23:42:56.573974443 +0200
+@@ -4,7 +4,6 @@ var I          = require('./valid')
  var deepEquals = require('deep-equals')
  var types      = require('./types')
  var paramap    = require('pull-paramap')
@@ -8,7 +8,7 @@
  var crypto     = require('crypto')
  var ssbKeys    = require('ssb-keys')
  var u          = require('./util')
-@@ -150,22 +149,6 @@
+@@ -150,22 +149,6 @@ exports.init = function (sbot, config) {
      }
    })
  
@@ -31,7 +31,7 @@
    //retrive full invitation.
    invites.getInvite = function (invite_id, cb) {
      var self = this
-@@ -194,18 +177,28 @@
+@@ -194,18 +177,28 @@ exports.init = function (sbot, config) {
  
    function getResponse (invite_id, test, cb) {
      return all(
@@ -70,7 +70,7 @@
        }
      )
    }
-@@ -326,7 +319,7 @@
+@@ -326,7 +319,7 @@ exports.init = function (sbot, config) {
            paramap(function (pub, cb) {
              //if opts.id != sbot.id connect using ssb client
              //so that you ask willReplicate from the correct id.
@@ -79,7 +79,7 @@
                //skip pubs that were not contactable
                if(err) {
                  pushFound(pub, err)
-@@ -400,16 +393,13 @@
+@@ -400,16 +393,13 @@ exports.init = function (sbot, config) {
        n++
        //don't use sbot.connect here, because we are connecting
        //with a different cap.
@@ -102,7 +102,7 @@
          if(n > 0 && rpc) {
            n = -1
            cb(null, rpc)
-@@ -474,10 +464,8 @@
+@@ -474,10 +464,8 @@ exports.init = function (sbot, config) {
            if(err) return cb(err)
            var invite_msg = data.value
            var opened = data.opened
@@ -115,12 +115,13 @@
              if(err) cb(err)
              else {
                state.set(reduce(state.value, accept, invites.since.value))
-@@ -506,7 +494,7 @@
-               pull.values(invite.pubs),
-               paramap(
-                 function (addr, cb) {
--                  sbot.gossip.add(addr, function (err, something) {
-+                  SSB.net.connect(addr, function (err, something) {
-                     if (err) cb(null, false)
-                     else cb(null, true)
-                   })
+@@ -502,9 +490,6 @@ exports.init = function (sbot, config) {
+             //TODO: store confirms for us in the state.
+             if (err) return cb(err)
+ 
+-            ;(invite.pubs || []).forEach(function (addr) {
+-              sbot.gossip.add(addr)
+-            })
+             cb(null, confirm)
+           })
+         })

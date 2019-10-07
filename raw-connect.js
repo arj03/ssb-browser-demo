@@ -1,12 +1,7 @@
 var SecretStack = require('secret-stack')
 var defaultCaps = require('ssb-caps')
 
-// FIXME: manifest merge stuff
-
 exports.init = function(keys, caps, manifest) {
-  console.log("raw client keys", keys)
-  console.log("raw client caps", caps)
-
   if (!caps || !caps.shs)
     caps = { shs: Buffer.from(defaultCaps.shs, 'base64') }
   
