@@ -119,7 +119,6 @@ exports.init = function (sbot, config) {
       if (isPrivate && !SSB.privateMessages) {
         ok = false
       } else if (!isPrivate && msg.content.type == 'about' && msg.content.about == msg.author) {
-        ok = true
         updateProfile(msg)
       } else if (!isPrivate && !SSB.validMessageTypes.includes(msg.content.type)) {
         ok = false

@@ -90,17 +90,14 @@ exports.syncThread = function(messages, cb) {
   pull(
     pull.values(messages),
     pull.filter((msg) => msg && msg.content.type == "post"),
-    pull.drain((msg) => {
+    pull.asyncMap((msg, cb) => {
       state = validate.appendOOO(SSB.state, hmac_key, msg)
 
-      if (SSB.state.error)
-        throw SSB.state.error
+      if (SSB.state.error) return cb(SSB.state.error)
 
-      SSB.db.add(msg, (err) => {
-        if (err)
-          console.log("err ", err)
-      })
-    }, cb)
+      SSB.db.add(msg, cb)
+    }),
+    pull.collect(cb)
   )
 }
 
@@ -167,9 +164,8 @@ exports.syncFeedAfterFollow = function(feedId) {
 
     pull(
       rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
-      pull.drain((msg) => {
-        SSB.net.add(msg, (err, res) => {})
-      }, (err) => {
+      pull.asyncMap(SSB.net.add),
+      pull.collect((err) => {
         if (err) throw err
 
         console.timeEnd("downloading messages")
@@ -240,13 +236,16 @@ exports.initialSync = function()
 
       pull(
         rpc.partialReplication.partialReplication({id: user, seq: seqStart, keys: false}),
-        pull.drain((msg) => {
+        pull.asyncMap((msg, cb) => {
           ++totalMessages
           SSB.net.add(msg, (err, res) => {
             if (res)
               ++totalFilteredMessages
+
+            cb(err, res)
           })
-        }, (err) => {
+        }),
+        pull.collect((err) => {
           if (err) throw err
 
           SSB.state.queue = []

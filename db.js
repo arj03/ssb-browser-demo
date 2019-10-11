@@ -21,7 +21,7 @@ exports.init = function (dir, ssbId) {
   function add(msg, cb) {
     var id = getId(msg)
 
-    if (store.since.value == 0)
+    if (store.since.value == 0 || SSB.isInitialSync)
     {
       // empty db, keys.get will block, just add anyways
       store.add(id, msg, cb)
