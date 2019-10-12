@@ -125,7 +125,7 @@ ssb-markdown increases the size quite substantially
 
 - split core into own module
 - exif stripping for images
-- peer-invites
+- markdown preview
 - port over ssb-friend-pub
 - disable or trust pubs as a way to control when to fetch threads
 

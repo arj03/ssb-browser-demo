@@ -79,7 +79,20 @@
                //skip pubs that were not contactable
                if(err) {
                  pushFound(pub, err)
-@@ -400,16 +393,13 @@ exports.init = function (sbot, config) {
+@@ -374,10 +367,8 @@ exports.init = function (sbot, config) {
+ 
+     function create(pubs) {
+       var seed = crypto.randomBytes(32).toString('base64')
+-      sbot.identities.publishAs({
+-        id: host_id,
+-        content: I.createInvite(seed, host_id, opts.reveal, opts.private, caps)
+-      }, function (err, data) {
++      // for browser UI, id is never different, so we don't need identities here
++      SSB.publish(I.createInvite(seed, host_id, opts.reveal, opts.private, caps), function (err, data) {
+         if(err) return cb(err)
+         var invite = {
+           seed: seed,
+@@ -400,16 +391,13 @@ exports.init = function (sbot, config) {
        n++
        //don't use sbot.connect here, because we are connecting
        //with a different cap.
@@ -102,7 +115,7 @@
          if(n > 0 && rpc) {
            n = -1
            cb(null, rpc)
-@@ -474,10 +464,8 @@ exports.init = function (sbot, config) {
+@@ -474,10 +462,8 @@ exports.init = function (sbot, config) {
            if(err) return cb(err)
            var invite_msg = data.value
            var opened = data.opened
@@ -115,7 +128,7 @@
              if(err) cb(err)
              else {
                state.set(reduce(state.value, accept, invites.since.value))
-@@ -502,9 +490,6 @@ exports.init = function (sbot, config) {
+@@ -502,9 +488,6 @@ exports.init = function (sbot, config) {
              //TODO: store confirms for us in the state.
              if (err) return cb(err)
  

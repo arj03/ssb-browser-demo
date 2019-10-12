@@ -1,20 +1,31 @@
 module.exports = function () {
   return {
-    template: `<div id="settings">
+    template: `
+    <div id="settings">
         <div class="settingsleft">
-        <button id="syncData" v-on:click="syncData">Sync data</button><br>
-        <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
-        <br><br>
-        <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
-        <br><br>
-        <input type="text" placeholder="open invite code" v-model="inviteCode" v-on:keyup.enter="openInvite" value="" class="textInput" />
-        <br><br>
-        <input type="text" placeholder="accept invite code" v-model="inviteCode" v-on:keyup.enter="acceptInvite" value="" class="textInput" />
-        <br><br>
-        Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
-        <br><br>
-      </div>
-      <div id="status" v-html="statusHTML"></div>
+          <button id="syncData" v-on:click="syncData">Sync data</button><br>
+          <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
+          <br><br>
+          <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
+          <br><br>
+          Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
+          <br><br>
+        </div>
+        <div id="status" v-html="statusHTML"></div>
+
+        <div id="peerinvites">
+          <h3>Use peer invite</h3>
+          <input type="text" placeholder="invite code" v-model="inviteCode" value="" class="textInput" />
+          <br><br>
+          <button v-on:click="openInvite">Check invite code</button>
+          <button v-on:click="acceptInvite">Accept invite code</button>
+          <h3>Create peer invite</h3>
+          <input type="text" placeholder="private message for invite" v-model="private" value="" class="textInput" />
+          <br>
+          <input type="text" placeholder="public reveal message for invite" v-model="reveal" value="" class="textInput" />
+          <br><br>
+          <button v-on:click="createInvite">Create invite code</button>
+        </div>
     </div>`,
 
     data: function() {
@@ -24,7 +35,9 @@ module.exports = function () {
         blobId: '',
         statusHTML: '',
         inviteCode: '',
-        running: true
+        running: true,
+        private: '',
+        reveal: ''
       }
     },
 
@@ -69,12 +82,12 @@ module.exports = function () {
       {
         if (this.inviteCode != '') {
           SSB.db.peerInvites.openInvite(this.inviteCode, (err, msg) => {
-            if (err) return alert(err)
+            if (err) return alert(err.message)
 
             var user = msg.value.author
             if (SSB.profiles[msg.value.author])
               user = SSB.profiles[msg.value.author].name
-            alert(`User ${user} has invited you, he included the following personal message: '${msg.opened.private}', and the following public message: '${msg.opened.reveal}'`)
+            alert(`User ${user} has invited you and included the following personal message: '${msg.opened.private}', and the following public message: '${msg.opened.reveal}'`)
           })
         }
       },
@@ -88,6 +101,20 @@ module.exports = function () {
             alert("Invite accepted!")
           })
         }
+      },
+
+      createInvite: function()
+      {
+        SSB.db.peerInvites.create({
+          private: this.private,
+          reveal: this.reveal,
+          allowWithoutPubs: true,
+          pubs: this.remoteAddress
+        }, (err, msg) => {
+          if (err) return alert(err)
+
+          alert(msg)
+        })
       }
     },
 

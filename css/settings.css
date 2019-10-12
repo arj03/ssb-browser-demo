@@ -13,15 +13,25 @@
 
 #settings > .settingsleft > #remoteAddress {
   width: 300px;
-  padding: 5px
+  padding: 5px;
 }
 
 #settings > .settingsleft > .textInput {
   width: 300px;
-  padding: 5px
+  padding: 5px;
 }
 
 #settings > #status {
   float: right;
   width: 55%;
+}
+
+#settings > #peerinvites {
+  clear: both;
+}
+
+#settings > #peerinvites > .textInput {
+  width: 500px;
+  padding: 5px;
+  margin-top: 10px;
 }

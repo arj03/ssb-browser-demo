@@ -156,7 +156,8 @@ exports.syncFeedAfterFollow = function(feedId) {
     delete SSB.state.feeds[feedId]
     SSB.db.last.setPartialLogState(feedId, false)
 
-    var seqStart = SSB.db.last.get()[feedId].sequence - 100
+    var last = SSB.db.last.get()
+    var seqStart = last[feedId] ? last[feedId].sequence - 100 : 0
     if (seqStart < 0)
       seqStart = 0
 

@@ -85,7 +85,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     },
 
     // config
-    validMessageTypes: ['post'],
+    validMessageTypes: ['post', 'peer-invite/confirm', 'peer-invite/accept', 'peer-invite'],
     privateMessages: true
 
     // will get added on load time:
