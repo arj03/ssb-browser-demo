@@ -85,7 +85,7 @@ module.exports = function () {
             if (err) return alert(err.message)
 
             var user = msg.value.author
-            if (SSB.profiles[msg.value.author])
+            if (SSB.profiles[msg.value.author] && SSB.profiles[msg.value.author].name)
               user = SSB.profiles[msg.value.author].name
             alert(`User ${user} has invited you and included the following personal message: '${msg.opened.private}', and the following public message: '${msg.opened.reveal}'`)
           })
