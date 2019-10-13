@@ -8,7 +8,7 @@ module.exports = function () {
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
         <textarea class="messageText" v-model="postText"></textarea><br>
         </span>
-        <button v-on:click="onPost">Post private message</button>
+        <button class="clickButton" v-on:click="onPost">Post private message</button>
         <h2>Private messages</h2>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
     </div>`,

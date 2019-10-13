@@ -176,6 +176,27 @@ exports.syncFeedAfterFollow = function(feedId) {
   })
 }
 
+exports.syncFeedFromSequence = function(feedId, sequence) {
+  connected((rpc) => {
+    var seqStart = sequence - 100
+    if (seqStart < 0)
+      seqStart = 0
+
+    console.time("downloading messages")
+
+    pull(
+      rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
+      pull.asyncMap(SSB.net.add),
+      pull.collect((err, msgs) => {
+        if (err) throw err
+
+        console.timeEnd("downloading messages")
+        SSB.state.queue = []
+      })
+    )
+  })
+}
+
 exports.initialSync = function()
 {
   const onboard = SSB.onboard

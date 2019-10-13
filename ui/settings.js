@@ -3,7 +3,7 @@ module.exports = function () {
     template: `
     <div id="settings">
         <div class="settingsleft">
-          <button id="syncData" v-on:click="syncData">Sync data</button><br>
+          <button class="clickButton" id="syncData" v-on:click="syncData">Sync data</button><br>
           <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
           <br><br>
           <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
@@ -17,14 +17,25 @@ module.exports = function () {
           <h3>Use peer invite</h3>
           <input type="text" placeholder="invite code" v-model="inviteCode" value="" class="textInput" />
           <br><br>
-          <button v-on:click="openInvite">Check invite code</button>
-          <button v-on:click="acceptInvite">Accept invite code</button>
-          <h3>Create peer invite</h3>
+          <button class="clickButton" v-on:click="openInvite">Check invite code</button>
+          <button class="clickButton" v-on:click="acceptInvite">Accept invite code</button>
+          <h3>Create personal peer invite</h3>
+          <div id="inviteDescription">Create a personal peer invite
+          code for someone to join Scuttlebutt. You can include people
+          you think the person might like in the invitation.</div>
           <input type="text" placeholder="private message for invite" v-model="private" value="" class="textInput" />
           <br>
           <input type="text" placeholder="public reveal message for invite" v-model="reveal" value="" class="textInput" />
           <br><br>
-          <button v-on:click="createInvite">Create invite code</button>
+          Add people (optional):
+          <v-select multiple v-model="selectedPeople" :options="people" label="name">
+            <template slot="option" slot-scope="option">
+              <img v-if='option.image' class="tinyAvatar" :src='option.image' />
+              <span>{{ option.name }}</span>
+            </template>
+          </v-select>
+          <br>
+          <button class="clickButton" v-on:click="createInvite">Create invite code</button>
         </div>
     </div>`,
 
@@ -37,7 +48,9 @@ module.exports = function () {
         inviteCode: '',
         running: true,
         private: '',
-        reveal: ''
+        reveal: '',
+        people: [],
+        selectedPeople: []
       }
     },
 
@@ -87,7 +100,19 @@ module.exports = function () {
             var user = msg.value.author
             if (SSB.profiles[msg.value.author] && SSB.profiles[msg.value.author].name)
               user = SSB.profiles[msg.value.author].name
-            alert(`User ${user} has invited you and included the following personal message: '${msg.opened.private}', and the following public message: '${msg.opened.reveal}'`)
+
+            let privateMsg = msg.opened.private
+            if (typeof msg.opened.private === 'object' && msg.opened.private.msg)
+              privateMsg = msg.opened.private.msg
+
+            let people = []
+            if (typeof msg.opened.private === 'object' && msg.opened.private.people)
+              people = msg.opened.private.people
+
+            if (people.length > 0)
+              alert(`The user ${user} has invited you and included the following personal message: '${privateMsg}', included ${people.length} people for you to check out, and the following public message: '${msg.opened.reveal}'`)
+            else
+              alert(`The user ${user} has invited you and included the following personal message: '${privateMsg}', and the following public message: '${msg.opened.reveal}'`)
           })
         }
       },
@@ -95,8 +120,28 @@ module.exports = function () {
       acceptInvite: function()
       {
         if (this.inviteCode != '') {
-          SSB.db.peerInvites.acceptInvite(this.inviteCode, (err, msg) => {
+          SSB.db.peerInvites.acceptInvite(this.inviteCode, (err) => {
             if (err) return alert(err)
+
+            // we need the original invite for the people
+            SSB.db.peerInvites.openInvite(this.inviteCode, (err, msg) => {
+              let people = []
+              if (typeof msg.opened.private === 'object' && msg.opened.private.people)
+                people = msg.opened.private.people
+
+              people.forEach(p => {
+                if (!(p.id in SSB.profiles)) {
+                  SSB.profiles[p.id] = {
+                    name: p.name,
+                    description: p.description,
+                    image: p.image
+                  }
+                }
+                SSB.syncFeedFromSequence(p.id, p.sequence)
+              })
+
+              SSB.saveProfiles()
+            })
 
             alert("Invite accepted!")
           })
@@ -105,8 +150,40 @@ module.exports = function () {
 
       createInvite: function()
       {
+        // make sure we follow the pubs feed in order to get the confirm msg
+        const remoteFeed = '@' + this.remoteAddress.split(':')[3]
+        if (!(remoteFeed in SSB.profiles))
+          SSB.syncFeedAfterFollow(remoteFeed)
+
+        const last = SSB.db.last.get()
+
+        let selected = this.selectedPeople.map(x => {
+          let profile = SSB.profiles[x.id]
+          let lastMsg = last[x.id]
+          return {
+            id: x.id,
+            name: profile.name,
+            image: profile.image,
+            description: profile.description,
+            sequence: lastMsg ? lastMsg.sequence : null
+          }
+        })
+
+        // always include self
+        if (!(SSB.net.id in selected)) {
+          let profile = SSB.profiles[SSB.net.id]
+          let lastMsg = last[SSB.net.id]
+          selected.push({
+            id: SSB.net.id,
+            name: profile.name,
+            image: profile.image,
+            description: profile.description,
+            sequence: lastMsg ? lastMsg.sequence : null
+          })
+        }
+
         SSB.db.peerInvites.create({
-          private: this.private,
+          private: { msg: this.private, people: selected },
           reveal: this.reveal,
           allowWithoutPubs: true,
           pubs: this.remoteAddress
@@ -144,6 +221,27 @@ module.exports = function () {
       }
 
       var self = this
+
+      const last = SSB.db.last.get()
+
+      for (let id in SSB.profiles) {
+        const profile = SSB.profiles[id]
+
+        if (profile.image && last[id])
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            self.people.push({
+              id: id,
+              name: profile.name || id,
+              image: err ? '' : url
+            })
+          })
+        else if (last[id])
+          self.people.push({
+            id: id,
+            name: profile.name || id,
+            image: ''
+          })
+      }
 
       var lastStatus = null
 

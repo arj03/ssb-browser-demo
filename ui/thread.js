@@ -8,7 +8,7 @@ module.exports = function () {
          <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg"></ssb-msg>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <textarea class="messageText" v-model="postText"></textarea><br>
-         <button v-on:click="postReply">Post reply</button>
+         <button class="clickButton" v-on:click="postReply">Post reply</button>
        <div>`,
 
     props: ['rootId'],

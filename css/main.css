@@ -78,7 +78,7 @@ code {
 
 .message > .header > a > .avatar {
   width: 50px;
-  height; 50px;
+  height: 50px;
   padding-right: 10px;
   display: table-cell;
 }
@@ -103,7 +103,7 @@ code {
   margin-right: 2rem;
 }
 
-button {
+.clickButton {
   margin-top: 5px;
   text-transform: uppercase;
   font-weight: bold;

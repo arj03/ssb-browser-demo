@@ -124,7 +124,6 @@ ssb-markdown increases the size quite substantially
 # TODO
 
 - peer-invites:
-  - make sure we follow the pub used for creating invite
   - somehow handle that we have a new friend (SSB.db.friends)
 - split core into own module
 - exif stripping for images

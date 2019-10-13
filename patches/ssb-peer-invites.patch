@@ -8,7 +8,7 @@
  var crypto     = require('crypto')
  var ssbKeys    = require('ssb-keys')
  var u          = require('./util')
-@@ -150,22 +149,6 @@ exports.init = function (sbot, config) {
+@@ -150,24 +149,13 @@ exports.init = function (sbot, config) {
      }
    })
  
@@ -30,10 +30,20 @@
 -
    //retrive full invitation.
    invites.getInvite = function (invite_id, cb) {
++    if (invites.since.value <= 0) return cb(code(
++      new Error('empty database'),
++      'invite-mismatch'
++    ))
++
      var self = this
-@@ -194,18 +177,28 @@ exports.init = function (sbot, config) {
+     invites.get(function (err, v) {
+       var invite = v.invites[invite_id]
+@@ -193,19 +181,31 @@ exports.init = function (sbot, config) {
+   }
  
    function getResponse (invite_id, test, cb) {
++    if (invites.since.value <= 0) return cb(null, [])
++
      return all(
 -      sbot.links({dest: invite_id, values: true, keys: false, meta: false}),
 +      SSB.db.query.read({
@@ -70,7 +80,7 @@
        }
      )
    }
-@@ -326,7 +319,7 @@ exports.init = function (sbot, config) {
+@@ -326,7 +326,7 @@ exports.init = function (sbot, config) {
            paramap(function (pub, cb) {
              //if opts.id != sbot.id connect using ssb client
              //so that you ask willReplicate from the correct id.
@@ -79,7 +89,7 @@
                //skip pubs that were not contactable
                if(err) {
                  pushFound(pub, err)
-@@ -374,10 +367,8 @@ exports.init = function (sbot, config) {
+@@ -374,10 +374,8 @@ exports.init = function (sbot, config) {
  
      function create(pubs) {
        var seed = crypto.randomBytes(32).toString('base64')
@@ -92,7 +102,7 @@
          if(err) return cb(err)
          var invite = {
            seed: seed,
-@@ -400,16 +391,13 @@ exports.init = function (sbot, config) {
+@@ -400,16 +398,13 @@ exports.init = function (sbot, config) {
        n++
        //don't use sbot.connect here, because we are connecting
        //with a different cap.
@@ -115,7 +125,7 @@
          if(n > 0 && rpc) {
            n = -1
            cb(null, rpc)
-@@ -474,10 +462,8 @@ exports.init = function (sbot, config) {
+@@ -474,10 +469,8 @@ exports.init = function (sbot, config) {
            if(err) return cb(err)
            var invite_msg = data.value
            var opened = data.opened
@@ -128,7 +138,7 @@
              if(err) cb(err)
              else {
                state.set(reduce(state.value, accept, invites.since.value))
-@@ -502,9 +488,6 @@ exports.init = function (sbot, config) {
+@@ -502,9 +495,6 @@ exports.init = function (sbot, config) {
              //TODO: store confirms for us in the state.
              if (err) return cb(err)
  
