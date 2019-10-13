@@ -37,6 +37,31 @@ module.exports = function () {
           <br>
           <button class="clickButton" v-on:click="createInvite">Create invite code</button>
         </div>
+
+        <transition name="modal" v-if="showModal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-container">
+                <div>
+                  An invite code has been generated, share this with your friend using something like email or signal.
+                </div>
+
+                <div class="modal-body">
+                  {{ createdInviteCode }}
+                </div>
+
+                <div class="modal-footer">
+                  <button class="clickButton" v-on:click="copyInviteToClipboard">
+                    Copy to clipboard
+                  </button>
+                  <button class="modal-default-button clickButton" @click="showModal = false">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
     </div>`,
 
     data: function() {
@@ -50,7 +75,9 @@ module.exports = function () {
         private: '',
         reveal: '',
         people: [],
-        selectedPeople: []
+        selectedPeople: [],
+        showModal: false,
+        createdInviteCode: ''
       }
     },
 
@@ -148,6 +175,10 @@ module.exports = function () {
         }
       },
 
+      copyInviteToClipboard: function() {
+        navigator.clipboard.writeText(this.createdInviteCode)
+      },
+
       createInvite: function()
       {
         // make sure we follow the pubs feed in order to get the confirm msg
@@ -190,7 +221,8 @@ module.exports = function () {
         }, (err, msg) => {
           if (err) return alert(err)
 
-          alert(msg)
+          this.createdInviteCode = msg
+          this.showModal = true
         })
       }
     },
