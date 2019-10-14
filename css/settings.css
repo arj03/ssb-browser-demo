@@ -89,6 +89,10 @@
   margin: 20px 0;
 }
 
+.modal-footer {
+  height: 30px;
+}
+
 .modal-default-button {
   float: right;
 }

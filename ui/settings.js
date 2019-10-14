@@ -38,7 +38,7 @@ module.exports = function () {
           <button class="clickButton" v-on:click="createInvite">Create invite code</button>
         </div>
 
-        <transition name="modal" v-if="showModal">
+        <transition name="modal" v-if="showNewInviteModal">
           <div class="modal-mask">
             <div class="modal-wrapper">
               <div class="modal-container">
@@ -54,7 +54,39 @@ module.exports = function () {
                   <button class="clickButton" v-on:click="copyInviteToClipboard">
                     Copy to clipboard
                   </button>
-                  <button class="modal-default-button clickButton" @click="showModal = false">
+                  <button class="modal-default-button clickButton" @click="showNewInviteModal = false">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+
+        <transition name="modal" v-if="showOpenInviteModal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-container">
+                <div>
+                  <b>The user {{ openInviteUser }} has sent you an invite to connect</b>
+                </div>
+
+                <div class="modal-body">
+                  The message includes the following personal message: {{ openInvitePrivateMsg }}<br>
+                  <br>
+                  And includes the following people for you to check out:<br>
+                  <div v-for="people in openInvitePeople">
+                    {{ people.name }}
+                  </div>
+                  <br>
+                  Once accepted, the following public message will be shown: {{ openInviteRevealMsg }}<br>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="modal-default-button clickButton" style="margin-left: 20px;" v-on:click="acceptInvite">
+                    Accept invite
+                  </button>
+                  <button class="modal-default-button clickButton" @click="showOpenInviteModal = false">
                     Close
                   </button>
                 </div>
@@ -76,8 +108,15 @@ module.exports = function () {
         reveal: '',
         people: [],
         selectedPeople: [],
-        showModal: false,
-        createdInviteCode: ''
+
+        showNewInviteModal: false,
+        createdInviteCode: '',
+
+        showOpenInviteModal: false,
+        openInviteUser: '',
+        openInvitePrivateMsg: '',
+        openInviteRevealMsg: '',
+        openInvitePeople: []
       }
     },
 
@@ -136,10 +175,11 @@ module.exports = function () {
             if (typeof msg.opened.private === 'object' && msg.opened.private.people)
               people = msg.opened.private.people
 
-            if (people.length > 0)
-              alert(`The user ${user} has invited you and included the following personal message: '${privateMsg}', included ${people.length} people for you to check out, and the following public message: '${msg.opened.reveal}'`)
-            else
-              alert(`The user ${user} has invited you and included the following personal message: '${privateMsg}', and the following public message: '${msg.opened.reveal}'`)
+            this.openInviteUser = user
+            this.openInvitePrivateMsg = privateMsg
+            this.openInviteRevealMsg = msg.opened.reveal
+            this.openInvitePeople = people
+            this.showOpenInviteModal = true
           })
         }
       },
@@ -222,7 +262,7 @@ module.exports = function () {
           if (err) return alert(err)
 
           this.createdInviteCode = msg
-          this.showModal = true
+          this.showNewInviteModal = true
         })
       }
     },
