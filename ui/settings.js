@@ -16,7 +16,7 @@ module.exports = function () {
         <div id="peerinvites">
           <h3>Use peer invite</h3>
           <input type="text" placeholder="invite code" v-model="inviteCode" value="" class="textInput" />
-          <br><br>
+          <br>
           <button class="clickButton" v-on:click="openInvite">Check invite code</button>
           <button class="clickButton" v-on:click="acceptInvite">Accept invite code</button>
           <h3>Create personal peer invite</h3>
@@ -34,7 +34,6 @@ module.exports = function () {
               <span>{{ option.name }}</span>
             </template>
           </v-select>
-          <br>
           <button class="clickButton" v-on:click="createInvite">Create invite code</button>
         </div>
 
