@@ -38,6 +38,15 @@
      var self = this
      invites.get(function (err, v) {
        var invite = v.invites[invite_id]
+@@ -180,7 +168,7 @@ exports.init = function (sbot, config) {
+       else if(invite === true)
+         //TODO just retrive all confirmations we know about
+         //via links.
+-        sbot.get(invite_id, cb)
++        SSB.db.get(invite_id, cb)
+       //only allow the guest to request their own invite.
+       else if(self.id !== invite.content.invite)
+         cb(code(
 @@ -193,19 +181,31 @@ exports.init = function (sbot, config) {
    }
  
