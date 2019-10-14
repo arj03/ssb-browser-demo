@@ -52,6 +52,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     removeBlobs: helpers.removeBlobs,
 
     syncFeedAfterFollow: helpers.syncFeedAfterFollow,
+    syncFeedFromSequence: helpers.syncFeedFromSequence,
     initialSync: helpers.initialSync,
     sync: helpers.sync,
     getThread: helpers.getThread,
@@ -59,6 +60,9 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     generateMessage: validate.appendNew,
     box: require('ssb-keys').box,
     state,
+
+    // peer invites
+    rawConnect: require('./raw-connect'),
 
     // sbot convenience wrappers
     publish: function(msg, cb) {
@@ -82,7 +86,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     },
 
     // config
-    validMessageTypes: ['post'],
+    validMessageTypes: ['post', 'peer-invite/confirm', 'peer-invite/accept', 'peer-invite'],
     privateMessages: true
 
     // will get added on load time:

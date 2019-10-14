@@ -27,13 +27,13 @@ module.exports = function () {
            </div>
            <div class="description">
              <textarea placeholder="Description (markdown is supported)" v-model="descriptionText"></textarea><br>
-             <button v-on:click="saveProfile">Save profile</button>
+             <button class="clickButton" v-on:click="saveProfile">Save profile</button>
            </div>
          </span>
          <span v-else>
            <div class="avatar">
              <img :src='image'><br>
-             <button v-on:click="changeFollowStatus">{{ followText }}</button>
+             <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
              <br><br>
            </div>
            <div class="description">

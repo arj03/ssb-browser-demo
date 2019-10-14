@@ -29,7 +29,7 @@ module.exports = function () {
         state[author].partial = true
         save()
       }
-      else if (!isPartial && state[author].partial === true) {
+      else if (!isPartial && state[author] && state[author].partial === true) {
         delete state[author].partial
         save()
       }

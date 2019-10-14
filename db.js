@@ -46,6 +46,7 @@ exports.init = function (dir, ssbId) {
     last: store.last,
     clock: store.clock,
     friends: store.friends,
+    peerInvites: store['peer-invites'],
     getStatus: store.getStatus
   }
 }

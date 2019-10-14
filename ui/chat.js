@@ -7,7 +7,7 @@ module.exports = function () {
   return {
     template: `<div id="chat">
          <div id='myId'>Your id: {{ SSB.net.id }}</div>
-         <button id="acceptConnections" v-on:click="SSB.net.tunnelChat.acceptMessages">Accept incoming connections</button>   or  
+         <button class="clickButton" id="acceptConnections" v-on:click="SSB.net.tunnelChat.acceptMessages">Accept incoming connections</button>   or  
          <input type="text" id="tunnelConnect" v-on:keyup.enter="connect" v-model="remoteId" placeholder="remote feedId to connect to" />
          <input type="text" id="chatMessage" v-model="chatText" v-on:keyup.enter="onChatSend" placeholder="type message, enter to send" />
          <h2>Off-chain messages</h2>

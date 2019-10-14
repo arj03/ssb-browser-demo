@@ -58,6 +58,7 @@ are needed:
  - ssb-ebt.patch
  - ssb-friends.patch
  - ssb-tunnel.patch
+ - ssb-peer-invites.patch
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
@@ -84,6 +85,12 @@ plugin is needed for faster sync. Also the
 used for browsing threads you don't currently have, such as from
 people outside the people you have synced or older messages because of
 the partial replication nature.
+
+# Peer invites
+
+To create an invite, do something like this:
+
+sbot peerInvites.create --private 'this is only for receiver' --reveal 'the public' --allowWithoutPubs --pubs wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519
 
 # Onboarding file
 
@@ -116,9 +123,11 @@ ssb-markdown increases the size quite substantially
 
 # TODO
 
+- peer-invites:
+  - somehow handle that we have a new friend (SSB.db.friends)
 - split core into own module
 - exif stripping for images
-- peer-invites
+- markdown preview
 - port over ssb-friend-pub
 - disable or trust pubs as a way to control when to fetch threads
 

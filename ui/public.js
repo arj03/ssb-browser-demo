@@ -5,7 +5,7 @@ module.exports = function () {
     template: `<div id="public">
         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
         <br>
-        <button id="postMessage" v-on:click="onPost">Post new thread</button>
+        <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
         <input type="file" id="publicMessageFileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
         <h2>Last 50 messages</h2>
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">

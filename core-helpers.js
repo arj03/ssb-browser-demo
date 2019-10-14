@@ -156,7 +156,8 @@ exports.syncFeedAfterFollow = function(feedId) {
     delete SSB.state.feeds[feedId]
     SSB.db.last.setPartialLogState(feedId, false)
 
-    var seqStart = SSB.db.last.get()[feedId].sequence - 100
+    var last = SSB.db.last.get()
+    var seqStart = last[feedId] ? last[feedId].sequence - 100 : 0
     if (seqStart < 0)
       seqStart = 0
 
@@ -166,6 +167,27 @@ exports.syncFeedAfterFollow = function(feedId) {
       rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
       pull.asyncMap(SSB.net.add),
       pull.collect((err) => {
+        if (err) throw err
+
+        console.timeEnd("downloading messages")
+        SSB.state.queue = []
+      })
+    )
+  })
+}
+
+exports.syncFeedFromSequence = function(feedId, sequence) {
+  connected((rpc) => {
+    var seqStart = sequence - 100
+    if (seqStart < 0)
+      seqStart = 0
+
+    console.time("downloading messages")
+
+    pull(
+      rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
+      pull.asyncMap(SSB.net.add),
+      pull.collect((err, msgs) => {
         if (err) throw err
 
         console.timeEnd("downloading messages")

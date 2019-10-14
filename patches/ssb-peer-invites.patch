@@ -1,0 +1,159 @@
+--- node_modules/ssb-peer-invites/index.js~    2019-09-30 21:58:14.331999286 +0200
++++ node_modules/ssb-peer-invites/index.js     2019-10-03 23:42:56.573974443 +0200
+@@ -4,7 +4,6 @@ var I          = require('./valid')
+ var deepEquals = require('deep-equals')
+ var types      = require('./types')
+ var paramap    = require('pull-paramap')
+-var ssbClient  = require('ssb-client')
+ var crypto     = require('crypto')
+ var ssbKeys    = require('ssb-keys')
+ var u          = require('./util')
+@@ -150,24 +149,13 @@ exports.init = function (sbot, config) {
+     }
+   })
+ 
+-  sbot.auth.hook(function (fn, args) {
+-    var id = args[0], cb = args[1]
+-    //currently a problem here where message may be confirmed,
+-    //but guest didn't get the welcome yet. they need to be able to connect
+-    //and request it again.
+-    invites.get(function (err, v) {
+-      if(err) return cb(err)
+-      if(v.guests[id])
+-        return cb(null, {
+-          allow: ['peerInvites.getInvite', 'peerInvites.confirm'],
+-          deny: null
+-        })
+-      fn.apply(null, args)
+-    })
+-  })
+-
+   //retrive full invitation.
+   invites.getInvite = function (invite_id, cb) {
++    if (invites.since.value <= 0) return cb(code(
++      new Error('empty database'),
++      'invite-mismatch'
++    ))
++
+     var self = this
+     invites.get(function (err, v) {
+       var invite = v.invites[invite_id]
+@@ -180,7 +168,7 @@ exports.init = function (sbot, config) {
+       else if(invite === true)
+         //TODO just retrive all confirmations we know about
+         //via links.
+-        sbot.get(invite_id, cb)
++        SSB.db.get(invite_id, cb)
+       //only allow the guest to request their own invite.
+       else if(self.id !== invite.content.invite)
+         cb(code(
+@@ -193,19 +181,31 @@ exports.init = function (sbot, config) {
+   }
+ 
+   function getResponse (invite_id, test, cb) {
++    if (invites.since.value <= 0) return cb(null, [])
++
+     return all(
+-      sbot.links({dest: invite_id, values: true, keys: false, meta: false}),
++      SSB.db.query.read({
++        query: [{
++          $filter: {
++            value: {
++              dest: invite_id,
++            }
++          }
++        }]
++      }),
++      //sbot.links({dest: invite_id, values: true, keys: false, meta: false}),
+       function (err, confirms) {
+         if(err) cb(err)
+-        else cb(null,
+-          confirms.filter(function (e) {
+-            try {
+-              return test(e)
+-            } catch (err) {
+-              return false
+-            }
+-          })[0]
+-        )
++        else
++          cb(null,
++             confirms.map(x => x.value).filter(function (e) {
++               try {
++                 return test(e)
++               } catch (err) {
++                 return false
++               }
++             })[0]
++            )
+       }
+     )
+   }
+@@ -326,7 +326,7 @@ exports.init = function (sbot, config) {
+           paramap(function (pub, cb) {
+             //if opts.id != sbot.id connect using ssb client
+             //so that you ask willReplicate from the correct id.
+-            sbot.connect(pub.address, function (err, rpc) {
++            SSB.net.connect(pub.address, function (err, rpc) {
+               //skip pubs that were not contactable
+               if(err) {
+                 pushFound(pub, err)
+@@ -374,10 +374,8 @@ exports.init = function (sbot, config) {
+ 
+     function create(pubs) {
+       var seed = crypto.randomBytes(32).toString('base64')
+-      sbot.identities.publishAs({
+-        id: host_id,
+-        content: I.createInvite(seed, host_id, opts.reveal, opts.private, caps)
+-      }, function (err, data) {
++      // for browser UI, id is never different, so we don't need identities here
++      SSB.publish(I.createInvite(seed, host_id, opts.reveal, opts.private, caps), function (err, data) {
+         if(err) return cb(err)
+         var invite = {
+           seed: seed,
+@@ -400,16 +398,13 @@ exports.init = function (sbot, config) {
+       n++
+       //don't use sbot.connect here, because we are connecting
+       //with a different cap.
+-      ssbClient(keys, {
+-        remote: addr,
+-        caps: {shs: invite.cap || caps.shs},
+-        manifest: {
+-          peerInvites: {
+-            getInvite: 'async',
+-            confirm: 'async'
+-          }
++      var client = SSB.rawConnect.init(keys, {shs: invite.cap || caps.shs}, {
++        peerInvites: {
++          getInvite: 'async',
++          confirm: 'async'
+         }
+-      }, function (_err, rpc) {
++      })
++      client.connect(SSB.remoteAddress, function (_err, rpc) {
+         if(n > 0 && rpc) {
+           n = -1
+           cb(null, rpc)
+@@ -474,10 +469,8 @@ exports.init = function (sbot, config) {
+           if(err) return cb(err)
+           var invite_msg = data.value
+           var opened = data.opened
+-          sbot.identities.publishAs({
+-            id: id,
+-            content: I.createAccept(invite_msg, invite.seed, id, caps)
+-          }, function (err, accept) {
++          // for browser UI, id is never different, so we don't need identities here
++          SSB.publish(I.createAccept(invite_msg, invite.seed, id, caps), function (err, accept) {
+             if(err) cb(err)
+             else {
+               state.set(reduce(state.value, accept, invites.since.value))
+@@ -502,9 +495,6 @@ exports.init = function (sbot, config) {
+             //TODO: store confirms for us in the state.
+             if (err) return cb(err)
+ 
+-            ;(invite.pubs || []).forEach(function (addr) {
+-              sbot.gossip.add(addr)
+-            })
+             cb(null, confirm)
+           })
+         })
