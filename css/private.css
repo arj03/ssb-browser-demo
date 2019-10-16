@@ -1,3 +1,17 @@
+#private > span > .v-select {
+  width: 500px;
+  background-color: white;
+}
+
+#private > span > .v-select > ul > li > img.tinyAvatar {
+  width: 35px;
+  height: 35px;
+}
+
+#private > span > .v-select > ul > li > span {
+  vertical-align: top;
+}
+
 #private > span > #recipients {
   padding: 5px;
   width: 45rem;
@@ -8,4 +22,12 @@
   padding: 5px;
   width: 45rem;
   margin: 0 0 10 0px;
+}
+
+#private input {
+  font-size: 1em;
+}
+
+#private > span > #subject {
+  margin-top: 10px;
 }

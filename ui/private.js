@@ -4,7 +4,12 @@ module.exports = function () {
   return {
     template: `<div id="private">
         <span v-if="postMessageVisible">
-        <input type="text" id="recipients" v-model="recipients" placeholder="recipient ids (, seperator)" />
+        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name">
+          <template slot="option" slot-scope="option">
+            <img v-if='option.image' class="tinyAvatar" :src='option.image' />
+            <span>{{ option.name }}</span>
+          </template>
+        </v-select>
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
         <textarea class="messageText" v-model="postText"></textarea><br>
         </span>
@@ -18,7 +23,8 @@ module.exports = function () {
         postMessageVisible: false,
         postText: "",
         subject: "",
-        recipients: "",
+        people: [],
+        recipients: [],
         messages: []
       }
     },
@@ -50,7 +56,7 @@ module.exports = function () {
           return
         }
 
-        var recps = this.recipients.split(',').map(x => x.trim())
+        let recps = this.recipients.map(x => x.id)
 
         if (!recps.every(x => x.startsWith("@"))) {
           alert("recipients must start with @")
@@ -64,20 +70,51 @@ module.exports = function () {
           var content = { type: 'post', text: this.postText, subject: this.subject }
           if (recps) {
             content.recps = recps
-            content = SSB.box(content, recps.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
+            content = SSB.box(content, recps.map(x => x.substr(1)))
           }
 
           SSB.publish(content, (err) => {
             if (err) console.log(err)
 
+            this.postMessageVisible = false
+            this.postText = ""
+            this.subject = ""
+            this.recipients = []
+
             this.renderPrivate()
           })
+        } else {
+          alert("Please provide both subject and text in private messages")
         }
       }
     },
 
     created: function () {
       this.renderPrivate()
+
+      // FIXME: helper function
+      var self = this
+
+      const last = SSB.db.last.get()
+
+      for (let id in SSB.profiles) {
+        const profile = SSB.profiles[id]
+
+        if (profile.image && last[id])
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            self.people.push({
+              id: id,
+              name: profile.name || id,
+              image: err ? '' : url
+            })
+          })
+        else if (last[id])
+          self.people.push({
+            id: id,
+            name: profile.name || id,
+            image: ''
+          })
+      }
     }
   }
 }
