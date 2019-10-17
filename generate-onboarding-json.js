@@ -163,7 +163,7 @@ require('ssb-client')(function (err, sbot) {
               }),
               pull.drain((msg) => {
                 data[friend].latestMsg = {
-                  key: msg.key,
+                  //key: msg.key,
                   seq: msg.value.sequence,
                   timestamp: msg.value.timestamp
                 }

@@ -8,6 +8,7 @@
     "url": ""
   },
   "dependencies": {
+    "deep-object-diff": "^1.1.0",
     "flumecodec": "0.0.1",
     "flumedb": "^2.0.0",
     "flumelog-aligned-offset": "github:arj03/flumelog-aligned-offset#polyraf",

@@ -111,6 +111,16 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 &sem3R7bj5rbJnNJkh+WTUskUWWtQt0tP2cBWFejBkY4=.sha256
 
+## Onboarding diff
+
+Test of roughly a 20 days diff of two onboarding files:
+
+node generate-onboarding-diff.js onboard.json onboard-2.json > onboard-diff.json
+
+= 28kb (12kb gzip), the initial onboard is roughly 267kb (131kb
+gzip). If we removed the unused key on latestMsg, we could bring the
+diff size down quite a bit. Initial without lastMsg key is 244kb.
+
 # browserify 2mb
 
 Removing blobs means that we go down to 1.6mb. ssb-backlinks brings
