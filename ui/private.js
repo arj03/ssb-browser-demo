@@ -1,4 +1,5 @@
 const pull = require('pull-stream')
+const helpers = require('./helpers')
 
 module.exports = function () {
   return {
@@ -92,29 +93,7 @@ module.exports = function () {
     created: function () {
       this.renderPrivate()
 
-      // FIXME: helper function
-      var self = this
-
-      const last = SSB.db.last.get()
-
-      for (let id in SSB.profiles) {
-        const profile = SSB.profiles[id]
-
-        if (profile.image && last[id])
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
-            self.people.push({
-              id: id,
-              name: profile.name || id,
-              image: err ? '' : url
-            })
-          })
-        else if (last[id])
-          self.people.push({
-            id: id,
-            name: profile.name || id,
-            image: ''
-          })
-      }
+      this.people = helpers.getPeople()
     }
   }
 }

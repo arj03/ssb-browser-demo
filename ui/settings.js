@@ -1,3 +1,5 @@
+const helpers = require('./helpers')
+
 module.exports = function () {
   return {
     template: `
@@ -291,29 +293,9 @@ module.exports = function () {
         SSB.remoteAddress = settings.remoteAddress
       }
 
+      this.people = helpers.getPeople()
+
       var self = this
-
-      const last = SSB.db.last.get()
-
-      for (let id in SSB.profiles) {
-        const profile = SSB.profiles[id]
-
-        if (profile.image && last[id])
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
-            self.people.push({
-              id: id,
-              name: profile.name || id,
-              image: err ? '' : url
-            })
-          })
-        else if (last[id])
-          self.people.push({
-            id: id,
-            name: profile.name || id,
-            image: ''
-          })
-      }
-
       var lastStatus = null
 
       function updateDBStatus() {
