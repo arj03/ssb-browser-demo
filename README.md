@@ -137,7 +137,6 @@ ssb-markdown increases the size quite substantially
   - somehow handle that we have a new friend (SSB.db.friends)
 - split core into own module
 - exif stripping for images
-- markdown preview
 - port over ssb-friend-pub
 - disable or trust pubs as a way to control when to fetch threads
 

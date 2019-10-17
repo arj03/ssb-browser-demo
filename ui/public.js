@@ -1,5 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
+  const md = require('./markdown')
 
   return {
     template: `<div id="public">
@@ -11,6 +12,26 @@ module.exports = function () {
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
         <br>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+
+        <transition name="modal" v-if="showPreview">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-container">
+                <h3>Post preview</h3>
+                <div class="modal-body" v-html="msgPreview"></div>
+
+                <div class="modal-footer">
+                  <button class="clickButton" @click="showPreview = false">
+                    Close
+                  </button>
+                  <button class="modal-default-button clickButton" v-on:click="confirmPost">
+                    Post message
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
     </div>`,
 
     data: function() {
@@ -18,7 +39,15 @@ module.exports = function () {
         postMessageVisible: false,
         postText: "",
         onlyThreads: false,
-        messages: []
+        messages: [],
+
+        showPreview: false
+      }
+    },
+
+    computed: {
+      msgPreview: function() {
+        return md.markdown(this.postText)
       }
     },
 
@@ -75,16 +104,20 @@ module.exports = function () {
           return
         }
 
-        if (this.postText != '') {
-          var self = this
-          SSB.publish({ type: 'post', text: this.postText }, (err) => {
-            if (err) console.log(err)
+        this.showPreview = true
+      },
 
-            self.postText = ""
-            
-            this.renderPublic()
-          })
-        }
+      confirmPost: function() {
+        var self = this
+        SSB.publish({ type: 'post', text: this.postText }, (err) => {
+          if (err) console.log(err)
+
+          self.postText = ""
+          self.postMessageVisible = false
+          self.showPreview = false
+
+          self.renderPublic()
+        })
       }
     },
 
