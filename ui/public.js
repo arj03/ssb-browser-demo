@@ -12,26 +12,7 @@ module.exports = function () {
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
         <br>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-
-        <transition name="modal" v-if="showPreview">
-          <div class="modal-mask">
-            <div class="modal-wrapper">
-              <div class="modal-container">
-                <h3>Post preview</h3>
-                <div class="modal-body" v-html="msgPreview"></div>
-
-                <div class="modal-footer">
-                  <button class="clickButton" @click="showPreview = false">
-                    Close
-                  </button>
-                  <button class="modal-default-button clickButton" v-on:click="confirmPost">
-                    Post message
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </transition>
+        <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
     data: function() {
@@ -42,12 +23,6 @@ module.exports = function () {
         messages: [],
 
         showPreview: false
-      }
-    },
-
-    computed: {
-      msgPreview: function() {
-        return md.markdown(this.postText)
       }
     },
 
@@ -104,6 +79,8 @@ module.exports = function () {
           return
         }
 
+        if (this.showPreview) // second time
+          this.showPreview = false
         this.showPreview = true
       },
 
