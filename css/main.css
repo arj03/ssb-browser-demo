@@ -28,14 +28,22 @@ body {
   text-decoration: none;
 }
 
-#messages, #navigation, #settings {
+#navigation {
+  font-weight: 600;
+}
+
+#navigation > a {
+  color: #000;
+}
+
+#messages, #settings {
   font-weight: 400;
   font-style: normal;
   font-family: system-ui, sans-serif
 }
 
 #goTo {
-  width: 300px;
+  width: 250px;
   padding: 5px;
   float: right;
 }
