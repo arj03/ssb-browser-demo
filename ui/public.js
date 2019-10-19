@@ -1,6 +1,5 @@
 module.exports = function () {
   const pull = require('pull-stream')
-  const md = require('./markdown')
 
   return {
     template: `<div id="public">

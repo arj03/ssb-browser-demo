@@ -9,6 +9,7 @@ module.exports = function () {
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <textarea class="messageText" v-model="postText"></textarea><br>
          <button class="clickButton" v-on:click="postReply">Post reply</button>
+         <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
        <div>`,
 
     props: ['rootId'],
@@ -20,30 +21,38 @@ module.exports = function () {
         recipients: undefined, // for private messages only
         postText: '',
         messages: [],
-        rootMsg: { key: '', value: { content: {} } }
+        rootMsg: { key: '', value: { content: {} } },
+
+        showPreview: false
       }
     },
 
     methods: {
       postReply: function() {
-        if (this.postText != '')
-        {
-          var content = { type: 'post', text: this.postText, root: this.rootId, branch: this.latestMsgIdInThread }
-          if (this.recipients) {
-            content.recps = this.recipients
-            content = SSB.box(content, this.recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
-          }
+        if (this.showPreview) // second time
+          this.showPreview = false
+        this.showPreview = true
+      },
 
-          var self = this
+      confirmPost: function() {
+        if (this.postText == '') return
 
-          SSB.publish(content, (err) => {
-            if (err) console.log(err)
-
-            self.postText = ""
-
-            this.renderThread()
-          })
+        var content = { type: 'post', text: this.postText, root: this.rootId, branch: this.latestMsgIdInThread }
+        if (this.recipients) {
+          content.recps = this.recipients
+          content = SSB.box(content, this.recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
         }
+
+        var self = this
+
+        SSB.publish(content, (err) => {
+          if (err) console.log(err)
+
+          self.postText = ""
+          self.showPreview = false
+
+          self.renderThread()
+        })
       },
 
       render: function(rootMsg) {
