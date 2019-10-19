@@ -11,7 +11,6 @@ module.exports = function () {
           <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
           <br><br>
           Sync only feeds I'm following <input type="checkbox" id="syncOnlyFollows" v-model="syncOnlyFollows" />
-          <br><br>
         </div>
         <div id="status" v-html="statusHTML"></div>
 
@@ -37,6 +36,11 @@ module.exports = function () {
             </template>
           </v-select>
           <button class="clickButton" v-on:click="createInvite">Create invite code</button>
+        </div>
+
+        <div id="build">
+          <h3>Reproducible build</h3>
+          {{ buildhash }}
         </div>
 
         <transition name="modal" v-if="showNewInviteModal">
@@ -109,6 +113,8 @@ module.exports = function () {
         reveal: '',
         people: [],
         selectedPeople: [],
+
+        buildhash: '',
 
         showNewInviteModal: false,
         createdInviteCode: '',
@@ -293,9 +299,19 @@ module.exports = function () {
         SSB.remoteAddress = settings.remoteAddress
       }
 
+      var self = this
+
+      var req = new XMLHttpRequest()
+      req.open("GET", "sha256.txt", true)
+      req.onreadystatechange = function() {
+        if (req.readyState == 4) {
+          self.buildhash = req.response.split(" ")[0]
+        }
+      }
+      req.send()
+
       this.people = helpers.getPeople()
 
-      var self = this
       var lastStatus = null
 
       function updateDBStatus() {

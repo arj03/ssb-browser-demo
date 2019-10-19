@@ -55,3 +55,7 @@
   margin-bottom: 10px;
   margin-top: -10px;
 }
+
+#settings > #build {
+  margin-top: 25px;
+}

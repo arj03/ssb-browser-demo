@@ -90,7 +90,9 @@ the partial replication nature.
 
 To create an invite, do something like this:
 
+```
 sbot peerInvites.create --private 'this is only for receiver' --reveal 'the public' --allowWithoutPubs --pubs wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519
+```
 
 # Onboarding file
 
@@ -115,19 +117,36 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 Test of roughly a 20 days diff of two onboarding files:
 
+```
 node generate-onboarding-diff.js onboard.json onboard-2.json > onboard-diff.json
+```
 
 = 28kb (12kb gzip), the initial onboard is roughly 267kb (131kb
 gzip). If we removed the unused key on latestMsg, we could bring the
 diff size down quite a bit. Initial without lastMsg key is 244kb.
+
+# Reproducible builds
+
+After running:
+
+```
+node write-dist.js && find dist -type f | xargs cat | sha256sum > dist/sha256.txt
+```
+
+The dist directory will be populated with the whole application
+including a file with the hash of all the contents. This way you can
+verify that the version you might see at some site, is the same as in
+this repo.
 
 # browserify 2mb
 
 Removing blobs means that we go down to 1.6mb. ssb-backlinks brings
 this back to 2mb because of level.
 
+```
 browserify --full-paths core.js > bundle-core.js
 browserify --full-paths ui/browser.js > bundle-ui.js
+```
 
 ssb-markdown increases the size quite substantially
 
