@@ -1,5 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
+  const resizer = require('browser-image-resizer').readAndCompressImage
 
   return {
     template: `<div id="public">
@@ -11,7 +12,7 @@ module.exports = function () {
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
         <br>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-        <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
+        <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
     data: function() {
@@ -59,27 +60,38 @@ module.exports = function () {
 
         var self = this
 
-        file.arrayBuffer().then(function (buffer) {
-          SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
-            SSB.net.blobs.add("&" + digest, file, (err) => {
-              if (!err) {
-                SSB.net.blobs.push("&" + digest, (err) => {
-                  self.postText += " ![" + file.name + "](&" + digest + ")"
-                })
-              }
+        var resizeConfig = {
+          quality: 0.9,
+          maxWidth: 1024,
+          maxHeight: 1024,
+          autoRotate: true
+        }
+
+        resizer(file, resizeConfig).then(resizedImage => {
+          resizedImage.arrayBuffer().then(function (buffer) {
+            SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
+              SSB.net.blobs.add("&" + digest, file, (err) => {
+                if (!err) {
+                  SSB.net.blobs.push("&" + digest, (err) => {
+                    self.postText += " ![" + file.name + "](&" + digest + ")"
+                  })
+                }
+              })
             })
           })
         })
       },
       
+      closePreview: function() {
+        this.showPreview = false
+      },
+
       onPost: function() {
         if (!this.postMessageVisible) {
           this.postMessageVisible = true
           return
         }
 
-        if (this.showPreview) // second time
-          this.showPreview = false
         this.showPreview = true
       },
 

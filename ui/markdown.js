@@ -6,12 +6,28 @@ const mdOpts = {
   toUrl: (id) => {
     var link = ref.parseLink(id)
     if (link && ref.isBlob(link.link)) {
+      var imageURL = SSB.net.blobs.remoteURL(link.link)
+
+      // markdown doesn't support async, so we have to modify the DOM afterwards, see:
+      // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
+      function replaceLink(err, newLink) {
+        if (imageURL != newLink)
+        {
+          var els = document.querySelectorAll(`img[src='${imageURL}']`)
+          for (var i = 0, l = els.length; i < l; ++i) {
+            els[i].src = newLink
+          }
+        }
+      }
+
       if (link.query && link.query.unbox) { // private
-        // FIXME: doesn't work the first time
-        SSB.net.blobs.privateGet(link.link, link.query.unbox, () => {})
-        return SSB.net.blobs.privateFsURL(link.link)
-      } else
-        return SSB.net.blobs.remoteURL(link.link)
+        SSB.net.blobs.privateGet(link.link, link.query.unbox, replaceLink)
+      }
+      else {
+        SSB.net.blobs.localGet(link.link, replaceLink)
+      }
+
+      return imageURL
     } else if (ref.isFeed(id)) {
       return `#/profile/${encodeURIComponent(id)}`
     } else if (ref.isMsg(id)) {

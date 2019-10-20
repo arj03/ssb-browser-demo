@@ -10,7 +10,7 @@ Vue.component('ssb-msg-preview', {
                 <div class="modal-body" v-html="msgPreview"></div>
 
                 <div class="modal-footer">
-                  <button class="clickButton" @click="show = false">
+                  <button class="clickButton" @click="onClose">
                     Close
                   </button>
                   <button class="modal-default-button clickButton" v-on:click="confirmPost">
@@ -22,11 +22,14 @@ Vue.component('ssb-msg-preview', {
           </div>
         </transition>`,
 
-  props: ['text', 'confirmPost', 'show'],
+  props: ['text', 'onClose', 'confirmPost', 'show'],
 
   computed: {
     msgPreview: function() {
-      return md.markdown(this.text)
+      if (this.show)
+        return md.markdown(this.text)
+      else
+        return ""
     }
   }
 })

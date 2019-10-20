@@ -8,6 +8,7 @@
     "url": ""
   },
   "dependencies": {
+    "browser-image-resizer": "^2.0.1",
     "deep-object-diff": "^1.1.0",
     "flumecodec": "0.0.1",
     "flumedb": "^2.0.0",

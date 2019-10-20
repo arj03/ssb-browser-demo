@@ -17,7 +17,7 @@ module.exports = function () {
         <button class="clickButton" v-on:click="onPost">Post private message</button>
         <h2>Private messages</h2>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-        <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
+        <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
     data: function() {
@@ -54,6 +54,10 @@ module.exports = function () {
         )
       },
 
+      closePreview: function() {
+        this.showPreview = false
+      },
+
       onPost: function() {
         if (!this.postMessageVisible) {
           this.postMessageVisible = true
@@ -65,8 +69,6 @@ module.exports = function () {
           return
         }
 
-        if (this.showPreview) // second time
-          this.showPreview = false
         this.showPreview = true
       },
 

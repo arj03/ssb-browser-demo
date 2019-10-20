@@ -23,7 +23,7 @@ exports.init = function (sbot, config) {
   const blobsDir = path.join(config.path, "blobs")
   const privateBlobsDir = path.join(config.path, "private-blobs")
   console.log("blobs dir:", blobsDir)
-  
+
   function httpGet(url, responseType, cb) {
     var req = new XMLHttpRequest()
     req.timeout = 2000;
@@ -116,7 +116,7 @@ exports.init = function (sbot, config) {
     else
       return SSB.remoteAddress.split("~")[0].replace("ws:", "http://") + '/blobs/get/' + id
   }
-  
+
   var zeros = new Buffer(24); zeros.fill(0)
 
   function unboxBlob(unbox) {
@@ -339,49 +339,51 @@ exports.init = function (sbot, config) {
     privateGet: function(id, unboxKey, cb) {
       const file = raf(path.join(privateBlobsDir, id))
       file.stat((err, stat) => {
-	if (stat.size == 0) {
-	  httpGet(remoteURL(id), 'arraybuffer', (err, data) => {
-	    pull(
-	      pull.once(Buffer.from(data)),
-	      unboxBlob(unboxKey),
-	      pull.collect((err, decrypted) => {
-		if (decrypted) {
-		  addPrivate(id, new Blob(decrypted), () => {
-		    console.log("wrote private blob")
-		  })
-		}
-		else
-		{
-		  console.log("failed to decrypt", err)
-		}
-	      })
-	    )
-	  })
-	}
-	else
-	{
+        if (stat.size == 0) {
+          httpGet(remoteURL(id), 'arraybuffer', (err, data) => {
+            pull(
+              pull.once(Buffer.from(data)),
+              unboxBlob(unboxKey),
+              pull.collect((err, decrypted) => {
+                if (decrypted) {
+                  addPrivate(id, new Blob(decrypted), () => {
+                    console.log("wrote private blob")
+                    privateFsURL(id, cb)
+                  })
+                }
+                else
+                {
+                  console.log("failed to decrypt", err)
+                  cb(err)
+                }
+              })
+            )
+          })
+        }
+        else
+        {
           privateFsURL(id, cb)
-	}
+        }
       })
     },
 
     localGet: function (id, cb) {
       const file = raf(path.join(blobsDir, id))
       file.stat((err, stat) => {
-	if (stat && stat.size == 0) {
-	  httpGet(remoteURL(id), 'blob', (err, data) => {
-	    if (err) cb(err)
-	    else if (data.size < max)
-	      add(id, data, () => { fsURL(id, cb) })
-	    else
-	      cb(null, remoteURL(id))
-	  })
-	}
-	else
-	{
-	  //console.log("reading from local filesystem")
-	  fsURL(id, cb)
-	}
+        if (stat && stat.size == 0) {
+          httpGet(remoteURL(id), 'blob', (err, data) => {
+            if (err) cb(err)
+            else if (data.size < max)
+              add(id, data, () => { fsURL(id, cb) })
+            else
+              cb(null, remoteURL(id))
+          })
+        }
+        else
+        {
+          //console.log("reading from local filesystem")
+          fsURL(id, cb)
+        }
       })
     },
 

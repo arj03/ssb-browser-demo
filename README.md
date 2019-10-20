@@ -152,10 +152,16 @@ ssb-markdown increases the size quite substantially
 
 # TODO
 
+BUGS:
+- a href on image doesn't do anything
+- no file input in reply & private post
+- navigating from one thread to another doesn't work
+  file:///home/chrx/dev/ssb-lite/browser.html#/thread/LiQ89SmUZJU7gRZfTLJzLUrsCO2jMyXeWcMufSqq50Q=.sha256
+
+
 - peer-invites:
   - somehow handle that we have a new friend (SSB.db.friends)
 - split core into own module
-- exif stripping for images
 - port over ssb-friend-pub
 - disable or trust pubs as a way to control when to fetch threads
 

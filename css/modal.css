@@ -16,7 +16,7 @@
 }
 
 .modal-container {
-  width: 600px;
+  width: 42rem;
   margin: 0px auto;
   padding: 30px;
   background-color: #fff;
@@ -51,4 +51,9 @@
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.modal-container > h3 {
+  margin-block-start: 0px;
+  text-align: right;
 }
