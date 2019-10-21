@@ -1,10 +1,23 @@
-const pull = require('pull-stream')
-
 module.exports = function () {
+  const pull = require('pull-stream')
+
+  initialState = function(rootId) {
+    return {
+      fixedRootId: rootId,
+      latestMsgIdInThread: rootId,
+      recipients: undefined, // for private messages only
+      postText: '',
+      messages: [],
+      rootMsg: { key: '', value: { content: {} } },
+
+      showPreview: false
+    }
+  }
+
   return {
     template: `
        <div id="thread">
-         <h2>Thread <small>{{ rootId }}</small></h2>
+         <h2>Thread <small>{{ fixedRootId }}</small></h2>
          <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg"></ssb-msg>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <textarea class="messageText" v-model="postText"></textarea><br>
@@ -15,16 +28,7 @@ module.exports = function () {
     props: ['rootId'],
     
     data: function() {
-      this.rootId = '%' + this.rootId
-      return {
-        latestMsgIdInThread: this.rootId,
-        recipients: undefined, // for private messages only
-        postText: '',
-        messages: [],
-        rootMsg: { key: '', value: { content: {} } },
-
-        showPreview: false
-      }
+      return initialState('%' + this.rootId)
     },
 
     methods: {
@@ -39,7 +43,7 @@ module.exports = function () {
       confirmPost: function() {
         if (this.postText == '') return
 
-        var content = { type: 'post', text: this.postText, root: this.rootId, branch: this.latestMsgIdInThread }
+        var content = { type: 'post', text: this.postText, root: this.fixedRootId, branch: this.latestMsgIdInThread }
         if (this.recipients) {
           content.recps = this.recipients
           content = SSB.box(content, this.recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
@@ -48,7 +52,7 @@ module.exports = function () {
         var self = this
 
         SSB.publish(content, (err) => {
-          if (err) console.log(err)
+          if (err) console.error(err)
 
           self.postText = ""
           self.showPreview = false
@@ -58,7 +62,7 @@ module.exports = function () {
       },
 
       render: function(rootMsg) {
-        this.rootMsg = { key: this.rootId, value: rootMsg }
+        this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
         pull(
@@ -66,7 +70,7 @@ module.exports = function () {
             query: [{
               $filter: {
                 value: {
-                  content: { root: this.rootId },
+                  content: { root: this.fixedRootId },
                 }
               }
             }]
@@ -77,7 +81,8 @@ module.exports = function () {
             var allMessages = []
 
             // determine if messages exists outside our follow graph
-            var knownIds = [this.rootId, ...msgs.map(x => x.key)]
+            var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
+
             msgs.forEach((msg) => {
               if (typeof msg.value.content.branch === 'string')
               {
@@ -118,12 +123,12 @@ module.exports = function () {
 
       renderThread: function() {
         var self = this
-        SSB.db.get(this.rootId, (err, rootMsg) => {
+        SSB.db.get(this.fixedRootId, (err, rootMsg) => {
           if (err) { // FIXME: make this configurable
-            SSB.getThread(self.rootId, (err) => {
+            SSB.getThread(this.fixedRootId, (err) => {
               if (err) console.error(err)
 
-              SSB.db.get(self.rootId, (err, rootMsg) => {
+              SSB.db.get(this.fixedRootId, (err, rootMsg) => {
                 if (err) {
                   console.error(err)
                   self.render({ content: { text: 'Unknown message type' }})
@@ -135,6 +140,12 @@ module.exports = function () {
             self.render(rootMsg)
         })
       }
+    },
+
+    beforeRouteUpdate(to, from, next) {
+      Object.assign(this.$data, initialState('%' + to.params.rootId))
+      this.renderThread()
+      next()
     },
 
     created: function () {

@@ -155,8 +155,6 @@ ssb-markdown increases the size quite substantially
 BUGS:
 - a href on image doesn't do anything
 - no file input in reply & private post
-- navigating from one thread to another doesn't work
-  file:///home/chrx/dev/ssb-lite/browser.html#/thread/LiQ89SmUZJU7gRZfTLJzLUrsCO2jMyXeWcMufSqq50Q=.sha256
 
 
 - peer-invites:
