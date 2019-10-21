@@ -107,10 +107,6 @@ code {
   padding: 5px;
 }
 
-#postMessage {
-  margin-right: 2rem;
-}
-
 .clickButton {
   margin-top: 5px;
   text-transform: uppercase;
@@ -128,4 +124,8 @@ code {
 
 .newPublic, .newPrivate {
   cursor: pointer;
+}
+
+.fileInput {
+  margin-left: 2rem;
 }

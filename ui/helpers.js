@@ -1,3 +1,5 @@
+const resizer = require('browser-image-resizer').readAndCompressImage
+
 exports.getPeople = function() {
   const last = SSB.db.last.get()
 
@@ -23,4 +25,31 @@ exports.getPeople = function() {
   }
 
   return people
+}
+
+exports.handleFileSelect = function(ev, cb) {
+  const file = ev.target.files[0]
+
+  if (!file) return cb()
+
+  var resizeConfig = {
+    quality: 0.9,
+    maxWidth: 1024,
+    maxHeight: 1024,
+    autoRotate: true
+  }
+
+  resizer(file, resizeConfig).then(resizedImage => {
+    resizedImage.arrayBuffer().then(function (buffer) {
+      SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
+        SSB.net.blobs.add("&" + digest, file, (err) => {
+          if (!err) {
+            SSB.net.blobs.push("&" + digest, (err) => {
+              cb(null, " ![" + file.name + "](&" + digest + ")")
+            })
+          }
+        })
+      })
+    })
+  })
 }

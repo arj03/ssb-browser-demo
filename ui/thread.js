@@ -1,5 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
+  const helpers = require('./helpers')
 
   initialState = function(rootId) {
     return {
@@ -22,6 +23,7 @@ module.exports = function () {
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <textarea class="messageText" v-model="postText"></textarea><br>
          <button class="clickButton" v-on:click="postReply">Post reply</button>
+         <input type="file" class="fileInput" v-on:change="onFileSelect">
          <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
        <div>`,
 
@@ -32,6 +34,13 @@ module.exports = function () {
     },
 
     methods: {
+      onFileSelect: function(ev) {
+        var self = this
+        helpers.handleFileSelect(ev, (err, text) => {
+          self.postText += text
+        })
+      },
+
       closePreview: function() {
         this.showPreview = false
       },

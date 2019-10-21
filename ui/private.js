@@ -1,7 +1,7 @@
-const pull = require('pull-stream')
-const helpers = require('./helpers')
-
 module.exports = function () {
+  const pull = require('pull-stream')
+  const helpers = require('./helpers')
+
   return {
     template: `<div id="private">
         <span v-if="postMessageVisible">

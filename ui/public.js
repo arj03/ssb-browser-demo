@@ -1,13 +1,13 @@
 module.exports = function () {
   const pull = require('pull-stream')
-  const resizer = require('browser-image-resizer').readAndCompressImage
+  const helpers = require('./helpers')
 
   return {
     template: `<div id="public">
         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
         <br>
         <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
-        <input type="file" id="publicMessageFileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
+        <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
         <h2>Last 50 messages</h2>
         Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
         <br>
@@ -54,31 +54,9 @@ module.exports = function () {
       },
 
       onFileSelect: function(ev) {
-        const file = ev.target.files[0]
-
-        if (!file) return
-
         var self = this
-
-        var resizeConfig = {
-          quality: 0.9,
-          maxWidth: 1024,
-          maxHeight: 1024,
-          autoRotate: true
-        }
-
-        resizer(file, resizeConfig).then(resizedImage => {
-          resizedImage.arrayBuffer().then(function (buffer) {
-            SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
-              SSB.net.blobs.add("&" + digest, file, (err) => {
-                if (!err) {
-                  SSB.net.blobs.push("&" + digest, (err) => {
-                    self.postText += " ![" + file.name + "](&" + digest + ")"
-                  })
-                }
-              })
-            })
-          })
+        helpers.handleFileSelect(ev, (err, text) => {
+          self.postText += text
         })
       },
       

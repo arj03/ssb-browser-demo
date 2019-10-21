@@ -154,8 +154,7 @@ ssb-markdown increases the size quite substantially
 
 BUGS:
 - a href on image doesn't do anything
-- no file input in reply & private post
-
+- Add and fix in reply file input in private post
 
 - peer-invites:
   - somehow handle that we have a new friend (SSB.db.friends)
