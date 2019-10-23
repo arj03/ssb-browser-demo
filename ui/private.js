@@ -15,6 +15,7 @@ module.exports = function () {
         <textarea class="messageText" v-model="postText"></textarea><br>
         </span>
         <button class="clickButton" v-on:click="onPost">Post private message</button>
+        <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
         <h2>Private messages</h2>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
         <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
@@ -52,6 +53,13 @@ module.exports = function () {
             this.messages = msgs
           })
         )
+      },
+
+      onFileSelect: function(ev) {
+        var self = this
+        helpers.handleFileSelect(ev, true, (err, text) => {
+          self.postText += text
+        })
       },
 
       closePreview: function() {
