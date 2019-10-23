@@ -59,6 +59,7 @@ are needed:
  - ssb-friends.patch
  - ssb-tunnel.patch
  - ssb-peer-invites.patch
+ - ssb-blob-files.patch
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
@@ -154,7 +155,6 @@ ssb-markdown increases the size quite substantially
 
 BUGS:
 - a href on image doesn't do anything
-- Add and fix in reply file input in private post
 
 - peer-invites:
   - somehow handle that we have a new friend (SSB.db.friends)

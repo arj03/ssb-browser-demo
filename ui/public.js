@@ -55,7 +55,7 @@ module.exports = function () {
 
       onFileSelect: function(ev) {
         var self = this
-        helpers.handleFileSelect(ev, (err, text) => {
+        helpers.handleFileSelect(ev, false, (err, text) => {
           self.postText += text
         })
       },

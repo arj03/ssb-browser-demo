@@ -36,7 +36,7 @@ module.exports = function () {
     methods: {
       onFileSelect: function(ev) {
         var self = this
-        helpers.handleFileSelect(ev, (err, text) => {
+        helpers.handleFileSelect(ev, this.recipients != undefined, (err, text) => {
           self.postText += text
         })
       },

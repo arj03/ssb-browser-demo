@@ -1,0 +1,44 @@
+--- node_modules/ssb-blob-files/async/publish-blob.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/ssb-blob-files/async/publish-blob.js	2019-10-23 21:46:06.423201790 +0200
+@@ -42,7 +42,14 @@
+ 
+   onceTrue(server, sbot => {
+     if (!encrypt) {
+-      sink.resolve(sbot.blobs.add(cb))
++      sink.resolve(Hash(function (err, buffers, hash) {
++        var id = '&' + hash.toString('base64') + '.sha256'
++        sbot.blobs.add(id, buffers, (err) => {
++          if (err) return cb(err)
++
++          cb(null, id)
++        })
++      }))
+       return
+     }
+ 
+@@ -62,18 +69,15 @@
+           if (err) return cb(err)
+           var id = '&' + hash.toString('base64') + '.sha256'
+ 
+-          pull(
+-            pull.values(buffers),
+-            sbot.blobs.add(id, function (err) {
+-              if (err) return cb(err)
+-
+-              sbot.blobs.push(id, function (err) {
+-                if (err) return cb(err)
++          sbot.blobs.add(id, buffers, function (err) {
++            if (err) return cb(err)
+ 
+-                cb(null, id + '?unbox=' + key.toString('base64') + '.boxs')
+-              })
++            sbot.blobs.push(id, function (err) {
++              if (err) return cb(err)
++              
++              cb(null, id + '?unbox=' + key.toString('base64') + '.boxs')
+             })
+-          )
++          })
+         })
+       )
+     }))
