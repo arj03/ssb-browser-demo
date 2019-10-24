@@ -11,19 +11,26 @@ evaluating different partial replication strategies.
 Partial replication is done by only getting the last few `post`
 messages for users as a way of onboarding users quickly. The client
 can download and index around 5.000 messages in 30 seconds on my
-really slow laptop (same speed on a phone). For this, a blob
+really slow laptop (roughly same speed on a phone). For this, a blob
 (generate-onboarding-json.js) must be provided that serves as a
-trusted onboard mechanism and as such should only be used between
-friends. Currently it can be hard to find new users of this client
-because one doesn't follow a pub. I plan on fixing this using
-[ssb-peer-invites]. Another way this project tries to make partial
-replication better is by using the [ssb-contact-msg] library where
-contact messages are linked together.
+trusted onboard mechanism.
 
-As a way to let people explore the messags of users outside this
-initial list of people, the [ssb-get-thread] plugin is used to get
-threads from the server. This has privacy implications so this need to
-be configurable, see TODO.
+This will provide an initial load of data and people. You then sync
+the feeds of these people, but selective sync can be done by following
+people directly.
+
+Peer invites is another way to onboard people. The client allows one
+to generate and use peer invites. The invites can include an list of
+people to follow beside the user that created the invite. In doing so,
+these invites serves the same function as the onboarding blob.
+
+This project tries to make partial replication better is by using the
+[ssb-contact-msg] library where contact messages are linked together.
+
+As a way to let people explore the messages from users outside ones
+follow graph, the [ssb-get-thread] plugin is used to get threads from
+the server. This has privacy implications so this need to be
+configurable, see TODO.
 
 The UI is written in vue.js and can display posts and self assigned
 profile about messages. Leaving out likes was done on purpose as an
@@ -31,12 +38,13 @@ experiment. I don't plan on adding them.
 
 Things that work:
  - viewing posts and threads
- - posting and replying to messages
- - posting blobs
+ - posting and replying to messages including posting blobs
  - viewing profiles and setting up your own profile
  - private messages including decrypting private blobs
+ - creating and using peer invites
+ - offline support and PWA (mobile)
  - off-chain chat using ssb-tunnel for e2e encrypted messages
- - ooo messages
+ - ooo messages for messages from people outside your current follow graph
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb.
