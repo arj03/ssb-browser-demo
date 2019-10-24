@@ -4,7 +4,7 @@ const md = require('./markdown')
 const SSBContactMsg = require('ssb-contact-msg/async/create')
 
 module.exports = function () {
-  initialState = function() {
+  let initialState = function() {
     return {
       following: false,
       name: '',

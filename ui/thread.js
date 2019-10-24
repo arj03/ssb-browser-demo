@@ -2,7 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
 
-  initialState = function(rootId) {
+  let initialState = function(rootId) {
     return {
       fixedRootId: rootId,
       latestMsgIdInThread: rootId,
