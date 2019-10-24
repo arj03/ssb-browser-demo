@@ -161,9 +161,6 @@ ssb-markdown increases the size quite substantially
 
 # TODO
 
-BUGS:
-- a href on image doesn't do anything
-
 - peer-invites:
   - somehow handle that we have a new friend (SSB.db.friends)
 - split core into own module
