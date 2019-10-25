@@ -1,18 +1,23 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
+  const throttle = require('lodash.throttle')
 
   return {
-    template: `<div id="public">
-        <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
-        <br>
-        <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
-        <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-        <h2>Last 50 messages</h2>
-        Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
-        <br>
-        <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-        <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
+    template: `
+    <div id="public">
+      <div class="refresher">
+         <img src="hermies.png">
+      </div>
+      <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
+      <br>
+      <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
+      <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
+      <h2>Last 50 messages</h2>
+      Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
+      <br>
+      <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+      <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
     data: function() {
@@ -84,11 +89,41 @@ module.exports = function () {
 
           self.renderPublic()
         })
+      },
+
+      enablePullToRefresh: function() {
+        let startY
+        const public = document.querySelector('#public')
+
+        public.addEventListener('touchstart', e => {
+          startY = e.touches[0].pageY;
+        }, { passive: true })
+
+        const throttledSync = throttle(SSB.sync, 250)
+
+        public.addEventListener('touchmove', e => {
+          if (document.scrollingElement.scrollTop === 0 && e.touches[0].pageY > startY &&
+              !document.body.classList.contains('refreshing')) {
+
+            //const refresher = document.querySelector('.refresher')
+            document.body.classList.add('refreshing')
+
+            setTimeout(() => {
+              document.body.classList.remove('refreshing')
+            }, 1000)
+
+            throttledSync()
+          }
+        }, { passive: true })
       }
     },
 
     created: function () {
       this.renderPublic()
+    },
+
+    mounted: function() {
+      this.enablePullToRefresh()
     },
     
     watch: {

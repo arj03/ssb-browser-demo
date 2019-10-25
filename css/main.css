@@ -129,3 +129,31 @@ code {
 .fileInput {
   margin-left: 2rem;
 }
+
+/* pull to refresh */
+body.refreshing #public {
+  filter: blur(1px);
+  touch-action: none; /* prevent scrolling */
+}
+body.refreshing .refresher {
+  transform: translate3d(0,150%,0) scale(1);
+  z-index: 1;
+  visibility: visible;
+}
+.refresher {
+  pointer-events: none;
+  --refresh-width: 100px;
+  width: var(--refresh-width);
+  height: var(--refresh-width);
+  position: absolute;
+  left: calc(50% - var(--refresh-width) / 2);
+  visibility: hidden;
+}
+.refresher img {
+  width: 100px;
+  height: 100px;
+}
+
+body, html {
+  overscroll-behavior-y: contain; /* disable pull to refresh, keeps glow effects */
+}
