@@ -39,8 +39,10 @@ experiment. I don't plan on adding them.
 Things that work:
  - viewing posts and threads
  - posting and replying to messages including posting blobs
+ - automatic exif stripping (such as GPS coordinates) on images for better privacy
+ - automatic image resizing of large images
  - viewing profiles and setting up your own profile
- - private messages including decrypting private blobs
+ - private messages including private blobs
  - creating and using peer invites
  - offline support and PWA (mobile)
  - off-chain chat using ssb-tunnel for e2e encrypted messages
