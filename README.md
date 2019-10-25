@@ -99,7 +99,7 @@ the partial replication nature.
 
 # Peer invites
 
-To create an invite, do something like this:
+Peer invites are included in the app, but can be created on another client using:
 
 ```
 sbot peerInvites.create --private 'this is only for receiver' --reveal 'the public' --allowWithoutPubs --pubs wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519
@@ -144,10 +144,9 @@ After running:
 node write-dist.js && find dist -type f | xargs cat | sha256sum > dist/sha256.txt
 ```
 
-The dist directory will be populated with the whole application
-including a file with the hash of all the contents. This way you can
-verify that the version you might see at some site, is the same as in
-this repo.
+the dist directory will be populated with the whole application
+including a file with the hash of all the contents. Each release will include this 
+hash so that one can verify that locally produced builds match the authors.
 
 # browserify 2mb
 
