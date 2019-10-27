@@ -1,44 +1,123 @@
+--- node_modules/ssb-blob-files/async/image-process.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/ssb-blob-files/async/image-process.js	2019-10-27 20:25:27.251668979 +0100
+@@ -46,29 +46,25 @@
+   image.onload = () => cb(image)
+   image.src = data
+   image.style.display = 'block'
+-  if (image.complete) cb(image)
++  //if (image.complete) cb(image)
+ }
+ 
+ function doResize (image, width, height) {
+-  var imageHeight = image.height
+-  var imageWidth = image.width
++  if (image.height < height && image.width < width)
++    return image
+ 
+-  var multiplier = (height / image.height)
+-  if (multiplier * imageWidth < width) {
+-    multiplier = width / image.width
+-  }
++  var ratioX = width / image.width
++  var ratioY = height / image.height
++  var ratio = Math.min(ratioX, ratioY)
+ 
+-  var finalWidth = imageWidth * multiplier
+-  var finalHeight = imageHeight * multiplier
+-
+-  var offsetX = (finalWidth - width) / 2
+-  var offsetY = (finalHeight - height) / 2
++  var finalWidth = image.width * ratio
++  var finalHeight = image.height * ratio
+ 
+   var canvas = document.createElement('canvas')
+-  canvas.width = width
+-  canvas.height = height
++  canvas.width = finalWidth
++  canvas.height = finalHeight
+   var ctx = canvas.getContext('2d')
+-  ctx.drawImage(image, -offsetX, -offsetY, finalWidth, finalHeight)
++  ctx.drawImage(image, 0, 0, finalWidth, finalHeight)
+   return canvas
+ }
+ 
 --- node_modules/ssb-blob-files/async/publish-blob.js~	1985-10-26 09:15:00.000000000 +0100
-+++ node_modules/ssb-blob-files/async/publish-blob.js	2019-10-23 21:46:06.423201790 +0200
-@@ -42,7 +42,14 @@
++++ node_modules/ssb-blob-files/async/publish-blob.js	2019-10-27 20:25:27.251668979 +0100
+@@ -42,41 +42,50 @@
  
    onceTrue(server, sbot => {
      if (!encrypt) {
 -      sink.resolve(sbot.blobs.add(cb))
+-      return
+-    }
+-
+-    // FROM: https://github.com/ssbc/ssb-secret-blob/blob/master/index.js
+-    // here we need to hash something twice, first, hash the plain text to use as the
+-    // key. This has the benefit of encrypting deterministically - the same file will
+-    // have the same hash. This can be used to deduplicate storage, but has privacy
+-    // implications. I do it here just because it's early days and this makes testing
+-    // easier.
+-
+-    sink.resolve(Hash(function (err, buffers, key) {
+-      if (err) return cb(err)
+-      pull(
+-        pull.once(Buffer.concat(buffers)),
+-        pullBoxStream.createBoxStream(key, zeros),
+-        Hash(function (err, buffers, hash) {
 +      sink.resolve(Hash(function (err, buffers, hash) {
 +        var id = '&' + hash.toString('base64') + '.sha256'
-+        sbot.blobs.add(id, buffers, (err) => {
-+          if (err) return cb(err)
-+
-+          cb(null, id)
-+        })
-+      }))
-       return
-     }
- 
-@@ -62,18 +69,15 @@
++        sbot.blobs.add(id, new Blob(buffers), (err) => {
            if (err) return cb(err)
-           var id = '&' + hash.toString('base64') + '.sha256'
+-          var id = '&' + hash.toString('base64') + '.sha256'
  
 -          pull(
 -            pull.values(buffers),
 -            sbot.blobs.add(id, function (err) {
--              if (err) return cb(err)
--
--              sbot.blobs.push(id, function (err) {
--                if (err) return cb(err)
-+          sbot.blobs.add(id, buffers, function (err) {
++          cb(null, id)
++        })
++      }))
++    }
++    else
++    {
++      // FROM: https://github.com/ssbc/ssb-secret-blob/blob/master/index.js
++      // here we need to hash something twice, first, hash the plain text to use as the
++      // key. This has the benefit of encrypting deterministically - the same file will
++      // have the same hash. This can be used to deduplicate storage, but has privacy
++      // implications. I do it here just because it's early days and this makes testing
++      // easier.
++
++      sink.resolve(Hash(function (err, buffers, key) {
++        if (err) return cb(err)
++        pull(
++          pull.once(Buffer.concat(buffers)),
++          pullBoxStream.createBoxStream(key, zeros),
++          Hash(function (err, encryptedBuffers, hash) {
 +            if (err) return cb(err)
++            var id = '&' + hash.toString('base64') + '.sha256'
++
++            sbot.blobs.addPrivate(id, new Blob(buffers), () => {
+               if (err) return cb(err)
+ 
+-              sbot.blobs.push(id, function (err) {
++              sbot.blobs.add(id, new Blob(encryptedBuffers), function (err) {
+                 if (err) return cb(err)
  
 -                cb(null, id + '?unbox=' + key.toString('base64') + '.boxs')
--              })
-+            sbot.blobs.push(id, function (err) {
-+              if (err) return cb(err)
-+              
-+              cb(null, id + '?unbox=' + key.toString('base64') + '.boxs')
++                sbot.blobs.push(id, function (err) {
++                  if (err) return cb(err)
++
++                  cb(null, id + '?unbox=' + key.toString('base64') + '.boxs')
++                })
+               })
              })
 -          )
+-        })
+-      )
+-    }))
 +          })
-         })
-       )
-     }))
++        )
++      }))
++    }
+   })
+ 
+   return sink
