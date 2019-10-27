@@ -6,6 +6,7 @@ const pull = require('pull-stream')
 const defer = require('pull-defer')
 const BoxStream = require('pull-box-stream')
 const chromeFS = require('random-access-chrome-file')
+const sanitize = require('sanitize-filename')
 
 exports.manifest = {
   has: 'async',
@@ -45,16 +46,24 @@ exports.init = function (sbot, config) {
     req.send()
   }
 
+  function sanitizedPrivatePath(id) {
+    return path.join(privateBlobsDir, sanitize(id))
+  }
+
   // we need to store these blobs unencrypted to have a fs url working
   function addPrivate(id, blob, cb) {
     console.log("wrote private to local filesystem:", id)
-    const file = raf(path.join(privateBlobsDir, id))
+    const file = raf(sanitizedPrivatePath(id))
     file.write(0, blob, cb)
+  }
+
+  function sanitizedPath(id) {
+    return path.join(blobsDir, sanitize(id))
   }
 
   function add(id, blob, cb) {
     console.log("wrote to local filesystem:", id)
-    const file = raf(path.join(blobsDir, id))
+    const file = raf(sanitizedPath(id))
     file.write(0, blob, (err) => {
       if (err) return cb(err)
 
@@ -73,7 +82,7 @@ exports.init = function (sbot, config) {
   }
 
   function privateFsURL(id, cb) {
-    var file = chromeFS(path.join(privateBlobsDir, id))
+    var file = chromeFS(sanitizedPrivatePath(id))
     file.stat((err, file) => {
       cb(null, URL.createObjectURL(file))
     })
@@ -90,8 +99,7 @@ exports.init = function (sbot, config) {
 
       const mutableAccess = require('random-access-idb-mutable-file')
       mutableAccess.mount({}).then((requestFile) => {
-        var f = requestFile(path.join(blobsDir, id))
-        console.log(path.join(blobsDir, id))
+        var f = requestFile(sanitizedPath(id))
         f.open((err) => {
           f.file.getFile().then((fileObj) => {
             // blob:null/ae825970-3f3a-4834-bc5c-ada3789b83c5
@@ -103,7 +111,7 @@ exports.init = function (sbot, config) {
     }
     else
     {
-      var file = chromeFS(path.join(blobsDir, id))
+      var file = chromeFS(sanitizedPath(id))
       file.stat((err, file) => {
         cb(null, URL.createObjectURL(file))
       })
@@ -245,7 +253,7 @@ exports.init = function (sbot, config) {
           n++
           //check whether we already *HAVE* this file.
           //respond with it's size, if we do.
-          const file = raf(path.join(blobsDir, id))
+          const file = raf(sanitizedPath(id))
           file.stat(function (err, stat) {
             if(stat && stat.size) res[id] = stat.size
             else wants(peer, id, data[id] - 1)
@@ -305,6 +313,7 @@ exports.init = function (sbot, config) {
   return {
     hash,
     add,
+    addPrivate,
     has,
     push: pushBlob,
 
@@ -317,7 +326,7 @@ exports.init = function (sbot, config) {
 
       var id = opts.key || opts.hash
 
-      const file = raf(path.join(blobsDir, id))
+      const file = raf(sanitizedPath(id))
       file.stat((err, stat) => {
         if (opts.max != null && opts.max < stat.size) {
           stream.abort(new Error('incorrect file length,'
@@ -337,10 +346,11 @@ exports.init = function (sbot, config) {
     // internal
 
     privateGet: function(id, unboxKey, cb) {
-      const file = raf(path.join(privateBlobsDir, id))
+      const file = raf(sanitizedPrivatePath(id))
       file.stat((err, stat) => {
         if (stat.size == 0) {
           httpGet(remoteURL(id), 'arraybuffer', (err, data) => {
+            if (err) return cb(err)
             pull(
               pull.once(Buffer.from(data)),
               unboxBlob(unboxKey),
@@ -368,7 +378,7 @@ exports.init = function (sbot, config) {
     },
 
     localGet: function (id, cb) {
-      const file = raf(path.join(blobsDir, id))
+      const file = raf(sanitizedPath(id))
       file.stat((err, stat) => {
         if (stat && stat.size == 0) {
           httpGet(remoteURL(id), 'blob', (err, data) => {

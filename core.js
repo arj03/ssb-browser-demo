@@ -61,6 +61,8 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     box: require('ssb-keys').box,
     state,
 
+    blobFiles: require('ssb-blob-files'),
+
     // peer invites
     rawConnect: require('./raw-connect'),
 

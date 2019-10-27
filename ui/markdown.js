@@ -11,6 +11,8 @@ const mdOpts = {
       // markdown doesn't support async, so we have to modify the DOM afterwards, see:
       // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
       function replaceLink(err, newLink) {
+        if (err) return
+
         if (imageURL != newLink)
         {
           var els = document.querySelectorAll(`img[src='${imageURL}']`)

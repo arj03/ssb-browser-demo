@@ -1,5 +1,3 @@
-const blobFiles = require('ssb-blob-files')
-
 exports.getPeople = function() {
   const last = SSB.db.last.get()
 
@@ -35,7 +33,7 @@ exports.handleFileSelect = function(ev, isPrivate, cb) {
     isPrivate
   }
 
-  blobFiles(ev.target.files, SSB.net, opts, (err, res) => {
+  SSB.blobFiles(ev.target.files, SSB.net, opts, (err, res) => {
     cb(null, " ![" + res.name + "](" + res.link + ")")
   })
 }
