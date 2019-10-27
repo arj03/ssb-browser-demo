@@ -58,9 +58,6 @@ An online version is available for testing [here][test-server]
 For testing this in Chrome locally, one needs to be run it with:
 --allow-file-access-from-files
 
-Also be sure to enable all 5 WASM options in
-chrome://flags/. Otherwise crypto will be super slow (like validate).
-
 The following patches (patch -p0 < x.patch) from the patches folder
 are needed:
  - epidemic-broadcast-fix-replicate-multiple.patch
