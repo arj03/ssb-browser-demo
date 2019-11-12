@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
@@ -33,6 +33,8 @@ module.exports = function () {
 
     methods: {
       renderPublic: function () {
+        componentsState.newPublicMessages = false
+
         let contentFilter = { type: 'post' }
         if (this.onlyThreads)
           contentFilter["root"] = undefined
@@ -99,13 +101,22 @@ module.exports = function () {
           startY = e.touches[0].pageY;
         }, { passive: true })
 
-        const throttledSync = throttle(SSB.sync, 250)
+        var self = this
+
+        const throttledSync = throttle(() => {
+          SSB.sync()
+
+          setTimeout(() => {
+            if (componentsState.newPublicMessages) {
+              self.renderPublic()
+            }
+          }, 2000)
+        }, 500)
 
         public.addEventListener('touchmove', e => {
           if (document.scrollingElement.scrollTop === 0 && e.touches[0].pageY > startY &&
               !document.body.classList.contains('refreshing')) {
 
-            //const refresher = document.querySelector('.refresher')
             document.body.classList.add('refreshing')
 
             setTimeout(() => {

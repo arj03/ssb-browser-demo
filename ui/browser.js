@@ -1,5 +1,5 @@
 (function() {
-  const components = require('./components')
+  const componentsState = require('./components')()
 
   if (location.protocol === 'https:' && 'serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -8,7 +8,7 @@
   }
 
   SSB.events.on('SSB: loaded', function() {
-    const Public = require('./public')()
+    const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
     const Thread = require('./thread')()
     const Private = require('./private')()
