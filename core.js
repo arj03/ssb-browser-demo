@@ -89,11 +89,12 @@ s.events.on('sodium-browserify:wasm loaded', function() {
 
     // config
     validMessageTypes: ['post', 'peer-invite/confirm', 'peer-invite/accept', 'peer-invite'],
-    privateMessages: true
+    privateMessages: true,
 
     // will get added on load time:
     // - onboard
     // - remoteAddress
+    profiles: {}
   })
 
   SSB.events.emit("SSB: loaded")

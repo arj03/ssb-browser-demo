@@ -253,9 +253,9 @@ module.exports = function () {
           let lastMsg = last[SSB.net.id]
           selected.push({
             id: SSB.net.id,
-            name: profile.name,
-            image: profile.image,
-            description: profile.description,
+            name: profile != null ? profile.name : '',
+            image: profile != null ? profile.image : '',
+            description: profile != null ? profile.description: '',
             sequence: lastMsg ? lastMsg.sequence : null
           })
         }
