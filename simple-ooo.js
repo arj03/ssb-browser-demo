@@ -45,7 +45,7 @@ exports.init = function (sbot, config) {
       return value == null && getId(msg) == id
     },
     process: function (id, msg, cb) {
-      if(checkInvalidOOO(msg, null))
+      if(id !== getId(msg) || checkInvalidOOO(msg, null))
         cb()
       else cb(null, msg)
     },
