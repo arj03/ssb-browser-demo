@@ -61,7 +61,6 @@ For testing this in Chrome locally, one needs to be run it with:
 The following patches (patch -p0 < x.patch) from the patches folder
 are needed:
  - epidemic-broadcast-fix-replicate-multiple.patch
- - flumeview-level-mkdirp.patch
  - ssb-ebt.patch
  - ssb-friends.patch
  - ssb-tunnel.patch
@@ -70,7 +69,6 @@ are needed:
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
- - https://github.com/flumedb/flumeview-level/pull/22
  - https://github.com/ssbc/ssb-validate/pull/16
 
 For a smaller bundle file, you can also apply
