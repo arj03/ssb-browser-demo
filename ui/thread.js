@@ -140,7 +140,7 @@ module.exports = function () {
               SSB.db.get(this.fixedRootId, (err, rootMsg) => {
                 if (err) {
                   console.error(err)
-                  self.render({ content: { text: 'Unknown message type' }})
+                  self.render({ content: { text: 'Unknown message type or message outside follow graph' }})
                 } else
                   self.render(rootMsg)
               })
