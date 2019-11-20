@@ -68,7 +68,6 @@ are needed:
  - ssb-blob-files.patch
 
 The following branches are references directly until patches are merged and pushed:
- - https://github.com/dominictarr/flumelog-aligned-offset/pull/1
  - https://github.com/ssbc/ssb-validate/pull/16
 
 For a smaller bundle file, you can also apply

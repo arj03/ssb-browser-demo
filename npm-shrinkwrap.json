@@ -882,8 +882,9 @@
       }
     },
     "flumelog-aligned-offset": {
-      "version": "github:arj03/flumelog-aligned-offset#38114068d99d72f7936278374f4a2be2f3e3e02b",
-      "from": "github:arj03/flumelog-aligned-offset#polyraf",
+      "version": "1.0.5",
+      "resolved": "https://registry.npmjs.org/flumelog-aligned-offset/-/flumelog-aligned-offset-1.0.5.tgz",
+      "integrity": "sha512-lkY9BSosmGQnx7by90gLt8BFQISmnA14+j8MoINutEjgONRw7ipaNO2uwrET1OJ2er0OBDeu4XAMaO60O3QhLQ==",
       "requires": {
         "lru_cache": "^1.0.2",
         "ltgt": "^2.2.1",
