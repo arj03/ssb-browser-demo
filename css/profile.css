@@ -1,15 +1,6 @@
-#profile > span > .avatar {
-  float: left;
-}
-
 #profile > span > .avatar > img {
   width: 13rem;
   height: 13rem;
-}
-
-#profile > span > .description {
-  float: right;
-  width: 30rem;
 }
 
 #profile > h2 {
@@ -19,7 +10,7 @@
 /* edit */
 
 #profile > span > div > textarea {
-  width: 30rem;
+  width: 100%;
   height: 15rem;
 }
 
@@ -35,5 +26,4 @@
 
 #profile > span > div > input {
   width: 13rem;
-
 }

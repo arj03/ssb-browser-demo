@@ -2,6 +2,7 @@
   <head>
     <title>SSB browser demo</title>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/public.css">
@@ -26,6 +27,13 @@
       </p>
 
       <router-view></router-view>
+
+      <div id="footer">
+        <router-link to="/public" class="navButton">Public</router-link><new-public-messages></new-public-messages>
+        <router-link to="/private" class="navButton">Private</router-link><new-private-messages></new-private-messages>
+        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}" class="navButton">Profile</router-link>
+        <router-link to="/settings" class="navButton">Settings</router-link><connected></connected>
+      </div>
     </div>
   </body>
 

@@ -16,12 +16,6 @@ body {
   -ms-text-size-adjust: none;
 }
 
-@media (min-resolution: 2dppx) {
-  #public, #private {
-    font-size: 150%;
-  }
-}
-
 .router-link-exact-active {
   font-weight: bold;
   color: #000;
@@ -50,6 +44,7 @@ body {
 
 img {
   max-width: 42rem;
+  width: 100%;
 }
 
 video {
@@ -156,4 +151,43 @@ body.refreshing .refresher {
 
 body, html {
   overscroll-behavior-y: contain; /* disable pull to refresh, keeps glow effects */
+}
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  margin-top: -1.5rem;
+  height: 1.5rem;
+  background-color: #fff;
+  text-align: center;
+  border-top: 1px solid #ccc;
+  justify-content: space-evenly;
+  display: none;
+  width: 92%;
+}
+
+#footer span {
+  font-size: x-small;
+}
+
+.navButton {
+  margin: 0rem 0.5rem;
+  text-transform: uppercase;
+  font-size: x-small;
+  font-weight: bold;
+  color: #000;
+  padding: 0.3rem 0rem;
+  cursor: pointer;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+@media (min-resolution: 2dppx) {
+  #navigation {
+    display: none;
+  }
+
+  #footer {
+    display: flex;
+  }
 }

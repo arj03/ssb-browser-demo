@@ -10,7 +10,6 @@ module.exports = function (componentsState) {
          <img src="hermies.png">
       </div>
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
-      <br>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
       <h2>Last 50 messages</h2>
