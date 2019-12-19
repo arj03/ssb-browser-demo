@@ -55,7 +55,7 @@ An online version is available for testing [here][test-server]
 
 # Running locally
 
-For testing this in Chrome locally, one needs to be run it with:
+For testing this in Chrome locally, one must run it with:
 --allow-file-access-from-files
 
 The following patches (patch -p0 < x.patch) from the patches folder
@@ -218,10 +218,6 @@ window.webkitRequestFileSystem(window.PERSISTENT, 0, function (fs) {
 
 Backlinks & query uses flumeview-level that stores it's db in indexdb
 in the browser. These indexes are much slower in the browser.
-
-## oasis
-
-%owvZa0OwPBH2olaKUiex1wqyBO/+AeBlxEHcH7jORtA=.sha256
 
 ## mcss generate css
 
