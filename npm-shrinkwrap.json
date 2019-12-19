@@ -3143,9 +3143,9 @@
       "integrity": "sha512-DRibZL6DsNhIgYQ+wNdWDL2SL3bKPlVrRiBqV5yuMm++op8W4kGFtaQfCs4KEJn0wBZcHVHJ3eoywX8983k1ow=="
     },
     "vue": {
-      "version": "2.6.10",
-      "resolved": "https://registry.npmjs.org/vue/-/vue-2.6.10.tgz",
-      "integrity": "sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ=="
+      "version": "2.6.11",
+      "resolved": "https://registry.npmjs.org/vue/-/vue-2.6.11.tgz",
+      "integrity": "sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ=="
     },
     "vue-router": {
       "version": "3.1.3",
@@ -3153,9 +3153,9 @@
       "integrity": "sha512-8iSa4mGNXBjyuSZFCCO4fiKfvzqk+mhL0lnKuGcQtO1eoj8nq3CmbEG8FwK5QqoqwDgsjsf1GDuisDX4cdb/aQ=="
     },
     "vue-select": {
-      "version": "3.2.0",
-      "resolved": "https://registry.npmjs.org/vue-select/-/vue-select-3.2.0.tgz",
-      "integrity": "sha512-FfARbDuJWQNpYm6X9zPWCsYXmz33TNR2oqY8FktKRVksKfp1tZPqL9g+/7wgsaMaqUxcIxYEUVV7C3AD+H5cxA=="
+      "version": "3.4.0",
+      "resolved": "https://registry.npmjs.org/vue-select/-/vue-select-3.4.0.tgz",
+      "integrity": "sha512-UHd0fiUjPgRmHIGhI6yUKtnJsHOdvzD00QUGUtD+FaxWWZRWF2AAb7KPZRj0j/egVfZQvey6M6woHn78GbTogA=="
     },
     "wordwrap": {
       "version": "1.0.0",
