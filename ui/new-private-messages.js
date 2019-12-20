@@ -13,7 +13,6 @@ module.exports = function (state) {
 
     methods: {
       reset() {
-        this.isActive = false
         if (this.$route.path == "/private")
           this.$route.matched[0].instances.default.renderPrivate()
         else

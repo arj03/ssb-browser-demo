@@ -11,7 +11,7 @@
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
     const Thread = require('./thread')()
-    const Private = require('./private')()
+    const Private = require('./private')(componentsState)
     const Chat = require('./chat')()
     const Settings = require('./settings')()
 

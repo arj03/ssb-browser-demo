@@ -1,4 +1,4 @@
-module.exports = function () {
+module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
 
@@ -36,6 +36,8 @@ module.exports = function () {
 
     methods: {
       renderPrivate: function() {
+        componentsState.newPrivateMessages = false
+
         pull(
           SSB.db.query.read({
             reverse: true,
@@ -104,6 +106,7 @@ module.exports = function () {
           this.postText = ""
           this.subject = ""
           this.recipients = []
+          this.showPreview = false
 
           this.renderPrivate()
         })
