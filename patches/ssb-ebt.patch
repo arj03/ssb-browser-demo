@@ -1,45 +1,6 @@
---- node_modules/ssb-ebt/index.js~     1985-10-26 09:15:00.000000000 +0100
-+++ node_modules/ssb-ebt/index.js      2019-07-31 11:15:26.095015455 +0200
-@@ -85,21 +85,23 @@ exports.init = function (sbot, config) {
-     ebt.onAppend(msg.value)
-   })
- 
--  //HACK: patch calls to replicate.request into ebt, too.
--  hook(sbot.replicate.request, function (fn, args) {
--    var id, replicate
--    if(isObject(args[0])) {
--      id = args[0].id
--      replicate = args[0].replicate
--    }
--    else {
--      id = args[0]
--      replicate = args[1]
--    }
--    if(!isFeed(id)) return
--    ebt.request(id, replicate)
--    return fn.apply(this, args)
--  })
-+  if (sbot.replicate) {
-+    //HACK: patch calls to replicate.request into ebt, too.
-+    hook(sbot.replicate.request, function (fn, args) {
-+      var id, replicate
-+      if(isObject(args[0])) {
-+        id = args[0].id
-+        replicate = args[0].replicate
-+      }
-+      else {
-+        id = args[0]
-+        replicate = args[1]
-+      }
-+      if(!isFeed(id)) return
-+      ebt.request(id, replicate)
-+      return fn.apply(this, args)
-+    })
-+  }
- 
- //  hook(sbot.status, function (fn) {
- //    var _status = fn(), feeds = 0
-@@ -120,7 +122,7 @@ exports.init = function (sbot, config) {
+--- node_modules/ssb-ebt/index.js~	1985-10-26 09:15:00.000000000 +0100
++++ node_modules/ssb-ebt/index.js	2019-12-20 21:43:16.742065771 +0100
+@@ -120,7 +120,7 @@
  
  
    sbot.on('rpc:connect', function (rpc, isClient) {
@@ -48,20 +9,3 @@
        var opts = {version: 3}
        var a = toPull.duplex(ebt.createStream(rpc.id, opts.version, true))
        var b = rpc.ebt.replicate(opts, function (err) {
-@@ -152,7 +154,7 @@ exports.init = function (sbot, config) {
-       sbot.gossip && sbot.gossip.disconnect(to, function () {})
-   }
- 
--  if(sbot.replicate.block)
-+  if(sbot.replicate && sbot.replicate.block)
-     sbot.replicate.block.hook(function (fn, args) {
-       block.apply(this, args)
-       return fn.apply(this, args)
-@@ -187,6 +189,7 @@ exports.init = function (sbot, config) {
-       return data
-     },
- 
-+    request: ebt.request,
-     // expose ebt.block for ssb-servers that don't have the ssb-friends plugin
-     block: block
-   }

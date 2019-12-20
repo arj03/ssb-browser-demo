@@ -105,17 +105,17 @@ exports.sync = function()
 {
   connected((rpc) => {
     if (!SSB.state.feeds[SSB.net.id])
-      SSB.net.ebt.request(SSB.net.id, true)
+      SSB.net.replicate.request(SSB.net.id, true)
 
     if (localStorage["settings"] && JSON.parse(localStorage["settings"]).syncOnlyFollows) {
       SSB.db.friends.hops((err, hops) => {
         for (var feed in hops)
           if (hops[feed] == 1)
-            SSB.net.ebt.request(feed, true)
+            SSB.net.replicate.request(feed, true)
       })
     } else {
       for (var feed in SSB.state.feeds)
-        SSB.net.ebt.request(feed, true)
+        SSB.net.replicate.request(feed, true)
     }
   })
 }

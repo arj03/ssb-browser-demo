@@ -37,6 +37,7 @@
     "ssb-peer-invites": "^2.0.2",
     "ssb-query": "^2.4.3",
     "ssb-ref": "^2.13.3",
+    "ssb-replicate": "^1.3.2",
     "ssb-tunnel": "^1.4.1",
     "ssb-validate": "github:ssbc/ssb-validate#add-ooo-append",
     "ssb-ws": "^6.2.3",
