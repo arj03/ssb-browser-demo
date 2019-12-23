@@ -54,6 +54,7 @@ s.events.on('sodium-browserify:wasm loaded', function() {
     syncFeedAfterFollow: helpers.syncFeedAfterFollow,
     syncFeedFromSequence: helpers.syncFeedFromSequence,
     syncFeedFromLatest: helpers.syncFeedFromLatest,
+    syncLatestProfile: helpers.syncLatestProfile,
     initialSync: helpers.initialSync,
     sync: helpers.sync,
     getThread: helpers.getThread,

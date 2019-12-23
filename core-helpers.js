@@ -85,13 +85,11 @@ exports.getOOO = function(msgId, cb)
 }
 
 exports.syncThread = function(messages, cb) {
-  const hmac_key = null
-
   pull(
     pull.values(messages),
     pull.filter((msg) => msg && msg.content.type == "post"),
     pull.asyncMap((msg, cb) => {
-      state = validate.appendOOO(SSB.state, hmac_key, msg)
+      state = validate.appendOOO(SSB.state, null, msg)
 
       if (SSB.state.error) return cb(SSB.state.error)
 
@@ -210,6 +208,54 @@ exports.syncFeedFromLatest = function(feedId, cb) {
 
         if (cb)
           cb()
+      })
+    )
+  })
+}
+
+exports.syncLatestProfile = function(feedId, profile, latestSeq, cb) {
+  connected((rpc) => {
+    if (latestSeq <= 0) return cb()
+
+    var seqStart = latestSeq - 200
+    if (seqStart < 0)
+      seqStart = 0
+
+    pull(
+      rpc.partialReplication.partialReplication({ id: feedId, seq: seqStart, keys: false, limit: 200 }),
+      pull.collect((err, msgs) => {
+        if (err) throw err
+
+        msgs.reverse()
+
+        msgs = msgs.filter((msg) => msg && msg.content.type == "about" && msg.content.about == feedId)
+
+        for (var i = 0; i < msgs.length; ++i)
+        {
+          SSB.state = validate.appendOOO(SSB.state, null, msgs[i])
+          if (SSB.state.error) return cb(SSB.state.error)
+
+          var content = msgs[i].content
+
+          if (content.name && !profile.name)
+            profile.name = content.name
+
+          if (!profile.image)
+          {
+            if (content.image && typeof content.image.link === 'string')
+              profile.image = content.image.link
+            else if (typeof content.image === 'string')
+              profile.image = content.image
+          }
+
+          if (content.description && !profile.description)
+            profile.description = content.description
+        }
+
+        if (profile.name && profile.image)
+          cb(null, profile)
+        else
+          exports.syncLatestProfile(feedId, profile, latestSeq - 200, cb)
       })
     )
   })

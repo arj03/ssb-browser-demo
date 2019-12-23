@@ -12,7 +12,8 @@ module.exports = function () {
       imageBlobId: '',
       descriptionText: '',
       messages: [],
-      canDownloadMessages: false
+      canDownloadMessages: false,
+      canDownloadProfile: true
     }
   }
 
@@ -42,8 +43,9 @@ module.exports = function () {
            </div>
          </span>
          <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
+         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-         <button  v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
+         <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
        </div>`,
 
     props: ['feedId'],
@@ -134,6 +136,17 @@ module.exports = function () {
         })
       },
       
+      downloadProfile: function() {
+        console.time("syncing profile")
+        var profile = {}
+        SSB.syncLatestProfile(this.feedId, profile, this.messages[this.messages.length-1].value.sequence, (err, msg) => {
+          console.timeEnd("syncing profile")
+          SSB.profiles[this.feedId] = profile
+          SSB.saveProfiles()
+          this.renderProfile()
+        })
+      },
+
       renderProfile: function () {
         pull(
           SSB.db.query.read({
@@ -152,10 +165,28 @@ module.exports = function () {
             }]
           }),
           pull.collect((err, msgs) => {
+
+            if (msgs.length == 0)
+              this.canDownloadProfile = false
+            else
+              this.canDownloadProfile = true
+
+            if (msgs.length < 5)
+              this.canDownloadMessages = true
+            else
+              this.canDownloadMessages = false
+
             if (SSB.profiles && SSB.profiles[this.feedId]) {
               var profile = SSB.profiles[this.feedId]
-              this.name = profile.name
-              this.descriptionText = profile.description
+
+              if (profile.name) {
+                this.name = profile.name
+                this.canDownloadProfile = false
+              }
+
+              if (profile.description)
+                this.descriptionText = profile.description
+
               if (profile.image) {
                 var self = this
                 SSB.net.blobs.localGet(profile.image, (err, url) => {
@@ -172,9 +203,6 @@ module.exports = function () {
                 this.following = status
               })
             }
-
-            if (msgs.length == 0)
-              this.canDownloadMessages = true
 
             this.messages = msgs
           })
