@@ -9,7 +9,8 @@ var Obv = require('obv')
 exports.manifest =  {
   createHistoryStream: 'source',
   partialReplication: {
-    partialReplication: 'source'
+    partialReplication: 'source',
+    partialReplicationReverse: 'source',
   }
 }
 

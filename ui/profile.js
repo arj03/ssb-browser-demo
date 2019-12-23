@@ -11,7 +11,8 @@ module.exports = function () {
       image: '',
       imageBlobId: '',
       descriptionText: '',
-      messages: []
+      messages: [],
+      canDownloadMessages: false
     }
   }
 
@@ -42,6 +43,7 @@ module.exports = function () {
          </span>
          <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+         <button  v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
        </div>`,
 
     props: ['feedId'],
@@ -125,6 +127,12 @@ module.exports = function () {
           })
         }
       },
+
+      downloadMessages: function() {
+        SSB.syncFeedFromLatest(this.feedId, () => {
+          this.renderProfile()
+        })
+      },
       
       renderProfile: function () {
         pull(
@@ -164,6 +172,9 @@ module.exports = function () {
                 this.following = status
               })
             }
+
+            if (msgs.length == 0)
+              this.canDownloadMessages = true
 
             this.messages = msgs
           })

@@ -156,15 +156,10 @@ exports.syncFeedAfterFollow = function(feedId) {
     delete SSB.state.feeds[feedId]
     SSB.db.last.setPartialLogState(feedId, false)
 
-    var last = SSB.db.last.get()
-    var seqStart = last[feedId] ? last[feedId].sequence - 100 : 0
-    if (seqStart < 0)
-      seqStart = 0
-
     console.time("downloading messages")
 
     pull(
-      rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
+      rpc.partialReplication.partialReplicationReverse({ id: feedId, limit: 100, keys: false }),
       pull.asyncMap(SSB.net.add),
       pull.collect((err) => {
         if (err) throw err
@@ -176,7 +171,7 @@ exports.syncFeedAfterFollow = function(feedId) {
   })
 }
 
-exports.syncFeedFromSequence = function(feedId, sequence) {
+exports.syncFeedFromSequence = function(feedId, sequence, cb) {
   connected((rpc) => {
     var seqStart = sequence - 100
     if (seqStart < 0)
@@ -185,13 +180,36 @@ exports.syncFeedFromSequence = function(feedId, sequence) {
     console.time("downloading messages")
 
     pull(
-      rpc.partialReplication.partialReplication({id: feedId, seq: seqStart, keys: false}),
+      rpc.partialReplication.partialReplication({ id: feedId, seq: seqStart, keys: false }),
       pull.asyncMap(SSB.net.add),
       pull.collect((err, msgs) => {
         if (err) throw err
 
         console.timeEnd("downloading messages")
         SSB.state.queue = []
+
+        if (cb)
+          cb()
+      })
+    )
+  })
+}
+
+exports.syncFeedFromLatest = function(feedId, cb) {
+  connected((rpc) => {
+    console.time("downloading messages")
+
+    pull(
+      rpc.partialReplication.partialReplicationReverse({ id: feedId, keys: false, limit: 25 }),
+      pull.asyncMap(SSB.net.add),
+      pull.collect((err, msgs) => {
+        if (err) throw err
+
+        console.timeEnd("downloading messages")
+        SSB.state.queue = []
+
+        if (cb)
+          cb()
       })
     )
   })
@@ -257,7 +275,7 @@ exports.initialSync = function()
       //console.log(`Downloading messages for: ${onboard[user].name}, seq: ${seqStart}`)
 
       pull(
-        rpc.partialReplication.partialReplication({id: user, seq: seqStart, keys: false}),
+        rpc.partialReplication.partialReplication({ id: user, seq: seqStart, keys: false }),
         pull.asyncMap((msg, cb) => {
           ++totalMessages
           SSB.net.add(msg, (err, res) => {
