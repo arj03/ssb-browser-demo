@@ -1,5 +1,6 @@
 #settings > #status > .indexstatus {
   float: right;
+  width: auto;
 }
 
 #settings > .settingsleft {
