@@ -1,6 +1,7 @@
-var Store = require('./store')
+const Store = require('./store')
+const pull = require('pull-stream')
 
-var hash = require('ssb-keys/util').hash
+const hash = require('ssb-keys/util').hash
 
 function getId(msg) {
   return '%'+hash(JSON.stringify(msg, null, 2))
@@ -36,10 +37,32 @@ exports.init = function (dir, ssbId) {
       })
     }
   }
+
+  function deleteFeed(feedId, cb) {
+    pull(
+      store.query.read({
+        query: [{
+          $filter: {
+            value: {
+              author: feedId
+            }
+          }
+        }]
+      }),
+      pull.asyncMap((msg, cb) => {
+        store.del(msg.key, (err) => {
+          cb(err, msg.key)
+        })
+      }),
+      pull.collect(cb)
+    )
+  }
   
   return {
     get,
     add,
+    del: store.del,
+    deleteFeed,
     // indexes
     //backlinks: store.backlinks,
     query: store.query,

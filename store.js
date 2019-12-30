@@ -40,6 +40,15 @@ module.exports = function (dir, ssbId) {
 
   store.last = require('./indexes/last')()
 
+  store.del = (key, cb) => {
+    store.keys.get(key, (err, val, seq) => {
+      if (err) return cb(err)
+      if (seq == null) return cb(new Error('seq is null!'))
+
+      log.del(seq, cb)
+    })
+  }
+
   // ssb-db convention used by plugins
   store._flumeUse = function (name, flumeview) {
     store.use(name, flumeview)

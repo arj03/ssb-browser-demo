@@ -47,6 +47,7 @@ Things that work:
  - offline support and PWA (mobile)
  - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages for messages from people outside your current follow graph
+ - deleting messages included a whole profile
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb.
@@ -69,7 +70,7 @@ are needed:
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/ssbc/ssb-validate/pull/16
- - https://github.com/ssbc/ssb-blob-files/pull/10
+ - https://github.com/dominictarr/flumelog-aligned-offset/pull/2
 
 For a smaller bundle file, you can also apply
 patches/sodium-browserify.patch

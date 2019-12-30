@@ -14,7 +14,7 @@ module.exports = function () {
       get(function (err, value) {
         if(err) cb(err)
         else if(!value || value[key] == null) cb(new Error('not found:'+key))
-        else log.get(value[key], cb)
+        else log.get(value[key], (err, val) => cb(err, val, value[key]))
       })
     }
     return index

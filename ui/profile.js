@@ -36,6 +36,7 @@ module.exports = function () {
            <div class="avatar">
              <img :src='image'><br>
              <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
+             <button class="clickButton" v-on:click="deleteFeed">Remove feed &#x2622</button>
              <br><br>
            </div>
            <div class="description">
@@ -128,6 +129,16 @@ module.exports = function () {
             alert("followed!") // FIXME: proper UI
           })
         }
+      },
+
+      deleteFeed: function() {
+        SSB.db.deleteFeed(this.feedId, (err) => {
+          if (err) return alert("Failed to remove feed", err)
+
+          delete SSB.profiles[this.feedId]
+          SSB.saveProfiles()
+          this.$router.push({ path: '/public'})
+        })
       },
 
       downloadMessages: function() {

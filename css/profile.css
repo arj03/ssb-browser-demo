@@ -7,6 +7,10 @@
   clear: both;
 }
 
+#profile > span > div > button.clickButton {
+  margin-left: 1rem;
+}
+
 /* edit */
 
 #profile > span > div > textarea {
