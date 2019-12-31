@@ -1,4 +1,5 @@
 module.exports = function () {
+  require('./ssb-profile-link')
   require('./ssb-msg')
   require('./ssb-msg-preview')
   require('./connected')

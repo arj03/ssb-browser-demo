@@ -13,7 +13,8 @@ module.exports = function () {
       descriptionText: '',
       messages: [],
       canDownloadMessages: false,
-      canDownloadProfile: true
+      canDownloadProfile: true,
+      friends: []
     }
   }
 
@@ -43,6 +44,12 @@ module.exports = function () {
              <span v-html="description"></span>
            </div>
          </span>
+         <h2 v-if="friends">Following</h2>
+         <div id="follows">
+           <div v-for="friend in friends">
+             <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
          <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
@@ -229,6 +236,15 @@ module.exports = function () {
     },
 
     created: function () {
+      if (this.feedId === SSB.net.id) {
+        pull(
+          SSB.db.friends.createFriendStream(),
+          pull.collect((err, a) => {
+            this.friends = a.filter(x => x != this.feedId)
+          })
+        )
+      }
+
       this.renderProfile()
     },
   }

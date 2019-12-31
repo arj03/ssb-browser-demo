@@ -5,9 +5,7 @@ Vue.component('ssb-msg', {
   template: `
       <div class='message'>
         <div class='header'>
-          <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">
-            <img class='avatar' :src='imgURL' />
-          </router-link>
+          <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
@@ -32,7 +30,6 @@ Vue.component('ssb-msg', {
 
   data: function() {
     return {
-      imgURL: '',
       name: this.msg.value.author
     }
   },
@@ -72,16 +69,8 @@ Vue.component('ssb-msg', {
       this.name = "You"
     else if (SSB.profiles) {
       var profile = SSB.profiles[this.msg.value.author]
-      if (profile) {
+      if (profile)
         this.name = profile.name
-        if (profile.image) {
-          var self = this
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
-            if (!err)
-              self.imgURL = url
-          })
-        }
-      }
     }
   }
 })
