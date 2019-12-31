@@ -7,11 +7,6 @@
   float: left;
 }
 
-#settings > .settingsleft > #syncData {
-  margin-bottom: 25px;
-  padding: 10px;
-}
-
 #settings > .settingsleft > #remoteAddress {
   width: 300px;
   padding: 5px;

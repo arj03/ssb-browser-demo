@@ -5,7 +5,6 @@ module.exports = function () {
     template: `
     <div id="settings">
         <div class="settingsleft">
-          <button class="clickButton" id="syncData" v-on:click="syncData">Sync data</button><br>
           <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
           <br><br>
           <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
@@ -128,30 +127,6 @@ module.exports = function () {
     },
 
     methods: {
-      syncData: function(ev) {
-        if (SSB.db.getStatus().since <= 0) {
-          if (!SSB.onboard && this.blobId != '') {
-            SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
-              if (err) return alert(err)
-
-              SSB.onboard = JSON.parse(data)
-
-              SSB.initialSync()
-              alert("Initial load can take a while")
-            })
-          }
-          else if (!SSB.onboard) {
-            alert("Must provide onboard blob url first")
-            return
-          }
-          else {
-            SSB.initialSync()
-            alert("Initial load can take a while")
-          }
-        } else
-          SSB.sync()
-      },
-
       loadOnboardBlob: function()
       {
         if (this.blobId != '') {
