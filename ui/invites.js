@@ -260,7 +260,6 @@ module.exports = function () {
 
       var lastStatus = null
       function updateDBStatus() {
-        console.log("running", self.running)
         if (!self.running) return
 
         setTimeout(() => {
@@ -280,8 +279,6 @@ module.exports = function () {
             self.statusIMG = `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256')}'/>`
           else // dancing
             self.statusIMG = `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256')}'/>`
-
-          console.log(self.statusIMG)
 
           updateDBStatus()
         }, 1000)
