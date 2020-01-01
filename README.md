@@ -2,7 +2,7 @@
 
 ![Screenshot of ssb browser demo][screenshot]
 
-Playground [ssb-server] in a browser. This was originally
+Scuttlebutt [ssb-server] in a browser. This was originally
 made as a demo for my bornhack [talk][bornhack-talk].
 
 The client was made for two purposes: test ssb in a browser and for
@@ -50,7 +50,7 @@ Things that work:
  - deleting messages included a whole profile
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
-instead of indexeddb.
+instead of indexeddb. Also tested on android and iOS.
 
 An online version is available for testing [here][test-server]
 
