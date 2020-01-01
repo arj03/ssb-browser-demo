@@ -1,0 +1,35 @@
+#invites > #peerinvites {
+  clear: both;
+}
+
+#invites > .textInput {
+  width: 500px;
+  padding: 5px;
+}
+
+#invites > #peerinvites > .textInput {
+  width: 500px;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+#invites > #peerinvites > .v-select {
+  width: 500px;
+  background-color: white;
+}
+
+#invites > #peerinvites > .v-select > ul > li > img.tinyAvatar {
+  width: 35px;
+  height: 35px;
+}
+
+#invites > #peerinvites > .v-select > ul > li > span {
+  vertical-align: top;
+}
+
+#invites > #peerinvites > #inviteDescription {
+  font-size: smaller;
+  margin-bottom: 10px;
+  margin-top: -10px;
+}
+

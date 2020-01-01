@@ -13,6 +13,7 @@
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
     const Chat = require('./chat')()
+    const Invites = require('./invites')()
     const Settings = require('./settings')()
 
     if (localStorage['settings']) {
@@ -29,6 +30,7 @@
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { path: '/private', component: Private },
       { path: '/chat', component: Chat },
+      { path: '/invites', component: Invites },
       { path: '/settings', component: Settings },
       { path: '/', redirect: 'public' },
     ]

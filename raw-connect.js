@@ -4,7 +4,7 @@ var defaultCaps = require('ssb-caps')
 exports.init = function(keys, caps, manifest) {
   if (!caps || !caps.shs)
     caps = { shs: Buffer.from(defaultCaps.shs, 'base64') }
-  
+
   return SecretStack({
     caps,
     keys,

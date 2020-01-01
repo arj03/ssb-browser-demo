@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/private.css">
     <link rel="stylesheet" type="text/css" href="css/chat.css">
     <link rel="stylesheet" type="text/css" href="css/profile.css">
+    <link rel="stylesheet" type="text/css" href="css/invites.css">
     <link rel="stylesheet" type="text/css" href="css/settings.css">
     <link rel="stylesheet" type="text/css" href="css/modal.css">
 
@@ -20,8 +21,9 @@
       <p id="navigation">
         <router-link to="/public">Public</router-link><new-public-messages></new-public-messages> |
         <router-link to="/private">Private</router-link><new-private-messages></new-private-messages> |
-        <router-link to="/chat">Off-chain chat</router-link> |
+        <router-link to="/chat">Chat</router-link> |
         <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">Your profile</router-link> |
+        <router-link to="/invites">Invites</router-link> |
         <router-link to="/settings">Settings</router-link><connected></connected>
         <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup.enter="goToTarget">
       </p>

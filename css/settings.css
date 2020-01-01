@@ -22,36 +22,7 @@
   width: 55%;
 }
 
-#settings > #peerinvites {
-  clear: both;
-}
-
-#settings > #peerinvites > .textInput {
-  width: 500px;
-  padding: 5px;
-  margin-top: 10px;
-}
-
-#settings > #peerinvites > .v-select {
-  width: 500px;
-  background-color: white;
-}
-
-#settings > #peerinvites > .v-select > ul > li > img.tinyAvatar {
-  width: 35px;
-  height: 35px;
-}
-
-#settings > #peerinvites > .v-select > ul > li > span {
-  vertical-align: top;
-}
-
-#settings > #peerinvites > #inviteDescription {
-  font-size: smaller;
-  margin-bottom: 10px;
-  margin-top: -10px;
-}
-
 #settings > #build {
   margin-top: 25px;
+  clear: both;
 }
