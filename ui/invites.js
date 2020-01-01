@@ -195,6 +195,7 @@ module.exports = function () {
               SSB.saveProfiles()
             })
 
+            this.showOpenInviteModal = false
             alert("Invite accepted!")
           })
         }
