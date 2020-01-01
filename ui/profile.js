@@ -50,6 +50,7 @@ module.exports = function () {
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
          </div>
+         <div style="clear: both;"></div>
          <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>

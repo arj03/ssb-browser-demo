@@ -16,6 +16,11 @@
   height: 50px;
 }
 
+#profile > div#follows > div {
+  float: left;
+  padding-right: 0.5rem;
+}
+
 /* edit */
 
 #profile > span > div > textarea {
