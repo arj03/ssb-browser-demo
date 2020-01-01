@@ -2,26 +2,25 @@ module.exports = function () {
   return {
     template: `
     <div id="settings">
-        <div class="settingsleft">
-          <b>Remote server</b>
-          <br><br>
-          <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
-        </div>
-        <div id="status" v-html="statusHTML"></div>
+      <div>
+        <h3>Remote server</h3>
+        <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
+      </div>
+      <div id="status" v-html="statusHTML"></div>
 
-        <div id="build">
-          <h3>Reproducible build</h3>
-          {{ buildhash }}
-        </div>
+      <div id="build">
+        <h3>Reproducible build</h3>
+        {{ buildhash }}
+      </div>
     </div>`,
 
     data: function() {
       return {
         remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
+        buildhash: '',
+
         statusHTML: '',
         running: true,
-
-        buildhash: '',
       }
     },
 
@@ -68,16 +67,8 @@ module.exports = function () {
 
           lastStatus = status
 
-          var html = "<b>DB status</b>"
-          if (status.since == 0 || status.since == -1) // sleeping
-            html += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256')}'/>`
-          else if (!status.sync) // hammer time
-            html += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256')}'/>`
-          else { // dancing
-            html += `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256')}'/>`
-          }
-
-          html += "<br><pre>" + JSON.stringify(status, null, 2) + "</pre>"
+          var html = "<h3>DB status</h3>"
+          html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
           self.statusHTML = html
 
           updateDBStatus()

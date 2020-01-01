@@ -2,89 +2,102 @@ module.exports = function () {
   return {
     template: `
     <div id="invites">
-        <div id="peerinvites">
-          <h2>Use peer invite</h2>
-          <input type="text" placeholder="invite code" v-model="inviteCode" value="" class="textInput" />
-          <br>
-          <button class="clickButton" v-on:click="openInvite">Check invite code</button>
-          <button class="clickButton" v-on:click="acceptInvite">Accept invite code</button>
-          <h2>Create personal peer invite</h2>
-          <div id="inviteDescription">Create a personal peer invite
-          code for someone to join Scuttlebutt. You can include people
-          you think the person might like in the invitation.</div>
-          <input type="text" placeholder="private message for invite" v-model="private" value="" class="textInput" />
-          <br>
-          <input type="text" placeholder="public reveal message for invite" v-model="reveal" value="" class="textInput" />
-          <br><br>
-          Add people (optional):
-          <v-select multiple v-model="selectedPeople" :options="people" label="name">
-            <template slot="option" slot-scope="option">
-              <img v-if='option.image' class="tinyAvatar" :src='option.image' />
-              <span>{{ option.name }}</span>
-            </template>
-          </v-select>
-          <button class="clickButton" v-on:click="createInvite">Create invite code</button>
+      <div id="content">
+        <h2>Use peer invite</h2>
+
+        <div class="description">
+          Redeem a personal invitation to connect to a person on Scuttlebutt.
         </div>
 
+        <input type="text" placeholder="invite code" v-model="inviteCode" value="" class="textInput" />
+        <br>
+        <button class="clickButton" v-on:click="openInvite">Check invite code</button>
+        <button class="clickButton" v-on:click="acceptInvite">Accept invite code</button>
+        <h2>Create personal peer invite</h2>
+
+        <div class="description">
+          Create a personal peer invite code for someone to join Scuttlebutt. 
+          You can include people you think the person might like in the invitation.
+        </div>
+
+        <input type="text" placeholder="private message for invite" v-model="private" value="" class="textInput" />
+        <br>
+        <input type="text" placeholder="public reveal message for invite" v-model="reveal" value="" class="textInput" />
+        <br><br>
+        Add people (optional):
+        <v-select multiple v-model="selectedPeople" :options="people" label="name">
+          <template slot="option" slot-scope="option">
+            <img v-if='option.image' class="tinyAvatar" :src='option.image' />
+            <span>{{ option.name }}</span>
+          </template>
+        </v-select>
+        <button class="clickButton" v-on:click="createInvite">Create invite code</button>
+
         <h2>Onboarding blob</h2>
-        <input type="text" placeholder="onboard blob url" v-model="blobId" v-on:keyup.enter="loadOnboardBlob" value="" class="textInput" />
+        <div class="description">
+          Start exploring Scuttlebutt by using a blob that includes a bunch of people to check out.
+        </div>
+        <input type="text" placeholder="onboard blob url" v-model="blobId" value="" class="textInput" />
+        <button class="clickButton" v-on:click="loadOnboardBlob">Initial load using blob file</button>
+      </div>
+      <div id="status" v-html="statusIMG"></div>
 
-        <transition name="modal" v-if="showNewInviteModal">
-          <div class="modal-mask">
-            <div class="modal-wrapper">
-              <div class="modal-container">
-                <div>
-                  An invite code has been generated, share this with your friend using something like email or signal.
-                </div>
+      <transition name="modal" v-if="showNewInviteModal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+              <div>
+                An invite code has been generated, share this with your friend using something like email or signal.
+              </div>
 
-                <div class="modal-body">
-                  {{ createdInviteCode }}
-                </div>
+              <div class="modal-body">
+                {{ createdInviteCode }}
+              </div>
 
-                <div class="modal-footer">
-                  <button class="clickButton" v-on:click="copyInviteToClipboard">
-                    Copy to clipboard
-                  </button>
-                  <button class="modal-default-button clickButton" @click="showNewInviteModal = false">
-                    Close
-                  </button>
-                </div>
+              <div class="modal-footer">
+                <button class="clickButton" v-on:click="copyInviteToClipboard">
+                  Copy to clipboard
+                </button>
+                <button class="modal-default-button clickButton" @click="showNewInviteModal = false">
+                  Close
+                </button>
               </div>
             </div>
           </div>
-        </transition>
+        </div>
+      </transition>
 
-        <transition name="modal" v-if="showOpenInviteModal">
-          <div class="modal-mask">
-            <div class="modal-wrapper">
-              <div class="modal-container">
-                <div>
-                  <b>The user {{ openInviteUser }} has sent you an invite to connect</b>
-                </div>
+      <transition name="modal" v-if="showOpenInviteModal">
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+              <div>
+                <b>The user {{ openInviteUser }} has sent you an invite to connect</b>
+              </div>
 
-                <div class="modal-body">
-                  The message includes the following personal message: {{ openInvitePrivateMsg }}<br>
-                  <br>
-                  And includes the following people for you to check out:<br>
-                  <div v-for="people in openInvitePeople">
-                    {{ people.name }}
-                  </div>
-                  <br>
-                  Once accepted, the following public message will be shown: {{ openInviteRevealMsg }}<br>
+              <div class="modal-body">
+                The message includes the following personal message: {{ openInvitePrivateMsg }}<br>
+                <br>
+                And includes the following people for you to check out:<br>
+                <div v-for="people in openInvitePeople">
+                  {{ people.name }}
                 </div>
+                <br>
+                Once accepted, the following public message will be shown: {{ openInviteRevealMsg }}<br>
+              </div>
 
-                <div class="modal-footer">
-                  <button class="modal-default-button clickButton" style="margin-left: 20px;" v-on:click="acceptInvite">
-                    Accept invite
-                  </button>
-                  <button class="modal-default-button clickButton" @click="showOpenInviteModal = false">
-                    Close
-                  </button>
-                </div>
+              <div class="modal-footer">
+                <button class="modal-default-button clickButton" style="margin-left: 20px;" v-on:click="acceptInvite">
+                  Accept invite
+                </button>
+                <button class="modal-default-button clickButton" @click="showOpenInviteModal = false">
+                  Close
+                </button>
               </div>
             </div>
           </div>
-        </transition>
+        </div>
+      </transition>
     </div>`,
 
     data: function() {
@@ -104,7 +117,10 @@ module.exports = function () {
         openInviteUser: '',
         openInvitePrivateMsg: '',
         openInviteRevealMsg: '',
-        openInvitePeople: []
+        openInvitePeople: [],
+
+        running: true,
+        statusIMG: ''
       }
     },
 
@@ -112,12 +128,17 @@ module.exports = function () {
       loadOnboardBlob: function()
       {
         if (this.blobId != '') {
-          SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
-            if (err) return alert(err)
+          if (SSB.db.getStatus().since <= 0) {
+            SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
+              if (err) return alert(err)
 
-            SSB.onboard = JSON.parse(data)
-            alert("Loaded onboarding blob")
-          })
+              SSB.onboard = JSON.parse(data)
+              alert("Loaded onboarding blob")
+
+              SSB.initialSync()
+            })
+          } else
+            alert("Onboarding blob only works for initial load")
         }
       },
 
@@ -234,6 +255,44 @@ module.exports = function () {
     created: function() {
       const helpers = require('./helpers')
       this.people = helpers.getPeople()
+
+      var self = this
+
+      var lastStatus = null
+      function updateDBStatus() {
+        console.log("running", self.running)
+        if (!self.running) return
+
+        setTimeout(() => {
+          const status = SSB.db.getStatus()
+
+          if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
+            updateDBStatus()
+
+            return
+          }
+
+          lastStatus = status
+
+          if (status.since == 0 || status.since == -1) // sleeping
+            self.statusIMG = `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&FT0Klmzl45VThvWQIuIhmGwPoQISP+tZTduu/5frHk4=.sha256')}'/>`
+          else if (!status.sync) // hammer time
+            self.statusIMG = `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&IGPNvaqpAuE9Hiquz7VNFd3YooSrEJNofoxUjRMSwww=.sha256')}'/>`
+          else // dancing
+            self.statusIMG = `<img class='indexstatus' src='${SSB.net.blobs.remoteURL('&utxo7ToSNDhHpXpgrEhJo46gwht7PBG3nIgzlUTMmgU=.sha256')}'/>`
+
+          console.log(self.statusIMG)
+
+          updateDBStatus()
+        }, 1000)
+      }
+
+      updateDBStatus()
+    },
+
+    beforeRouteLeave: function(from, to, next) {
+      this.running = false
+      next()
     }
   }
 }

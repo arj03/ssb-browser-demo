@@ -1,28 +1,8 @@
-#settings > #status > .indexstatus {
-  float: right;
-  width: auto;
-}
-
-#settings > .settingsleft {
-  float: left;
-}
-
-#settings > .settingsleft > #remoteAddress {
-  width: 300px;
+#settings > div > input {
+  width: 100%;
   padding: 5px;
-}
-
-#settings > .settingsleft > .textInput {
-  width: 300px;
-  padding: 5px;
-}
-
-#settings > #status {
-  float: right;
-  width: 55%;
 }
 
 #settings > #build {
   margin-top: 25px;
-  clear: both;
 }

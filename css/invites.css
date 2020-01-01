@@ -1,35 +1,38 @@
-#invites > #peerinvites {
-  clear: both;
+#invites > #content {
+  float: left;
+  width: 35rem;
 }
 
-#invites > .textInput {
-  width: 500px;
-  padding: 5px;
-}
-
-#invites > #peerinvites > .textInput {
-  width: 500px;
+#invites > #content > .textInput {
+  width: 100%;
   padding: 5px;
   margin-top: 10px;
 }
 
-#invites > #peerinvites > .v-select {
-  width: 500px;
+#invites > #content > .v-select {
+  width: 100%;
   background-color: white;
 }
 
-#invites > #peerinvites > .v-select > ul > li > img.tinyAvatar {
+#invites > #content > .v-select > ul > li > img.tinyAvatar {
   width: 35px;
   height: 35px;
 }
 
-#invites > #peerinvites > .v-select > ul > li > span {
+#invites > #content > .v-select > ul > li > span {
   vertical-align: top;
 }
 
-#invites > #peerinvites > #inviteDescription {
+#invites > #content > .description {
   font-size: smaller;
   margin-bottom: 10px;
   margin-top: -10px;
 }
 
+#invites > #status {
+  float: right;
+}
+
+#invites > #status > img {
+  width: auto;
+}
