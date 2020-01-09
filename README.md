@@ -70,7 +70,6 @@ are needed:
 
 The following branches are references directly until patches are merged and pushed:
  - https://github.com/ssbc/ssb-validate/pull/16
- - https://github.com/dominictarr/flumelog-aligned-offset/pull/2
 
 For a smaller bundle file, you can also apply
 patches/sodium-browserify.patch
