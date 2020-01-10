@@ -140,7 +140,6 @@ Will create a dist folder with the whole application
 
 - peer-invites:
   - somehow handle that we have a new friend (SSB.db.friends)
-- split core into own module
 - port over ssb-friend-pub
 - disable or trust pubs as a way to control when to fetch threads
 

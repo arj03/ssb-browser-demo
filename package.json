@@ -1,11 +1,11 @@
 {
-  "name": "ssb-lite",
+  "name": "ssb-browser-demo",
   "description": "",
   "version": "1.0.0",
-  "homepage": "",
+  "homepage": "https://github.com/arj03/ssb-browser-demo",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:arj03/ssb-browser-demo.git"
   },
   "dependencies": {
     "human-time": "0.0.2",
@@ -24,7 +24,8 @@
     "workbox-build": "^4.3.1"
   },
   "devDependencies": {
-    "ssb-client": "^4.7.9"
+    "ssb-client": "^4.7.9",
+    "deep-object-diff": "^1.1.0"
   },
   "scripts": {
     "build": "mkdir build && browserify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js"
