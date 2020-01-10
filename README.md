@@ -59,21 +59,6 @@ An online version is available for testing [here][test-server]
 For testing this in Chrome locally, one must run it with:
 --allow-file-access-from-files
 
-The following patches (patch -p0 < x.patch) from the patches folder
-are needed:
- - epidemic-broadcast-fix-replicate-multiple.patch
- - ssb-ebt.patch
- - ssb-friends.patch
- - ssb-tunnel.patch
- - ssb-peer-invites.patch
- - ssb-blob-files.patch
-
-The following branches are references directly until patches are merged and pushed:
- - https://github.com/ssbc/ssb-validate/pull/16
-
-For a smaller bundle file, you can also apply
-patches/sodium-browserify.patch
-
 # Server
 
 Server needs to have ws enabled.
@@ -143,17 +128,13 @@ the dist directory will be populated with the whole application
 including a file with the hash of all the contents. Each release will include this 
 hash so that one can verify that locally produced builds match the authors.
 
-# browserify 2mb
-
-Removing blobs means that we go down to 1.6mb. ssb-backlinks brings
-this back to 2mb because of level.
+# Building
 
 ```
-browserify --full-paths core.js > bundle-core.js
-browserify --full-paths ui/browser.js > bundle-ui.js
+npm run build
 ```
 
-ssb-markdown increases the size quite substantially
+Will create a dist folder with the whole application
 
 # TODO
 
