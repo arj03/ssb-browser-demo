@@ -130,11 +130,7 @@ hash so that one can verify that locally produced builds match the authors.
 
 # Building
 
-```
-npm run build
-```
-
-Will create a dist folder with the whole application
+`npm run build` for developing and `npm run release` for a much smaller bundle.
 
 # TODO
 
@@ -142,13 +138,6 @@ Will create a dist folder with the whole application
   - somehow handle that we have a new friend (SSB.db.friends)
 - port over ssb-friend-pub
 - disable or trust pubs as a way to control when to fetch threads
-
-## uglifyify
-
-browserify --full-paths -g uglifyify -p common-shakeify core.js > bundle-core.js
-browserify --full-paths -g uglifyify -p common-shakeify browser-test.js > bundle-test.js
-
-=> 1.2mb
 
 # Other
 
