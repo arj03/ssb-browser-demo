@@ -33,26 +33,9 @@ module.exports = function (componentsState) {
 
     methods: {
       syncData: function(ev) {
-        if (SSB.db.getStatus().since <= 0) {
-          if (!SSB.onboard && this.blobId != '') {
-            SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
-              if (err) return alert(err)
-
-              SSB.onboard = JSON.parse(data)
-
-              SSB.initialSync()
-              alert("Initial load can take a while")
-            })
-          }
-          else if (!SSB.onboard) {
-            alert("Must provide onboard blob url first")
-            return
-          }
-          else {
-            SSB.initialSync()
-            alert("Initial load can take a while")
-          }
-        } else // FIXME: add check for following anyone
+        if (SSB.db.getStatus().since <= 0)
+          alert("Nothing to sync, use invites tab for onboarding")
+        else
           SSB.sync()
       },
 
