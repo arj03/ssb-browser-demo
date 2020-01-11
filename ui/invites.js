@@ -132,10 +132,9 @@ module.exports = function () {
             SSB.net.blobs.remoteGet(this.blobId, "text", (err, data) => {
               if (err) return alert(err)
 
-              SSB.onboard = JSON.parse(data)
               alert("Loaded onboarding blob")
 
-              SSB.initialSync()
+              SSB.initialSync(JSON.parse(data))
             })
           } else
             alert("Onboarding blob only works for initial load")
