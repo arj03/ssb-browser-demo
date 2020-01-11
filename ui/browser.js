@@ -24,6 +24,9 @@
 
     SSB.loadProfiles()
 
+    // add helper methods
+    require('../net')
+
     const routes = [
       { name: 'public', path: '/public', component: Public },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },

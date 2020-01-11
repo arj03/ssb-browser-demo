@@ -2401,9 +2401,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-1.0.0.tgz",
-      "integrity": "sha512-J8S1OK/qAyxYWLp1Br7NyRl6Tx6GfDtHa46pAew4275wZodhphHVcCv+GqpA+N7fMH7RXqj7FGnSDTzjy8sjyA==",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-1.1.0.tgz",
+      "integrity": "sha512-iw3x26uVDHfVazDktbOV+J6BCNj7k0UHqx1ru2K3VKYdc3uNwymE3roUav3AYxPnOPEui/2nmXtLs0HB0avmOA==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.0.0",
