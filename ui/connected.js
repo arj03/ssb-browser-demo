@@ -1,6 +1,6 @@
 Vue.component('connected', {
   template: `
-        <span v-if="connected" title="Connected to remote peer">
+        <span v-if="connected" title="Connected to remote peer" class="emoji">
         &#129412;
     </span>`,
 

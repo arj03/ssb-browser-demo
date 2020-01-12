@@ -3,7 +3,7 @@ module.exports = function (state) {
 
   Vue.component('new-private-messages', {
     template: `
-        <span v-if="newPrivateMessages" class="newPrivate" title="New messages" v-on:click="reset">
+        <span v-if="newPrivateMessages" class="newPrivate emoji" title="New messages" v-on:click="reset">
           &#128274;
         </span>`,
 
