@@ -50,7 +50,8 @@ Things that work:
  - deleting messages included a whole profile
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
-instead of indexeddb. Also tested on android and iOS.
+instead of indexeddb. Also tested on android using Chrome and iOS
+using safari.
 
 An online version is available for testing [here][test-server]
 
