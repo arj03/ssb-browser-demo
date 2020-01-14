@@ -2,8 +2,9 @@
 
 ![Screenshot of ssb browser demo][screenshot]
 
-A secure scuttlebutt client interface in the browser. This was
-originally made as a demo for my bornhack [talk][bornhack-talk].
+A secure scuttlebutt client interface in the browser. Built using
+[ssb-browser-core]. This was originally made as a demo for my bornhack
+[talk][bornhack-talk].
 
 The client was made for two purposes: test ssb in a browser and for
 evaluating different partial replication strategies.
@@ -195,6 +196,7 @@ in the browser. These indexes are much slower in the browser.
 mcss plugs/app/page/books.mcss -o books.css
 
 [screenshot]: assets/screenshot.jpg
+[ssb-browser-core]: https://github.com/arj03/ssb-browser-core
 [bornhack-talk]: https://people.iola.dk/arj/2019/08/11/bornhack-talk/
 [ssb-get-thread]: https://github.com/arj03/ssb-get-thread
 [ssb-peer-invites]: https://github.com/ssbc/ssb-peer-invites
