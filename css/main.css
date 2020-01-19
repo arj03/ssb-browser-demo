@@ -98,7 +98,8 @@ code {
 
 .messageText {
   height: 10rem;
-  width: 45rem;
+  width: 100%;
+  max-width: 45rem;
   padding: 5px;
 }
 
