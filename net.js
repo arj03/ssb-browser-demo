@@ -1,4 +1,5 @@
 // this is loaded from ui/browser.js when SSB is ready
+const pull = require('pull-stream')
 
 // this uses https://github.com/arj03/ssb-partial-replication
 SSB.syncFeedAfterFollow = function(feedId) {
