@@ -1,7 +1,7 @@
 (function() {
   const componentsState = require('./components')()
 
-  if (location.protocol === 'https:' && 'serviceWorker' in navigator) {
+  if ((location.hostname == 'localhost' || location.protocol === 'https:') && 'serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('sw.js');
     })
