@@ -79,6 +79,11 @@ code {
   background-color: white;
 }
 
+#public .message {
+  max-height: 800px;
+  overflow: hidden;
+}
+
 .message > .header {
   display: table;
   width: 100%;
