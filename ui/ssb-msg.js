@@ -5,7 +5,9 @@ Vue.component('ssb-msg', {
   template: `
       <div class='message'>
         <div class='header'>
-          <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
+          <span class="profile">
+            <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
+           </span>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
@@ -15,6 +17,9 @@ Vue.component('ssb-msg', {
             <span v-else>
               a <router-link :to="{name: 'thread', params: { rootId: rootId }}">thread</router-link>
             </span>
+          </span>
+          <span class='channel' v-if="msg.value.content.channel">
+            <router-link :to="{name: 'channel', params: { channel: msg.value.content.channel }}">#{{ msg.value.content.channel }}</router-link>
           </span>
         </div>
 

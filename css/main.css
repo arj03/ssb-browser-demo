@@ -22,6 +22,11 @@ body {
   text-decoration: none;
 }
 
+a {
+  color: #000;
+  text-decoration: underline;
+}
+
 #navigation {
   font-weight: 600;
 }
@@ -76,18 +81,30 @@ code {
 
 .message > .header {
   display: table;
+  width: 100%;
 }
 
-.message > .header > a > .avatar {
+.message > .header > span > a > .avatar {
   width: 50px;
   height: 50px;
   padding-right: 10px;
   display: table-cell;
 }
 
+.message > .header > .profile {
+  display: table-cell;
+  width: 50px;
+}
+
 .message > .header > .text {
   vertical-align: top;
   display: table-cell;
+}
+
+.message > .header > .channel {
+  vertical-align: top;
+  display: table-cell;
+  text-align: right;
 }
 
 .message > .header > .text > .date {
