@@ -104,7 +104,7 @@ cat onboard.json | ../ssb-minimal-pub-server/bin.js blobs.add
 
 => something like
 
-&7MQ0+hgWOlVeXZtrpLaYbPUiAt8IxkgV6yUHuzuaaX0=.sha256
+&Th+atKGMs9Hb7DhishRD30olvoY+T8qHpvo2NeCq9rs=.sha256
 
 ## Onboarding diff
 
