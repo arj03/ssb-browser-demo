@@ -41,7 +41,3 @@
 #profile > span > div > input {
   width: 13rem;
 }
-
-#profile > span > div.description img {
-  width: auto;
-}

@@ -37,7 +37,7 @@ const mdOpts = {
     } else
       return id
   },
-  imageLink: (ref) => { return '#' },
+  imageLink: (ref) => ref,
   emoji: (emoji) => {
     // https://github.com/omnidan/node-emoji/issues/76
     const emojiCharacter = nodeEmoji.get(emoji).replace(/:/g, '')
