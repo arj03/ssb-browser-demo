@@ -665,9 +665,9 @@
       }
     },
     "es-abstract": {
-      "version": "1.17.2",
-      "resolved": "https://registry.npmjs.org/es-abstract/-/es-abstract-1.17.2.tgz",
-      "integrity": "sha512-YoKuru3Lyoy7yVTBSH2j7UxTqe/je3dWAruC0sHvZX1GNd5zX8SSLvQqEgO9b3Ex8IW+goFI9arEEsFIbulhOw==",
+      "version": "1.17.4",
+      "resolved": "https://registry.npmjs.org/es-abstract/-/es-abstract-1.17.4.tgz",
+      "integrity": "sha512-Ae3um/gb8F0mui/jPL+QiqmglkUsaQf7FwBEHYIFkztkneosu9imhqHpBzQ3h1vit8t5iQ74t6PEVvphBZiuiQ==",
       "requires": {
         "es-to-primitive": "^1.2.1",
         "function-bind": "^1.1.1",
@@ -2580,9 +2580,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "1.2.2",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-1.2.2.tgz",
-      "integrity": "sha512-7P30MbOIVS5jOuFwM0Wao4hcAUmSDALjEjUBUaRj3TizES2GFPBUruAiXlpTpQXLhtsHr8NslcOympScAIHYYA==",
+      "version": "1.2.3",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-1.2.3.tgz",
+      "integrity": "sha512-pwwR02rDPiIray8sYjsDjyKxP+VnCHAjawkSXAtiRAZyJ+hXv0T4NiHHqdKm4UKomwBilK1bC0JhtS+HdcrDpw==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.0.0",

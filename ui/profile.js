@@ -143,8 +143,8 @@ module.exports = function () {
         SSB.db.deleteFeed(this.feedId, (err) => {
           if (err) return alert("Failed to remove feed", err)
 
-          delete SSB.profiles[this.feedId]
-          SSB.saveProfiles()
+          SSB.removeFeedState(this.feedId)
+
           this.$router.push({ path: '/public'})
         })
       },
