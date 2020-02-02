@@ -2,6 +2,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
+  const ssbMentions = require('ssb-mentions')
 
   return {
     template: `
@@ -89,7 +90,10 @@ module.exports = function (componentsState) {
 
       confirmPost: function() {
         var self = this
-        SSB.publish({ type: 'post', text: this.postText }, (err) => {
+
+        var mentions = ssbMentions(this.postText)
+
+        SSB.publish({ type: 'post', text: this.postText, mentions: mentions }, (err) => {
           if (err) console.log(err)
 
           self.postText = ""

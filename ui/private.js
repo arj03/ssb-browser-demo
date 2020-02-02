@@ -1,6 +1,7 @@
 module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
+  const ssbMentions = require('ssb-mentions')
 
   return {
     template: `<div id="private">
@@ -93,7 +94,9 @@ module.exports = function (componentsState) {
         if (!recps.includes(SSB.net.id))
           recps.push(SSB.net.id)
 
-        var content = { type: 'post', text: this.postText, subject: this.subject }
+        var mentions = ssbMentions(this.postText)
+
+        var content = { type: 'post', text: this.postText, subject: this.subject, mentions }
         if (recps) {
           content.recps = recps
           content = SSB.box(content, recps.map(x => x.substr(1)))

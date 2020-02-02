@@ -1,6 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
+  const ssbMentions = require('ssb-mentions')
 
   let initialState = function(rootId) {
     return {
@@ -52,7 +53,9 @@ module.exports = function () {
       confirmPost: function() {
         if (this.postText == '') return
 
-        var content = { type: 'post', text: this.postText, root: this.fixedRootId, branch: this.latestMsgIdInThread }
+        var mentions = ssbMentions(this.postText)
+        var content = { type: 'post', text: this.postText, root: this.fixedRootId, branch: this.latestMsgIdInThread, mentions }
+
         if (this.recipients) {
           content.recps = this.recipients
           content = SSB.box(content, this.recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))

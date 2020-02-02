@@ -491,6 +491,14 @@
         "regexp.prototype.flags": "^1.2.0"
       }
     },
+    "deep-equals": {
+      "version": "0.0.2",
+      "resolved": "https://registry.npmjs.org/deep-equals/-/deep-equals-0.0.2.tgz",
+      "integrity": "sha1-IcFkxV0aUIAtFdlPgB0yWFqZ8M4=",
+      "requires": {
+        "ramda": "^0.23.0"
+      }
+    },
     "deep-extend": {
       "version": "0.6.0",
       "resolved": "https://registry.npmjs.org/deep-extend/-/deep-extend-0.6.0.tgz",
@@ -2141,6 +2149,11 @@
       "resolved": "https://registry.npmjs.org/railroad-diagrams/-/railroad-diagrams-1.0.0.tgz",
       "integrity": "sha1-635iZ1SN3t+4mcG5Dlc3RVnN234="
     },
+    "ramda": {
+      "version": "0.23.0",
+      "resolved": "https://registry.npmjs.org/ramda/-/ramda-0.23.0.tgz",
+      "integrity": "sha1-zNE//3NJepOXTj6GMnv9h71ujis="
+    },
     "randexp": {
       "version": "0.4.6",
       "resolved": "https://registry.npmjs.org/randexp/-/randexp-0.4.6.tgz",
@@ -2692,6 +2705,21 @@
         "markdown-it-emoji": "^1.4.0",
         "markdown-it-hashtag": "^0.4.0",
         "node-emoji": "^1.10.0"
+      }
+    },
+    "ssb-marked": {
+      "version": "0.7.4",
+      "resolved": "https://registry.npmjs.org/ssb-marked/-/ssb-marked-0.7.4.tgz",
+      "integrity": "sha1-MXFPFlSFMcmaA6JOIsfh67vOeHU="
+    },
+    "ssb-mentions": {
+      "version": "0.5.1",
+      "resolved": "https://registry.npmjs.org/ssb-mentions/-/ssb-mentions-0.5.1.tgz",
+      "integrity": "sha512-SIllP6yois6Gs33XuFuamPpvm3+jYiSlC5okf06eFuOT9spag41Pjp9Yo1Jrm86MLsb/Bp8tQnsHAwzhG0nHEA==",
+      "requires": {
+        "deep-equals": "0.0.2",
+        "ssb-marked": "^0.7.0",
+        "ssb-ref": "^2.11.0"
       }
     },
     "ssb-msg-content": {
