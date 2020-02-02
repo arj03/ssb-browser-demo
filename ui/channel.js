@@ -4,6 +4,7 @@ module.exports = function () {
   return {
     template: `
        <div id="channel">
+         <h2>Channel #{{ channel }}</h2>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
        <div>`,
 
@@ -17,7 +18,7 @@ module.exports = function () {
 
     methods: {
       render: function () {
-        let contentFilter = { channel: this.channel }
+        const contentFilter = { channel: this.channel }
 
         pull(
           SSB.db.query.read({
