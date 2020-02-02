@@ -10,6 +10,7 @@
   SSB.events.on('SSB: loaded', function() {
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
+    const Notifications = require('./notifications')()
     const Channel = require('./channel')()
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
@@ -33,6 +34,7 @@
       { name: 'channel', path: '/channel/:channel', component: Channel, props: true },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
+      { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
       { path: '/chat', component: Chat },
       { path: '/invites', component: Invites },
