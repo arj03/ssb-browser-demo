@@ -49,6 +49,8 @@ Things that work:
  - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages for messages from people outside your current follow graph
  - deleting messages included a whole profile
+ - channels
+ - notifications
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb. Also tested on android using Chrome and iOS
