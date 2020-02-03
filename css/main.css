@@ -47,12 +47,12 @@ a {
   float: right;
 }
 
-img {
-  max-width: 42rem;
+.message > span img {
+  max-width: 100%;
 }
 
-video {
-  max-width: 42rem;
+.message > span video {
+  max-width: 100%;
 }
 
 code {
