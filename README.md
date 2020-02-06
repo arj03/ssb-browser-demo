@@ -179,7 +179,7 @@ window.webkitRequestFileSystem(window.PERSISTENT, 0, function (fs) {
 ## indexes
 
 Backlinks & query uses flumeview-level that stores it's db in indexdb
-in the browser. These indexes are much slower in the browser.
+in the browser. These indexes are slower in the browser.
 
 ## mcss generate css
 
