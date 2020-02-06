@@ -120,18 +120,6 @@ node generate-onboarding-diff.js onboard.json onboard-2.json > onboard-diff.json
 gzip). If we removed the unused key on latestMsg, we could bring the
 diff size down quite a bit. Initial without lastMsg key is 244kb.
 
-# Reproducible builds
-
-After running:
-
-```
-node write-dist.js && find dist -type f | xargs cat | sha256sum > dist/sha256.txt
-```
-
-the dist directory will be populated with the whole application
-including a file with the hash of all the contents. Each release will include this 
-hash so that one can verify that locally produced builds match the authors.
-
 # Building
 
 `npm run build` for developing and `npm run release` for a much smaller bundle.

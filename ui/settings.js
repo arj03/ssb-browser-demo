@@ -7,17 +7,11 @@ module.exports = function () {
         <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
       </div>
       <div id="status" v-html="statusHTML"></div>
-
-      <div id="build">
-        <h3>Reproducible build</h3>
-        {{ buildhash }}
-      </div>
     </div>`,
 
     data: function() {
       return {
-        remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
-        buildhash: '',
+        remoteAddress: 'wss:between-two-worlds.dk:8990~noauth:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
 
         statusHTML: '',
         running: true,
@@ -41,15 +35,6 @@ module.exports = function () {
       }
 
       var self = this
-
-      var req = new XMLHttpRequest()
-      req.open("GET", "sha256.txt", true)
-      req.onreadystatechange = function() {
-        if (req.readyState == 4) {
-          self.buildhash = req.response.split(" ")[0]
-        }
-      }
-      req.send()
 
       var lastStatus = null
 
