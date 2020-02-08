@@ -2536,7 +2536,7 @@
       "integrity": "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="
     },
     "ssb-backlinks": {
-      "version": "github:ssbc/ssb-backlinks#ad8dde9c4332cf844e60d704024a8741e0c57fa4",
+      "version": "github:ssbc/ssb-backlinks#5b7c2ee5d73a5b0ff92056fdeac2e1ad6c58144a",
       "from": "github:ssbc/ssb-backlinks#fix-type-check",
       "requires": {
         "base64-url": "^2.2.0",
@@ -2561,9 +2561,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "1.4.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-1.4.0.tgz",
-      "integrity": "sha512-eA4mynO5A/NZQm/Ivv42SzL2rXwies0+U/nJ2KdBl8hSGwxixtK3zhibKOvNzMu2LNxQJxQAdymM4PXTIPNfJA==",
+      "version": "1.4.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-1.4.1.tgz",
+      "integrity": "sha512-uJCpaIz7LniwRCfEhNeCdtWS0v5BjAETyPSAHjYGwTttmSONHTXAgrPxgNC8vQZXtdnBaSLJow5n6loHy4E7UA==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.0.0",
