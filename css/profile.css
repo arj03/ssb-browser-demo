@@ -41,3 +41,10 @@
 #profile > span > div > input {
   width: 13rem;
 }
+
+/* mnemonic */
+
+#profile > div.modal-mask > div > div > div > textarea {
+  width: 100%;
+  height: 10rem;
+}

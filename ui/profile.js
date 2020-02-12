@@ -12,9 +12,13 @@ module.exports = function () {
       imageBlobId: '',
       descriptionText: '',
       messages: [],
-      canDownloadMessages: false,
+      canDownloadMessages: true,
       canDownloadProfile: true,
-      friends: []
+      friends: [],
+
+      showExportKey: false,
+      showImportKey: false,
+      mnemonic: ''
     }
   }
 
@@ -30,6 +34,8 @@ module.exports = function () {
            </div>
            <div class="description">
              <textarea placeholder="Description (markdown is supported)" v-model="descriptionText"></textarea><br>
+             <button class="clickButton" v-on:click="exportKey">Export feed key to mnemonic code</button>
+             <button class="clickButton" v-on:click="showImportKey = true">Load feed key from mnemonic code</button>
              <button class="clickButton" v-on:click="saveProfile">Save profile</button>
            </div>
          </span>
@@ -55,6 +61,59 @@ module.exports = function () {
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
+
+         <transition name="modal" v-if="showExportKey">
+           <div class="modal-mask">
+             <div class="modal-wrapper">
+               <div class="modal-container">
+                 <div>
+                   <b>A mnemonic code has been generated from your private feed key.</b>
+                   <div style="padding-top: 10px;">
+                     This code can be used to restore your identitfy later. Store this somewhere safe.
+                   </div>
+                 </div>
+
+                 <div class="modal-body">
+                   {{ mnemonic }}
+                 </div>
+
+                 <div class="modal-footer">
+                   <button class="modal-default-button clickButton" @click="showExportKey = false">
+                     Close
+                   </button>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </transition>
+
+         <transition name="modal" v-if="showImportKey">
+           <div class="modal-mask">
+             <div class="modal-wrapper">
+               <div class="modal-container">
+                 <div>
+                   <b>Enter mnemonic code below to restore your feed key.</b>
+                   <div style="padding-top: 10px;">
+                     WARNING: this will overwrite your current feed key!
+                   </div>
+                 </div>
+
+                 <div class="modal-body">
+                    <textarea placeholder="Mnemonic code" v-model="mnemonic"></textarea><br>
+                 </div>
+
+                 <div class="modal-footer">
+                    <button class="modal-default-button clickButton" style="margin-left: 20px;" v-on:click="restoreKey">
+                      Restore feed
+                   </button>
+                   <button class="modal-default-button clickButton" @click="showImportKey = false">
+                     Close
+                   </button>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </transition>
        </div>`,
 
     props: ['feedId'],
@@ -95,6 +154,23 @@ module.exports = function () {
             })
           })
         })
+      },
+
+      exportKey: function() {
+        const mnemonic = require('ssb-keys-mnemonic')
+        this.mnemonic = mnemonic.keysToWords(JSON.parse(localStorage["/.ssb-lite/secret"]))
+        this.showExportKey = true
+      },
+
+      restoreKey: function() {
+        const mnemonic = require('ssb-keys-mnemonic')
+        const key = mnemonic.wordsToKeys(this.mnemonic)
+        localStorage["/.ssb-lite/secret"] = JSON.stringify(key)
+        this.showImportKey = false
+
+        SSB.net.id = this.feedId = key.id
+        Object.assign(this.$data, initialState())
+        this.renderProfile()
       },
 
       saveProfile: function() {
@@ -150,9 +226,10 @@ module.exports = function () {
       },
 
       downloadMessages: function() {
-        SSB.syncFeedFromLatest(this.feedId, () => {
-          this.renderProfile()
-        })
+        if (this.feedId == SSB.net.id)
+          SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
+        else
+          SSB.syncFeedFromLatest(this.feedId, this.renderProfile)
       },
       
       downloadProfile: function() {
