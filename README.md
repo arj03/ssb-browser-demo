@@ -51,6 +51,7 @@ Things that work:
  - deleting messages included a whole profile
  - channels
  - notifications
+ - backup / restore feed using mnemonics
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb. Also tested on android using Chrome and iOS
