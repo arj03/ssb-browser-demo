@@ -74,6 +74,8 @@ SSB.syncLatestProfile = function(feedId, profile, latestSeq, cb) {
     if (seqStart < 0)
       seqStart = 0
 
+    var state = SSB.validate.initial()
+
     pull(
       rpc.partialReplication.partialReplication({ id: feedId, seq: seqStart, keys: false, limit: 200 }),
       pull.collect((err, msgs) => {
@@ -85,8 +87,9 @@ SSB.syncLatestProfile = function(feedId, profile, latestSeq, cb) {
 
         for (var i = 0; i < msgs.length; ++i)
         {
-          SSB.state = SSB.validate.appendOOO(SSB.state, null, msgs[i])
-          if (SSB.state.error) return cb(SSB.state.error)
+          // we use appendOOO here because we are looking at messages in reverse order
+          state = SSB.validate.appendOOO(state, null, msgs[i])
+          if (state.error) return cb(state.error)
 
           var content = msgs[i].content
 
@@ -119,13 +122,7 @@ syncThread = function(messages, cb) {
   pull(
     pull.values(messages),
     pull.filter((msg) => msg && msg.content.type == "post"),
-    pull.asyncMap((msg, cb) => {
-      SSB.state = SSB.validate.appendOOO(SSB.state, null, msg)
-
-      if (SSB.state.error) return cb(SSB.state.error)
-
-      SSB.db.add(msg, cb)
-    }),
+    pull.asyncMap(SSB.db.validateAndAdd),
     pull.collect(cb)
   )
 }

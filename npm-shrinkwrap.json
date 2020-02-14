@@ -1,6 +1,6 @@
 {
   "name": "ssb-browser-demo",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -1365,9 +1365,9 @@
       },
       "dependencies": {
         "readable-stream": {
-          "version": "3.5.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-3.5.0.tgz",
-          "integrity": "sha512-gSz026xs2LfxBPudDuI41V1lka8cxg64E66SGe78zJlsUofOg/yqwezdIcdfwik6B4h8LFmWPA9ef9X3FiNFLA==",
+          "version": "3.6.0",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.0.tgz",
+          "integrity": "sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==",
           "requires": {
             "inherits": "^2.0.3",
             "string_decoder": "^1.1.1",
@@ -2681,9 +2681,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.0.0.tgz",
-      "integrity": "sha512-HCYpuP1io3PRnssdGk4cqCwkBlgZDAs1yxT80H8pSAmFeQEKYIf829qvo7sJzWUp3yA1DDUPh47BqQKVtuTy7A==",
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.0.1.tgz",
+      "integrity": "sha512-G/N9CTDMTP7R62LT+SHUWQ/osTEF7ksDveFgkxnWwqRF++GZMJwO5i8DWjbP9HqCcLFYgt96x4+dew97ZpcH3Q==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.0.0",
