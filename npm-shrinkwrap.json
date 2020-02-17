@@ -1,6 +1,6 @@
 {
   "name": "ssb-browser-demo",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -2681,9 +2681,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "2.0.1",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.0.1.tgz",
-      "integrity": "sha512-G/N9CTDMTP7R62LT+SHUWQ/osTEF7ksDveFgkxnWwqRF++GZMJwO5i8DWjbP9HqCcLFYgt96x4+dew97ZpcH3Q==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.0.2.tgz",
+      "integrity": "sha512-I50BtnVOvWbANlptJlK4LSdmNpdyzV7AQ/o53OzUsHDdjmO5kUwxmsZUyp0Dj7qYkV8jUgJFc7CYpPMeK/db0g==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.0.0",
