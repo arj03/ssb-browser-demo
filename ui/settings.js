@@ -11,7 +11,7 @@ module.exports = function () {
 
     data: function() {
       return {
-        remoteAddress: 'wss:between-two-worlds.dk:8990~noauth:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
+        remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=.ed25519',
 
         statusHTML: '',
         running: true,
