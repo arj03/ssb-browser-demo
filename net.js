@@ -11,7 +11,7 @@ SSB.syncFeedAfterFollow = function(feedId) {
 
     pull(
       rpc.partialReplication.partialReplicationReverse({ id: feedId, limit: 100, keys: false }),
-      pull.asyncMap(SSB.net.add),
+      pull.asyncMap(SSB.db.validateAndAddStrictOrder),
       pull.collect((err) => {
         if (err) throw err
 
@@ -32,7 +32,7 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
 
     pull(
       rpc.partialReplication.partialReplication({ id: feedId, seq: seqStart, keys: false }),
-      pull.asyncMap(SSB.net.add),
+      pull.asyncMap(SSB.db.validateAndAdd),
       pull.collect((err, msgs) => {
         if (err) throw err
 
@@ -52,7 +52,7 @@ SSB.syncFeedFromLatest = function(feedId, cb) {
 
     pull(
       rpc.partialReplication.partialReplicationReverse({ id: feedId, keys: false, limit: 25 }),
-      pull.asyncMap(SSB.net.add),
+      pull.asyncMap(SSB.db.validateAndAdd),
       pull.collect((err, msgs) => {
         if (err) throw err
 
@@ -228,7 +228,7 @@ SSB.initialSync = function(onboard)
         rpc.partialReplication.partialReplication({ id: user, seq: seqStart, keys: false }),
         pull.asyncMap((msg, cb) => {
           ++totalMessages
-          SSB.net.add(msg, (err, res) => {
+          SSB.db.validateAndAddStrictOrder(msg, (err, res) => {
             if (res)
               ++totalFilteredMessages
 
