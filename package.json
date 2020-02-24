@@ -17,7 +17,7 @@
     "ssb-browser-core": "^2.1.1",
     "ssb-contact-msg": "^1.1.0",
     "ssb-keys-mnemonic": "^0.2.0",
-    "ssb-markdown": "github:ssbc/ssb-markdown#fix-private-mentions",
+    "ssb-markdown": "^6.0.4",
     "ssb-mentions": "^0.5.2",
     "ssb-ref": "^2.13.3",
     "vue": "^2.6.11",
