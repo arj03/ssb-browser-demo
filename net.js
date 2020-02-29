@@ -10,7 +10,7 @@ SSB.syncFeedAfterFollow = function(feedId) {
     console.time("downloading messages")
 
     pull(
-      rpc.partialReplication.partialReplicationReverse({ id: feedId, limit: 100, keys: false }),
+      rpc.partialReplication.getFeedReverse({ id: feedId, limit: 100, keys: false }),
       pull.asyncMap(SSB.db.validateAndAddStrictOrder),
       pull.collect((err) => {
         if (err) throw err
@@ -31,7 +31,7 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
     console.time("downloading messages")
 
     pull(
-      rpc.partialReplication.partialReplication({ id: feedId, seq: seqStart, keys: false }),
+      rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false }),
       pull.asyncMap(SSB.db.validateAndAdd),
       pull.collect((err, msgs) => {
         if (err) throw err
@@ -51,7 +51,7 @@ SSB.syncFeedFromLatest = function(feedId, cb) {
     console.time("downloading messages")
 
     pull(
-      rpc.partialReplication.partialReplicationReverse({ id: feedId, keys: false, limit: 25 }),
+      rpc.partialReplication.getFeedReverse({ id: feedId, keys: false, limit: 25 }),
       pull.asyncMap(SSB.db.validateAndAdd),
       pull.collect((err, msgs) => {
         if (err) throw err
@@ -77,7 +77,7 @@ SSB.syncLatestProfile = function(feedId, profile, latestSeq, cb) {
     var state = SSB.validate.initial()
 
     pull(
-      rpc.partialReplication.partialReplication({ id: feedId, seq: seqStart, keys: false, limit: 200 }),
+      rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false, limit: 200 }),
       pull.collect((err, msgs) => {
         if (err) throw err
 
@@ -127,11 +127,11 @@ syncThread = function(messages, cb) {
   )
 }
 
-// this uses https://github.com/arj03/ssb-get-thread plugin
+// this uses https://github.com/arj03/ssb-partial-replication
 SSB.getThread = function(msgId, cb)
 {
   SSB.connected((rpc) => {
-    rpc.getThread.get(msgId, (err, messages) => {
+    rpc.partialReplication.getTangle(msgId, (err, messages) => {
       if (err) return cb(err)
 
       syncThread(messages, cb)
@@ -225,7 +225,7 @@ SSB.initialSync = function(onboard)
       //console.log(`Downloading messages for: ${onboard[user].name}, seq: ${seqStart}`)
 
       pull(
-        rpc.partialReplication.partialReplication({ id: user, seq: seqStart, keys: false }),
+        rpc.partialReplication.getFeed({ id: user, seq: seqStart, keys: false }),
         pull.asyncMap((msg, cb) => {
           ++totalMessages
           SSB.db.validateAndAddStrictOrder(msg, (err, res) => {
