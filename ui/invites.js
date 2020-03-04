@@ -172,7 +172,7 @@ module.exports = function () {
       {
         if (this.inviteCode != '') {
           SSB.db.peerInvites.acceptInvite(this.inviteCode, (err) => {
-            if (err) return alert(err)
+            if (err) return alert(err.message)
 
             // we need the original invite for the people
             SSB.db.peerInvites.openInvite(this.inviteCode, (err, msg) => {

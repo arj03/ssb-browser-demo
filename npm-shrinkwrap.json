@@ -3084,6 +3084,7 @@
       "version": "1.14.2",
       "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.14.2.tgz",
       "integrity": "sha512-EjlOBLBO1kxsUxsKjLt7TAECyKW6fOh1VRkykQkKGzcBbjjPIxBqGh0jf7GJ3k/f5mxMqW3htMD3WdTUVtW8HQ==",
+      "dev": true,
       "requires": {
         "path-parse": "^1.0.6"
       }
@@ -3379,9 +3380,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "2.2.1",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.2.1.tgz",
-      "integrity": "sha512-XUEmdVNyGk+UuHDv1M8IOUFLsmVPiH2rX7YMXxTkH2rX71yZ91iKjQ4fwcZgr1aonOlebsRBDbPHaiL9hsjZUw==",
+      "version": "2.3.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.3.0.tgz",
+      "integrity": "sha512-rIk+3E6J0PVBeRPbx45gl5q0tq51WzK5kyVMIcCfTcBZJBjtas8YgNblc7Z9W7Zi1ZYYZzLGiNE4XBl20xy93A==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.0.0",
@@ -3927,9 +3928,9 @@
       }
     },
     "tape": {
-      "version": "4.13.0",
-      "resolved": "https://registry.npmjs.org/tape/-/tape-4.13.0.tgz",
-      "integrity": "sha512-J/hvA+GJnuWJ0Sj8Z0dmu3JgMNU+MmusvkCT7+SN4/2TklW18FNCp/UuHIEhPZwHfy4sXfKYgC7kypKg4umbOw==",
+      "version": "4.13.2",
+      "resolved": "https://registry.npmjs.org/tape/-/tape-4.13.2.tgz",
+      "integrity": "sha512-waWwC/OqYVE9TS6r1IynlP2sEdk4Lfo6jazlgkuNkPTHIbuG2BTABIaKdlQWwPeB6Oo4ksZ1j33Yt0NTOAlYMQ==",
       "requires": {
         "deep-equal": "~1.1.1",
         "defined": "~1.0.0",
@@ -3942,7 +3943,7 @@
         "is-regex": "~1.0.5",
         "minimist": "~1.2.0",
         "object-inspect": "~1.7.0",
-        "resolve": "~1.14.2",
+        "resolve": "~1.15.1",
         "resumer": "~0.0.0",
         "string.prototype.trim": "~1.2.1",
         "through": "~2.3.8"
@@ -3965,6 +3966,14 @@
           "version": "1.2.0",
           "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz",
           "integrity": "sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ="
+        },
+        "resolve": {
+          "version": "1.15.1",
+          "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.15.1.tgz",
+          "integrity": "sha512-84oo6ZTtoTUpjgNEr5SJyzQhzL72gaRodsSfyxC/AXRvwu0Yse9H8eF9IpGo7b8YetZhlI6v7ZQ6bKBFV/6S7w==",
+          "requires": {
+            "path-parse": "^1.0.6"
+          }
         }
       }
     },
