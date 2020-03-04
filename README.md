@@ -52,6 +52,7 @@ Things that work:
  - channels
  - notifications
  - backup / restore feed using mnemonics
+ - easily run alternative [networks][pub-setup]
 
 Tested with Chrome and Firefox. Chrome is faster because it uses fs
 instead of indexeddb. Also tested on android using Chrome and iOS
@@ -66,21 +67,7 @@ For testing this in Chrome locally, one must run it with:
 
 # Server
 
-Server needs to have ws enabled.
-
-```
-"ws": [
- { "port": 8989, "host": "::", "scope": "public", "transform": "shs" }
-]
-```
-
-The
-[ssb-partial-replication](https://github.com/arj03/ssb-partial-replication)
-plugin is needed for faster sync. Also the
-[ssb-get-thread](https://github.com/arj03/ssb-get-thread) plugin is
-used for browsing threads you don't currently have, such as from
-people outside the people you have synced or older messages because of
-the partial replication nature.
+I made a [blog post][pub-setup] that should tell you exactly how to get a pub running.
 
 # Peer invites
 
@@ -193,3 +180,4 @@ mcss plugs/app/page/books.mcss -o books.css
 [ssb-peer-invites]: https://github.com/ssbc/ssb-peer-invites
 [test-server]: https://between-two-worlds.dk/browser.html
 [ssb-contact-msg]: https://github.com/ssbc/ssb-contact-msg
+[pub-setup]: https://people.iola.dk/arj/2020/03/04/how-to-setup-a-pub-for-ssb-browser/
