@@ -1,6 +1,6 @@
 {
   "name": "ssb-browser-demo",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -831,8 +831,7 @@
     "dash-ast": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/dash-ast/-/dash-ast-1.0.0.tgz",
-      "integrity": "sha512-Vy4dx7gquTeMcQR/hDkYLGUnwVil6vk4FOOct+djUnHOUWt+zJPJAaRIXaAFkPXtJjvlY7o3rfRu0/3hpnwoUA==",
-      "dev": true
+      "integrity": "sha512-Vy4dx7gquTeMcQR/hDkYLGUnwVil6vk4FOOct+djUnHOUWt+zJPJAaRIXaAFkPXtJjvlY7o3rfRu0/3hpnwoUA=="
     },
     "debug": {
       "version": "4.1.1",
@@ -1343,9 +1342,8 @@
       }
     },
     "flumelog-aligned-offset": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/flumelog-aligned-offset/-/flumelog-aligned-offset-1.1.0.tgz",
-      "integrity": "sha512-61mWaWni8L6OYr/lvBfSp1dk7qWc5umEkwBcdh64xZRX/vvD5n3TUemyQmpC/oryC+CcHAyC2HxqLC4QeOl5oQ==",
+      "version": "github:arj03/flumelog-aligned-offset#4e9a5f4ef4c820c109b8f4477c93d907669af48b",
+      "from": "github:arj03/flumelog-aligned-offset#fix-state",
       "requires": {
         "lru_cache": "^1.0.2",
         "ltgt": "^2.2.1",
@@ -3138,11 +3136,12 @@
       }
     },
     "scope-analyzer": {
-      "version": "2.0.5",
-      "resolved": "https://registry.npmjs.org/scope-analyzer/-/scope-analyzer-2.0.5.tgz",
-      "integrity": "sha512-+U5H0417mnTEstCD5VwOYO7V4vYuSqwqjFap40ythe67bhMFL5C3UgPwyBv7KDJsqUBIKafOD57xMlh1rN7eaw==",
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/scope-analyzer/-/scope-analyzer-2.1.1.tgz",
+      "integrity": "sha512-azEAihtQ9mEyZGhfgTJy3IbOWEzeOrYbg7NcYEshPKnKd+LZmC3TNd5dmDxbLBsTG/JVWmCp+vDJ03vJjeXMHg==",
       "requires": {
         "array-from": "^2.1.1",
+        "dash-ast": "^1.0.0",
         "es6-map": "^0.1.5",
         "es6-set": "^0.1.5",
         "es6-symbol": "^3.1.1",
@@ -3380,13 +3379,13 @@
       }
     },
     "ssb-browser-core": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.3.0.tgz",
-      "integrity": "sha512-rIk+3E6J0PVBeRPbx45gl5q0tq51WzK5kyVMIcCfTcBZJBjtas8YgNblc7Z9W7Zi1ZYYZzLGiNE4XBl20xy93A==",
+      "version": "2.3.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-2.3.1.tgz",
+      "integrity": "sha512-Ramp3Rwxt/JORKUmus2gtkIs/c0ANOmNQK3hTxJUAz8AdRxN8iPcHOZjbhMAuYdgpS4YpFOJ/S1ePGD+XLEkZA==",
       "requires": {
         "flumecodec": "0.0.1",
-        "flumedb": "^2.0.0",
-        "flumelog-aligned-offset": "^1.1.0",
+        "flumedb": "^2.1.1",
+        "flumelog-aligned-offset": "github:arj03/flumelog-aligned-offset#fix-state",
         "flumeview-reduce": "^1.3.16",
         "gossip-query": "^2.0.2",
         "polyraf": "^1.1.0",
@@ -3701,9 +3700,9 @@
       "integrity": "sha1-6SNZipvlHmF2gsshzxsoGKRJraI="
     },
     "static-eval": {
-      "version": "2.0.3",
-      "resolved": "https://registry.npmjs.org/static-eval/-/static-eval-2.0.3.tgz",
-      "integrity": "sha512-zsxDGucfAh8T339sSKgpFbvg15Fms2IVaJGC+jqp0bVsxhcpM+iMeAI8weNo8dmf4OblgifTBUoyk1vGVtYw2w==",
+      "version": "2.0.5",
+      "resolved": "https://registry.npmjs.org/static-eval/-/static-eval-2.0.5.tgz",
+      "integrity": "sha512-nNbV6LbGtMBgv7e9LFkt5JV8RVlRsyJrphfAt9tOtBBW/SfnzZDf2KnS72an8e434A+9e/BmJuTxeGPvrAK7KA==",
       "requires": {
         "escodegen": "^1.11.1"
       },
@@ -3963,9 +3962,9 @@
           }
         },
         "minimist": {
-          "version": "1.2.0",
-          "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz",
-          "integrity": "sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ="
+          "version": "1.2.4",
+          "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.4.tgz",
+          "integrity": "sha512-wTiNDqe4D2rbTJGZk1qcdZgFtY0/r+iuE6GDT7V0/+Gu5MLpIDm4+CssDECR79OJs/OxLPXMzdxy153b5Qy3hg=="
         },
         "resolve": {
           "version": "1.15.1",
