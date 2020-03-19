@@ -12,9 +12,9 @@ evaluating different partial replication strategies.
 Partial replication is done by only getting the last few `post`
 messages for users as a way of onboarding users quickly. The client
 can download and index around 5.000 messages in 30 seconds on my
-really slow laptop (roughly same speed on a phone). For this, a blob
-(generate-onboarding-json.js) must be provided that serves as a
-trusted onboard mechanism.
+really slow laptop (roughly same speed on a mid-range phone). For
+this, a blob (generate-onboarding-json.js) must be provided that
+serves as a trusted onboard mechanism.
 
 This will provide an initial load of data and people. You then sync
 the feeds of these people, but selective sync can be done by following
@@ -29,9 +29,9 @@ This project tries to make partial replication better is by using the
 [ssb-contact-msg] library where contact messages are linked together.
 
 As a way to let people explore the messages from users outside ones
-follow graph, the [ssb-get-thread] plugin is used to get threads from
-the server. This has privacy implications so this need to be
-configurable, see TODO.
+follow graph, the [ssb-partial-replication] plugin is used to get
+threads from the server. This has privacy implications so this need to
+be configurable, see TODO.
 
 The UI is written in vue.js and can display posts and self assigned
 profile about messages. Leaving out likes was done on purpose as an
@@ -176,7 +176,7 @@ mcss plugs/app/page/books.mcss -o books.css
 [screenshot]: assets/screenshot.jpg
 [ssb-browser-core]: https://github.com/arj03/ssb-browser-core
 [bornhack-talk]: https://people.iola.dk/arj/2019/08/11/bornhack-talk/
-[ssb-get-thread]: https://github.com/arj03/ssb-get-thread
+[ssb-partial-replication]: https://github.com/arj03/ssb-partial-replication
 [ssb-peer-invites]: https://github.com/ssbc/ssb-peer-invites
 [test-server]: https://between-two-worlds.dk/browser.html
 [ssb-contact-msg]: https://github.com/ssbc/ssb-contact-msg
