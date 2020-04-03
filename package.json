@@ -17,7 +17,7 @@
     "ssb-browser-core": "^2.4.0",
     "ssb-contact-msg": "^1.1.0",
     "ssb-keys-mnemonic": "^0.2.0",
-    "ssb-markdown": "^6.0.4",
+    "ssb-markdown": "^6.0.7",
     "ssb-mentions": "^0.5.2",
     "ssb-ref": "^2.13.3",
     "vue": "^2.6.11",
