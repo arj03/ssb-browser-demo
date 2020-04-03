@@ -7,7 +7,7 @@ module.exports = function () {
   return {
     template: `<div id="chat">
          <div id='myId'>Your id: {{ SSB.net.id }}</div>
-         <button class="clickButton" id="acceptConnections" v-on:click="SSB.net.tunnelChat.acceptMessages">Accept incoming connections</button>   or  
+         <button class="clickButton" id="acceptConnections" v-on:click="acceptMessages">Accept incoming connections</button>   or
          <input type="text" id="tunnelConnect" v-on:keyup.enter="connect" v-model="remoteId" placeholder="remote feedId to connect to" />
          <input type="text" id="chatMessage" v-model="chatText" v-on:keyup.enter="onChatSend" placeholder="type message, enter to send" />
          <h2>Off-chain messages</h2>
@@ -26,12 +26,18 @@ module.exports = function () {
     },
 
     methods: {
+      acceptMessages: function() {
+        SSB.net.tunnelMessage.acceptMessages((remoteId) => {
+	  return confirm("Allow connection from: " + remoteId + "?")
+        })
+      },
+
       connect: function() {
-        SSB.net.tunnelChat.connect(this.remoteId)
+        SSB.net.tunnelMessage.connect(this.remoteId)
       },
 
       onChatSend: function() {
-        SSB.net.tunnelChat.sendMessage(this.chatText)
+        SSB.net.tunnelMessage.sendMessage("chat", this.chatText)
         this.chatText = ''
       }
     },
@@ -39,10 +45,18 @@ module.exports = function () {
     created: function() {
       abortablePullStream = pullAbort()
       pull(
-        SSB.net.tunnelChat.messages(),
+        SSB.net.tunnelMessage.messages(),
         abortablePullStream,
         pull.drain((msg) => {
-          document.getElementById("messages").innerHTML += msg.user + "> " + msg.text + "<br>"
+          var user = msg.user
+          if (msg.type == "chat")
+            user = user.substr(0, 10)
+
+          if (SSB.profiles[msg.user])
+            user = SSB.profiles[msg.user].name
+          else if (msg.user == SSB.net.id)
+            user = "me"
+          document.getElementById("messages").innerHTML += `${user}> ${msg.data}<br>`
         })
       )
     },
