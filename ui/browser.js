@@ -14,7 +14,7 @@
     const Channel = require('./channel')()
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
-    const Chat = require('./chat')()
+    const Prose = require('./prose')()
     const Invites = require('./invites')()
     const Settings = require('./settings')()
 
@@ -36,7 +36,7 @@
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
-      { path: '/chat', component: Chat },
+      { path: '/collab', component: Prose },
       { path: '/invites', component: Invites },
       { path: '/settings', component: Settings },
       { path: '/', redirect: 'public' },
