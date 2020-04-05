@@ -27,7 +27,7 @@ module.exports = function () {
     const editor = document.getElementById('editor')
 
     const mi = buildMenuItems(schema)
-    
+
     return new EditorView(editor, {
       state: EditorState.create({
         doc: defaultMarkdownParser.parse(content),
@@ -43,8 +43,9 @@ module.exports = function () {
         ].concat(exampleSetup({
           schema,
           menuContent: [
-            [mi.toggleStrong, mi.toggleEm, mi.makeHead1, mi.makeHead2,
-             mi.wrapBulletList, mi.wrapOrderedList, mi.wrapBlockQuote]
+            [mi.toggleStrong, mi.toggleEm],
+            [mi.makeHead1, mi.makeHead2],
+            [mi.wrapBulletList, mi.wrapOrderedList, mi.wrapBlockQuote]
           ]
         }))
       })
@@ -67,16 +68,7 @@ module.exports = function () {
       </div>
 
       <div>
-        <div id="markdown" v-if="isMarkdown">
-          <textarea v-model="documentText"></textarea>
-        </div>
-        <div id="editor" v-else></div>
-
-        <div style="text-align: center">
-          <label>
-            Raw markdown <input type="checkbox" v-on:click="onViewChange">
-          </label>
-        </div>
+        <div id="editor"></div>
       </div>
 
       <br>
@@ -94,27 +86,11 @@ module.exports = function () {
         remoteId: "",
         documentText: "",
         chatText: "",
-        isMarkdown: false,
-        proseMirrorView: undefined
+        proseMirrorView: null
       }
     },
 
     methods: {
-      onViewChange: function() {
-        var self = this
-        if (!self.isMarkdown)
-        {
-          self.documentText = defaultMarkdownSerializer.serialize(self.proseMirrorView.state.doc)
-          self.proseMirrorView.destroy()
-          self.isMarkdown = !self.isMarkdown
-        }
-        else
-        {
-          self.isMarkdown = !self.isMarkdown
-          self.$nextTick(() => self.proseMirrorView = createProseMirrorView(self.documentText))
-        }
-      },
-
       acceptMessages: function() {
         SSB.net.tunnelMessage.acceptMessages((remoteId) => {
 	  return confirm("Allow connection from: " + remoteId + "?")
@@ -183,6 +159,9 @@ module.exports = function () {
       })
 
       this.proseMirrorView = createProseMirrorView("")
+
+      // for exporting:
+      // defaultMarkdownSerializer.serialize(this.proseMirrorView.state.doc)
     },
 
     beforeRouteLeave: function(from, to, next) {
