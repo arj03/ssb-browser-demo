@@ -69,6 +69,7 @@ module.exports = function () {
 
       <div>
         <div id="editor"></div>
+        <button class="clickButton" v-on:click="exportMarkdown">Export text as markdown to clipboard</button>
       </div>
 
       <br>
@@ -104,6 +105,12 @@ module.exports = function () {
       onChatSend: function() {
         SSB.net.tunnelMessage.sendMessage("chat", this.chatText)
         this.chatText = ''
+      },
+
+      exportMarkdown: function() {
+        const md = defaultMarkdownSerializer.serialize(this.proseMirrorView.state.doc)
+        navigator.clipboard.writeText(md)
+        alert("Exported markdown text to clipboard")
       }
     },
 
@@ -159,9 +166,6 @@ module.exports = function () {
       })
 
       this.proseMirrorView = createProseMirrorView("")
-
-      // for exporting:
-      // defaultMarkdownSerializer.serialize(this.proseMirrorView.state.doc)
     },
 
     beforeRouteLeave: function(from, to, next) {
