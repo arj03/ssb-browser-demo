@@ -148,6 +148,7 @@ module.exports = function () {
           else if (msg.type == 'info' && msg.data == "disconnected") {
             connected--
             document.getElementById("status").innerHTML += `${user} disconnected<br>`
+            this.connectText = "Connect to host"
           }
           else if (msg.type == 'info' && msg.data == "waiting for accept") {
             document.getElementById("status").innerHTML += `waiting for ${user} to accept<br>`
