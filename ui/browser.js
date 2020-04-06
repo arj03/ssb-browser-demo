@@ -7,7 +7,8 @@
     })
   }
 
-  SSB.events.on('SSB: loaded', function() {
+  function ssbLoaded() {
+    console.log("ssb loaded")
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
     const Notifications = require('./notifications')()
@@ -68,5 +69,10 @@
       }
 
     }).$mount('#app')
-  })
+  }
+
+  if (SSB.events._events["SSB: loaded"])
+    ssbLoaded()
+  else
+    SSB.events.once('SSB: loaded', ssbLoaded)
 })()
