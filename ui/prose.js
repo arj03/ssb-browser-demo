@@ -56,8 +56,8 @@ module.exports = function () {
     template: `
     <div id="prose">
       <div id='myId'>Your id: {{ SSB.net.id }}</div>
-      <button class="clickButton" id="acceptConnections" v-on:click="acceptMessages">Accept incoming connections</button>   or
-      <input type="text" id="tunnelConnect" v-on:keyup.enter="connect" v-model="remoteId" placeholder="remote feedId to connect to" />
+      <button class="clickButton" id="acceptConnections" v-on:click="acceptMessages">Host session</button>   or
+      <input type="text" id="tunnelConnect" v-on:keyup.enter="connectDisconnect" v-model="remoteId" placeholder="remote feedId" /><button class="clickButton" v-on:click="connectDisconnect">{{ connectText }}</button>
 
       <h2>Shared document</h2>
 
@@ -84,6 +84,7 @@ module.exports = function () {
 
     data: function() {
       return {
+        connectText: "Connect to host",
         remoteId: "",
         documentText: "",
         chatText: "",
@@ -98,8 +99,14 @@ module.exports = function () {
         })
       },
 
-      connect: function() {
-        SSB.net.tunnelMessage.connect(this.remoteId)
+      connectDisconnect: function() {
+        if (this.connectText == "Connect to host") {
+          SSB.net.tunnelMessage.connect(this.remoteId)
+          this.connectText = "Disconnect from host"
+        } else {
+          SSB.net.tunnelMessage.disconnect()
+          this.connectText = "Connect to host"
+        }
       },
 
       onChatSend: function() {
@@ -135,18 +142,25 @@ module.exports = function () {
 
             // FIXME: maybe save their state and only send them updates based on that
             const state = uint8ArrayToStrBase64(Y.encodeStateAsUpdate(ydoc))
+            //console.log("sending initial state", state)
             SSB.net.tunnelMessage.sendMessage("prose-current-state", state)
           }
           else if (msg.type == 'info' && msg.data == "disconnected") {
             connected--
             document.getElementById("status").innerHTML += `${user} disconnected<br>`
           }
-          else if (msg.type == 'info' && msg.date == "waiting for accept") {
-            document.getElementById("status").innerHTML += `waiting for ${user} accept<br>`
+          else if (msg.type == 'info' && msg.data == "waiting for accept") {
+            document.getElementById("status").innerHTML += `waiting for ${user} to accept<br>`
           }
           else if (user != "me" && (msg.type == "prose-current-state" || msg.type == "prose-state-update"))
           {
+            //console.log("got update", user)
+            //console.log("got update msg", msg.data)
             Y.applyUpdate(ydoc, strBase64ToUint8Array(msg.data))
+          }
+          else if (user == "me" && (msg.type == "prose-current-state" || msg.type == "prose-state-update"))
+          {
+            // skip own state updates
           }
           else if (msg.type == 'chat') {
             document.getElementById("status").innerHTML += `${user}> ${msg.data}<br>`

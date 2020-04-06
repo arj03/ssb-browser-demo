@@ -8,9 +8,10 @@
  
 #prose > #tunnelConnect {
   padding: 5px;
-  width: 25rem;
+  width: 19rem;
   margin-bottom: 12px;
   margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 #prose > div > #chatMessage {
