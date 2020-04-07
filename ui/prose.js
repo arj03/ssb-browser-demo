@@ -51,7 +51,25 @@ module.exports = function () {
       })
     })
   }
+
+  function sendInitialState() {
+    // FIXME: maybe save their state and only send them updates based on that
+    const state = uint8ArrayToStrBase64(Y.encodeStateAsUpdate(ydoc))
+    //console.log("sending initial state", state)
+    SSB.net.tunnelMessage.sendMessage("prose-current-state", state)
+  }
   
+  function sendInitialStateOnConnect() {
+    SSB.net.once('rpc:connect', function (rpc, isClient) {
+      if (rpc.id == '@' + SSB.remoteAddress.split(':')[3]) {
+        sendInitialStateOnConnect() // a tunnel is multiple connects
+        return
+      }
+
+      sendInitialState()
+    })
+  }
+
   return {
     template: `
     <div id="prose">
@@ -95,13 +113,14 @@ module.exports = function () {
     methods: {
       acceptMessages: function() {
         SSB.net.tunnelMessage.acceptMessages((remoteId) => {
+          sendInitialStateOnConnect()
 	  return confirm("Allow connection from: " + remoteId + "?")
         })
       },
 
       connectDisconnect: function() {
         if (this.connectText == "Connect to host") {
-          SSB.net.tunnelMessage.connect(this.remoteId)
+          SSB.net.tunnelMessage.connect(this.remoteId, sendInitialState)
           this.connectText = "Disconnect from host"
         } else {
           SSB.net.tunnelMessage.disconnect()
@@ -139,11 +158,6 @@ module.exports = function () {
           if (msg.type == 'info' && msg.data == "connected") {
             connected++
             document.getElementById("status").innerHTML += `${user} connected<br>`
-
-            // FIXME: maybe save their state and only send them updates based on that
-            const state = uint8ArrayToStrBase64(Y.encodeStateAsUpdate(ydoc))
-            //console.log("sending initial state", state)
-            SSB.net.tunnelMessage.sendMessage("prose-current-state", state)
           }
           else if (msg.type == 'info' && msg.data == "disconnected") {
             connected--
@@ -155,7 +169,6 @@ module.exports = function () {
           }
           else if (user != "me" && (msg.type == "prose-current-state" || msg.type == "prose-state-update"))
           {
-            //console.log("got update", user)
             //console.log("got update msg", msg.data)
             Y.applyUpdate(ydoc, strBase64ToUint8Array(msg.data))
           }
