@@ -510,12 +510,6 @@
         }
       }
     },
-    "async-limiter": {
-      "version": "1.0.1",
-      "resolved": "https://registry.npmjs.org/async-limiter/-/async-limiter-1.0.1.tgz",
-      "integrity": "sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==",
-      "optional": true
-    },
     "async-single": {
       "version": "1.0.5",
       "resolved": "https://registry.npmjs.org/async-single/-/async-single-1.0.5.tgz",
@@ -4127,9 +4121,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "3.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-3.0.0.tgz",
-      "integrity": "sha512-mkhx/cWScD6XRbB+eKQE6TKzmf+tdAKuySiju6X3voqV0iu1IP7oSK6j2l/HOAren6N+f1tG53BJopaNwH4VoQ==",
+      "version": "3.1.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-3.1.0.tgz",
+      "integrity": "sha512-UBBrBcoviL5IIU7Z5IIsziKd5CuQtU79PlJlb5OWraD+tAQoE1KZYvgH6SK7q/5e8Zr8EyRhvC8LUSxTw9/mTA==",
       "requires": {
         "flumecodec": "0.0.1",
         "flumedb": "^2.1.1",
@@ -5188,35 +5182,6 @@
       "integrity": "sha512-+vgwV+Up90rIEhwfxiHCoB7arChUuNaS+O0cUDpVhObJ1BNkVoEGYRu/c6BQC8S+Wpsl9AnAGnKKsyCxaatQfQ==",
       "requires": {
         "lib0": "^0.2.15"
-      }
-    },
-    "y-protocols": {
-      "version": "0.2.3",
-      "resolved": "https://registry.npmjs.org/y-protocols/-/y-protocols-0.2.3.tgz",
-      "integrity": "sha512-mJ838iW7XgMQqlv+9DtH7QyLqflZoy/VvaUWRIpwawee4mQiFJcEXazCmSYUHEbXIUuVNNc70FnuNSMWDC5vKQ==",
-      "requires": {
-        "lib0": "^0.2.20"
-      }
-    },
-    "y-websocket": {
-      "version": "1.2.5",
-      "resolved": "https://registry.npmjs.org/y-websocket/-/y-websocket-1.2.5.tgz",
-      "integrity": "sha512-Q8dcUrP7tZvfODPP/6cZ90lE+U3ucAUIBfPHwLtUov2WynDAqm/fc9fiARd5URYRk55m+edNkAhmwhkFNhbhFQ==",
-      "requires": {
-        "lib0": "^0.2.22",
-        "ws": "^6.2.1",
-        "y-protocols": "^0.2.3"
-      },
-      "dependencies": {
-        "ws": {
-          "version": "6.2.1",
-          "resolved": "https://registry.npmjs.org/ws/-/ws-6.2.1.tgz",
-          "integrity": "sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==",
-          "optional": true,
-          "requires": {
-            "async-limiter": "~1.0.0"
-          }
-        }
       }
     },
     "yjs": {
