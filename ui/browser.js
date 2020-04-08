@@ -7,14 +7,14 @@
     })
   }
 
-  SSB.events.on('SSB: loaded', function() {
+  function ssbLoaded() {
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
     const Notifications = require('./notifications')()
     const Channel = require('./channel')()
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
-    const Chat = require('./chat')()
+    const Prose = require('./prose')()
     const Invites = require('./invites')()
     const Settings = require('./settings')()
 
@@ -36,7 +36,7 @@
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
-      { path: '/chat', component: Chat },
+      { path: '/collab', component: Prose },
       { path: '/invites', component: Invites },
       { path: '/settings', component: Settings },
       { path: '/', redirect: 'public' },
@@ -68,5 +68,10 @@
       }
 
     }).$mount('#app')
-  })
+  }
+
+  if (SSB.events._events["SSB: loaded"])
+    ssbLoaded()
+  else
+    SSB.events.once('SSB: loaded', ssbLoaded)
 })()
