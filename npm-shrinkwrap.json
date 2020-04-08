@@ -1,6 +1,6 @@
 {
   "name": "ssb-browser-demo",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -5182,6 +5182,14 @@
       "integrity": "sha512-+vgwV+Up90rIEhwfxiHCoB7arChUuNaS+O0cUDpVhObJ1BNkVoEGYRu/c6BQC8S+Wpsl9AnAGnKKsyCxaatQfQ==",
       "requires": {
         "lib0": "^0.2.15"
+      }
+    },
+    "y-protocols": {
+      "version": "0.2.3",
+      "resolved": "https://registry.npmjs.org/y-protocols/-/y-protocols-0.2.3.tgz",
+      "integrity": "sha512-mJ838iW7XgMQqlv+9DtH7QyLqflZoy/VvaUWRIpwawee4mQiFJcEXazCmSYUHEbXIUuVNNc70FnuNSMWDC5vKQ==",
+      "requires": {
+        "lib0": "^0.2.20"
       }
     },
     "yjs": {

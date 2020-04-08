@@ -29,6 +29,7 @@
     "vue-select": "^3.9.5",
     "workbox-build": "^4.3.1",
     "y-prosemirror": "^0.3.3",
+    "y-protocols": "^0.2.3",
     "yjs": "^13.0.5"
   },
   "devDependencies": {
