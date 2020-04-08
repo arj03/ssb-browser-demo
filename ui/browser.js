@@ -8,7 +8,6 @@
   }
 
   function ssbLoaded() {
-    console.log("ssb loaded")
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
     const Notifications = require('./notifications')()
