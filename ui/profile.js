@@ -58,6 +58,7 @@ module.exports = function () {
          </div>
          <div style="clear: both;"></div>
          <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
+         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">Download following</button>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
@@ -189,14 +190,6 @@ module.exports = function () {
           if (err) return alert(err)
 
           alert("Saved!")
-
-          SSB.profiles[this.feedId] = {
-            name: this.name,
-            description: this.descriptionText,
-            image: this.imageBlobId
-          }
-
-          SSB.saveProfiles()
         })
       },
 
@@ -237,13 +230,31 @@ module.exports = function () {
         var profile = {}
         SSB.syncLatestProfile(this.feedId, profile, this.messages[this.messages.length-1].value.sequence, (err, msg) => {
           console.timeEnd("syncing profile")
-          SSB.profiles[this.feedId] = profile
-          SSB.saveProfiles()
           this.renderProfile()
         })
       },
 
+      downloadFollowing: function() {
+        console.log(this.feedId)
+        console.time("download following")
+        var profile = {}
+        SSB.connected((rpc) => {
+          pull(
+            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
+            pull.asyncMap(SSB.db.validateAndAdd),
+            pull.collect((err, msgs) => {
+              if (err) alert(err.message)
+
+              console.timeEnd("download following")
+              console.log(msgs.length)
+            })
+          )
+        })
+      },
+
       renderProfile: function () {
+        return // FIXME
+        
         pull(
           SSB.db.query.read({
             reverse: true,
@@ -314,6 +325,7 @@ module.exports = function () {
     },
 
     created: function () {
+      return // FIXME
       if (this.feedId === SSB.net.id) {
         pull(
           SSB.db.friends.createFriendStream(),

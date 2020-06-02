@@ -43,6 +43,8 @@ module.exports = function (componentsState) {
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
+        return // FIXME
+
         let contentFilter = { type: 'post' }
         if (this.onlyThreads)
           contentFilter["root"] = undefined

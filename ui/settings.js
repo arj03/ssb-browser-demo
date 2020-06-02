@@ -38,6 +38,14 @@ module.exports = function () {
 
       var lastStatus = null
 
+      /*
+      SSB.net.blobs.remoteGet("&iRW9+26q1StUywvh0dp6TRU3uF1Ay0UuTAsuM8IEhNE=.sha256", "text", (err, data) => {
+        if (err) return alert(err)
+        
+        console.log(JSON.parse(data))
+      })
+      */
+      
       function updateDBStatus() {
         if (!self.running) return
 

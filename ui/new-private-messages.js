@@ -22,6 +22,9 @@ module.exports = function (state) {
 
     created: function () {
       var self = this
+
+      return // FIXME
+
       pull(
         SSB.db.query.read({
           live: true,

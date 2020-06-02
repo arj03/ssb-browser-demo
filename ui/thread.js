@@ -77,6 +77,8 @@ module.exports = function () {
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
+        return // FIXME
+        
         pull(
           SSB.db.query.read({
             query: [{

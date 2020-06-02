@@ -18,6 +18,8 @@ module.exports = function () {
 
     methods: {
       render: function () {
+        return // FIXME
+        
         const query = [{
           $filter: {
             dest: SSB.net.id,

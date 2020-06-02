@@ -1,4 +1,6 @@
 exports.getPeople = function() {
+  return [] // FIXME
+  
   const last = SSB.db.last.get()
 
   const people = []

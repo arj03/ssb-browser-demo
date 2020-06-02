@@ -39,6 +39,8 @@ module.exports = function (componentsState) {
       renderPrivate: function() {
         componentsState.newPrivateMessages = false
 
+        return // FIXME
+
         pull(
           SSB.db.query.read({
             reverse: true,

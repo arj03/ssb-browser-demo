@@ -20,6 +20,8 @@ module.exports = function () {
       render: function () {
         const contentFilter = { channel: this.channel }
 
+        return // FIXME
+
         pull(
           SSB.db.query.read({
             reverse: true,
