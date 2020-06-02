@@ -28,15 +28,17 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
     if (seqStart < 0)
       seqStart = 0
 
+    console.log(`seq ${seqStart} feedId: ${feedId}`)
     console.time("downloading messages")
 
     pull(
       rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false }),
-      pull.asyncMap(SSB.db.validateAndAdd),
+      pull.asyncMap(SSB.db.validateAndAddStrictOrder),
       pull.collect((err, msgs) => {
         if (err) throw err
 
         console.timeEnd("downloading messages")
+        console.log(msgs.length)
         SSB.state.queue = []
 
         if (cb)

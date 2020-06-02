@@ -43,31 +43,14 @@ module.exports = function (componentsState) {
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
-        return // FIXME
+        console.time("latest messages")
+        SSB.db.latestMessages((err, messages) => {
+          if (this.onlyThreads)
+            messages = messages.filter(x => !x.root)
 
-        let contentFilter = { type: 'post' }
-        if (this.onlyThreads)
-          contentFilter["root"] = undefined
-
-        pull(
-          SSB.db.query.read({
-            reverse: true,
-            limit: 50,
-            query: [{
-              $filter: {
-                value: {
-                  timestamp: { $gt: 0 },
-                  //author: '@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
-                  content: contentFilter
-                }
-              }
-            }]
-          }),
-          pull.filter((msg) => !msg.value.meta),
-          pull.collect((err, msgs) => {
-            this.messages = msgs
-          })
-        )
+          this.messages = messages.sort((x, y) => y.value.timestamp - x.value.timestamp).slice(0, 50)
+          console.timeEnd("latest messages")
+        })
       },
 
       onFileSelect: function(ev) {

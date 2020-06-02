@@ -219,6 +219,9 @@ module.exports = function () {
       },
 
       downloadMessages: function() {
+        SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
+        return
+        
         if (this.feedId == SSB.net.id)
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else
@@ -253,67 +256,22 @@ module.exports = function () {
       },
 
       renderProfile: function () {
-        return // FIXME
-        
-        pull(
-          SSB.db.query.read({
-            reverse: true,
-            limit: 25,
-            query: [{
-              $filter: {
-                value: {
-                  timestamp: { $gt: 0 },
-                  author: this.feedId,
-                  content: {
-                    type: 'post'
-                  }
-                }
-              }
-            }]
-          }),
-          pull.collect((err, msgs) => {
+        console.time("profile messages")
+        SSB.db.latestMessages((err, messages) => {
+          const authorMessages = messages.filter(x => x.value.author == this.feedId)
+          this.messages = authorMessages.sort((x, y) => y.value.timestamp - x.value.timestamp).slice(0, 25)
+          console.timeEnd("profile messages")
 
-            if (msgs.length == 0)
-              this.canDownloadProfile = false
-            else
-              this.canDownloadProfile = true
+          if (authorMessages.length == 0)
+            this.canDownloadProfile = false
+          else
+            this.canDownloadProfile = true
 
-            if (msgs.length < 5)
-              this.canDownloadMessages = true
-            else
-              this.canDownloadMessages = false
-
-            if (SSB.profiles && SSB.profiles[this.feedId]) {
-              var profile = SSB.profiles[this.feedId]
-
-              if (profile.name) {
-                this.name = profile.name
-                this.canDownloadProfile = false
-              }
-
-              if (profile.description)
-                this.descriptionText = profile.description
-
-              if (profile.image) {
-                var self = this
-                SSB.net.blobs.localGet(profile.image, (err, url) => {
-                  if (!err) {
-                    self.image = url
-                    self.imageBlobId = profile.image
-                  }
-                })
-              }
-            }
-
-            if (this.feedId != SSB.net.id) {
-              SSB.db.friends.isFollowing({source: SSB.net.id, dest: this.feedId }, (err, status) => {
-                this.following = status
-              })
-            }
-
-            this.messages = msgs
-          })
-        )
+          if (authorMessages.length < 5)
+            this.canDownloadMessages = true
+          else
+            this.canDownloadMessages = false
+        })
       }
     },
 
@@ -325,16 +283,6 @@ module.exports = function () {
     },
 
     created: function () {
-      return // FIXME
-      if (this.feedId === SSB.net.id) {
-        pull(
-          SSB.db.friends.createFriendStream(),
-          pull.collect((err, a) => {
-            this.friends = a.filter(x => x != this.feedId)
-          })
-        )
-      }
-
       this.renderProfile()
     },
   }
