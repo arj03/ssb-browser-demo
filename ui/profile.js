@@ -219,9 +219,6 @@ module.exports = function () {
       },
 
       downloadMessages: function() {
-        SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
-        return
-        
         if (this.feedId == SSB.net.id)
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else
