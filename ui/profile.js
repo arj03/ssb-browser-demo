@@ -309,7 +309,7 @@ module.exports = function () {
     created: function () {
       var self = this
       SSB.db.getHops((err, hops) => {
-        self.friends = hops[self.feedId]
+        self.friends = Object.keys(hops[self.feedId])
       })
 
       this.renderProfile()
