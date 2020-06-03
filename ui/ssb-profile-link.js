@@ -23,7 +23,7 @@ Vue.component('ssb-profile-link', {
           this.name = profile.name
           if (profile.image) {
             var self = this
-            SSB.net.blobs.localGet(profile.image, (err, url) => {
+            SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
               if (!err)
                 self.imgURL = url
               else

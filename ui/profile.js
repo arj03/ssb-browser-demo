@@ -263,9 +263,9 @@ module.exports = function () {
       },
 
       renderProfile: function () {
-
         console.time("latest 25 profile messages")
         SSB.db.latestMessages((err, messages) => {
+          console.log("total latest messages", messages.length)
           const authorMessages = messages.filter(x => x.value.author == this.feedId)
           this.messages = authorMessages.sort((x, y) => y.value.timestamp - x.value.timestamp).slice(0, 25)
           console.timeEnd("latest 25 profile messages")
