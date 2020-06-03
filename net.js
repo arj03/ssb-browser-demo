@@ -68,58 +68,6 @@ SSB.syncFeedFromLatest = function(feedId, cb) {
   })
 }
 
-SSB.syncLatestProfile = function(feedId, profile, latestSeq, cb) {
-  SSB.connected((rpc) => {
-    if (latestSeq <= 0) return cb()
-
-    var seqStart = latestSeq - 200
-    if (seqStart < 0)
-      seqStart = 0
-
-    var state = SSB.validate.initial()
-
-    pull(
-      rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false, limit: 200 }),
-      pull.collect((err, msgs) => {
-        if (err) throw err
-
-        msgs.reverse()
-
-        msgs = msgs.filter((msg) => msg && msg.content.type == "about" && msg.content.about == feedId)
-
-        for (var i = 0; i < msgs.length; ++i)
-        {
-          // we use appendOOO here because we are looking at messages in reverse order
-          state = SSB.validate.appendOOO(state, null, msgs[i])
-          if (state.error) return cb(state.error)
-
-          var content = msgs[i].content
-
-          if (content.name && !profile.name)
-            profile.name = content.name
-
-          if (!profile.image)
-          {
-            if (content.image && typeof content.image.link === 'string')
-              profile.image = content.image.link
-            else if (typeof content.image === 'string')
-              profile.image = content.image
-          }
-
-          if (content.description && !profile.description)
-            profile.description = content.description
-        }
-
-        if (profile.name && profile.image)
-          cb(null, profile)
-        else
-          SSB.syncLatestProfile(feedId, profile, latestSeq - 200, cb)
-      })
-    )
-  })
-}
-
-
 syncThread = function(messages, cb) {
   pull(
     pull.values(messages),

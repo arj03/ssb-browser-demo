@@ -230,17 +230,24 @@ module.exports = function () {
       
       downloadProfile: function() {
         console.time("syncing profile")
-        var profile = {}
-        SSB.syncLatestProfile(this.feedId, profile, this.messages[this.messages.length-1].value.sequence, (err, msg) => {
-          console.timeEnd("syncing profile")
-          this.renderProfile()
+        SSB.connected((rpc) => {
+          pull(
+            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
+            pull.asyncMap(SSB.db.validateAndAdd),
+            pull.collect((err, msgs) => {
+              if (err) alert(err.message)
+
+              console.timeEnd("syncing profile")
+              console.log(msgs.length)
+              this.renderProfile()
+            })
+          )
         })
       },
 
       downloadFollowing: function() {
         console.log(this.feedId)
         console.time("download following")
-        var profile = {}
         SSB.connected((rpc) => {
           pull(
             rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
@@ -256,21 +263,38 @@ module.exports = function () {
       },
 
       renderProfile: function () {
-        console.time("profile messages")
+
+        console.time("latest 25 profile messages")
         SSB.db.latestMessages((err, messages) => {
           const authorMessages = messages.filter(x => x.value.author == this.feedId)
           this.messages = authorMessages.sort((x, y) => y.value.timestamp - x.value.timestamp).slice(0, 25)
-          console.timeEnd("profile messages")
+          console.timeEnd("latest 25 profile messages")
+        })
 
-          if (authorMessages.length == 0)
-            this.canDownloadProfile = false
-          else
-            this.canDownloadProfile = true
+        console.time("get profiles")
+        SSB.db.getProfiles((err, profiles) => {
+          console.log(profiles)
+          const profile = profiles[this.feedId]
 
-          if (authorMessages.length < 5)
-            this.canDownloadMessages = true
-          else
-            this.canDownloadMessages = false
+          if (!profile) return
+
+          if (profile.name)
+            this.name = profile.name
+
+          if (profile.description)
+            this.descriptionText = profile.description
+
+          if (profile.image) {
+            var self = this
+            SSB.net.blobs.localGet(profile.image, (err, url) => {
+              if (!err) {
+                self.image = url
+                self.imageBlobId = profile.image
+              }
+            })
+          }
+
+          console.timeEnd("get profiles")
         })
       }
     },
