@@ -18,7 +18,7 @@ Vue.component('ssb-profile-link', {
       if (this.feedId == SSB.net.id)
         this.name = "You"
       else if (profiles) {
-        var profile = profiles[this.feedId]
+        const profile = profiles[this.feedId]
         if (profile) {
           this.name = profile.name
           if (profile.image) {

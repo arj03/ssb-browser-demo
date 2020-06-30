@@ -43,13 +43,27 @@ module.exports = function (componentsState) {
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
-        console.time("latest messages")
-        SSB.db.latestMessages((err, messages) => {
-          if (this.onlyThreads)
-            messages = messages.filter(x => !x.root)
+        SSB.db.jitdb.onReady(() => {
+          /* FIXME
+            if (this.onlyThreads)
+              messages = messages.filter(x => !x.root)
+          */
 
-          this.messages = messages.sort((x, y) => y.value.timestamp - x.value.timestamp).slice(0, 50)
-          console.timeEnd("latest messages")
+          const bPostValue = Buffer.from('post')
+
+          console.time("latest messages")
+          const query = {
+            type: 'EQUAL',
+            data: {
+              seek: SSB.db.jitdb.seekType,
+              value: bPostValue,
+              indexName: "type_post"
+            }
+          }
+          SSB.db.jitdb.query(query, true, (err, results) => {
+            this.messages = results.reverse()
+            console.timeEnd("latest messages")
+          })
         })
       },
 

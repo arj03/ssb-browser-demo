@@ -70,12 +70,14 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
-    if (SSB.profiles && !SSB.profiles[this.msg.value.author] && this.msg.value.author == SSB.net.id)
-      this.name = "You"
-    else if (SSB.profiles) {
-      var profile = SSB.profiles[this.msg.value.author]
-      if (profile)
-        this.name = profile.name
-    }
+    SSB.db.getProfiles((err, profiles) => {
+      if (this.msg.value.author == SSB.net.id)
+        this.name = "You"
+      else if (profiles) {
+        const profile = profiles[this.msg.value.author]
+        if (profile)
+          this.name = profile.name
+      }
+    })
   }
 })

@@ -261,10 +261,38 @@ module.exports = function () {
 
       renderProfile: function () {
         console.time("latest 25 profile messages")
-        SSB.db.latestMessages((err, messages) => {
-          const authorMessages = messages.filter(x => x.value.author == this.feedId)
-          this.messages = authorMessages.sort((x, y) => y.value.timestamp - x.value.timestamp).slice(0, 25)
-          console.timeEnd("latest 25 profile messages")
+
+        SSB.db.jitdb.onReady(() => {
+          /* FIXME
+            if (this.onlyThreads)
+              messages = messages.filter(x => !x.root)
+          */
+
+          const bPostValue = Buffer.from('post')
+          const bAuthorValue = Buffer.from(this.feedId)
+
+          SSB.db.jitdb.query({
+            type: 'AND',
+            data: [
+              { type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekType,
+                  value: bPostValue,
+                  indexName: "type_post"
+                }
+              },
+              { type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekAuthor,
+                  value: bAuthorValue,
+                  indexName: "author_arj"
+                }
+              }
+            ]
+          }, true, (err, results) => {
+            this.messages = results.reverse()
+            console.timeEnd("latest messages")
+          })
         })
 
         console.time("get profiles")
@@ -304,9 +332,11 @@ module.exports = function () {
 
     created: function () {
       var self = this
+      /*
       SSB.db.getHops((err, hops) => {
         self.friends = Object.keys(hops[self.feedId])
       })
+      */
 
       this.renderProfile()
     },
