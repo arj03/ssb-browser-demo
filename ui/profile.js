@@ -230,7 +230,7 @@ module.exports = function () {
         SSB.connected((rpc) => {
           pull(
             rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-            pull.asyncMap(SSB.db.validateAndAdd),
+            pull.asyncMap(SSB.db.validateAndAddOOO),
             pull.collect((err, msgs) => {
               if (err) alert(err.message)
 
@@ -248,7 +248,7 @@ module.exports = function () {
         SSB.connected((rpc) => {
           pull(
             rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
-            pull.asyncMap(SSB.db.validateAndAdd),
+            pull.asyncMap(SSB.db.validateAndAddOOO),
             pull.collect((err, msgs) => {
               if (err) alert(err.message)
 
@@ -278,14 +278,14 @@ module.exports = function () {
                 data: {
                   seek: SSB.db.jitdb.seekType,
                   value: bPostValue,
-                  indexName: "type_post"
+                  indexType: "type"
                 }
               },
               { type: 'EQUAL',
                 data: {
                   seek: SSB.db.jitdb.seekAuthor,
                   value: bAuthorValue,
-                  indexName: "author_arj"
+                  indexType: "author"
                 }
               }
             ]
@@ -295,9 +295,7 @@ module.exports = function () {
           })
         })
 
-        console.time("get profiles")
         SSB.db.getProfiles((err, profiles) => {
-          console.log(profiles)
           const profile = profiles[this.feedId]
 
           if (!profile) return
@@ -317,8 +315,6 @@ module.exports = function () {
               }
             })
           }
-
-          console.timeEnd("get profiles")
         })
       }
     },
@@ -333,7 +329,7 @@ module.exports = function () {
     created: function () {
       var self = this
       SSB.db.getHops((err, hops) => {
-        self.friends = Object.keys(hops[self.feedId])
+        self.friends = Object.keys(hops[self.feedId]) // FIXME not all friends..
       })
 
       this.renderProfile()

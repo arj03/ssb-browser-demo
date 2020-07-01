@@ -57,7 +57,7 @@ module.exports = function (componentsState) {
             data: {
               seek: SSB.db.jitdb.seekType,
               value: bPostValue,
-              indexName: "type_post"
+              indexType: "type"
             }
           }
           SSB.db.jitdb.query(query, 100, (err, results) => {
