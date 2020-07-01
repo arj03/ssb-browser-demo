@@ -49,17 +49,37 @@ module.exports = function (componentsState) {
               messages = messages.filter(x => !x.root)
           */
 
-          const bPostValue = Buffer.from('post')
-
           console.time("latest messages")
-          const query = {
+          var query = {
             type: 'EQUAL',
             data: {
               seek: SSB.db.jitdb.seekType,
-              value: bPostValue,
+              value: Buffer.from('post'),
               indexType: "type"
             }
           }
+
+          if (this.onlyThreads) {
+            query = {
+              type: 'AND',
+              data: [{
+                type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekType,
+                  value: Buffer.from('post'),
+                  indexType: "type"
+                }
+              }, {
+                type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekRoot,
+                  value: undefined,
+                  indexType: "root"
+                }
+              }]
+            }
+          }
+
           SSB.db.jitdb.query(query, 100, (err, results) => {
             this.messages = results.reverse()
             console.timeEnd("latest messages")
