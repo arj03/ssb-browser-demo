@@ -60,7 +60,7 @@ module.exports = function (componentsState) {
               indexName: "type_post"
             }
           }
-          SSB.db.jitdb.query(query, true, (err, results) => {
+          SSB.db.jitdb.query(query, 100, (err, results) => {
             this.messages = results.reverse()
             console.timeEnd("latest messages")
           })

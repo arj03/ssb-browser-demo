@@ -289,7 +289,7 @@ module.exports = function () {
                 }
               }
             ]
-          }, true, (err, results) => {
+          }, 25, (err, results) => {
             this.messages = results.reverse()
             console.timeEnd("latest messages")
           })
@@ -332,11 +332,9 @@ module.exports = function () {
 
     created: function () {
       var self = this
-      /*
       SSB.db.getHops((err, hops) => {
         self.friends = Object.keys(hops[self.feedId])
       })
-      */
 
       this.renderProfile()
     },
