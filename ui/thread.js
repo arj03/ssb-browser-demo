@@ -77,22 +77,29 @@ module.exports = function () {
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
-        return // FIXME
+        const query = {
+          type: 'AND',
+          data: [{
+            type: 'EQUAL',
+            data: {
+              seek: SSB.db.jitdb.seekType,
+              value: Buffer.from('post'),
+              indexType: "type"
+            }
+          }, {
+            type: 'EQUAL',
+            data: {
+              seek: SSB.db.jitdb.seekRoot,
+              value: this.fixedRootId,
+              indexType: "root"
+            }
+          }]
+        }
         
-        pull(
-          SSB.db.query.read({
-            query: [{
-              $filter: {
-                value: {
-                  content: { root: this.fixedRootId },
-                }
-              }
-            }]
-          }),
-          pull.filter((msg) => msg.value.content.type == 'post'),
-          pull.through((msg) => this.latestMsgIdInThread = msg.key),
-          pull.collect((err, msgs) => {
-            var allMessages = []
+        SSB.db.jitdb.query(query, 0, (err, msgs) => {
+          var allMessages = []
+          if (msgs.length > 0) {
+            this.latestMsgIdInThread = msgs[msgs.length-1].key
 
             // determine if messages exists outside our follow graph
             var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
@@ -129,10 +136,10 @@ module.exports = function () {
 
               allMessages.push(msg)
             })
+          }
 
-            this.messages = allMessages
-          })
-        )
+          this.messages = allMessages
+        })
       },
 
       renderThread: function() {
