@@ -80,8 +80,8 @@ module.exports = function (componentsState) {
             }
           }
 
-          SSB.db.jitdb.query(query, 100, (err, results) => {
-            this.messages = results.reverse()
+          SSB.db.jitdb.query(query, 50, (err, results) => {
+            this.messages = results
             console.timeEnd("latest messages")
           })
         })
