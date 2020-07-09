@@ -283,7 +283,13 @@ module.exports = function () {
             ]
           }, 25, (err, results) => {
             this.messages = results
-            console.timeEnd("latest messages")
+
+            if (results.length < 5)
+              this.canDownloadMessages = true
+            else
+              this.canDownloadMessages = false
+
+            console.timeEnd("latest 25 profile messages")
           })
         })
 

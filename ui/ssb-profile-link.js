@@ -17,17 +17,19 @@ Vue.component('ssb-profile-link', {
     SSB.db.getProfiles((err, profiles) => {
       if (this.feedId == SSB.net.id)
         this.name = "You"
-      else if (profiles) {
+
+      if (profiles) {
         const profile = profiles[this.feedId]
         if (profile) {
-          this.name = profile.name
+          if (this.feedId != SSB.net.id)
+            this.name = profile.name
           if (profile.image) {
             var self = this
             SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
-              if (!err)
-                self.imgURL = url
-              else
-                console.error("failed to get img", err)
+              if (err)
+                return console.error("failed to get img", err)
+
+              self.imgURL = url
             })
           }
         }
