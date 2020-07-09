@@ -263,34 +263,26 @@ module.exports = function () {
         console.time("latest 25 profile messages")
 
         SSB.db.jitdb.onReady(() => {
-          /* FIXME
-            if (this.onlyThreads)
-              messages = messages.filter(x => !x.root)
-          */
-
-          const bPostValue = Buffer.from('post')
-          const bAuthorValue = Buffer.from(this.feedId)
-
           SSB.db.jitdb.query({
             type: 'AND',
             data: [
               { type: 'EQUAL',
                 data: {
                   seek: SSB.db.jitdb.seekType,
-                  value: bPostValue,
+                  value: Buffer.from('post'),
                   indexType: "type"
                 }
               },
               { type: 'EQUAL',
                 data: {
                   seek: SSB.db.jitdb.seekAuthor,
-                  value: bAuthorValue,
+                  value: Buffer.from(this.feedId),
                   indexType: "author"
                 }
               }
             ]
           }, 25, (err, results) => {
-            this.messages = results.reverse()
+            this.messages = results
             console.timeEnd("latest messages")
           })
         })
