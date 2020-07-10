@@ -3,20 +3,7 @@ const pull = require('pull-stream')
 
 // this uses https://github.com/arj03/ssb-partial-replication
 SSB.syncFeedAfterFollow = function(feedId) {
-  SSB.connected((rpc) => {
-    console.time("downloading messages")
-
-    pull(
-      rpc.partialReplication.getFeedReverse({ id: feedId, limit: 100, keys: false }),
-      pull.asyncMap(SSB.db.validateAndAdd),
-      pull.collect((err) => {
-        if (err) throw err
-
-        console.timeEnd("downloading messages")
-        SSB.state.queue = []
-      })
-    )
-  })
+  SSB.syncFeedFromSequence(feedId, 0)
 }
 
 SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
@@ -30,7 +17,7 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
 
     pull(
       rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false }),
-      pull.asyncMap(SSB.db.validateAndAdd),
+      pull.asyncMap(SSB.db.validateAndAddOOO),
       pull.collect((err, msgs) => {
         if (err) throw err
 
@@ -51,7 +38,7 @@ SSB.syncFeedFromLatest = function(feedId, cb) {
 
     pull(
       rpc.partialReplication.getFeedReverse({ id: feedId, keys: false, limit: 25 }),
-      pull.asyncMap(SSB.db.validateAndAdd),
+      pull.asyncMap(SSB.db.validateAndAddOOO),
       pull.collect((err, msgs) => {
         if (err) throw err
 
