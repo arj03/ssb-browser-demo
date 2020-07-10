@@ -1,9 +1,7 @@
-const pull = require('pull-stream')
-const md = require('./markdown')
-
-const SSBContactMsg = require('ssb-contact-msg/async/create')
-
 module.exports = function () {
+  const pull = require('pull-stream')
+  const md = require('./markdown')
+
   let initialState = function() {
     return {
       following: false,
@@ -194,14 +192,21 @@ module.exports = function () {
       },
 
       changeFollowStatus: function() {
-        var contact = SSBContactMsg(SSB)
         if (this.following) {
-          contact.unfollow(this.feedId, () => {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            following: false
+          }, () => {
             alert("unfollowed!") // FIXME: proper UI
           })
         } else {
           var self = this
-          contact.follow(this.feedId, () => {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            following: true
+          }, () => {
             SSB.syncFeedAfterFollow(self.feedId)
             alert("followed!") // FIXME: proper UI
           })
@@ -260,6 +265,17 @@ module.exports = function () {
       },
 
       renderProfile: function () {
+
+        var self = this
+        SSB.db.getHops((err, hops) => {
+          for (var feed in hops[self.feedId])
+            if (hops[self.feedId][feed] > 0)
+              self.friends.push(feed)
+
+          if (self.feedId != SSB.net.id && hops[SSB.net.id][self.feedId] > 0)
+            self.following = true
+        })
+
         console.time("latest 25 profile messages")
 
         SSB.db.jitdb.onReady(() => {
@@ -325,11 +341,6 @@ module.exports = function () {
     },
 
     created: function () {
-      var self = this
-      SSB.db.getHops((err, hops) => {
-        self.friends = Object.keys(hops[self.feedId]) // FIXME not all friends..
-      })
-
       this.renderProfile()
     },
   }
