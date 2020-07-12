@@ -44,12 +44,6 @@ module.exports = function (componentsState) {
         componentsState.newPublicMessages = false
 
         SSB.db.jitdb.onReady(() => {
-          /* FIXME
-            if (this.onlyThreads)
-              messages = messages.filter(x => !x.root)
-          */
-
-          console.time("latest messages")
           var query = {
             type: 'EQUAL',
             data: {
@@ -80,6 +74,7 @@ module.exports = function (componentsState) {
             }
           }
 
+          console.time("latest messages")
           SSB.db.jitdb.query(query, 50, (err, results) => {
             this.messages = results
             console.timeEnd("latest messages")

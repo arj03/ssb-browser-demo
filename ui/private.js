@@ -39,25 +39,43 @@ module.exports = function (componentsState) {
       renderPrivate: function() {
         componentsState.newPrivateMessages = false
 
-        return // FIXME
-
-        pull(
-          SSB.db.query.read({
-            reverse: true,
-            query: [{
-              $filter: {
-                value: {
-                  timestamp: { $gt: 0 },
-                  content: { recps: { $truthy: true } }
-                }
+        SSB.db.jitdb.onReady(() => {
+          const query = {
+            type: 'AND',
+            data: [{
+              type: 'EQUAL',
+              data: {
+                seek: SSB.db.jitdb.seekType,
+                value: Buffer.from('post'),
+                indexType: "type"
+              }
+            }, {
+              type: 'EQUAL',
+              data: {
+                seek: SSB.db.jitdb.seekPrivate,
+                value: Buffer.from("true"),
+                indexType: "private"
               }
             }]
-          }),
-          pull.filter((msg) => !msg.value.content.root), // top posts
-          pull.collect((err, msgs) => {
-            this.messages = msgs
+          }
+          const queryRootOnly = {
+            type: 'AND',
+            data: [query, {
+              type: 'EQUAL',
+              data: {
+                seek: SSB.db.jitdb.seekRoot,
+                value: undefined,
+                indexType: "root"
+              }
+            }]
+          }
+
+          console.time("private messages")
+          SSB.db.jitdb.query(queryRootOnly, 50, (err, results) => {
+            this.messages = results
+            console.timeEnd("private messages")
           })
-        )
+        })
       },
 
       onFileSelect: function(ev) {
