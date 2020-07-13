@@ -226,8 +226,12 @@ module.exports = function () {
       downloadMessages: function() {
         if (this.feedId == SSB.net.id)
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
-        else
-          SSB.syncFeedFromLatest(this.feedId, this.renderProfile)
+        else {
+          SSB.syncFeedFromLatest(this.feedId, () => {
+            SSB.db.partial.updateState(this.feedId, { syncedMessages: true })
+            this.renderProfile()
+          })
+        }
       },
       
       downloadProfile: function() {
@@ -241,6 +245,9 @@ module.exports = function () {
 
               console.timeEnd("syncing profile")
               console.log(msgs.length)
+
+              SSB.db.partial.updateState(this.feedId, { syncedProfile: true })
+
               this.renderProfile()
             })
           )
@@ -259,13 +266,16 @@ module.exports = function () {
 
               console.timeEnd("download following")
               console.log(msgs.length)
+
+              SSB.db.partial.updateState(this.feedId, { syncedContacts: true })
+
+              this.renderProfile()
             })
           )
         })
       },
 
       renderProfile: function () {
-
         var self = this
         SSB.db.getHops((err, hops) => {
           for (var feed in hops[self.feedId])
