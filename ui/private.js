@@ -139,7 +139,9 @@ module.exports = function (componentsState) {
     created: function () {
       this.renderPrivate()
 
-      this.people = helpers.getPeople()
+      helpers.getPeople((err, people) => {
+        this.people = people
+      })
     }
   }
 }
