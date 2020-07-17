@@ -79,40 +79,34 @@ module.exports = function () {
 
         console.log("query for", this.fixedRootId)
         
-        SSB.db.jitdb.onReady(() => {
-          const query = {
-            type: 'AND',
-            data: [{
-              type: 'EQUAL',
-              data: {
-                seek: SSB.db.jitdb.seekType,
-                value: Buffer.from('post'),
-                indexType: "type"
+        SSB.db.getMessagesByRoot(this.fixedRootId, (err, msgs) => {
+          var allMessages = []
+          if (msgs.length > 0) {
+            this.latestMsgIdInThread = msgs[msgs.length-1].key
+
+            // determine if messages exists outside our follow graph
+            var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
+
+            msgs.forEach((msg) => {
+              if (typeof msg.value.content.branch === 'string')
+              {
+                if (!knownIds.includes(msg.value.content.branch)) {
+                  allMessages.push({
+                    key: msg.value.content.branch,
+                    value: {
+                      content: {
+                        text: "Message outside follow graph"
+                      }
+                    }
+                  })
+                }
               }
-            }, {
-              type: 'EQUAL',
-              data: {
-                seek: SSB.db.jitdb.seekRoot,
-                value: Buffer.from(this.fixedRootId),
-                indexType: "root"
-              }
-            }]
-          }
-
-          SSB.db.jitdb.query(query, 0, (err, msgs) => {
-            var allMessages = []
-            if (msgs.length > 0) {
-              this.latestMsgIdInThread = msgs[msgs.length-1].key
-
-              // determine if messages exists outside our follow graph
-              var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
-
-              msgs.forEach((msg) => {
-                if (typeof msg.value.content.branch === 'string')
-                {
-                  if (!knownIds.includes(msg.value.content.branch)) {
+              else if (Array.isArray(msg.value.content.branch))
+              {
+                msg.value.content.branch.forEach((branch) => {
+                  if (!knownIds.includes(branch)) {
                     allMessages.push({
-                      key: msg.value.content.branch,
+                      key: branch,
                       value: {
                         content: {
                           text: "Message outside follow graph"
@@ -120,40 +114,25 @@ module.exports = function () {
                       }
                     })
                   }
-                }
-                else if (Array.isArray(msg.value.content.branch))
-                {
-                  msg.value.content.branch.forEach((branch) => {
-                    if (!knownIds.includes(branch)) {
-                      allMessages.push({
-                        key: branch,
-                        value: {
-                          content: {
-                            text: "Message outside follow graph"
-                          }
-                        }
-                      })
-                    }
-                  })
-                }
+                })
+              }
 
-                allMessages.push(msg)
-              })
-            }
+              allMessages.push(msg)
+            })
+          }
 
-            this.messages = allMessages
-          })
+          this.messages = allMessages
         })
       },
 
       renderThread: function() {
         var self = this
-        SSB.db.get(this.fixedRootId, (err, rootMsg) => {
+        SSB.db.get(self.fixedRootId, (err, rootMsg) => {
           if (err) { // FIXME: make this configurable
-            SSB.getThread(this.fixedRootId, (err) => {
+            SSB.getThread(self.fixedRootId, (err) => {
               if (err) console.error(err)
 
-              SSB.db.get(this.fixedRootId, (err, rootMsg) => {
+              SSB.db.get(self.fixedRootId, (err, rootMsg) => {
                 if (err) {
                   console.error(err)
                   self.render({ content: { text: 'Unknown message type or message outside follow graph' }})
