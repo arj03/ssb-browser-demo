@@ -2,6 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
   const ssbMentions = require('ssb-mentions')
+  const sort = require('ssb-sort')
 
   let initialState = function(rootId) {
     return {
@@ -121,7 +122,7 @@ module.exports = function () {
             })
           }
 
-          this.messages = allMessages
+          this.messages = sort(allMessages)
         })
       },
 
