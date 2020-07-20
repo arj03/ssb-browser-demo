@@ -1,6 +1,5 @@
 exports.getPeople = function(cb) {
   SSB.db.getProfiles((err, profiles) => {
-    console.log(profiles)
     let people = []
     for (var id in profiles) {
       const profile = profiles[id]
