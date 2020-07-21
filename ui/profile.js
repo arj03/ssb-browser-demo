@@ -217,8 +217,6 @@ module.exports = function () {
         SSB.db.deleteFeed(this.feedId, (err) => {
           if (err) return alert("Failed to remove feed", err)
 
-          SSB.removeFeedState(this.feedId)
-
           this.$router.push({ path: '/public'})
         })
       },
@@ -308,7 +306,7 @@ module.exports = function () {
               }
             ]
           }, 25, (err, results) => {
-            this.messages = results
+            this.messages = results.filter(msg => !msg.value.meta)
 
             if (results.length < 5)
               this.canDownloadMessages = true

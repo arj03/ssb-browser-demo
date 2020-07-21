@@ -76,7 +76,7 @@ module.exports = function (componentsState) {
 
           console.time("latest messages")
           SSB.db.jitdb.query(query, 50, (err, results) => {
-            this.messages = results
+            this.messages = results.filter(msg => !msg.value.meta)
             console.timeEnd("latest messages")
           })
         })
