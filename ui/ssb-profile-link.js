@@ -37,5 +37,3 @@ Vue.component('ssb-profile-link', {
     })
   }
 })
-  
-  

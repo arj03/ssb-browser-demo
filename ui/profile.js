@@ -13,6 +13,7 @@ module.exports = function () {
       canDownloadMessages: true,
       canDownloadProfile: true,
       friends: [],
+      blocked: [],
 
       showExportKey: false,
       showImportKey: false,
@@ -52,6 +53,13 @@ module.exports = function () {
          <div id="follows">
            <div v-for="friend in friends">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
+         <div style="clear: both;"></div>
+         <h2 v-if="blocked">Blocking</h2>
+         <div id="blocked">
+           <div v-for="block in blocked">
+             <ssb-profile-link v-bind:key="block" v-bind:feedId="block"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
@@ -276,9 +284,12 @@ module.exports = function () {
       renderProfile: function () {
         var self = this
         SSB.db.getHops((err, hops) => {
-          for (var feed in hops[self.feedId])
+          for (var feed in hops[self.feedId]) {
             if (hops[self.feedId][feed] > 0)
               self.friends.push(feed)
+            else if (hops[self.feedId][feed] < 0)
+              self.blocked.push(feed)
+          }
 
           if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] > 0)
             self.following = true
