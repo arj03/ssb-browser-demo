@@ -280,7 +280,7 @@ module.exports = function () {
             if (hops[self.feedId][feed] > 0)
               self.friends.push(feed)
 
-          if (self.feedId != SSB.net.id && hops[SSB.net.id][self.feedId] > 0)
+          if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] > 0)
             self.following = true
         })
 
