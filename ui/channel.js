@@ -18,28 +18,21 @@ module.exports = function () {
 
     methods: {
       render: function () {
-        const contentFilter = { channel: this.channel }
+        console.time("latest 50 channel messages")
+        SSB.db.jitdb.onReady(() => {
+          SSB.db.jitdb.query({
+            type: 'EQUAL',
+            data: {
+              seek: SSB.db.jitdb.seekChannel,
+              value: Buffer.from(this.channel),
+              indexType: "channel"
+            }
+          }, 50, (err, results) => {
+            this.messages = results.filter(msg => !msg.value.meta)
 
-        return // FIXME
-
-        pull(
-          SSB.db.query.read({
-            reverse: true,
-            limit: 50,
-            query: [{
-              $filter: {
-                value: {
-                  timestamp: { $gt: 0 },
-                  content: contentFilter
-                }
-              }
-            }]
-          }),
-          pull.filter((msg) => !msg.value.meta),
-          pull.collect((err, msgs) => {
-            this.messages = msgs
+            console.timeEnd("latest 50 channel messages")
           })
-        )
+        })
       }
     },
 
