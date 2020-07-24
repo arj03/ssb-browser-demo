@@ -89,6 +89,8 @@ module.exports = function () {
             var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
 
             msgs.forEach((msg) => {
+              if (msg.value.content.type != 'post') return
+
               if (typeof msg.value.content.branch === 'string')
               {
                 if (!knownIds.includes(msg.value.content.branch)) {
