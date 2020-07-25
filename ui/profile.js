@@ -5,6 +5,7 @@ module.exports = function () {
   let initialState = function() {
     return {
       following: false,
+      blocking: false,
       name: '',
       image: '',
       imageBlobId: '',
@@ -42,6 +43,7 @@ module.exports = function () {
            <div class="avatar">
              <img :src='image'><br>
              <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
+             <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
              <button class="clickButton" v-on:click="deleteFeed">Remove feed &#x2622</button>
              <br><br>
            </div>
@@ -131,6 +133,7 @@ module.exports = function () {
 
     computed: {
       followText: function() { return this.following ? "Unfollow" : "Follow" },
+      blockText: function() { return this.blocking ? "Unblock" : "Block" },
       isSelf: function() { return SSB.net.id == this.feedId },
       description: function() { return md.markdown(this.descriptionText) }
     },
@@ -221,6 +224,26 @@ module.exports = function () {
         }
       },
 
+      changeBlockStatus: function() {
+        if (this.blocking) {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            blocking: false
+          }, () => {
+            alert("unblocked!") // FIXME: proper UI
+          })
+        } else {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            blocking: true
+          }, () => {
+            alert("blocked!") // FIXME: proper UI
+          })
+        }
+      },
+
       deleteFeed: function() {
         SSB.db.deleteFeed(this.feedId, (err) => {
           if (err) return alert("Failed to remove feed", err)
@@ -285,14 +308,16 @@ module.exports = function () {
         var self = this
         SSB.db.getHops((err, hops) => {
           for (var feed in hops[self.feedId]) {
-            if (hops[self.feedId][feed] > 0)
+            if (hops[self.feedId][feed] === 1)
               self.friends.push(feed)
-            else if (hops[self.feedId][feed] < 0)
+            else if (hops[self.feedId][feed] === -1)
               self.blocked.push(feed)
           }
 
-          if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] > 0)
+          if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] === 1)
             self.following = true
+          if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] === -1)
+            self.blocking = true
         })
 
         console.time("latest 25 profile messages")
