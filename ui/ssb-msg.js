@@ -70,7 +70,7 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
-    SSB.db.getProfiles((err, profiles) => {
+    SSB.db.profiles.get((err, profiles) => {
       if (this.msg.value.author == SSB.net.id)
         this.name = "You"
       else if (profiles) {

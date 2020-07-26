@@ -14,7 +14,7 @@ Vue.component('ssb-profile-link', {
   },
 
   created: function () {
-    SSB.db.getProfiles((err, profiles) => {
+    SSB.db.profiles.get((err, profiles) => {
       if (this.feedId == SSB.net.id)
         this.name = "You"
 

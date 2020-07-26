@@ -306,18 +306,12 @@ module.exports = function () {
 
       renderProfile: function () {
         var self = this
-        SSB.db.getHops((err, hops) => {
-          for (var feed in hops[self.feedId]) {
-            if (hops[self.feedId][feed] === 1)
-              self.friends.push(feed)
-            else if (hops[self.feedId][feed] === -1)
-              self.blocked.push(feed)
-          }
+        SSB.db.contacts.getGraphForFeed(self.feedId, (err, graph) => {
+          self.friends = graph.following
+          self.blocked = graph.blocking
 
-          if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] === 1)
-            self.following = true
-          if (self.feedId != SSB.net.id && hops[SSB.net.id] && hops[SSB.net.id][self.feedId] === -1)
-            self.blocking = true
+          self.following = self.feedId != SSB.net.id && SSB.db.contacts.isFollowing(SSB.net.id, self.feedId)
+          self.blocking = self.feedId != SSB.net.id && SSB.db.contacts.isBlocking(SSB.net.id, self.feedId)
         })
 
         console.time("latest 25 profile messages")
@@ -353,7 +347,7 @@ module.exports = function () {
           })
         })
 
-        SSB.db.getProfiles((err, profiles) => {
+        SSB.db.profiles.get((err, profiles) => {
           const profile = profiles[this.feedId]
 
           if (!profile) return
