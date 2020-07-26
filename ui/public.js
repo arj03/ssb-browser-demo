@@ -34,10 +34,10 @@ module.exports = function (componentsState) {
 
     methods: {
       syncData: function(ev) {
-        if (SSB.db.getStatus().sync == false)
-          alert("Nothing to sync, write a message or use invites tab for onboarding")
+        if (SSB.db.getStatus().log == 0)
+          alert("Nothing to sync, try following a profile first!")
         else
-          SSB.sync()
+          SSB.db.feedSyncer.syncFeeds(SSB.sync)
       },
 
       renderPublic: function () {
