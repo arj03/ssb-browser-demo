@@ -1,12 +1,11 @@
-const pull = require('pull-stream')
-const md = require('./markdown')
-
-const SSBContactMsg = require('ssb-contact-msg/async/create')
-
 module.exports = function () {
+  const pull = require('pull-stream')
+  const md = require('./markdown')
+
   let initialState = function() {
     return {
       following: false,
+      blocking: false,
       name: '',
       image: '',
       imageBlobId: '',
@@ -15,6 +14,7 @@ module.exports = function () {
       canDownloadMessages: true,
       canDownloadProfile: true,
       friends: [],
+      blocked: [],
 
       showExportKey: false,
       showImportKey: false,
@@ -43,6 +43,7 @@ module.exports = function () {
            <div class="avatar">
              <img :src='image'><br>
              <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
+             <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
              <button class="clickButton" v-on:click="deleteFeed">Remove feed &#x2622</button>
              <br><br>
            </div>
@@ -57,7 +58,15 @@ module.exports = function () {
            </div>
          </div>
          <div style="clear: both;"></div>
+         <h2 v-if="blocked">Blocking</h2>
+         <div id="blocked">
+           <div v-for="block in blocked">
+             <ssb-profile-link v-bind:key="block" v-bind:feedId="block"></ssb-profile-link>
+           </div>
+         </div>
+         <div style="clear: both;"></div>
          <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
+         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">Download following</button>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
@@ -124,6 +133,7 @@ module.exports = function () {
 
     computed: {
       followText: function() { return this.following ? "Unfollow" : "Follow" },
+      blockText: function() { return this.blocking ? "Unblock" : "Block" },
       isSelf: function() { return SSB.net.id == this.feedId },
       description: function() { return md.markdown(this.descriptionText) }
     },
@@ -189,28 +199,47 @@ module.exports = function () {
           if (err) return alert(err)
 
           alert("Saved!")
-
-          SSB.profiles[this.feedId] = {
-            name: this.name,
-            description: this.descriptionText,
-            image: this.imageBlobId
-          }
-
-          SSB.saveProfiles()
         })
       },
 
       changeFollowStatus: function() {
-        var contact = SSBContactMsg(SSB)
         if (this.following) {
-          contact.unfollow(this.feedId, () => {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            following: false
+          }, () => {
             alert("unfollowed!") // FIXME: proper UI
           })
         } else {
           var self = this
-          contact.follow(this.feedId, () => {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            following: true
+          }, () => {
             SSB.syncFeedAfterFollow(self.feedId)
             alert("followed!") // FIXME: proper UI
+          })
+        }
+      },
+
+      changeBlockStatus: function() {
+        if (this.blocking) {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            blocking: false
+          }, () => {
+            alert("unblocked!") // FIXME: proper UI
+          })
+        } else {
+          SSB.publish({
+            type: 'contact',
+            contact: this.feedId,
+            blocking: true
+          }, () => {
+            alert("blocked!") // FIXME: proper UI
           })
         }
       },
@@ -219,8 +248,6 @@ module.exports = function () {
         SSB.db.deleteFeed(this.feedId, (err) => {
           if (err) return alert("Failed to remove feed", err)
 
-          SSB.removeFeedState(this.feedId)
-
           this.$router.push({ path: '/public'})
         })
       },
@@ -228,81 +255,119 @@ module.exports = function () {
       downloadMessages: function() {
         if (this.feedId == SSB.net.id)
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
-        else
-          SSB.syncFeedFromLatest(this.feedId, this.renderProfile)
+        else {
+          SSB.syncFeedFromLatest(this.feedId, () => {
+            SSB.db.partial.updateState(this.feedId, { syncedMessages: true })
+            this.renderProfile()
+          })
+        }
       },
       
       downloadProfile: function() {
         console.time("syncing profile")
-        var profile = {}
-        SSB.syncLatestProfile(this.feedId, profile, this.messages[this.messages.length-1].value.sequence, (err, msg) => {
-          console.timeEnd("syncing profile")
-          SSB.profiles[this.feedId] = profile
-          SSB.saveProfiles()
-          this.renderProfile()
+        SSB.connected((rpc) => {
+          pull(
+            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
+            pull.asyncMap(SSB.db.validateAndAddOOO),
+            pull.collect((err, msgs) => {
+              if (err) alert(err.message)
+
+              console.timeEnd("syncing profile")
+              console.log(msgs.length)
+
+              SSB.db.partial.updateState(this.feedId, { syncedProfile: true })
+
+              this.renderProfile()
+            })
+          )
+        })
+      },
+
+      downloadFollowing: function() {
+        console.log(this.feedId)
+        console.time("download following")
+        SSB.connected((rpc) => {
+          pull(
+            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
+            pull.asyncMap(SSB.db.validateAndAddOOO),
+            pull.collect((err, msgs) => {
+              if (err) alert(err.message)
+
+              console.timeEnd("download following")
+              console.log(msgs.length)
+
+              SSB.db.partial.updateState(this.feedId, { syncedContacts: true })
+
+              this.renderProfile()
+            })
+          )
         })
       },
 
       renderProfile: function () {
-        pull(
-          SSB.db.query.read({
-            reverse: true,
-            limit: 25,
-            query: [{
-              $filter: {
-                value: {
-                  timestamp: { $gt: 0 },
-                  author: this.feedId,
-                  content: {
-                    type: 'post'
-                  }
+        var self = this
+        SSB.db.contacts.getGraphForFeed(self.feedId, (err, graph) => {
+          self.friends = graph.following
+          self.blocked = graph.blocking
+
+          self.following = self.feedId != SSB.net.id && SSB.db.contacts.isFollowing(SSB.net.id, self.feedId)
+          self.blocking = self.feedId != SSB.net.id && SSB.db.contacts.isBlocking(SSB.net.id, self.feedId)
+        })
+
+        console.time("latest 25 profile messages")
+
+        SSB.db.jitdb.onReady(() => {
+          SSB.db.jitdb.query({
+            type: 'AND',
+            data: [
+              { type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekType,
+                  value: Buffer.from('post'),
+                  indexType: "type"
+                }
+              },
+              { type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekAuthor,
+                  value: Buffer.from(this.feedId),
+                  indexType: "author"
                 }
               }
-            }]
-          }),
-          pull.collect((err, msgs) => {
+            ]
+          }, 25, (err, results) => {
+            this.messages = results.filter(msg => !msg.value.meta)
 
-            if (msgs.length == 0)
-              this.canDownloadProfile = false
-            else
-              this.canDownloadProfile = true
-
-            if (msgs.length < 5)
+            if (results.length < 5)
               this.canDownloadMessages = true
             else
               this.canDownloadMessages = false
 
-            if (SSB.profiles && SSB.profiles[this.feedId]) {
-              var profile = SSB.profiles[this.feedId]
-
-              if (profile.name) {
-                this.name = profile.name
-                this.canDownloadProfile = false
-              }
-
-              if (profile.description)
-                this.descriptionText = profile.description
-
-              if (profile.image) {
-                var self = this
-                SSB.net.blobs.localGet(profile.image, (err, url) => {
-                  if (!err) {
-                    self.image = url
-                    self.imageBlobId = profile.image
-                  }
-                })
-              }
-            }
-
-            if (this.feedId != SSB.net.id) {
-              SSB.db.friends.isFollowing({source: SSB.net.id, dest: this.feedId }, (err, status) => {
-                this.following = status
-              })
-            }
-
-            this.messages = msgs
+            console.timeEnd("latest 25 profile messages")
           })
-        )
+        })
+
+        SSB.db.profiles.get((err, profiles) => {
+          const profile = profiles[this.feedId]
+
+          if (!profile) return
+
+          if (profile.name)
+            this.name = profile.name
+
+          if (profile.description)
+            this.descriptionText = profile.description
+
+          if (profile.image) {
+            var self = this
+            SSB.net.blobs.localGet(profile.image, (err, url) => {
+              if (!err) {
+                self.image = url
+                self.imageBlobId = profile.image
+              }
+            })
+          }
+        })
       }
     },
 
@@ -314,15 +379,6 @@ module.exports = function () {
     },
 
     created: function () {
-      if (this.feedId === SSB.net.id) {
-        pull(
-          SSB.db.friends.createFriendStream(),
-          pull.collect((err, a) => {
-            this.friends = a.filter(x => x != this.feedId)
-          })
-        )
-      }
-
       this.renderProfile()
     },
   }

@@ -34,38 +34,52 @@ module.exports = function (componentsState) {
 
     methods: {
       syncData: function(ev) {
-        if (SSB.db.getStatus().sync == false)
-          alert("Nothing to sync, write a message or use invites tab for onboarding")
+        if (SSB.db.getStatus().log == 0)
+          alert("Nothing to sync, try following a profile first!")
         else
-          SSB.sync()
+          SSB.db.feedSyncer.syncFeeds(SSB.sync)
       },
 
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
-        let contentFilter = { type: 'post' }
-        if (this.onlyThreads)
-          contentFilter["root"] = undefined
+        SSB.db.jitdb.onReady(() => {
+          var query = {
+            type: 'EQUAL',
+            data: {
+              seek: SSB.db.jitdb.seekType,
+              value: Buffer.from('post'),
+              indexType: "type"
+            }
+          }
 
-        pull(
-          SSB.db.query.read({
-            reverse: true,
-            limit: 50,
-            query: [{
-              $filter: {
-                value: {
-                  timestamp: { $gt: 0 },
-                  //author: '@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519'
-                  content: contentFilter
+          if (this.onlyThreads) {
+            query = {
+              type: 'AND',
+              data: [{
+                type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekType,
+                  value: Buffer.from('post'),
+                  indexType: "type"
                 }
-              }
-            }]
-          }),
-          pull.filter((msg) => !msg.value.meta),
-          pull.collect((err, msgs) => {
-            this.messages = msgs
+              }, {
+                type: 'EQUAL',
+                data: {
+                  seek: SSB.db.jitdb.seekRoot,
+                  value: undefined,
+                  indexType: "root"
+                }
+              }]
+            }
+          }
+
+          console.time("latest messages")
+          SSB.db.jitdb.query(query, 50, (err, results) => {
+            this.messages = results.filter(msg => !msg.value.meta)
+            console.timeEnd("latest messages")
           })
-        )
+        })
       },
 
       onFileSelect: function(ev) {

@@ -1,28 +1,27 @@
-exports.getPeople = function() {
-  const last = SSB.db.last.get()
-
-  const people = []
-  
-  for (let id in SSB.profiles) {
-    const profile = SSB.profiles[id]
-
-    if (profile.image && last[id])
-      SSB.net.blobs.localGet(profile.image, (err, url) => {
-        people.push({
-          id: id,
-          name: profile.name || id,
-          image: err ? '' : url
+exports.getPeople = function(cb) {
+  SSB.db.profiles.get((err, profiles) => {
+    let people = []
+    for (var id in profiles) {
+      const profile = profiles[id]
+      if (profile.image) {
+        SSB.net.blobs.localGet(profile.image, (err, url) => {
+          people.push({
+            id,
+            name: profile.name || id,
+            image: err ? '' : url
+          })
         })
-      })
-    else if (last[id])
-      people.push({
-        id: id,
-        name: profile.name || id,
-        image: ''
-      })
-  }
+      } else {
+        people.push({
+          id,
+          name: profile.name || id,
+          image: ''
+        })
+      }
+    }
 
-  return people
+    cb(null, people)
+  })
 }
 
 exports.handleFileSelect = function(ev, isPrivate, cb) {

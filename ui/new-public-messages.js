@@ -25,24 +25,21 @@ module.exports = function (state) {
     created: function () {
       var self = this
 
-      pull(
-        SSB.db.query.read({
-          live: true,
-          old: false,
-          query: [{
-            $filter: {
-              value: {
-                timestamp: { $gt: 0 },
-                content: { type: 'post' }
-              }
-            }
-          }]
-        }),
-        pull.filter((msg) => !msg.value.meta),
-        pull.drain(() => {
-          self.newPublicMessages = true
+      const query = {
+        type: 'EQUAL',
+        data: {
+          seek: SSB.db.jitdb.seekType,
+          value: Buffer.from('post'),
+          indexType: "type"
+        }
+      }
+
+      SSB.db.jitdb.onReady(() => {
+        SSB.db.jitdb.liveQuerySingleIndex(query, (err, results) => {
+          if (results.some(msg => !msg.value.meta))
+            self.newPublicMessages = true
         })
-      )
+      })
     }
   })
 }

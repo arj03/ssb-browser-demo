@@ -22,23 +22,21 @@ module.exports = function (state) {
 
     created: function () {
       var self = this
-      pull(
-        SSB.db.query.read({
-          live: true,
-          old: false,
-          query: [{
-            $filter: {
-              value: {
-                timestamp: { $gt: 0 },
-                content: { type: 'post', recps: { $truthy: true } }
-              }
-            }
-          }]
-        }),
-        pull.drain(() => {
+
+      const query = {
+        type: 'EQUAL',
+        data: {
+          seek: SSB.db.jitdb.seekPrivate,
+          value: Buffer.from("true"),
+          indexType: "private"
+        }
+      }
+
+      SSB.db.jitdb.onReady(() => {
+        SSB.db.jitdb.liveQuerySingleIndex(query, (err, results) => {
           self.newPrivateMessages = true
         })
-      )
+      })
     }
   })
 }
