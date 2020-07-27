@@ -28,14 +28,26 @@ Vue.component('ssb-msg', {
         </h2>
 
         <span v-html="body"></span>
+        <span v-if="forks.length > 0"><b>Forks:</b>
+          <li v-for="msg in forks">
+            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
+          </li>
+        </span>
+        <span v-if="mentions.length > 0"><b>Mentions:</b>
+          <li v-for="msg in mentions">
+            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
+          </li>
+        </span>
         <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
       </div>`,
 
-  props: ['msg'],
+  props: ['msg', 'thread'],
 
   data: function() {
     return {
-      name: this.msg.value.author
+      name: this.msg.value.author,
+      forks: [],
+      mentions: []
     }
   },
 
@@ -78,6 +90,16 @@ Vue.component('ssb-msg', {
         if (profile)
           this.name = profile.name
       }
+    })
+
+    if (this.msg.key != this.thread) {
+      SSB.db.getMessagesByRoot(this.msg.key, (err, msgs) => {
+        this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
+      })
+    }
+
+    SSB.db.getMessagesByMention(this.msg.key, (err, msgs) => {
+      this.mentions = msgs
     })
   }
 })

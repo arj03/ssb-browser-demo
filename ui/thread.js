@@ -21,7 +21,7 @@ module.exports = function () {
     template: `
        <div id="thread">
          <h2>Thread <small>{{ fixedRootId }}</small></h2>
-         <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg"></ssb-msg>
+         <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg" v-bind:thread="fixedRootId"></ssb-msg>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <textarea class="messageText" v-model="postText"></textarea><br>
          <button class="clickButton" v-on:click="postReply">Post reply</button>
@@ -88,9 +88,7 @@ module.exports = function () {
             // determine if messages exists outside our follow graph
             var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
 
-            msgs.forEach((msg) => {
-              if (msg.value.content.type != 'post') return
-
+            function insertMissingMessages(msg) {
               if (typeof msg.value.content.branch === 'string')
               {
                 if (!knownIds.includes(msg.value.content.branch)) {
@@ -119,7 +117,12 @@ module.exports = function () {
                   }
                 })
               }
+            }
 
+            msgs.forEach((msg) => {
+              if (msg.value.content.type != 'post') return
+
+              insertMissingMessages(msg)
               allMessages.push(msg)
             })
           }
