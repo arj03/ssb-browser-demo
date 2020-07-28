@@ -17,7 +17,7 @@ module.exports = function (componentsState) {
       <h2>Last 50 messages</h2>
       Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
       <br>
-      <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.key"></ssb-msg>
+      <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
