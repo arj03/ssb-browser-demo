@@ -12,8 +12,8 @@ module.exports = function (componentsState) {
       </div>
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
-      <button class="clickButton" id="syncData" v-on:click="syncData">Sync data</button><br>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
+      <button class="clickButton" id="syncData" v-on:click="syncData">Sync data</button><br>
       <h2>Last 50 messages</h2>
       Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
       <br>
