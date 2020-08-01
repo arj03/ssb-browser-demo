@@ -25,8 +25,7 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
         console.log(msgs.length)
         SSB.state.queue = []
 
-        if (cb)
-          cb()
+        if (cb) cb()
       })
     )
   })
@@ -45,8 +44,7 @@ SSB.syncFeedFromLatest = function(feedId, cb) {
         console.timeEnd("downloading messages")
         SSB.state.queue = []
 
-        if (cb)
-          cb()
+        if (cb) cb()
       })
     )
   })
