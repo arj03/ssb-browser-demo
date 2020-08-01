@@ -36,8 +36,7 @@ const mdOpts = {
       return `#/thread/${encodeURIComponent(id.substring(1))}`
     } else if (typeof(id) === 'string' && id[0] === '#') {
       return `#/channel/${encodeURIComponent(id.substring(1))}`
-    } else
-      return id
+    }
   },
   imageLink: (ref) => ref,
   emoji: (emoji) => {
