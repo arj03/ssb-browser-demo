@@ -129,7 +129,7 @@ module.exports = function (componentsState) {
         var self = this
 
         const throttledSync = throttle(() => {
-          SSB.sync()
+          SSB.db.feedSyncer.syncFeeds(SSB.sync)
 
           setTimeout(() => {
             if (componentsState.newPublicMessages) {
