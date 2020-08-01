@@ -218,7 +218,6 @@ module.exports = function () {
             contact: this.feedId,
             following: true
           }, () => {
-            SSB.syncFeedAfterFollow(self.feedId)
             alert("followed!") // FIXME: proper UI
           })
         }
