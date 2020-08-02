@@ -37,7 +37,7 @@ module.exports = function (componentsState) {
         if (SSB.db.getStatus().log == 0)
           alert("Nothing to sync, try following a profile first!")
         else
-          SSB.db.feedSyncer.syncFeeds(SSB.sync)
+          SSB.sync()
       },
 
       renderPublic: function () {
@@ -129,7 +129,7 @@ module.exports = function (componentsState) {
         var self = this
 
         const throttledSync = throttle(() => {
-          SSB.db.feedSyncer.syncFeeds(SSB.sync)
+          SSB.sync()
 
           setTimeout(() => {
             if (componentsState.newPublicMessages) {
