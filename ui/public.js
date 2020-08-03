@@ -34,7 +34,7 @@ module.exports = function (componentsState) {
 
     methods: {
       syncData: function(ev) {
-        if (SSB.db.getStatus().log == 0)
+        if (SSB.db.getStatus().log == -1)
           alert("Nothing to sync, try following a profile first!")
         else
           SSB.sync()
