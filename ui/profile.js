@@ -2,6 +2,28 @@ module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
 
+  function query(feedId) {
+    return {
+      type: 'AND',
+      data: [
+        { type: 'EQUAL',
+          data: {
+            seek: SSB.db.jitdb.seekType,
+            value: Buffer.from('post'),
+            indexType: "type"
+          }
+        },
+        { type: 'EQUAL',
+          data: {
+            seek: SSB.db.jitdb.seekAuthor,
+            value: Buffer.from(feedId),
+            indexType: "author"
+          }
+        }
+      ]
+    }
+  }
+
   let initialState = function() {
     return {
       following: false,
@@ -18,7 +40,9 @@ module.exports = function () {
 
       showExportKey: false,
       showImportKey: false,
-      mnemonic: ''
+      mnemonic: '',
+
+      offset: 0
     }
   }
 
@@ -69,6 +93,7 @@ module.exports = function () {
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">Download following</button>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
+         <button class="clickButton" v-on:click="loadMore">Load more</button>
          <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
 
          <transition name="modal" v-if="showExportKey">
@@ -303,6 +328,13 @@ module.exports = function () {
         })
       },
 
+      loadMore: function() {
+        SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
+          this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
+          this.offset += results.length
+        })
+      },
+
       renderProfile: function () {
         var self = this
         SSB.db.contacts.getGraphForFeed(self.feedId, (err, graph) => {
@@ -313,29 +345,11 @@ module.exports = function () {
           self.blocking = self.feedId != SSB.net.id && SSB.db.contacts.isBlocking(SSB.net.id, self.feedId)
         })
 
-        console.time("latest 25 profile messages")
-
         SSB.db.jitdb.onReady(() => {
-          SSB.db.jitdb.query({
-            type: 'AND',
-            data: [
-              { type: 'EQUAL',
-                data: {
-                  seek: SSB.db.jitdb.seekType,
-                  value: Buffer.from('post'),
-                  indexType: "type"
-                }
-              },
-              { type: 'EQUAL',
-                data: {
-                  seek: SSB.db.jitdb.seekAuthor,
-                  value: Buffer.from(this.feedId),
-                  indexType: "author"
-                }
-              }
-            ]
-          }, 25, (err, results) => {
+          console.time("latest 25 profile messages")
+          SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
+            this.offset += results.length
 
             if (results.length < 5)
               this.canDownloadMessages = true

@@ -4,6 +4,40 @@ module.exports = function (componentsState) {
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
 
+  function getQuery(onlyThreads) {
+    var query = {
+      type: 'EQUAL',
+      data: {
+        seek: SSB.db.jitdb.seekType,
+        value: Buffer.from('post'),
+        indexType: "type"
+      }
+    }
+
+    if (onlyThreads) {
+      query = {
+        type: 'AND',
+        data: [{
+          type: 'EQUAL',
+          data: {
+            seek: SSB.db.jitdb.seekType,
+            value: Buffer.from('post'),
+            indexType: "type"
+          }
+        }, {
+          type: 'EQUAL',
+          data: {
+            seek: SSB.db.jitdb.seekRoot,
+            value: undefined,
+            indexType: "root"
+          }
+        }]
+      }
+    }
+
+    return query
+  }
+
   return {
     template: `
     <div id="public">
@@ -18,6 +52,7 @@ module.exports = function (componentsState) {
       Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
+      <button class="clickButton" v-on:click="loadMore">Load more</button>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
@@ -27,6 +62,7 @@ module.exports = function (componentsState) {
         postText: "",
         onlyThreads: false,
         messages: [],
+        offset: 0,
 
         showPreview: false
       }
@@ -40,43 +76,21 @@ module.exports = function (componentsState) {
           SSB.sync()
       },
 
+      loadMore: function() {
+        SSB.db.jitdb.query(getQuery(this.onlyThreads), this.offset, 25, (err, results) => {
+          this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
+          this.offset += results.length
+        })
+      },
+
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
         SSB.db.jitdb.onReady(() => {
-          var query = {
-            type: 'EQUAL',
-            data: {
-              seek: SSB.db.jitdb.seekType,
-              value: Buffer.from('post'),
-              indexType: "type"
-            }
-          }
-
-          if (this.onlyThreads) {
-            query = {
-              type: 'AND',
-              data: [{
-                type: 'EQUAL',
-                data: {
-                  seek: SSB.db.jitdb.seekType,
-                  value: Buffer.from('post'),
-                  indexType: "type"
-                }
-              }, {
-                type: 'EQUAL',
-                data: {
-                  seek: SSB.db.jitdb.seekRoot,
-                  value: undefined,
-                  indexType: "root"
-                }
-              }]
-            }
-          }
-
           console.time("latest messages")
-          SSB.db.jitdb.query(query, 50, (err, results) => {
+          SSB.db.jitdb.query(getQuery(this.onlyThreads), this.offset, 25, (err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
+            this.offset += results.length
             console.timeEnd("latest messages")
           })
         })

@@ -27,7 +27,7 @@ module.exports = function () {
               value: Buffer.from(this.channel),
               indexType: "channel"
             }
-          }, 50, (err, results) => {
+          }, 0, 50, (err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
 
             console.timeEnd("latest 50 channel messages")

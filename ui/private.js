@@ -71,7 +71,7 @@ module.exports = function (componentsState) {
           }
 
           console.time("private messages")
-          SSB.db.jitdb.query(queryRootOnly, 50, (err, results) => {
+          SSB.db.jitdb.query(queryRootOnly, 0, 50, (err, results) => {
             this.messages = results
             console.timeEnd("private messages")
           })
