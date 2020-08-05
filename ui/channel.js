@@ -24,7 +24,7 @@ module.exports = function () {
             type: 'EQUAL',
             data: {
               seek: SSB.db.jitdb.seekChannel,
-              value: Buffer.from(this.channel),
+              value: this.channel,
               indexType: "channel"
             }
           }, 0, 50, (err, results) => {

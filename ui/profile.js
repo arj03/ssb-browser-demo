@@ -9,14 +9,14 @@ module.exports = function () {
         { type: 'EQUAL',
           data: {
             seek: SSB.db.jitdb.seekType,
-            value: Buffer.from('post'),
+            value: 'post',
             indexType: "type"
           }
         },
         { type: 'EQUAL',
           data: {
             seek: SSB.db.jitdb.seekAuthor,
-            value: Buffer.from(feedId),
+            value: feedId,
             indexType: "author"
           }
         }

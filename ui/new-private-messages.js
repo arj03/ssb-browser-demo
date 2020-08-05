@@ -27,7 +27,7 @@ module.exports = function (state) {
         type: 'EQUAL',
         data: {
           seek: SSB.db.jitdb.seekPrivate,
-          value: Buffer.from("true"),
+          value: "true",
           indexType: "private"
         }
       }

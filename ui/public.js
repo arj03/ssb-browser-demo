@@ -9,7 +9,7 @@ module.exports = function (componentsState) {
       type: 'EQUAL',
       data: {
         seek: SSB.db.jitdb.seekType,
-        value: Buffer.from('post'),
+        value: 'post',
         indexType: "type"
       }
     }
@@ -21,7 +21,7 @@ module.exports = function (componentsState) {
           type: 'EQUAL',
           data: {
             seek: SSB.db.jitdb.seekType,
-            value: Buffer.from('post'),
+            value: 'post',
             indexType: "type"
           }
         }, {

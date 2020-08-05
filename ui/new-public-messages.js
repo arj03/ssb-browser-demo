@@ -29,7 +29,7 @@ module.exports = function (state) {
         type: 'EQUAL',
         data: {
           seek: SSB.db.jitdb.seekType,
-          value: Buffer.from('post'),
+          value: 'post',
           indexType: "type"
         }
       }

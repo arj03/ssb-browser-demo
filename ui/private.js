@@ -46,14 +46,14 @@ module.exports = function (componentsState) {
               type: 'EQUAL',
               data: {
                 seek: SSB.db.jitdb.seekType,
-                value: Buffer.from('post'),
+                value: 'post',
                 indexType: "type"
               }
             }, {
               type: 'EQUAL',
               data: {
                 seek: SSB.db.jitdb.seekPrivate,
-                value: Buffer.from("true"),
+                value: "true",
                 indexType: "private"
               }
             }]
