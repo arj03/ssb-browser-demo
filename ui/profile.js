@@ -17,7 +17,8 @@ module.exports = function () {
           data: {
             seek: SSB.db.jitdb.seekAuthor,
             value: feedId,
-            indexType: "author"
+            indexType: "author",
+            indexAll: true
           }
         }
       ]
