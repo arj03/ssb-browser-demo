@@ -14,7 +14,7 @@
     "pull-abortable": "^4.1.1",
     "pull-stream": "^3.6.14",
     "rimraf": "^3.0.0",
-    "ssb-browser-core": "^4.0.4",
+    "ssb-browser-core": "^4.0.5",
     "ssb-contact-msg": "^1.1.0",
     "ssb-keys-mnemonic": "^0.3.0",
     "ssb-markdown": "^6.0.7",
@@ -27,7 +27,7 @@
     "workbox-build": "^4.3.1"
   },
   "devDependencies": {
-    "browserify": "^16.5.1",
+    "browserify": "^16.5.2",
     "common-shakeify": "^0.6.2",
     "deep-object-diff": "^1.1.0",
     "esmify": "^2.1.1",
