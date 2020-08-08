@@ -282,8 +282,9 @@ module.exports = function () {
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else {
           SSB.syncFeedFromLatest(this.feedId, () => {
-            SSB.db.partial.updateState(this.feedId, { syncedMessages: true })
-            this.renderProfile()
+            SSB.db.partial.updateState(this.feedId, { syncedMessages: true }, () => {
+              this.renderProfile()
+            })
           })
         }
       },
@@ -300,9 +301,9 @@ module.exports = function () {
               console.timeEnd("syncing profile")
               console.log(msgs.length)
 
-              SSB.db.partial.updateState(this.feedId, { syncedProfile: true })
-
-              this.renderProfile()
+              SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+                this.renderProfile()
+              })
             })
           )
         })
@@ -321,9 +322,9 @@ module.exports = function () {
               console.timeEnd("download following")
               console.log(msgs.length)
 
-              SSB.db.partial.updateState(this.feedId, { syncedContacts: true })
-
-              this.renderProfile()
+              SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
+                this.renderProfile()
+              })
             })
           )
         })
