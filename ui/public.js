@@ -88,7 +88,7 @@ module.exports = function (componentsState) {
 
         SSB.db.jitdb.onReady(() => {
           console.time("latest messages")
-          SSB.db.jitdb.query(getQuery(this.onlyThreads), this.offset, 25, (err, results) => {
+          SSB.db.jitdb.query(getQuery(this.onlyThreads), 0, 25, (err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
             this.offset += results.length
             console.timeEnd("latest messages")
