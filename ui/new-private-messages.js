@@ -1,5 +1,5 @@
 module.exports = function (state) {
-  const pull = require('pull-stream')
+  var loaded = false
 
   Vue.component('new-private-messages', {
     template: `
@@ -22,6 +22,9 @@ module.exports = function (state) {
 
     created: function () {
       var self = this
+
+      if (loaded) return // is loaded twice?
+      loaded = true
 
       const query = {
         type: 'EQUAL',
