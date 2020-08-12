@@ -138,7 +138,7 @@ module.exports = function () {
             SSB.getThread(self.fixedRootId, (err) => {
               if (err) console.error(err)
 
-              SSB.db.get(self.fixedRootId, (err, rootMsg) => {
+              SSB.db.getSync(self.fixedRootId, (err, rootMsg) => {
                 if (err) {
                   console.error(err)
                   self.render({ content: { text: 'Unknown message type or message outside follow graph' }})
