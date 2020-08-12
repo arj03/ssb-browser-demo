@@ -22,8 +22,7 @@ on the profile page.
 
 As a way to let people explore the messages from users outside ones
 follow graph, the [ssb-partial-replication] plugin is used to get
-threads from the server. This has privacy implications so this need to
-be configurable, see TODO.
+threads from the server. 
 
 The UI is written in vue.js and can display posts and self assigned
 profile about messages. Leaving out likes was done on purpose as an
@@ -40,6 +39,7 @@ Things that work:
  - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages for messages from people outside your current follow graph
  - deleting messages included a whole profile
+ - blocking
  - channels
  - notifications
  - backup / restore feed using mnemonics
@@ -53,8 +53,7 @@ An online version is available for testing [here][test-server]
 
 # Running locally
 
-For testing this in Chrome locally, one must run it with:
---allow-file-access-from-files
+For testing this in Chrome locally, Chrome must be started with with: --allow-file-access-from-files
 
 # Server
 
@@ -66,10 +65,9 @@ I made a [blog post][pub-setup] that should tell you exactly how to get a pub ru
 
 # TODO
 
+- handle blocking when doing ooo
 - port over ssb-friend-pub
-- disable or trust pubs as a way to control when to fetch threads
-  - auto fetch messages of threads
-  - handle blocking when doing ooo
+- emoji reactions as in manyverse
 
 # Other
 
