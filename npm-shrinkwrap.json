@@ -1726,9 +1726,9 @@
       }
     },
     "flumelog-aligned-offset": {
-      "version": "1.1.3",
-      "resolved": "https://registry.npmjs.org/flumelog-aligned-offset/-/flumelog-aligned-offset-1.1.3.tgz",
-      "integrity": "sha512-LPemhyyERpQIuvR8dxtwKNshtMn+cRBHNNs273XBTkx6im6ld7DGdIspbb9d2QbXwMtworzj86KawBdyuFJrOg==",
+      "version": "1.1.4",
+      "resolved": "https://registry.npmjs.org/flumelog-aligned-offset/-/flumelog-aligned-offset-1.1.4.tgz",
+      "integrity": "sha512-4X0TDm3zY+W6pw3oGlpzooKpLYI1S/eHt1eAed1Hm8huA+48d4hE7bCrFcWmTNAdswokurJYUw2aNQvpxK0FCg==",
       "requires": {
         "lru_cache": "^1.0.2",
         "ltgt": "^2.2.1",
@@ -1929,9 +1929,9 @@
       "integrity": "sha512-sbYI90YhYmstslPTb70BLGjy6mdESa0lxL7uDR4fIVAx9Iobz8fLEqi7FqF4Q/6vblrzZALg//MsYJlIPBU8SA=="
     },
     "idb-kv-store": {
-      "version": "4.4.0",
-      "resolved": "https://registry.npmjs.org/idb-kv-store/-/idb-kv-store-4.4.0.tgz",
-      "integrity": "sha1-IsVqjV+QvYj4GKhZ25xYYn3ieL4=",
+      "version": "4.5.0",
+      "resolved": "https://registry.npmjs.org/idb-kv-store/-/idb-kv-store-4.5.0.tgz",
+      "integrity": "sha512-snvtAQRforYUI+C2+45L2LBJy/0/uQUffxv8/uwiS98fSUoXHVrFPClgzWZWxT0drwkLHJRm9inZcYzTR42GLA==",
       "requires": {
         "inherits": "^2.0.3",
         "promisize": "^1.1.2"
@@ -2123,14 +2123,14 @@
       "integrity": "sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE="
     },
     "jitdb": {
-      "version": "0.8.0",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-0.8.0.tgz",
-      "integrity": "sha512-68ZalDkA0Ni4CDhr1tr0KPtw8a4uzu6HTIiSBg05otl5+23oOxqX/nIzwWcY2yzpIR0QWzrXWwN5uoSsWC7SZA==",
+      "version": "0.8.1",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-0.8.1.tgz",
+      "integrity": "sha512-fNHCMTlH+6kTKjU9A+3liS+V09AC7HYGnTpxojyjLHJIb1n+6AFjET1Lyk+Cugv6/VABL6yMEdvwy130bHh5Wg==",
       "requires": {
         "atomic-file": "^2.0.1",
         "bipf": "^1.3.0",
         "flumelog-aligned-offset": "^1.1.3",
-        "idb-kv-store": "^4.4.0",
+        "idb-kv-store": "^4.5.0",
         "lodash.debounce": "^4.0.8",
         "mkdirp": "^1.0.4",
         "push-stream": "^11.0.0",
@@ -3544,17 +3544,17 @@
       }
     },
     "ssb-browser-core": {
-      "version": "4.0.6",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.6.tgz",
-      "integrity": "sha512-rDDi6QRG2PGVx49+g0TfHIfwnT1lnnJ3vmFk0hm/wncuSXBa1rZYGrLIAibLaV1+PrcfI27iukQ788MOxCOMVA==",
+      "version": "4.0.7",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.7.tgz",
+      "integrity": "sha512-l3a3AlubqIz/pDpAgU4LmqJ0L8R63vSOlTcTftbGoVH3AtXvwIVtA8fQbt2Q8sZPZ0UcuXho4sEwyNfRAI6Dvg==",
       "requires": {
         "atomic-file": "^2.0.1",
         "base64-url": "^2.3.3",
         "bipf": "^1.3.0",
         "epidemic-broadcast-trees": "^7.0.0",
-        "flumelog-aligned-offset": "^1.1.3",
+        "flumelog-aligned-offset": "^1.1.4",
         "gossip-query": "^2.0.2",
-        "jitdb": "^0.8.0",
+        "jitdb": "^0.8.1",
         "lodash.debounce": "^4.0.8",
         "lossy-store": "^1.2.4",
         "polyraf": "^1.1.0",
