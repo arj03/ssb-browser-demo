@@ -1488,9 +1488,9 @@
       },
       "dependencies": {
         "is-regex": {
-          "version": "1.1.0",
-          "resolved": "https://registry.npmjs.org/is-regex/-/is-regex-1.1.0.tgz",
-          "integrity": "sha512-iI97M8KTWID2la5uYXlkbSDQIg4F6o1sYboZKKTDpnDQMLtUL86zxhgDet3Q2SriaYsyGqZ6Mn2SjbRKeLHdqw==",
+          "version": "1.1.1",
+          "resolved": "https://registry.npmjs.org/is-regex/-/is-regex-1.1.1.tgz",
+          "integrity": "sha512-1+QkEcxiLlB7VEyFtyBg94e08OAsvq7FUBgApTq/w2ymCLyKJgDPsybBENVtA7XCQEgEXxKPonG+mvYRxh/LIg==",
           "requires": {
             "has-symbols": "^1.0.1"
           }
@@ -3544,9 +3544,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "4.0.5",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.5.tgz",
-      "integrity": "sha512-hzlt+Zx4D6R4boBHxK3XEyczfBvuMG5NZFTXzX2BEcEnu/F6ZWUjeJIwU4lNwX6E3lDf9JRT9LEw7Z2U8lhZaw==",
+      "version": "4.0.6",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.6.tgz",
+      "integrity": "sha512-rDDi6QRG2PGVx49+g0TfHIfwnT1lnnJ3vmFk0hm/wncuSXBa1rZYGrLIAibLaV1+PrcfI27iukQ788MOxCOMVA==",
       "requires": {
         "atomic-file": "^2.0.1",
         "base64-url": "^2.3.3",
