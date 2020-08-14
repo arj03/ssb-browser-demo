@@ -65,7 +65,6 @@ I made a [blog post][pub-setup] that should tell you exactly how to get a pub ru
 
 # TODO
 
-- handle blocking when doing ooo
 - port over ssb-friend-pub
 - emoji reactions as in manyverse
 
