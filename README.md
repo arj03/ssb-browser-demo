@@ -29,7 +29,8 @@ profile about messages. Leaving out likes was done on purpose as an
 experiment. I don't plan on adding them.
 
 Things that work:
- - viewing posts and threads
+ - partial replication
+ - viewing posts and threads, including forks and backlinks
  - posting and replying to messages including posting blobs
  - automatic exif stripping (such as GPS coordinates) on images for better privacy
  - automatic image resizing of large images
