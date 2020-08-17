@@ -70,10 +70,14 @@ module.exports = function (componentsState) {
             }]
           }
 
+          document.body.classList.add('refreshing')
+
           console.time("private messages")
           SSB.db.jitdb.query(queryRootOnly, 0, 50, (err, results) => {
             this.messages = results
             console.timeEnd("private messages")
+
+            document.body.classList.remove('refreshing')
           })
         })
       },

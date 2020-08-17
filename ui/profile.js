@@ -349,6 +349,8 @@ module.exports = function () {
         })
 
         SSB.db.jitdb.onReady(() => {
+          document.body.classList.add('refreshing')
+
           console.time("latest 25 profile messages")
           SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
@@ -360,6 +362,8 @@ module.exports = function () {
               this.canDownloadMessages = false
 
             console.timeEnd("latest 25 profile messages")
+
+            document.body.classList.remove('refreshing')
           })
         })
 

@@ -41,9 +41,6 @@ module.exports = function (componentsState) {
   return {
     template: `
     <div id="public">
-      <div class="refresher">
-         <img src="hermies.png">
-      </div>
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
@@ -87,10 +84,13 @@ module.exports = function (componentsState) {
         componentsState.newPublicMessages = false
 
         SSB.db.jitdb.onReady(() => {
+          document.body.classList.add('refreshing')
+
           console.time("latest messages")
           SSB.db.jitdb.query(getQuery(this.onlyThreads), 0, 25, (err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
             this.offset += results.length
+            document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
           })
         })
