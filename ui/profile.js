@@ -206,7 +206,8 @@ module.exports = function () {
 
         SSB.net.id = this.feedId = key.id
         Object.assign(this.$data, initialState())
-        this.renderProfile()
+
+        SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
       },
 
       saveProfile: function() {
