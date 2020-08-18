@@ -37,23 +37,29 @@ module.exports = function () {
       var self = this
 
       var lastStatus = null
+      var lastEbtStatus = null
 
       function updateDBStatus() {
         if (!self.running) return
 
         setTimeout(() => {
           const status = SSB.db.getStatus()
+          const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
 
-          if (JSON.stringify(status) == JSON.stringify(lastStatus)) {
+          if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
+              JSON.stringify(ebtStatus) == JSON.stringify(lastEbtStatus)) {
             updateDBStatus()
 
             return
           }
 
           lastStatus = status
+          lastEbtStatus = ebtStatus
 
           var html = "<h3>DB status</h3>"
           html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
+          html += "<h3>EBT status</h3>"
+          html += "<pre>" + JSON.stringify(ebtStatus, null, 2) + "</pre>"
           self.statusHTML = html
 
           updateDBStatus()
