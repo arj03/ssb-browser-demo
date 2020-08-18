@@ -58,7 +58,7 @@ For testing this in Chrome locally, Chrome must be started with with: --allow-fi
 
 # Server
 
-I made a [blog post][pub-setup] that should tell you exactly how to get a pub running.
+I made a [blog post][pub-setup] on how to run a server pub to relay messages to other nodes through.
 
 # Building
 
