@@ -2,7 +2,7 @@
 
 ![Screenshot of ssb browser demo][screenshot]
 
-A secure scuttlebutt client interface in the browser. Built using
+A secure scuttlebutt client interface running 100% in the browser. Built using
 [ssb-browser-core]. This was originally made as a demo for my bornhack
 [talk][bornhack-talk].
 
