@@ -10,7 +10,7 @@ The client was made for two purposes: test ssb in a browser and for
 evaluating different partial replication strategies.
 
 Feeds are stored in full for feeds you follow directly. For feeds
-follwed by a feed you follow (hops 2), you only store a partial
+followed by a feed you follow (hops 2), you only store a partial
 replica of their messages.
 
 If you are a new user, the best way to get started is to get the id of
