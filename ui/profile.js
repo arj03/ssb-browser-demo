@@ -205,6 +205,7 @@ module.exports = function () {
         this.showImportKey = false
 
         SSB.net.id = this.feedId = key.id
+        SSB.net.config.keys = key
         Object.assign(this.$data, initialState())
 
         SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
