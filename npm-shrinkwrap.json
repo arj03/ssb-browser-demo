@@ -3544,9 +3544,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "4.0.9",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.9.tgz",
-      "integrity": "sha512-e9b7W/75h0RzsMcu3UrfYbwXzbLAlkGc7vgpJZbaC/my0Zge9t8f2H7542OKe3sekuxXMpERd+AhxDHHzSS0MQ==",
+      "version": "4.0.10",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.10.tgz",
+      "integrity": "sha512-cZeejT/8RVm+LF/Rc3b8PiOGcGWdy+t5iEp+wedD1EzlTLm85kF6bZGRiZ2YurHQEANm6Mx1y2vUToD/nBTMYw==",
       "requires": {
         "atomic-file": "^2.1.1",
         "base64-url": "^2.3.3",
