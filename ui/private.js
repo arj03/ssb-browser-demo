@@ -7,9 +7,9 @@ module.exports = function (componentsState) {
     template: `<div id="private">
         <span v-if="postMessageVisible">
         <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name">
-          <template slot="option" slot-scope="option">
-            <img v-if='option.image' class="tinyAvatar" :src='option.image' />
-            <span>{{ option.name }}</span>
+          <template #option="{ name, image }">
+            <img v-if='image' class="tinyAvatar" :src='image' />
+            <span>{{ name }}</span>
           </template>
         </v-select>
         <input type="text" id="subject" v-model="subject" placeholder="subject" />

@@ -4,10 +4,11 @@ exports.getPeople = function(cb) {
     for (var id in profiles) {
       const profile = profiles[id]
       if (profile.image) {
+        const profileId = id
         SSB.net.blobs.localGet(profile.image, (err, url) => {
           people.push({
-            id,
-            name: profile.name || id,
+            id: profileId,
+            name: profile.name || profileId,
             image: err ? '' : url
           })
         })

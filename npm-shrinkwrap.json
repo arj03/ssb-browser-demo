@@ -4301,9 +4301,9 @@
       "integrity": "sha512-n3Ok70hW0EpcJF4lcWIwSHAQbFTnIOLl/fhO8+oTs4jHNtBNsovcVvPZeTOyKEd8C3xF1Crft2ASuOiVT5K1mw=="
     },
     "vue-select": {
-      "version": "3.9.5",
-      "resolved": "https://registry.npmjs.org/vue-select/-/vue-select-3.9.5.tgz",
-      "integrity": "sha512-r392oaLYepNxY+uY1EN7r05VPOqSWGEfZ3LtJ3NqhrRbWCpWQ5EPSMN3QL80HdN3H+o1ueQA9P58K1vgGZ5P3Q=="
+      "version": "3.10.8",
+      "resolved": "https://registry.npmjs.org/vue-select/-/vue-select-3.10.8.tgz",
+      "integrity": "sha512-PnjtZWCTiSr04bs8ctPIiU41qnBK+oh/SOe6Pb4gElMMxofDFwUxiUe++mz0+84aTy4zrleGxtvVVyWbiPYBiw=="
     },
     "word-wrap": {
       "version": "1.2.3",
