@@ -1,6 +1,6 @@
 {
   "name": "ssb-browser-demo",
-  "version": "1.5.2",
+  "version": "2.0.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -510,9 +510,9 @@
       }
     },
     "atomic-file": {
-      "version": "2.1.0",
-      "resolved": "https://registry.npmjs.org/atomic-file/-/atomic-file-2.1.0.tgz",
-      "integrity": "sha512-RF/2h7FQYY4zhWPjeAKFDS171G6pe0myu/koUEj3/8LVe4qWgPnOzGR2m4G3iZ/md5puWrq7tHDeZY9WzLf20g==",
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/atomic-file/-/atomic-file-2.1.1.tgz",
+      "integrity": "sha512-Eh6pW+fRC2/1RxPq3hO8+PkZKv+wujzKky2MP/n69eC8yMkbNFfuEb/riZHqf13M7gr6Hvglpk/kISgBSBb6bQ==",
       "requires": {
         "flumecodec": "0.0.1",
         "idb-kv-store": "^4.5.0",
@@ -2124,11 +2124,11 @@
       "integrity": "sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE="
     },
     "jitdb": {
-      "version": "0.8.2",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-0.8.2.tgz",
-      "integrity": "sha512-zCOrtk9yk8Htq8jKiKflw05uExsfP9xfjsQGnonUy49Lb2SO7YyBdkCT5rKW0Qnr7Mz4x0q+pfBbG5BUZ5R/8g==",
+      "version": "0.8.3",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-0.8.3.tgz",
+      "integrity": "sha512-GzPkDdOnHTTeg7vkLI6bq0YsJ9KN0jU4A6eBRBXdu/xuHRPnUuF4LR/QzKAHZPIEAy8Lvzo54cJ5kWMXZpWLVg==",
       "requires": {
-        "atomic-file": "^2.1.0",
+        "atomic-file": "^2.1.1",
         "bipf": "^1.3.0",
         "flumelog-aligned-offset": "^1.1.3",
         "idb-kv-store": "^4.5.0",
@@ -3544,17 +3544,17 @@
       }
     },
     "ssb-browser-core": {
-      "version": "4.0.8",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.8.tgz",
-      "integrity": "sha512-krvF49oLTLCySuJ1LLm8Lv37/V+kWL0jGKN3RWiBDxzTrE0uSzg80rqQaBgvQsmMslQ3nuDSmwP6zctNHjaCoA==",
+      "version": "4.0.9",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-4.0.9.tgz",
+      "integrity": "sha512-e9b7W/75h0RzsMcu3UrfYbwXzbLAlkGc7vgpJZbaC/my0Zge9t8f2H7542OKe3sekuxXMpERd+AhxDHHzSS0MQ==",
       "requires": {
-        "atomic-file": "^2.1.0",
+        "atomic-file": "^2.1.1",
         "base64-url": "^2.3.3",
         "bipf": "^1.3.0",
         "epidemic-broadcast-trees": "^7.0.0",
         "flumelog-aligned-offset": "^1.1.4",
         "gossip-query": "^2.0.2",
-        "jitdb": "^0.8.2",
+        "jitdb": "^0.8.3",
         "lodash.debounce": "^4.0.8",
         "lossy-store": "^1.2.4",
         "polyraf": "^1.1.0",
