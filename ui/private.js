@@ -1,5 +1,4 @@
 module.exports = function (componentsState) {
-  const pull = require('pull-stream')
   const helpers = require('./helpers')
   const ssbMentions = require('ssb-mentions')
 
