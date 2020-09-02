@@ -204,7 +204,8 @@ body, html {
   vertical-align: middle;
 }
 
-@media (min-resolution: 2dppx) {
+@media (min-resolution: 2dppx) and (max-width: 40em)
+{
   #navigation {
     display: none;
   }
