@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "browserify": "^16.5.2",
-    "common-shakeify": "^0.6.2",
     "deep-object-diff": "^1.1.0",
     "esmify": "^2.1.1",
     "ssb-client": "^4.7.9",
@@ -36,7 +35,7 @@
   },
   "scripts": {
     "build": "mkdir -p build && browserify -p esmify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js",
-    "release": "mkdir -p build && browserify -g uglifyify -p esmify -p common-shakeify ui/browser.js > build/bundle-ui.js && node write-dist.js"
+    "release": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js > build/bundle-ui.js && node write-dist.js"
   },
   "author": "arj",
   "license": "beerware"
