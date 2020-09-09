@@ -14,7 +14,7 @@
     "pull-abortable": "^4.1.1",
     "pull-stream": "^3.6.14",
     "rimraf": "^3.0.0",
-    "ssb-browser-core": "^4.0.10",
+    "ssb-browser-core": "^4.0.11",
     "ssb-contact-msg": "^1.1.0",
     "ssb-keys-mnemonic": "^0.3.0",
     "ssb-markdown": "^6.0.7",
