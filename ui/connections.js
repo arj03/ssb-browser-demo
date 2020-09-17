@@ -1,39 +1,42 @@
 module.exports = function () {
   return {
     template: `
-    <div id="settings">
+    <div id="connections">
       <div>
-        <h3>Remote server</h3>
-        <input type="text" placeholder="remote peer" v-model="remoteAddress" id="remoteAddress" />
+      </div>
+      <div>
+        <h3>Add pub server or room</h3>
+        <select v-model="type">
+           <option value='pub'>Pub</option>
+           <option value='room'>Room</option>
+        </select>
+        <input type="text" placeholder="remote address" v-model="address" id="remoteAddress" />
+        <button class="clickButton" v-on:click="add">Add</button>
       </div>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
 
     data: function() {
       return {
-        remoteAddress: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=',
+        type: 'pub',
+        address: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=',
 
         statusHTML: '',
         running: true,
       }
     },
 
-    watch: {
-      remoteAddress: function (newValue, oldValue) {
-        localStorage['settings'] = JSON.stringify({
-          syncOnlyFollows: this.syncOnlyFollows,
-          remoteAddress: this.remoteAddress
+    methods: {
+      add: function() {
+        var s = this.address.split(":")
+        SSB.net.connectAndRemember(this.address, {
+          key: '@' + s[s.length-1] + '.ed25519',
+          type: this.type
         })
-        SSB.remoteAddress = this.remoteAddress
       }
     },
 
     created: function() {
-      if (localStorage['settings']) {
-        var settings = JSON.parse(localStorage['settings'])
-        SSB.remoteAddress = this.remoteAddress = settings.remoteAddress
-      }
-
       var self = this
 
       var lastStatus = null
