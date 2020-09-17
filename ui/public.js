@@ -44,7 +44,6 @@ module.exports = function (componentsState) {
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-      <button class="clickButton" id="syncData" v-on:click="syncData">Sync data</button><br>
       <h2>Last 50 messages</h2>
       Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
       <br>
@@ -66,13 +65,6 @@ module.exports = function (componentsState) {
     },
 
     methods: {
-      syncData: function(ev) {
-        if (SSB.db.getStatus().log == -1)
-          alert("Nothing to sync, try following a profile first!")
-        else
-          SSB.sync()
-      },
-
       loadMore: function() {
         SSB.db.jitdb.query(getQuery(this.onlyThreads), this.offset, 25, (err, results) => {
           this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
@@ -131,51 +123,12 @@ module.exports = function (componentsState) {
           self.renderPublic()
         })
       },
-
-      enablePullToRefresh: function() {
-        let startY
-        const public = document.querySelector('#public')
-
-        public.addEventListener('touchstart', e => {
-          startY = e.touches[0].pageY;
-        }, { passive: true })
-
-        var self = this
-
-        const throttledSync = throttle(() => {
-          SSB.sync()
-
-          setTimeout(() => {
-            if (componentsState.newPublicMessages) {
-              self.renderPublic()
-            }
-          }, 2000)
-        }, 500)
-
-        public.addEventListener('touchmove', e => {
-          if (document.scrollingElement.scrollTop === 0 && e.touches[0].pageY > startY &&
-              !document.body.classList.contains('refreshing')) {
-
-            document.body.classList.add('refreshing')
-
-            setTimeout(() => {
-              document.body.classList.remove('refreshing')
-            }, 1000)
-
-            throttledSync()
-          }
-        }, { passive: true })
-      }
     },
 
     created: function () {
       this.renderPublic()
     },
 
-    mounted: function() {
-      this.enablePullToRefresh()
-    },
-    
     watch: {
       onlyThreads: function (newValue, oldValue) {
         this.renderPublic()

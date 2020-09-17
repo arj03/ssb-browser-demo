@@ -293,43 +293,45 @@ module.exports = function () {
       
       downloadProfile: function() {
         console.time("syncing profile")
-        SSB.connected((rpc) => {
-          pull(
-            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-            pull.asyncMap(SSB.db.validateAndAddOOO),
-            pull.collect((err, msgs) => {
-              if (err) alert(err.message)
 
-              console.timeEnd("syncing profile")
-              console.log(msgs.length)
+        let rpc = SSB.getPeer()
 
-              SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
-                this.renderProfile()
-              })
+        pull(
+          rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
+          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.collect((err, msgs) => {
+            if (err) alert(err.message)
+
+            console.timeEnd("syncing profile")
+            console.log(msgs.length)
+
+            SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+              this.renderProfile()
             })
-          )
-        })
+          })
+        )
       },
 
       downloadFollowing: function() {
         console.log(this.feedId)
         console.time("download following")
-        SSB.connected((rpc) => {
-          pull(
-            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
-            pull.asyncMap(SSB.db.validateAndAddOOO),
-            pull.collect((err, msgs) => {
-              if (err) alert(err.message)
 
-              console.timeEnd("download following")
-              console.log(msgs.length)
+        let rpc = SSB.getPeer()
 
-              SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
-                this.renderProfile()
-              })
+        pull(
+          rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
+          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.collect((err, msgs) => {
+            if (err) alert(err.message)
+
+            console.timeEnd("download following")
+            console.log(msgs.length)
+
+            SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
+              this.renderProfile()
             })
-          )
-        })
+          })
+        )
       },
 
       loadMore: function() {
