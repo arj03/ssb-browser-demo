@@ -292,9 +292,13 @@ module.exports = function () {
       },
       
       downloadProfile: function() {
-        console.time("syncing profile")
-
         let rpc = SSB.getPeer()
+        if (!rpc) {
+          console.log("No remote connection, unable to download profile")
+          return
+        }
+
+        console.time("syncing profile")
 
         pull(
           rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
@@ -313,10 +317,14 @@ module.exports = function () {
       },
 
       downloadFollowing: function() {
-        console.log(this.feedId)
-        console.time("download following")
-
         let rpc = SSB.getPeer()
+
+        if (!rpc) {
+          console.log("No remote connection, unable to download profile")
+          return
+        }
+
+        console.time("download following")
 
         pull(
           rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
