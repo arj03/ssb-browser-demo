@@ -8,11 +8,11 @@ module.exports = function () {
       </div>
       <div>
         <h3>Add pub server or room</h3>
-        <select v-model="type">
-           <option value='pub'>Pub</option>
+        <select v-model="type" v-on:change="onTypeChange(this.value)">
            <option value='room'>Room</option>
+           <option value='pub'>Pub</option>
         </select>
-        <input type="text" placeholder="remote address" v-model="address" id="remoteAddress" />
+        <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
         <button class="clickButton" v-on:click="add">Add</button>
       </div>
       <h3>Staged peers</h3>
@@ -24,9 +24,8 @@ module.exports = function () {
 
     data: function() {
       return {
-        type: 'pub',
-        // room: wss:between-two-worlds.dk:9999~shs:7R5/crt8/icLJNpGwP2D7Oqz2WUd7ObCIinFKVR6kNY=
-        address: 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=',
+        type: 'room',
+        address: '',
 
         statusHTML: '',
         running: true,
@@ -35,6 +34,13 @@ module.exports = function () {
     },
 
     methods: {
+      onTypeChange: function() {
+        if (this.type == 'room')
+          this.address = 'wss:between-two-worlds.dk:9999~shs:7R5/crt8/icLJNpGwP2D7Oqz2WUd7ObCIinFKVR6kNY='
+        else
+          this.address = 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8='
+      },
+
       add: function() {
         var s = this.address.split(":")
         SSB.net.connectAndRemember(this.address, {
@@ -49,6 +55,8 @@ module.exports = function () {
 
     created: function() {
       var self = this
+
+      self.onTypeChange()
 
       var lastStatus = null
       var lastEbtStatus = null
