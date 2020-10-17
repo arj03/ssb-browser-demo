@@ -246,6 +246,7 @@ module.exports = function () {
             contact: this.feedId,
             following: true
           }, () => {
+            SSB.net.sync(SSB.getPeer())
             alert("followed!") // FIXME: proper UI
           })
         }
