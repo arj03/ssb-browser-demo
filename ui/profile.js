@@ -246,6 +246,7 @@ module.exports = function () {
             contact: this.feedId,
             following: true
           }, () => {
+            SSB.net.sync(SSB.getPeer())
             alert("followed!") // FIXME: proper UI
           })
         }
@@ -292,44 +293,54 @@ module.exports = function () {
       },
       
       downloadProfile: function() {
+        let rpc = SSB.getPeer()
+        if (!rpc) {
+          console.log("No remote connection, unable to download profile")
+          return
+        }
+
         console.time("syncing profile")
-        SSB.connected((rpc) => {
-          pull(
-            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-            pull.asyncMap(SSB.db.validateAndAddOOO),
-            pull.collect((err, msgs) => {
-              if (err) alert(err.message)
 
-              console.timeEnd("syncing profile")
-              console.log(msgs.length)
+        pull(
+          rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
+          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.collect((err, msgs) => {
+            if (err) alert(err.message)
 
-              SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
-                this.renderProfile()
-              })
+            console.timeEnd("syncing profile")
+            console.log(msgs.length)
+
+            SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+              this.renderProfile()
             })
-          )
-        })
+          })
+        )
       },
 
       downloadFollowing: function() {
-        console.log(this.feedId)
+        let rpc = SSB.getPeer()
+
+        if (!rpc) {
+          console.log("No remote connection, unable to download profile")
+          return
+        }
+
         console.time("download following")
-        SSB.connected((rpc) => {
-          pull(
-            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
-            pull.asyncMap(SSB.db.validateAndAddOOO),
-            pull.collect((err, msgs) => {
-              if (err) alert(err.message)
 
-              console.timeEnd("download following")
-              console.log(msgs.length)
+        pull(
+          rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
+          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.collect((err, msgs) => {
+            if (err) alert(err.message)
 
-              SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
-                this.renderProfile()
-              })
+            console.timeEnd("download following")
+            console.log(msgs.length)
+
+            SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
+              this.renderProfile()
             })
-          )
-        })
+          })
+        )
       },
 
       loadMore: function() {

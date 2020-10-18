@@ -1,4 +1,4 @@
-// this is loaded from ui/browser.js when SSB is ready
+// this file is loaded from ui/browser.js when SSB is ready
 const pull = require('pull-stream')
 
 // this uses https://github.com/arj03/ssb-partial-replication
@@ -7,47 +7,47 @@ SSB.syncFeedAfterFollow = function(feedId) {
 }
 
 SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
-  SSB.connected((rpc) => {
-    var seqStart = sequence - 100
-    if (seqStart < 0)
-      seqStart = 0
+  let rpc = SSB.getPeer()
 
-    console.log(`seq ${seqStart} feedId: ${feedId}`)
-    console.time("downloading messages")
+  var seqStart = sequence - 100
+  if (seqStart < 0)
+    seqStart = 0
 
-    pull(
-      rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false }),
-      pull.asyncMap(SSB.db.validateAndAddOOO),
-      pull.collect((err, msgs) => {
-        if (err) throw err
+  console.log(`seq ${seqStart} feedId: ${feedId}`)
+  console.time("downloading messages")
 
-        console.timeEnd("downloading messages")
-        console.log(msgs.length)
-        SSB.state.queue = []
+  pull(
+    rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false }),
+    pull.asyncMap(SSB.db.validateAndAddOOO),
+    pull.collect((err, msgs) => {
+      if (err) throw err
 
-        if (cb) cb()
-      })
-    )
-  })
+      console.timeEnd("downloading messages")
+      console.log(msgs.length)
+      SSB.state.queue = []
+
+      if (cb) cb()
+    })
+  )
 }
 
 SSB.syncFeedFromLatest = function(feedId, cb) {
-  SSB.connected((rpc) => {
-    console.time("downloading messages")
+  let rpc = SSB.getPeer()
 
-    pull(
-      rpc.partialReplication.getFeedReverse({ id: feedId, keys: false, limit: 25 }),
-      pull.asyncMap(SSB.db.validateAndAddOOO),
-      pull.collect((err, msgs) => {
-        if (err) throw err
+  console.time("downloading messages")
 
-        console.timeEnd("downloading messages")
-        SSB.state.queue = []
+  pull(
+    rpc.partialReplication.getFeedReverse({ id: feedId, keys: false, limit: 25 }),
+    pull.asyncMap(SSB.db.validateAndAddOOO),
+    pull.collect((err, msgs) => {
+      if (err) throw err
 
-        if (cb) cb()
-      })
-    )
-  })
+      console.timeEnd("downloading messages")
+      SSB.state.queue = []
+
+      if (cb) cb()
+    })
+  )
 }
 
 syncThread = function(messages, cb) {
@@ -60,19 +60,17 @@ syncThread = function(messages, cb) {
 }
 
 // this uses https://github.com/arj03/ssb-partial-replication
-SSB.getThread = function(msgId, cb)
-{
-  SSB.connected((rpc) => {
-    rpc.partialReplication.getTangle(msgId, (err, messages) => {
-      if (err) return cb(err)
+SSB.getThread = function(msgId, cb) {
+  let rpc = SSB.getPeer()
 
-      syncThread(messages, cb)
-    })
+  rpc.partialReplication.getTangle(msgId, (err, messages) => {
+    if (err) return cb(err)
+
+    syncThread(messages, cb)
   })
 }
 
-SSB.getOOO = function(msgId, cb)
-{
+SSB.getOOO = function(msgId, cb) {
   SSB.connected((rpc) => {
     SSB.net.ooo.get(msgId, cb)
   })

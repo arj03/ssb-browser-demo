@@ -14,13 +14,7 @@
     const Channel = require('./channel')()
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
-    const Settings = require('./settings')()
-
-    if (localStorage['settings']) {
-      var settings = JSON.parse(localStorage['settings'])
-      SSB.remoteAddress = settings.remoteAddress
-    } else
-      SSB.remoteAddress = Settings.data().remoteAddress
+    const Connections = require('./connections')()
 
     // add helper methods
     require('../net')
@@ -32,7 +26,7 @@
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
-      { path: '/settings', component: Settings },
+      { path: '/connections', component: Connections },
       { path: '/', redirect: 'public' },
     ]
 

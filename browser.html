@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/public.css">
     <link rel="stylesheet" type="text/css" href="css/private.css">
     <link rel="stylesheet" type="text/css" href="css/profile.css">
-    <link rel="stylesheet" type="text/css" href="css/settings.css">
+    <link rel="stylesheet" type="text/css" href="css/connections.css">
     <link rel="stylesheet" type="text/css" href="css/modal.css">
 
     <link rel="stylesheet" type="text/css" href="node_modules/vue-select/dist/vue-select.css">
@@ -24,7 +24,7 @@
         <router-link to="/private">Private</router-link><new-private-messages></new-private-messages> |
         <router-link to="/notifications">Notifications</router-link> |
         <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">Profile</router-link> |
-        <router-link to="/settings">Settings</router-link><connected></connected>
+        <router-link to="/connections">Connections</router-link><connected></connected>
         <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup.enter="goToTarget">
       </p>
 
