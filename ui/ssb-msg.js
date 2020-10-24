@@ -38,6 +38,11 @@ Vue.component('ssb-msg', {
             <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
           </li>
         </span>
+        <span v-if="reactions.length > 0"><b>Reactions:</b>
+          <span v-for="reaction in reactions">
+            <span v-bind:title="reaction.author">{{ reaction.expression }}</span>
+          </span>
+        </span>
         <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
       </div>`,
 
@@ -47,7 +52,8 @@ Vue.component('ssb-msg', {
     return {
       name: this.msg.value.author,
       forks: [],
-      mentions: []
+      mentions: [],
+      reactions: []
     }
   },
 
@@ -86,14 +92,31 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
-    SSB.db.profiles.get((err, profiles) => {
-      if (this.msg.value.author == SSB.net.id)
-        this.name = "You"
+    function getName(profiles, author) {
+      if (author == SSB.net.id)
+        return "You"
       else if (profiles) {
-        const profile = profiles[this.msg.value.author]
+        const profile = profiles[author]
         if (profile)
-          this.name = profile.name
+          return profile.name
       }
+    }
+
+    SSB.db.profiles.get((err, profiles) => {
+      this.name = getName(profiles, this.msg.value.author)
+
+      SSB.db.getMessagesByVoteLink(this.msg.key, (err, msgs) => {
+        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { author: x.value.author })
+        this.reactions = msgs.map(x => {
+          const expression = x.value.content.vote.expression
+          if (expression === 'Like') {
+            if (unlikes.indexOf(x.value.author) == -1)
+              return { author: getName(profiles, x.value.author), expression: '👍' }
+          }
+          else
+            return { author: getName(profiles, x.value.author), expression }
+        })
+      })
     })
 
     if (this.msg.key != this.thread) {
