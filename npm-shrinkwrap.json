@@ -3764,9 +3764,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "5.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-5.1.0.tgz",
-      "integrity": "sha512-WUSKKcHfrWjh3hqy9y3FYsq/cA8Q/ee1n7BBnhNStUoAmCuaRsMLtBTRnASKi0kS+K3TsYIhtnd/gCOZCIsKNA==",
+      "version": "5.1.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-5.1.1.tgz",
+      "integrity": "sha512-+J2485MaGNyZr1OsM/OSfbBKFKrBIuUA4oKuKGA7wKxADvN6hYWPb7IJRXDI3GgpR61PDgiay/A6zKvRDkMdQA==",
       "requires": {
         "async-flumelog": "^1.0.7",
         "atomic-file": "^2.1.1",
