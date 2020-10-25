@@ -15,9 +15,13 @@ module.exports = function () {
         <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
         <button class="clickButton" v-on:click="add">Add</button>
       </div>
-      <h3>Staged peers</h3>
+      <h3>Possible connections</h3>
       <div v-for="stagedPeer in stagedPeers">
         <button class="clickButton" v-on:click="connect(stagedPeer)">Connect to {{ stagedPeer.data.key }}</button>
+      </div>
+      <h3>Connections</h3>
+      <div v-for="peer in peers">
+        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from {{ peer.data.key }}
       </div>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
@@ -29,7 +33,8 @@ module.exports = function () {
 
         statusHTML: '',
         running: true,
-        stagedPeers: []
+        stagedPeers: [],
+        peers: []
       }
     },
 
@@ -50,6 +55,9 @@ module.exports = function () {
       },
       connect: function(stagedPeer) {
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
+      },
+      disconnect: function(peer) {
+        SSB.net.conn.disconnect(peer.address)
       }
     },
 
@@ -65,6 +73,13 @@ module.exports = function () {
         SSB.net.conn.stagedPeers(),
         pull.drain((entries) => {
           self.stagedPeers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
+        })
+      )
+
+      pull(
+        SSB.net.conn.peers(),
+        pull.drain((entries) => {
+          self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
         })
       )
 
