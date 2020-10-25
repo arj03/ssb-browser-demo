@@ -65,11 +65,6 @@ I made a [blog post][pub-setup] on how to run a server pub to relay messages to 
 
 `npm run build` for developing and `npm run release` for a much smaller bundle.
 
-# TODO
-
-- port over ssb-friend-pub
-- emoji reactions as in manyverse
-
 # Other
 
 ## Force WASM locally (outside browser)
