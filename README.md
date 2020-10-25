@@ -25,12 +25,11 @@ follow graph, the [ssb-partial-replication] plugin is used to get
 threads from the server. 
 
 The UI is written in vue.js and can display posts and self assigned
-profile about messages. Leaving out likes was done on purpose as an
-experiment. I don't plan on adding them.
+profile about messages.
 
 Things that work:
  - partial replication
- - viewing posts and threads, including forks and backlinks
+ - viewing posts and threads, including forks, backlinks and reactions
  - posting and replying to messages including posting blobs
  - automatic exif stripping (such as GPS coordinates) on images for better privacy
  - automatic image resizing of large images
