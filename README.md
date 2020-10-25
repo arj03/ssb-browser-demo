@@ -29,6 +29,7 @@ profile about messages.
 
 Things that work:
  - partial replication
+ - direct connections to other peers using [rooms]
  - viewing posts and threads, including forks, backlinks and reactions
  - posting and replying to messages including posting blobs
  - automatic exif stripping (such as GPS coordinates) on images for better privacy
@@ -122,3 +123,4 @@ window.webkitRequestFileSystem(window.PERSISTENT, 0, function (fs) {
 [test-server]: https://between-two-worlds.dk/browser.html
 [ssb-contact-msg]: https://github.com/ssbc/ssb-contact-msg
 [pub-setup]: https://people.iola.dk/arj/2020/03/04/how-to-setup-a-pub-for-ssb-browser/
+[rooms]: https://github.com/staltz/ssb-room
