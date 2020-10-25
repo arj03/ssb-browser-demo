@@ -54,7 +54,8 @@ An online version is available for testing [here][test-server]
 
 # Running locally
 
-For testing this in Chrome locally, Chrome must be started with with: --allow-file-access-from-files
+For testing this locally, one needs to run a local http server like
+`npm i -g http-server`.
 
 # Server
 
