@@ -1,5 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
+  const { and, channel, startFrom, paginate, toCallback } = require('ssb-db2/operators')  
 
   return {
     template: `
@@ -19,20 +20,17 @@ module.exports = function () {
     methods: {
       render: function () {
         console.time("latest 50 channel messages")
-        SSB.db.jitdb.onReady(() => {
-          SSB.db.jitdb.query({
-            type: 'EQUAL',
-            data: {
-              seek: SSB.db.jitdb.seekChannel,
-              value: this.channel,
-              indexType: "channel"
-            }
-          }, 0, 50, (err, results) => {
-            this.messages = results.filter(msg => !msg.value.meta)
+
+        SSB.db.query(
+          and(channel(this.channel)),
+          startFrom(this.offset),
+          paginate(50),
+          toCallback((err, answer) => {
+            this.messages = answer.results.filter(msg => !msg.value.meta)
 
             console.timeEnd("latest 50 channel messages")
           })
-        })
+        )
       }
     },
 

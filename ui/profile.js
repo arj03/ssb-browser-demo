@@ -1,30 +1,8 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
-
-  function query(feedId) {
-    return {
-      type: 'AND',
-      data: [
-        { type: 'EQUAL',
-          data: {
-            seek: SSB.db.jitdb.seekType,
-            value: 'post',
-            indexType: "type"
-          }
-        },
-        { type: 'EQUAL',
-          data: {
-            seek: SSB.db.jitdb.seekAuthor,
-            value: feedId,
-            indexType: "author",
-            indexAll: true
-          }
-        }
-      ]
-    }
-  }
-
+  const { and, author, type, startFrom, paginate, toCallback } = require('ssb-db2/operators')  
+  
   let initialState = function() {
     return {
       following: false,
@@ -345,10 +323,15 @@ module.exports = function () {
       },
 
       loadMore: function() {
-        SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
-          this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
-          this.offset += results.length
-        })
+        SSB.db.query(
+          and(author(this.feedId), type('post')),
+          startFrom(this.offset),
+          paginate(25),
+          toCallback((err, results) => {
+            this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
+            this.offset += results.length
+          })
+        )
       },
 
       renderProfile: function () {
@@ -361,11 +344,14 @@ module.exports = function () {
           self.blocking = self.feedId != SSB.net.id && SSB.db.contacts.isBlocking(SSB.net.id, self.feedId)
         })
 
-        SSB.db.jitdb.onReady(() => {
-          document.body.classList.add('refreshing')
+        document.body.classList.add('refreshing')
 
-          console.time("latest 25 profile messages")
-          SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
+        console.time("latest 25 profile messages")
+        SSB.db.query(
+          and(author(this.feedId), type('post')),
+          startFrom(this.offset),
+          paginate(25),
+          toCallback((err, results) => {
             this.messages = results.filter(msg => !msg.value.meta)
             this.offset += results.length
 
@@ -378,7 +364,7 @@ module.exports = function () {
 
             document.body.classList.remove('refreshing')
           })
-        })
+        )
 
         SSB.db.profiles.get((err, profiles) => {
           const profile = profiles[this.feedId]

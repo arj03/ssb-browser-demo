@@ -1,4 +1,7 @@
 module.exports = function (state) {
+  const { and, type, live, toPullStream } = require('ssb-db2/operators')  
+  const pull = require('pull-stream')  
+
   var loaded = false
 
   Vue.component('new-public-messages', {
@@ -27,21 +30,17 @@ module.exports = function (state) {
       if (loaded) return // is loaded twice?
       loaded = true
 
-      const query = {
-        type: 'EQUAL',
-        data: {
-          seek: SSB.db.jitdb.seekType,
-          value: 'post',
-          indexType: "type"
-        }
-      }
-
-      SSB.db.jitdb.onReady(() => {
-        SSB.db.jitdb.liveQuerySingleIndex(query, (err, results) => {
-          if (results.some(msg => !msg.value.meta))
-            self.newPublicMessages = true
-        })
-      })
+      pull(
+        SSB.db.query(
+          and(type('post')),
+          live(),
+          toPullStream(),
+          pull.drain((msg) => {
+            if (!msg.value.meta)
+              self.newPublicMessages = true
+          })
+        )
+      )
     }
   })
 }

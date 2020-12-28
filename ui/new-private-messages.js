@@ -1,4 +1,7 @@
 module.exports = function (state) {
+  const { and, isPrivate, type, live, toPullStream } = require('ssb-db2/operators')  
+  const pull = require('pull-stream')  
+
   var loaded = false
 
   Vue.component('new-private-messages', {
@@ -26,20 +29,16 @@ module.exports = function (state) {
       if (loaded) return // is loaded twice?
       loaded = true
 
-      const query = {
-        type: 'EQUAL',
-        data: {
-          seek: SSB.db.jitdb.seekPrivate,
-          value: "true",
-          indexType: "private"
-        }
-      }
-
-      SSB.db.jitdb.onReady(() => {
-        SSB.db.jitdb.liveQuerySingleIndex(query, (err, results) => {
-          self.newPrivateMessages = true
-        })
-      })
+      pull(
+        SSB.db.query(
+          and(isPrivate()),
+          live(),
+          toPullStream(),
+          pull.drain(() => {
+            self.newPrivateMessages = true
+          })
+        )
+      )
     }
   })
 }

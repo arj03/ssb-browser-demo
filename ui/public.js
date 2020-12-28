@@ -3,39 +3,13 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
+  const { and, isRoot, type, startFrom, paginate, toCallback } = require('ssb-db2/operators')  
 
   function getQuery(onlyThreads) {
-    var query = {
-      type: 'EQUAL',
-      data: {
-        seek: SSB.db.jitdb.seekType,
-        value: 'post',
-        indexType: "type"
-      }
-    }
-
-    if (onlyThreads) {
-      query = {
-        type: 'AND',
-        data: [{
-          type: 'EQUAL',
-          data: {
-            seek: SSB.db.jitdb.seekType,
-            value: 'post',
-            indexType: "type"
-          }
-        }, {
-          type: 'EQUAL',
-          data: {
-            seek: SSB.db.jitdb.seekRoot,
-            value: undefined,
-            indexType: "root"
-          }
-        }]
-      }
-    }
-
-    return query
+    if (onlyThreads)
+      return and(type('post'), isRoot())
+    else
+      return and(type('post'))
   }
 
   return {
@@ -66,26 +40,35 @@ module.exports = function (componentsState) {
 
     methods: {
       loadMore: function() {
-        SSB.db.jitdb.query(getQuery(this.onlyThreads), this.offset, 25, (err, results) => {
-          this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
-          this.offset += results.length
-        })
+        SSB.db.query(
+          getQuery(this.onlyThreads),
+          startFrom(this.offset),
+          paginate(25),
+          toCallback((err, answer) => {
+            this.messages = this.messages.concat(answer.results.filter(msg => !msg.value.meta))
+            this.offset += answer.results.length
+          })
+        )
       },
 
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
-        SSB.db.jitdb.onReady(() => {
-          document.body.classList.add('refreshing')
+        document.body.classList.add('refreshing')
 
-          console.time("latest messages")
-          SSB.db.jitdb.query(getQuery(this.onlyThreads), 0, 25, (err, results) => {
-            this.messages = results.filter(msg => !msg.value.meta)
-            this.offset += results.length
+        console.time("latest messages")
+        
+        SSB.db.query(
+          getQuery(this.onlyThreads),
+          startFrom(this.offset),
+          paginate(25),
+          toCallback((err, answer) => {
+            this.messages = this.messages.concat(answer.results.filter(msg => !msg.value.meta))
+            this.offset += answer.results.length
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
           })
-        })
+        )
       },
 
       onFileSelect: function(ev) {
