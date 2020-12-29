@@ -226,7 +226,7 @@ module.exports = function () {
           }, () => {
             alert("followed!") // FIXME: proper UI
             // wait for db sync
-            SSB.db.getIndexes().contacts.getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+            SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
           })
         }
       },
@@ -336,7 +336,7 @@ module.exports = function () {
 
       renderProfile: function () {
         var self = this
-        const contacts = SSB.db.getIndexes().contacts
+        const contacts = SSB.db.getIndex('contacts')
         contacts.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
@@ -368,7 +368,7 @@ module.exports = function () {
           })
         )
 
-        const profiles = SSB.db.getIndexes().profiles.getProfiles()
+        const profiles = SSB.db.getIndex('profiles').getProfiles()
         const profile = profiles[this.feedId]
 
         if (!profile) return

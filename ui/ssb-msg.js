@@ -83,7 +83,7 @@ Vue.component('ssb-msg', {
       SSB.getOOO(this.msg.key, (err, msgValue) => {
         if (err) return alert("Failed to get msg " + err)
 
-        if (net.db.getIndexes().contacts.isBlocking(SSB.net.id, msgValue.author))
+        if (net.db.getIndex('contacts').isBlocking(SSB.net.id, msgValue.author))
           this.msg.value.content.text = "Blocked user"
         else
           this.msg = { key: this.msg.key, value: msgValue }
@@ -92,7 +92,7 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
-    const { and, toCallback } = require('ssb-db2/operators')  
+    const { and, votesFor, hasRoot, toCallback } = require('ssb-db2/operators')  
     const mentions = require('ssb-db2/operators/full-mentions')
 
     function getName(profiles, author) {
@@ -108,23 +108,29 @@ Vue.component('ssb-msg', {
     const profiles = SSB.db.getIndexes().profiles.getProfiles()
     this.name = getName(profiles, this.msg.value.author)
 
-    SSB.db.getMessagesByVoteLink(this.msg.key, (err, msgs) => {
-      const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { author: x.value.author })
-      this.reactions = msgs.map(x => {
-        const expression = x.value.content.vote.expression
-        if (expression === 'Like') {
-          if (unlikes.indexOf(x.value.author) == -1)
-            return { author: getName(profiles, x.value.author), expression: '👍' }
-        }
-        else
-          return { author: getName(profiles, x.value.author), expression }
+    SSB.db.query(
+      and(votesFor(this.msg.key)),
+      toCallback((err, msgs) => {    
+        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { author: x.value.author })
+        this.reactions = msgs.map(x => {
+          const expression = x.value.content.vote.expression
+          if (expression === 'Like') {
+            if (unlikes.indexOf(x.value.author) == -1)
+              return { author: getName(profiles, x.value.author), expression: '👍' }
+          }
+          else
+            return { author: getName(profiles, x.value.author), expression }
+        })
       })
-    })
+    )
 
     if (this.msg.key != this.thread) {
-      SSB.db.getMessagesByRoot(this.msg.key, (err, msgs) => {
-        this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
-      })
+      SSB.db.query(
+        and(hasRoot(this.msg.key)),
+        toCallback((err, msgs) => {    
+          this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
+        })
+      )
     }
 
     SSB.db.query(
