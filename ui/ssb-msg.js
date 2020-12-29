@@ -83,7 +83,7 @@ Vue.component('ssb-msg', {
       SSB.getOOO(this.msg.key, (err, msgValue) => {
         if (err) return alert("Failed to get msg " + err)
 
-        if (SSB.db.contacts.isBlocking(SSB.net.id, msgValue.author))
+        if (net.db.getIndexes().contacts.isBlocking(SSB.net.id, msgValue.author))
           this.msg.value.content.text = "Blocked user"
         else
           this.msg = { key: this.msg.key, value: msgValue }
