@@ -226,7 +226,7 @@ module.exports = function () {
           }, () => {
             alert("followed!") // FIXME: proper UI
             // wait for db sync
-            SSB.db.contacts.getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+            SSB.db.getIndexes().contacts.getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
           })
         }
       },
@@ -327,21 +327,22 @@ module.exports = function () {
           and(author(this.feedId), type('post')),
           startFrom(this.offset),
           paginate(25),
-          toCallback((err, results) => {
-            this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
-            this.offset += results.length
+          toCallback((err, answer) => {
+            this.messages = this.messages.concat(answer.results.filter(msg => !msg.value.meta))
+            this.offset += answer.results.length
           })
         )
       },
 
       renderProfile: function () {
         var self = this
-        SSB.db.contacts.getGraphForFeed(self.feedId, (err, graph) => {
+        const contacts = SSB.db.getIndexes().contacts
+        contacts.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
-          self.following = self.feedId != SSB.net.id && SSB.db.contacts.isFollowing(SSB.net.id, self.feedId)
-          self.blocking = self.feedId != SSB.net.id && SSB.db.contacts.isBlocking(SSB.net.id, self.feedId)
+          self.following = self.feedId != SSB.net.id && contacts.isFollowing(SSB.net.id, self.feedId)
+          self.blocking = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
         })
 
         document.body.classList.add('refreshing')
@@ -351,7 +352,8 @@ module.exports = function () {
           and(author(this.feedId), type('post')),
           startFrom(this.offset),
           paginate(25),
-          toCallback((err, results) => {
+          toCallback((err, answer) => {
+            const results = answer.results
             this.messages = results.filter(msg => !msg.value.meta)
             this.offset += results.length
 
@@ -366,7 +368,7 @@ module.exports = function () {
           })
         )
 
-        SSB.db.profiles.get((err, profiles) => {
+        SSB.db.getIndexes().profiles.getProfiles((err, profiles) => {
           const profile = profiles[this.feedId]
 
           if (!profile) return
