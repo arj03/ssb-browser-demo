@@ -1,4 +1,7 @@
 module.exports = function () {
+  const { and, toCallback } = require('ssb-db2/operators')  
+  const mentions = require('ssb-db2/operators/full-mentions')
+  
   return {
     template: `
        <div id="channel">
@@ -16,9 +19,12 @@ module.exports = function () {
 
     methods: {
       render: function () {
-        SSB.db.getMessagesByMention(SSB.net.id, (err, msgs) => {
-          this.messages = msgs
-        })
+        SSB.db.query(
+          and(mentions(SSB.net.id)),
+          toCallback((err, answer) => {
+            this.messages = answer.results
+          })
+        )
       }
     },
 

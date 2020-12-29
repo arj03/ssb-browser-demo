@@ -92,6 +92,9 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
+    const { and, toCallback } = require('ssb-db2/operators')  
+    const mentions = require('ssb-db2/operators/full-mentions')
+
     function getName(profiles, author) {
       if (author == SSB.net.id)
         return "You"
@@ -102,20 +105,19 @@ Vue.component('ssb-msg', {
       }
     }
 
-    SSB.db.profiles.get((err, profiles) => {
-      this.name = getName(profiles, this.msg.value.author)
+    const profiles = SSB.db.getIndexes().profiles.getProfiles()
+    this.name = getName(profiles, this.msg.value.author)
 
-      SSB.db.getMessagesByVoteLink(this.msg.key, (err, msgs) => {
-        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { author: x.value.author })
-        this.reactions = msgs.map(x => {
-          const expression = x.value.content.vote.expression
-          if (expression === 'Like') {
-            if (unlikes.indexOf(x.value.author) == -1)
-              return { author: getName(profiles, x.value.author), expression: '👍' }
-          }
-          else
-            return { author: getName(profiles, x.value.author), expression }
-        })
+    SSB.db.getMessagesByVoteLink(this.msg.key, (err, msgs) => {
+      const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { author: x.value.author })
+      this.reactions = msgs.map(x => {
+        const expression = x.value.content.vote.expression
+        if (expression === 'Like') {
+          if (unlikes.indexOf(x.value.author) == -1)
+            return { author: getName(profiles, x.value.author), expression: '👍' }
+        }
+        else
+          return { author: getName(profiles, x.value.author), expression }
       })
     })
 
@@ -125,8 +127,11 @@ Vue.component('ssb-msg', {
       })
     }
 
-    SSB.db.getMessagesByMention(this.msg.key, (err, msgs) => {
-      this.mentions = msgs
-    })
+    SSB.db.query(
+      and(mentions(this.msg.key)),
+      toCallback((err, answer) => {
+        this.mentions = answer.results
+      })
+    )
   }
 })
