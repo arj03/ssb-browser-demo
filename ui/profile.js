@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
-  const { and, author, type, startFrom, paginate, toCallback } = require('ssb-db2/operators')  
+  const { and, author, type, startFrom, paginate, descending, toCallback } = require('ssb-db2/operators')  
   
   let initialState = function() {
     return {
@@ -330,6 +330,7 @@ module.exports = function () {
           and(author(this.feedId), type('post')),
           startFrom(this.offset),
           paginate(25),
+          descending(),
           toCallback((err, answer) => {
             this.messages = this.messages.concat(answer.results.filter(msg => !msg.value.meta))
             this.offset += answer.results.length
@@ -355,6 +356,7 @@ module.exports = function () {
           and(author(this.feedId), type('post')),
           startFrom(this.offset),
           paginate(25),
+          descending(),
           toCallback((err, answer) => {
             const results = answer.results
             this.messages = results.filter(msg => !msg.value.meta)
