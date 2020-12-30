@@ -105,7 +105,7 @@ Vue.component('ssb-msg', {
       }
     }
 
-    const profiles = SSB.db.getIndexes().profiles.getProfiles()
+    const profiles = SSB.db.getIndex('profiles').getProfiles()
     this.name = getName(profiles, this.msg.value.author)
 
     SSB.db.query(
