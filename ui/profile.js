@@ -264,6 +264,7 @@ module.exports = function () {
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else {
           SSB.syncFeedFromLatest(this.feedId, () => {
+            // FIXME: not working
             SSB.db.partial.updateState(this.feedId, { syncedMessages: true }, () => {
               this.renderProfile()
             })
@@ -282,13 +283,14 @@ module.exports = function () {
 
         pull(
           rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.asyncMap(SSB.db.addOOO),
           pull.collect((err, msgs) => {
             if (err) alert(err.message)
 
             console.timeEnd("syncing profile")
             console.log(msgs.length)
 
+            // FIXME: not working
             SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
               this.renderProfile()
             })
@@ -308,13 +310,14 @@ module.exports = function () {
 
         pull(
           rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
-          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.asyncMap(SSB.db.addOOO),
           pull.collect((err, msgs) => {
             if (err) alert(err.message)
 
             console.timeEnd("download following")
             console.log(msgs.length)
 
+            // FIXME: not working
             SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
               this.renderProfile()
             })
