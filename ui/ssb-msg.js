@@ -135,8 +135,8 @@ Vue.component('ssb-msg', {
 
     SSB.db.query(
       and(mentions(this.msg.key)),
-      toCallback((err, answer) => {
-        this.mentions = answer.results
+      toCallback((err, results) => {
+        this.mentions = results
       })
     )
   }
