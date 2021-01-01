@@ -123,6 +123,10 @@ Vue.component('ssb-msg', {
             if (unlikes.indexOf(x.value.author) == -1)
               return { author: getName(profiles, x.value.author), expression: '🖖' }
           }
+          else if (expression === 'heart') {
+            if (unlikes.indexOf(x.value.author) == -1)
+              return { author: getName(profiles, x.value.author), expression: '❤' }
+          }
           else
             return { author: getName(profiles, x.value.author), expression }
         })

@@ -116,6 +116,7 @@ module.exports = function (componentsState) {
 
     watch: {
       onlyThreads: function (newValue, oldValue) {
+        this.messages = []
         this.renderPublic()
       }
     }
