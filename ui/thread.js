@@ -80,8 +80,6 @@ module.exports = function () {
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
-        console.log("query for", this.fixedRootId)
-
         SSB.db.query(
           and(hasRoot(this.fixedRootId)),
           toCallback((err, msgs) => {

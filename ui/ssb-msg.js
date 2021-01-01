@@ -92,6 +92,8 @@ Vue.component('ssb-msg', {
   },
   
   created: function () {
+    if (!this.msg.key) return
+
     const { and, votesFor, hasRoot, toCallback } = require('ssb-db2/operators')  
     const mentions = require('ssb-db2/operators/full-mentions')
 
