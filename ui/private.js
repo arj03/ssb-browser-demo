@@ -44,8 +44,8 @@ module.exports = function (componentsState) {
         console.time("private messages")
         SSB.db.query(
           and(isPrivate(), isRoot(), type('post')),
-          toCallback((err, answer) => {
-            this.messages = answer.results
+          toCallback((err, results) => {
+            this.messages = results
             console.timeEnd("private messages")
 
             document.body.classList.remove('refreshing')
