@@ -1,5 +1,5 @@
 module.exports = function (state) {
-  const { and, isPrivate, type, live, toPullStream } = require('ssb-db2/operators')  
+  const { and, isPrivate, type, live, toPullStream } = SSB.dbOperators
   const pull = require('pull-stream')  
 
   var loaded = false

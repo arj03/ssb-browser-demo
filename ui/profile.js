@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
-  const { and, author, type, startFrom, paginate, descending, toCallback } = require('ssb-db2/operators')  
+  const { and, author, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
   let initialState = function() {
     return {

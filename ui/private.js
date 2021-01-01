@@ -1,7 +1,7 @@
 module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const ssbMentions = require('ssb-mentions')
-  const { and, isPrivate, isRoot, type, toCallback } = require('ssb-db2/operators')  
+  const { and, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
 
   return {
     template: `<div id="private">

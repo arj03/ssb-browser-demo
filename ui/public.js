@@ -3,7 +3,7 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
-  const { and, isRoot, type, startFrom, paginate, descending, toCallback } = require('ssb-db2/operators')  
+  const { and, isRoot, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   function getQuery(onlyThreads) {
     if (onlyThreads)

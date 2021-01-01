@@ -4,7 +4,7 @@ module.exports = function () {
   const ssbMentions = require('ssb-mentions')
   const sort = require('ssb-sort')
 
-  const { and, hasRoot, toCallback } = require('ssb-db2/operators')  
+  const { and, hasRoot, toCallback } = SSB.dbOperators
 
   let initialState = function(rootId) {
     return {

@@ -1,6 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
-  const { and, channel, startFrom, paginate, toCallback } = require('ssb-db2/operators')  
+  const { and, channel, startFrom, paginate, toCallback } = SSB.dbOperators
 
   return {
     template: `

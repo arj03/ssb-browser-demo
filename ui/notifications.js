@@ -1,6 +1,5 @@
 module.exports = function () {
-  const { and, toCallback } = require('ssb-db2/operators')  
-  const mentions = require('ssb-db2/operators/full-mentions')
+  const { and, mentions, toCallback } = SSB.dbOperators
   
   return {
     template: `
@@ -21,8 +20,8 @@ module.exports = function () {
       render: function () {
         SSB.db.query(
           and(mentions(SSB.net.id)),
-          toCallback((err, answer) => {
-            this.messages = answer.results
+          toCallback((err, results) => {
+            this.messages = results
           })
         )
       }
