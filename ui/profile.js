@@ -341,7 +341,7 @@ module.exports = function () {
       renderProfile: function () {
         var self = this
         const contacts = SSB.db.getIndex('contacts')
-        contacts.getGraphForFeed(self.feedId, (err, graph) => {
+        contacts.getGraphForFeedHops1(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
