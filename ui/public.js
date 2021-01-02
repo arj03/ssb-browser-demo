@@ -3,13 +3,13 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
-  const { and, isRoot, isNotPrivate, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, isRoot, isPublic, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   function getQuery(onlyThreads) {
     if (onlyThreads)
-      return and(type('post'), isRoot(), isNotPrivate())
+      return and(type('post'), isRoot(), isPublic())
     else
-      return and(type('post'), isNotPrivate())
+      return and(type('post'), isPublic())
   }
 
   return {

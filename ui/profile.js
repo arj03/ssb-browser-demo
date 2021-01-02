@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
-  const { and, author, type, isNotPrivate, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
   let initialState = function() {
     return {
@@ -327,7 +327,7 @@ module.exports = function () {
 
       loadMore: function() {
         SSB.db.query(
-          and(author(this.feedId), type('post'), isNotPrivate()),
+          and(author(this.feedId), type('post'), isPublic()),
           startFrom(this.offset),
           paginate(25),
           descending(),
@@ -353,7 +353,7 @@ module.exports = function () {
 
         console.time("latest 25 profile messages")
         SSB.db.query(
-          and(author(this.feedId), type('post'), isNotPrivate()),
+          and(author(this.feedId), type('post'), isPublic()),
           startFrom(this.offset),
           paginate(25),
           descending(),
