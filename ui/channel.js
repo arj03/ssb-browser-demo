@@ -1,6 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
-  const { and, channel, startFrom, paginate, toCallback } = SSB.dbOperators
+  const { and, channel, isNotPrivate, startFrom, paginate, toCallback } = SSB.dbOperators
 
   return {
     template: `
@@ -22,11 +22,11 @@ module.exports = function () {
         console.time("latest 50 channel messages")
 
         SSB.db.query(
-          and(channel(this.channel)),
+          and(channel(this.channel), isNotPrivate()),
           startFrom(this.offset),
           paginate(50),
           toCallback((err, answer) => {
-            this.messages = answer.results.filter(msg => !msg.value.meta)
+            this.messages = answer.results
 
             console.timeEnd("latest 50 channel messages")
           })

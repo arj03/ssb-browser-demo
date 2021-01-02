@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
-  const { and, author, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, author, type, isNotPrivate, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
   let initialState = function() {
     return {
@@ -327,12 +327,12 @@ module.exports = function () {
 
       loadMore: function() {
         SSB.db.query(
-          and(author(this.feedId), type('post')),
+          and(author(this.feedId), type('post'), isNotPrivate()),
           startFrom(this.offset),
           paginate(25),
           descending(),
           toCallback((err, answer) => {
-            this.messages = this.messages.concat(answer.results.filter(msg => !msg.value.meta))
+            this.messages = this.messages.concat(answer.results)
             this.offset += answer.results.length
           })
         )
@@ -353,13 +353,13 @@ module.exports = function () {
 
         console.time("latest 25 profile messages")
         SSB.db.query(
-          and(author(this.feedId), type('post')),
+          and(author(this.feedId), type('post'), isNotPrivate()),
           startFrom(this.offset),
           paginate(25),
           descending(),
           toCallback((err, answer) => {
             const results = answer.results
-            this.messages = results.filter(msg => !msg.value.meta)
+            this.messages = results
             this.offset += results.length
 
             if (results.length < 5)
