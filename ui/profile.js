@@ -186,6 +186,7 @@ module.exports = function () {
         SSB.net.config.keys = key
         Object.assign(this.$data, initialState())
 
+        // FIXME: this won't work
         SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
       },
 
@@ -264,9 +265,8 @@ module.exports = function () {
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else {
           SSB.syncFeedFromLatest(this.feedId, () => {
-            // FIXME: not working
-            SSB.db.partial.updateState(this.feedId, { syncedMessages: true }, () => {
-              this.renderProfile()
+            SSB.partial.updateState(this.feedId, { syncedMessages: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
           })
         }
@@ -290,9 +290,8 @@ module.exports = function () {
             console.timeEnd("syncing profile")
             console.log(msgs.length)
 
-            // FIXME: not working
-            SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
-              this.renderProfile()
+            SSB.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
           })
         )
@@ -317,9 +316,8 @@ module.exports = function () {
             console.timeEnd("download following")
             console.log(msgs.length)
 
-            // FIXME: not working
-            SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
-              this.renderProfile()
+            SSB.partial.updateState(this.feedId, { syncedContacts: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
           })
         )
