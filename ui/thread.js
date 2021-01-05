@@ -66,7 +66,7 @@ module.exports = function () {
 
         var self = this
 
-        SSB.publish(content, (err) => {
+        SSB.db.publish(content, (err) => {
           if (err) console.error(err)
 
           self.postText = ""

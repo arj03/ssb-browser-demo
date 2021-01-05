@@ -98,7 +98,7 @@ module.exports = function (componentsState) {
 
         var mentions = ssbMentions(this.postText)
 
-        SSB.publish({ type: 'post', text: this.postText, mentions: mentions }, (err) => {
+        SSB.db.publish({ type: 'post', text: this.postText, mentions: mentions }, (err) => {
           if (err) console.log(err)
 
           self.postText = ""

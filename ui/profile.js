@@ -202,7 +202,7 @@ module.exports = function () {
           }
         }
 
-        SSB.publish(msg, (err) => {
+        SSB.db.publish(msg, (err) => {
           if (err) return alert(err)
 
           alert("Saved!")
@@ -211,7 +211,7 @@ module.exports = function () {
 
       changeFollowStatus: function() {
         if (this.following) {
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             following: false
@@ -220,7 +220,7 @@ module.exports = function () {
           })
         } else {
           var self = this
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             following: true
@@ -234,7 +234,7 @@ module.exports = function () {
 
       changeBlockStatus: function() {
         if (this.blocking) {
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             blocking: false
@@ -242,7 +242,7 @@ module.exports = function () {
             alert("unblocked!") // FIXME: proper UI
           })
         } else {
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             blocking: true

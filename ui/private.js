@@ -97,7 +97,7 @@ module.exports = function (componentsState) {
           content = SSB.box(content, recps.map(x => x.substr(1)))
         }
 
-        SSB.publish(content, (err) => {
+        SSB.db.publish(content, (err) => {
           if (err) console.log(err)
 
           this.postMessageVisible = false
