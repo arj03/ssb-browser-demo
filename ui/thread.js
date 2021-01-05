@@ -4,6 +4,8 @@ module.exports = function () {
   const ssbMentions = require('ssb-mentions')
   const sort = require('ssb-sort')
 
+  const { and, hasRoot, toCallback } = SSB.dbOperators
+
   let initialState = function(rootId) {
     return {
       fixedRootId: rootId,
@@ -64,7 +66,7 @@ module.exports = function () {
 
         var self = this
 
-        SSB.publish(content, (err) => {
+        SSB.db.publish(content, (err) => {
           if (err) console.error(err)
 
           self.postText = ""
@@ -78,36 +80,22 @@ module.exports = function () {
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
-        console.log("query for", this.fixedRootId)
-        
-        SSB.db.getMessagesByRoot(this.fixedRootId, (err, msgs) => {
-          var allMessages = []
-          if (msgs.length > 0) {
-            this.latestMsgIdInThread = msgs[msgs.length-1].key
+        SSB.db.query(
+          and(hasRoot(this.fixedRootId)),
+          toCallback((err, msgs) => {
+            var allMessages = []
+            if (msgs.length > 0) {
+              this.latestMsgIdInThread = msgs[msgs.length-1].key
 
-            // determine if messages exists outside our follow graph
-            var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
+              // determine if messages exists outside our follow graph
+              var knownIds = [this.fixedRootId, ...msgs.map(x => x.key)]
 
-            function insertMissingMessages(msg) {
-              if (typeof msg.value.content.branch === 'string')
-              {
-                if (!knownIds.includes(msg.value.content.branch)) {
-                  allMessages.push({
-                    key: msg.value.content.branch,
-                    value: {
-                      content: {
-                        text: "Message outside follow graph"
-                      }
-                    }
-                  })
-                }
-              }
-              else if (Array.isArray(msg.value.content.branch))
-              {
-                msg.value.content.branch.forEach((branch) => {
-                  if (!knownIds.includes(branch)) {
+              function insertMissingMessages(msg) {
+                if (typeof msg.value.content.branch === 'string')
+                {
+                  if (!knownIds.includes(msg.value.content.branch)) {
                     allMessages.push({
-                      key: branch,
+                      key: msg.value.content.branch,
                       value: {
                         content: {
                           text: "Message outside follow graph"
@@ -115,20 +103,35 @@ module.exports = function () {
                       }
                     })
                   }
-                })
+                }
+                else if (Array.isArray(msg.value.content.branch))
+                {
+                  msg.value.content.branch.forEach((branch) => {
+                    if (!knownIds.includes(branch)) {
+                      allMessages.push({
+                        key: branch,
+                        value: {
+                          content: {
+                            text: "Message outside follow graph"
+                          }
+                        }
+                      })
+                    }
+                  })
+                }
               }
+
+              msgs.forEach((msg) => {
+                if (msg.value.content.type != 'post') return
+
+                insertMissingMessages(msg)
+                allMessages.push(msg)
+              })
             }
 
-            msgs.forEach((msg) => {
-              if (msg.value.content.type != 'post') return
-
-              insertMissingMessages(msg)
-              allMessages.push(msg)
-            })
-          }
-
-          this.messages = sort(allMessages)
-        })
+            this.messages = sort(allMessages)
+          })
+        )
       },
 
       renderThread: function() {
@@ -138,7 +141,7 @@ module.exports = function () {
             SSB.getThread(self.fixedRootId, (err) => {
               if (err) console.error(err)
 
-              SSB.db.getSync(self.fixedRootId, (err, rootMsg) => {
+              SSB.db.get(self.fixedRootId, (err, rootMsg) => {
                 if (err) {
                   console.error(err)
                   self.render({ content: { text: 'Unknown message type or message outside follow graph' }})

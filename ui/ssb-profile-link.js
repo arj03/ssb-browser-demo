@@ -14,26 +14,22 @@ Vue.component('ssb-profile-link', {
   },
 
   created: function () {
-    SSB.db.profiles.get((err, profiles) => {
-      if (this.feedId == SSB.net.id)
-        this.name = "You"
+    if (this.feedId == SSB.net.id)
+      this.name = "You"
 
-      if (profiles) {
-        const profile = profiles[this.feedId]
-        if (profile) {
-          if (this.feedId != SSB.net.id)
-            this.name = profile.name
-          if (profile.image) {
-            var self = this
-            SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
-              if (err)
-                return console.error("failed to get img", err)
+    const profile = SSB.db.getIndex('profiles').getProfile(this.feedId)
+    if (profile) {
+      if (this.feedId != SSB.net.id)
+        this.name = profile.name
+      if (profile.image) {
+        var self = this
+        SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
+          if (err)
+            return console.error("failed to get img", err)
 
-              self.imgURL = url
-            })
-          }
-        }
+          self.imgURL = url
+        })
       }
-    })
+    }
   }
 })

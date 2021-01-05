@@ -1,6 +1,7 @@
 module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const ssbMentions = require('ssb-mentions')
+  const { and, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
 
   return {
     template: `<div id="private">
@@ -38,47 +39,18 @@ module.exports = function (componentsState) {
       renderPrivate: function() {
         componentsState.newPrivateMessages = false
 
-        SSB.db.jitdb.onReady(() => {
-          const query = {
-            type: 'AND',
-            data: [{
-              type: 'EQUAL',
-              data: {
-                seek: SSB.db.jitdb.seekType,
-                value: 'post',
-                indexType: "type"
-              }
-            }, {
-              type: 'EQUAL',
-              data: {
-                seek: SSB.db.jitdb.seekPrivate,
-                value: "true",
-                indexType: "private"
-              }
-            }]
-          }
-          const queryRootOnly = {
-            type: 'AND',
-            data: [query, {
-              type: 'EQUAL',
-              data: {
-                seek: SSB.db.jitdb.seekRoot,
-                value: undefined,
-                indexType: "root"
-              }
-            }]
-          }
+        document.body.classList.add('refreshing')
 
-          document.body.classList.add('refreshing')
-
-          console.time("private messages")
-          SSB.db.jitdb.query(queryRootOnly, 0, 50, (err, results) => {
+        console.time("private messages")
+        SSB.db.query(
+          and(isPrivate(), isRoot(), type('post')),
+          toCallback((err, results) => {
             this.messages = results
             console.timeEnd("private messages")
 
             document.body.classList.remove('refreshing')
           })
-        })
+        )
       },
 
       onFileSelect: function(ev) {
@@ -125,7 +97,7 @@ module.exports = function (componentsState) {
           content = SSB.box(content, recps.map(x => x.substr(1)))
         }
 
-        SSB.publish(content, (err) => {
+        SSB.db.publish(content, (err) => {
           if (err) console.log(err)
 
           this.postMessageVisible = false

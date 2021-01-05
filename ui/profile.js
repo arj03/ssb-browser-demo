@@ -1,30 +1,8 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const md = require('./markdown')
-
-  function query(feedId) {
-    return {
-      type: 'AND',
-      data: [
-        { type: 'EQUAL',
-          data: {
-            seek: SSB.db.jitdb.seekType,
-            value: 'post',
-            indexType: "type"
-          }
-        },
-        { type: 'EQUAL',
-          data: {
-            seek: SSB.db.jitdb.seekAuthor,
-            value: feedId,
-            indexType: "author",
-            indexAll: true
-          }
-        }
-      ]
-    }
-  }
-
+  const { and, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  
   let initialState = function() {
     return {
       following: false,
@@ -208,6 +186,7 @@ module.exports = function () {
         SSB.net.config.keys = key
         Object.assign(this.$data, initialState())
 
+        // FIXME: this won't work
         SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
       },
 
@@ -223,7 +202,7 @@ module.exports = function () {
           }
         }
 
-        SSB.publish(msg, (err) => {
+        SSB.db.publish(msg, (err) => {
           if (err) return alert(err)
 
           alert("Saved!")
@@ -232,7 +211,7 @@ module.exports = function () {
 
       changeFollowStatus: function() {
         if (this.following) {
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             following: false
@@ -241,21 +220,21 @@ module.exports = function () {
           })
         } else {
           var self = this
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             following: true
           }, () => {
             alert("followed!") // FIXME: proper UI
             // wait for db sync
-            SSB.db.contacts.getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+            SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
           })
         }
       },
 
       changeBlockStatus: function() {
         if (this.blocking) {
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             blocking: false
@@ -263,7 +242,7 @@ module.exports = function () {
             alert("unblocked!") // FIXME: proper UI
           })
         } else {
-          SSB.publish({
+          SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             blocking: true
@@ -286,8 +265,8 @@ module.exports = function () {
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else {
           SSB.syncFeedFromLatest(this.feedId, () => {
-            SSB.db.partial.updateState(this.feedId, { syncedMessages: true }, () => {
-              this.renderProfile()
+            SSB.partial.updateState(this.feedId, { syncedMessages: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
           })
         }
@@ -304,15 +283,15 @@ module.exports = function () {
 
         pull(
           rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.asyncMap(SSB.db.addOOO),
           pull.collect((err, msgs) => {
             if (err) alert(err.message)
 
             console.timeEnd("syncing profile")
             console.log(msgs.length)
 
-            SSB.db.partial.updateState(this.feedId, { syncedProfile: true }, () => {
-              this.renderProfile()
+            SSB.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
           })
         )
@@ -330,43 +309,55 @@ module.exports = function () {
 
         pull(
           rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'contact'}),
-          pull.asyncMap(SSB.db.validateAndAddOOO),
+          pull.asyncMap(SSB.db.addOOO),
           pull.collect((err, msgs) => {
             if (err) alert(err.message)
 
             console.timeEnd("download following")
             console.log(msgs.length)
 
-            SSB.db.partial.updateState(this.feedId, { syncedContacts: true }, () => {
-              this.renderProfile()
+            SSB.partial.updateState(this.feedId, { syncedContacts: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
           })
         )
       },
 
       loadMore: function() {
-        SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
-          this.messages = this.messages.concat(results.filter(msg => !msg.value.meta))
-          this.offset += results.length
-        })
+        SSB.db.query(
+          and(author(this.feedId), type('post'), isPublic()),
+          startFrom(this.offset),
+          paginate(25),
+          descending(),
+          toCallback((err, answer) => {
+            this.messages = this.messages.concat(answer.results)
+            this.offset += answer.results.length
+          })
+        )
       },
 
       renderProfile: function () {
         var self = this
-        SSB.db.contacts.getGraphForFeed(self.feedId, (err, graph) => {
+        const contacts = SSB.db.getIndex('contacts')
+        contacts.getGraphForFeedHops1(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
-          self.following = self.feedId != SSB.net.id && SSB.db.contacts.isFollowing(SSB.net.id, self.feedId)
-          self.blocking = self.feedId != SSB.net.id && SSB.db.contacts.isBlocking(SSB.net.id, self.feedId)
+          self.following = self.feedId != SSB.net.id && contacts.isFollowing(SSB.net.id, self.feedId)
+          self.blocking = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
         })
 
-        SSB.db.jitdb.onReady(() => {
-          document.body.classList.add('refreshing')
+        document.body.classList.add('refreshing')
 
-          console.time("latest 25 profile messages")
-          SSB.db.jitdb.query(query(this.feedId), this.offset, 25, (err, results) => {
-            this.messages = results.filter(msg => !msg.value.meta)
+        console.time("latest 25 profile messages")
+        SSB.db.query(
+          and(author(this.feedId), type('post'), isPublic()),
+          startFrom(this.offset),
+          paginate(25),
+          descending(),
+          toCallback((err, answer) => {
+            const results = answer.results
+            this.messages = results
             this.offset += results.length
 
             if (results.length < 5)
@@ -378,29 +369,27 @@ module.exports = function () {
 
             document.body.classList.remove('refreshing')
           })
-        })
+        )
 
-        SSB.db.profiles.get((err, profiles) => {
-          const profile = profiles[this.feedId]
+        const profiles = SSB.db.getIndex('profiles').getProfiles()
+        const profile = profiles[this.feedId]
 
-          if (!profile) return
+        if (!profile) return
 
-          if (profile.name)
-            this.name = profile.name
+        if (profile.name)
+          this.name = profile.name
 
-          if (profile.description)
-            this.descriptionText = profile.description
+        if (profile.description)
+          this.descriptionText = profile.description
 
-          if (profile.image) {
-            var self = this
-            SSB.net.blobs.localGet(profile.image, (err, url) => {
-              if (!err) {
-                self.image = url
-                self.imageBlobId = profile.image
-              }
-            })
-          }
-        })
+        if (profile.image) {
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            if (!err) {
+              self.image = url
+              self.imageBlobId = profile.image
+            }
+          })
+        }
       }
     },
 

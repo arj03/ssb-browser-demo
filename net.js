@@ -18,13 +18,12 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
 
   pull(
     rpc.partialReplication.getFeed({ id: feedId, seq: seqStart, keys: false }),
-    pull.asyncMap(SSB.db.validateAndAddOOO),
+    pull.asyncMap(SSB.db.addOOO),
     pull.collect((err, msgs) => {
       if (err) throw err
 
       console.timeEnd("downloading messages")
       console.log(msgs.length)
-      SSB.state.queue = []
 
       if (cb) cb()
     })
@@ -38,12 +37,11 @@ SSB.syncFeedFromLatest = function(feedId, cb) {
 
   pull(
     rpc.partialReplication.getFeedReverse({ id: feedId, keys: false, limit: 25 }),
-    pull.asyncMap(SSB.db.validateAndAddOOO),
+    pull.asyncMap(SSB.db.addOOO),
     pull.collect((err, msgs) => {
       if (err) throw err
 
       console.timeEnd("downloading messages")
-      SSB.state.queue = []
 
       if (cb) cb()
     })
@@ -54,7 +52,7 @@ syncThread = function(messages, cb) {
   pull(
     pull.values(messages),
     pull.filter((msg) => msg && msg.content.type == "post"),
-    pull.asyncMap(SSB.db.validateAndAddOOO),
+    pull.asyncMap(SSB.db.addOOO),
     pull.collect(cb)
   )
 }
