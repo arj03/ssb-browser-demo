@@ -16,6 +16,9 @@ Vue.component('ssb-profile-link', {
   created: function () {
     if (this.feedId == SSB.net.id)
       this.name = "You"
+    
+    // Set a default image to be overridden if there is an actual avatar to show.
+    this.imgURL = 'assets/noavatar.svg';
 
     const profile = SSB.db.getIndex('profiles').getProfile(this.feedId)
     if (profile) {
