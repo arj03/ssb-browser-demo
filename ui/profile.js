@@ -8,7 +8,7 @@ module.exports = function () {
       following: false,
       blocking: false,
       name: '',
-      image: '',
+      image: 'assets/noavatar.svg',
       imageBlobId: '',
       descriptionText: '',
       messages: [],

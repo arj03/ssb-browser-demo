@@ -28,11 +28,13 @@ rimraf("dist", function () {
   fs.mkdirSync('dist')
   fs.mkdirSync('dist/css')
   fs.mkdirSync('dist/js')
+  fs.mkdirSync('dist/assets')
 
   // other
   fs.copyFileSync('css/NotoColorEmoji.ttf', 'dist/css/NotoColorEmoji.ttf')
   fs.copyFileSync('manifest.json', 'dist/manifest.json')
   fs.copyFileSync('hermies.png', 'dist/hermies.png')
+  fs.copyFileSync('assets/noavatar.svg', 'dist/assets/noavatar.svg')
 
   pull(
     pull.values(html.split('\n')),
