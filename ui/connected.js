@@ -1,7 +1,7 @@
 Vue.component('connected', {
   template: `
-  <span v-if="connected" title="Connected to remote peer">
-    &#129412;
+  <span v-if="connected" title="Connected to remote peer" style="color: #090;">
+    &#9673;
   </span>`,
 
   data: function() {
