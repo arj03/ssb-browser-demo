@@ -37,7 +37,6 @@ Things that work:
  - viewing profiles and setting up your own profile
  - private messages including private blobs
  - offline support and PWA (mobile)
- - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages for messages from people outside your current follow graph
  - deleting messages included a whole profile
  - blocking
