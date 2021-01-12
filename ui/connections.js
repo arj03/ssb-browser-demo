@@ -11,6 +11,7 @@ module.exports = function () {
         <select v-model="type" v-on:change="onTypeChange(this.value)">
            <option value='room'>Room</option>
            <option value='pub'>Pub</option>
+           <option value='dht'>DHT Peer invite</option>
         </select>
         <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
         <button class="clickButton" v-on:click="add">Add</button>
@@ -42,16 +43,23 @@ module.exports = function () {
       onTypeChange: function() {
         if (this.type == 'room')
           this.address = 'wss:between-two-worlds.dk:9999~shs:7R5/crt8/icLJNpGwP2D7Oqz2WUd7ObCIinFKVR6kNY='
-        else
+        else if(this.type == 'pub')
           this.address = 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8='
+	else
+	  this.address = ''
       },
 
       add: function() {
         var s = this.address.split(":")
-        SSB.net.connectAndRemember(this.address, {
-          key: '@' + s[s.length-1] + '.ed25519',
-          type: this.type
-        })
+	if (s[0] == 'dht') {
+	  SSB.net.dhtInvite.start(() => {});
+	  SSB.net.dhtInvite.accept(this.address, () => {});
+	}
+	else
+          SSB.net.connectAndRemember(this.address, {
+            key: '@' + s[s.length-1] + '.ed25519',
+            type: this.type
+          })
       },
       connect: function(stagedPeer) {
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
