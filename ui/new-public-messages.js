@@ -7,7 +7,7 @@ module.exports = function (state) {
   Vue.component('new-public-messages', {
     template: `
         <span v-if="newPublicMessages" class="newPublic" title="New messages" v-on:click="reset">
-          &#127881;
+          &#9993;
         </span>`,
 
     data: function() {
