@@ -37,7 +37,6 @@ Things that work:
  - viewing profiles and setting up your own profile
  - private messages including private blobs
  - offline support and PWA (mobile)
- - off-chain chat using ssb-tunnel for e2e encrypted messages
  - ooo messages for messages from people outside your current follow graph
  - deleting messages included a whole profile
  - blocking
@@ -63,7 +62,7 @@ I made a [blog post][pub-setup] on how to run a server pub to relay messages to 
 
 # Building
 
-`npm run build` for developing and `npm run release` for a much smaller bundle.
+`npm run build` for developing and `npm run release` for a much smaller bundle.  You can also run `npm run inline` to genereate a single monolithic index.html file with all resources included.
 
 # Other
 

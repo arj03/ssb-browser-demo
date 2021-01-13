@@ -22,7 +22,7 @@ module.exports = function () {
       </div>
       <h3>Connections</h3>
       <div v-for="peer in peers">
-        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from {{ peer.data.key }}
+        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.data.key }}</router-link>
       </div>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
