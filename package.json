@@ -40,5 +40,5 @@
     "inline": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js > build/bundle-ui.js && node write-dist.js && node node_modules/inline-source-cli/dist/index.js --compress false --attribute '' --root dist/ dist/index.html dist/index-inlined.html && sed -i -e \"s~assets/noavatar.svg~data:image/svg+xml;base64,$(base64 -w 0 assets/noavatar.svg)~\" dist/index-inlined.html && pushd dist && find . \\! -name 'index-inlined.html' \\! -name 'favicon.ico' -delete && mv index-inlined.html index.html && popd"
   },
   "author": "arj",
-  "license": "beerware"
+  "license": "Beerware"
 }
