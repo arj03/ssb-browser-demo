@@ -24,6 +24,8 @@ module.exports = function () {
       <div v-for="peer in peers">
         <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.data.key }}</router-link>
       </div>
+      <button class="clickButton" v-on:click="createInvite">Create invite</button>
+      <dht-invite v-bind:show="showInvite" v-bind:inviteCode="inviteCode" v-bind:onClose="closeInvite"></dht-invite>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
 
@@ -35,7 +37,10 @@ module.exports = function () {
         statusHTML: '',
         running: true,
         stagedPeers: [],
-        peers: []
+        peers: [],
+
+	inviteCode: '',
+	showInvite: false
       }
     },
 
@@ -66,7 +71,29 @@ module.exports = function () {
       },
       disconnect: function(peer) {
         SSB.net.conn.disconnect(peer.address)
+      },
+      createInvite: function() {
+        if(SSB.net.dhtInvite) {
+          this.inviteCode = "(Generating invite code...)";
+          SSB.net.dhtInvite.start(() => {});
+	  var connectionsScreen = this;
+	  SSB.net.dhtInvite.create((err, inviteCode) => {
+	    if(err) {
+              connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Please try again.";
+	    } else {
+	      connectionsScreen.inviteCode = inviteCode;
+	    }
+	  });
+	} else {
+	  this.inviteCode = "The version of ssb-browser-core you have does not support DHT.  Please upgrade it to the latest version.";
+	}
+
+        this.showInvite = true
+      },
+      closeInvite: function() {
+        this.showInvite = false
       }
+
     },
 
     created: function() {
