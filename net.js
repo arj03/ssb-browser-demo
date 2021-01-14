@@ -68,6 +68,16 @@ SSB.getThread = function(msgId, cb) {
   })
 }
 
+SSB.connected = function(cb) {
+  if(SSB.net && SSB.net.ooo) {
+    cb();
+    return;
+  }
+
+  // Try again later.
+  setTimeout(1000, function() { SSB.connected(cb); });
+}
+
 SSB.getOOO = function(msgId, cb) {
   SSB.connected((rpc) => {
     SSB.net.ooo.get(msgId, cb)
