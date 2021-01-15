@@ -214,3 +214,30 @@ body, html {
     display: flex;
   }
 }
+
+.reactions
+{
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #ccc;
+}
+
+.reactions .reactions-existing,
+.reactions .reactions-mine,
+.reactions .reactions-new
+{
+  display: inline-block;
+  padding: 0.5em;
+}
+
+.reactions .reactions-mine,
+.reactions .reactions-new
+{
+  border-left: 1px solid #ccc;
+}
+
+.reactions .reactions-mine a,
+.reactions .reactions-new a
+{
+  text-decoration: none;
+}
