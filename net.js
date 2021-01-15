@@ -69,7 +69,5 @@ SSB.getThread = function(msgId, cb) {
 }
 
 SSB.getOOO = function(msgId, cb) {
-  SSB.connected((rpc) => {
-    SSB.net.ooo.get(msgId, cb)
-  })
+  SSB.net.ooo.get(msgId, cb)
 }
