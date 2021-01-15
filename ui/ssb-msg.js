@@ -40,22 +40,22 @@ Vue.component('ssb-msg', {
         </span>
         <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
         <div class='reactions'>
-	  <span class='reactions-existing'>
+          <span class='reactions-existing'>
             <span v-for="reaction in reactions">
               <span v-bind:title="reaction.author">{{ reaction.expression }}</span>
             </span>
-	  </span>
-	  <span class='reactions-mine' v-if="myReactions.length > 0">
-	    <span v-for="reaction in myReactions">
-	      <a href="javascript:void(0);" v-on:click="unlike()">{{ reaction.expression }}</a> 
-	    </span>
-	  </span>
-	  <span class='reactions-new' v-if="myReactions.length <= 0">
-	    <span class='reactions-label'>Add: </span>
-	    <span v-for="emoji in emojiOptions">
-	      <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
-	    </span>
-	  </span>
+          </span>
+          <span class='reactions-mine' v-if="myReactions.length > 0">
+            <span v-for="reaction in myReactions">
+              <a title='Remove reaction' href="javascript:void(0);" v-on:click="unlike()">{{ reaction.expression }}</a> 
+            </span>
+          </span>
+          <span class='reactions-new' v-if="myReactions.length <= 0">
+            <span class='reactions-label'>Add: </span>
+            <span v-for="emoji in emojiOptions">
+              <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
+            </span>
+          </span>
         </div>
       </div>`,
 
@@ -106,26 +106,28 @@ Vue.component('ssb-msg', {
       })
     },
     react: function(emoji) {
+      var voteValue = 1
       if(emoji == 'Unlike') {
-	this.myReactions = [];
+        this.myReactions = []
+        voteValue = 0
       } else {
-        this.myReactions.push({ expression: emoji });
+        this.myReactions.push({ expression: emoji })
       }
-      var reactTo = this.msg.key;
+      var reactTo = this.msg.key
       var message = {
         type: 'vote',
-	vote: {
-	  link: reactTo,
-	  value: 1,
-	  expression: emoji
-	}
-      };
+        vote: {
+          link: reactTo,
+          value: voteValue,
+          expression: emoji
+        }
+      }
       SSB.db.publish(message, (err) => {
         if (err) console.log(err)
       })
     },
     unlike: function() {
-      if(confirm("Are you sure you want to unlike this post?"))
+      if(confirm("Are you sure you want to remove your reaction from this post?"))
       {
         this.react('Unlike');
       }
@@ -154,14 +156,14 @@ Vue.component('ssb-msg', {
       and(votesFor(this.msg.key)),
       toCallback((err, msgs) => {    
         if(err) {
-	  console.log("Error getting votes: " + err);
-	  return;
-	}
-        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { return x.value.author })
+          console.log("Error getting votes: " + err);
+          return;
+        }
+        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike' || x.value.content.vote.value == 0).map(x => { return x.value.author })
         const allReactions = msgs.map(x => {
           const expression = x.value.content.vote.expression
-	  if(unlikes.indexOf(x.value.author) >= 0)
-	    return { unliked: true }
+          if(unlikes.indexOf(x.value.author) >= 0)
+            return { unliked: true }
 
           if (expression === 'Like') {
             return { authorID: x.value.author, author: getName(profiles, x.value.author), expression: '👍' }
@@ -176,7 +178,7 @@ Vue.component('ssb-msg', {
             return { authorID: x.value.author, author: getName(profiles, x.value.author), expression }
         })
         this.reactions = allReactions.filter(x => !x.unliked && x.authorID != SSB.net.id);
-	this.myReactions = allReactions.filter(x => !x.unliked && x.authorID == SSB.net.id);
+        this.myReactions = allReactions.filter(x => !x.unliked && x.authorID == SSB.net.id);
       })
     )
 
