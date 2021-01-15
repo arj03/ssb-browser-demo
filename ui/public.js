@@ -65,10 +65,17 @@ module.exports = function (componentsState) {
           paginate(25),
           descending(),
           toCallback((err, answer) => {
-            this.messages = this.messages.concat(answer.results)
-            this.offset += answer.results.length
+	    if(!err) {
+              this.messages = this.messages.concat(answer.results)
+              this.offset += answer.results.length
+	    }
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
+	    if(err) {
+	      this.messages = [];
+	      alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err);
+	      throw err;
+	    }
           })
         )
       },
