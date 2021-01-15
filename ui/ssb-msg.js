@@ -50,7 +50,7 @@ Vue.component('ssb-msg', {
               <a title='Remove reaction' href="javascript:void(0);" v-on:click="unlike()">{{ reaction.expression }}</a> 
             </span>
           </span>
-          <span class='reactions-new' v-if="myReactions.length <= 0">
+          <span class='reactions-new' v-if="myReactions.length == 0">
             <span class='reactions-label'>Add: </span>
             <span v-for="emoji in emojiOptions">
               <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
@@ -107,12 +107,12 @@ Vue.component('ssb-msg', {
     },
     react: function(emoji) {
       var voteValue = 1
-      if(emoji == 'Unlike') {
+      if (emoji == 'Unlike') {
         this.myReactions = []
         voteValue = 0
-      } else {
+      } else
         this.myReactions.push({ expression: emoji })
-      }
+
       var reactTo = this.msg.key
       var message = {
         type: 'vote',
@@ -122,15 +122,14 @@ Vue.component('ssb-msg', {
           expression: emoji
         }
       }
+
       SSB.db.publish(message, (err) => {
         if (err) console.log(err)
       })
     },
     unlike: function() {
-      if(confirm("Are you sure you want to remove your reaction from this post?"))
-      {
-        this.react('Unlike');
-      }
+      if (confirm("Are you sure you want to remove your reaction from this post?"))
+        this.react('Unlike')
     }
   },
   
@@ -155,30 +154,35 @@ Vue.component('ssb-msg', {
     SSB.db.query(
       and(votesFor(this.msg.key)),
       toCallback((err, msgs) => {    
-        if(err) {
-          console.log("Error getting votes: " + err);
-          return;
+        if (err) {
+          console.log("Error getting votes: " + err)
+          return
         }
-        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike' || x.value.content.vote.value == 0).map(x => { return x.value.author })
-        const allReactions = msgs.map(x => {
-          const expression = x.value.content.vote.expression
-          if(unlikes.indexOf(x.value.author) >= 0)
-            return { unliked: true }
 
-          if (expression === 'Like') {
-            return { authorID: x.value.author, author: getName(profiles, x.value.author), expression: '👍' }
+        let authorToReaction = {}
+
+        function isUnlike(msg) {
+          return msg.value.content.vote.expression == 'Unlike' || msg.value.content.vote.value == 0
+        }
+
+        msgs.forEach(msg => {
+          if (isUnlike(msg))
+            delete authorToReaction[msg.value.author]
+          else {
+            let expression = msg.value.content.vote.expression
+            if (expression === 'Like')
+              expression = '👍'
+            else if (expression === 'dig')
+              expression = '🖖'
+            else if (expression === 'heart')
+              expression = '❤'
+
+            authorToReaction[msg.value.author] = { author: getName(profiles, msg.value.author), expression }
           }
-          else if (expression === 'dig') {
-            return { authorID: x.value.author, author: getName(profiles, x.value.author), expression: '🖖' }
-          }
-          else if (expression === 'heart') {
-            return { authorID: x.value.author, author: getName(profiles, x.value.author), expression: '❤' }
-          }
-          else
-            return { authorID: x.value.author, author: getName(profiles, x.value.author), expression }
         })
-        this.reactions = allReactions.filter(x => !x.unliked && x.authorID != SSB.net.id);
-        this.myReactions = allReactions.filter(x => !x.unliked && x.authorID == SSB.net.id);
+
+        this.reactions = Object.entries(authorToReaction).filter(([k,v]) => k != SSB.net.id).map(([k,v]) => v)
+        this.myReactions = authorToReaction[SSB.net.id] ? [authorToReaction[SSB.net.id]] : []
       })
     )
 
