@@ -57,6 +57,7 @@ module.exports = function () {
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
       },
       disconnect: function(peer) {
+        SSB.net.conn.forget(peer.address)
         SSB.net.conn.disconnect(peer.address)
       }
     },
