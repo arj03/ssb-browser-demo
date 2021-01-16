@@ -12,6 +12,7 @@
     const Profile = require('./profile')()
     const Notifications = require('./notifications')()
     const Channel = require('./channel')()
+    const Channels = require('./channels')()
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
@@ -21,6 +22,7 @@
 
     const routes = [
       { name: 'public', path: '/public', component: Public },
+      { name: 'channels', path: '/channels', component: Channels },
       { name: 'channel', path: '/channel/:channel', component: Channel, props: true },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
