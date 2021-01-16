@@ -1,5 +1,20 @@
+const localPrefs = require('../localprefs')
+const optionsForCore = {
+  caps: { shs: Buffer.from(localPrefs.getCaps(), 'base64') },
+  hops: localPrefs.getHops(),
+  conn: {
+    autostart: false,
+    hops: localPrefs.getHops(),
+    populatePubs: false
+  }
+}
+require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
+
 (function() {
   const componentsState = require('./components')()
+
+  // Load local preferences.
+  localPrefs.updateStateFromSettings();
 
   if ((location.hostname == 'localhost' || location.protocol === 'https:') && 'serviceWorker' in navigator) {
     window.addEventListener('load', function() {
@@ -8,6 +23,9 @@
   }
 
   function ssbLoaded() {
+    // Make sure settings have been applied.
+    localPrefs.updateStateFromSettings();
+
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
     const Notifications = require('./notifications')()
@@ -16,6 +34,7 @@
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
+    const Settings = require('./settings')()
 
     // add helper methods
     require('../net')
@@ -29,6 +48,7 @@
       { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
       { path: '/connections', component: Connections },
+      { path: '/settings', component: Settings },
       { path: '/', redirect: 'public' },
     ]
 
@@ -41,6 +61,7 @@
 
       data: function() {
         return {
+          appTitle: localPrefs.getAppTitle(),
           goToTargetText: ""
         }
       },
