@@ -241,3 +241,24 @@ body, html {
 {
   text-decoration: none;
 }
+
+#channels ol
+{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  column-count: 3;
+  column-gap: 3em;
+  line-height: 125%;
+}
+
+#channels ol li
+{
+  display: block;
+}
+
+#channels ol li a
+{
+  display: inline-block;
+  padding: 0.75em;
+}
