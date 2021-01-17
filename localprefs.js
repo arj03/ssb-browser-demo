@@ -31,6 +31,10 @@ exports.getTheme = function() { return getPref('theme', (defaultPrefs.theme || '
 
 exports.setTheme = function(theme) { setPref('theme', theme) }
 
+exports.getPublicFilters = function() { return getPref('publicFilters', (defaultPrefs.publicFilters || '')) }
+
+exports.setPublicFilters = function(filterNamesSeparatedByPipes) { setPref('publicFilters', filterNamesSeparatedByPipes) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()
