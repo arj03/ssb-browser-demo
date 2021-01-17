@@ -10,7 +10,7 @@ module.exports = function () {
          <h2>Settings</h2>
 	 <p>
 	 <label for="appTitle">App/browser tab title:</label><br />
-	 <input id="appTitle" v-model="appTitle" placeholder="(Use default)" />
+	 <input type="text" id="appTitle" v-model="appTitle" placeholder="(Use default)" />
 	 </p>
 
          <p>
@@ -35,7 +35,7 @@ module.exports = function () {
 
 	 <p>
 	 <label for="caps"><strong>ADVANCED</strong> - Caps key (leave blank to use default):</label><br />
-	 <input id="caps" v-model="caps" placeholder="(Use default)" /><br />
+	 <input type="text" id="caps" v-model="caps" placeholder="(Use default)" /><br />
 	 <small>(Only change this if you really, really know what you're doing.)</small>
 	 </p>
 
