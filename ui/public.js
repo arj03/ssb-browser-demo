@@ -3,13 +3,19 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
-  const { and, isRoot, isPublic, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, or, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   function getQuery(onlyThreads) {
+    let feedFilter = null
+    if (this.onlyDirectFollow) {
+      const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
+      feedFilter = or(...graph.following.map(x => author(x)))
+    }
+
     if (onlyThreads)
-      return and(type('post'), isRoot(), isPublic())
+      return and(type('post'), isRoot(), isPublic(), feedFilter)
     else
-      return and(type('post'), isPublic())
+      return and(type('post'), isPublic(), feedFilter)
   }
 
   return {
@@ -48,20 +54,6 @@ module.exports = function (componentsState) {
     },
 
     methods: {
-      filterResultsByFollow: function(rawResults) {
-        if(!this.onlyDirectFollow)
-          return rawResults
-
-        // Filter out any results from people our profile doesn't follow.
-        var filtered = []
-        const contacts = SSB.db.getIndex('contacts')
-        for(r in rawResults)
-          if(contacts.isFollowing(SSB.net.id, rawResults[r].value.author))
-            filtered.push(rawResults[r])
-
-        return filtered
-      },
-
       loadMore: function() {
         SSB.db.query(
           getQuery(this.onlyThreads),
@@ -69,8 +61,7 @@ module.exports = function (componentsState) {
           paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
-            const results = this.filterResultsByFollow(answer.results)
-            this.messages = this.messages.concat(results)
+            this.messages = this.messages.concat(answer.results)
             this.displayPageEnd = this.offset + this.pageSize
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
@@ -90,18 +81,19 @@ module.exports = function (componentsState) {
           paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
-	    if(!err) {
-              const results = this.filterResultsByFollow(answer.results)
-              this.messages = this.messages.concat(results)
+	    if (!err) {
+              this.messages = this.messages.concat(answer.results)
               this.displayPageEnd = this.offset + this.pageSize
               this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
 	    }
+
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
-	    if(err) {
-	      this.messages = [];
-	      alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err);
-	      throw err;
+
+	    if (err) {
+	      this.messages = []
+	      alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
+	      throw err
 	    }
           })
         )
