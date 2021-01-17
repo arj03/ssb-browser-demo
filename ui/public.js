@@ -26,7 +26,7 @@ module.exports = function (componentsState) {
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
       <p v-if="messages.length == 0">(No messages to display)</p>
-      <p>Showing messages from 1-{{ displayPageStart + pageSize - 1 }}<br />
+      <p>Showing messages from 1-{{ displayPageEnd }}<br />
       <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
       </p>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
@@ -41,7 +41,7 @@ module.exports = function (componentsState) {
         messages: [],
         offset: 0,
         pageSize: 50,
-        displayPageStart: 1,
+        displayPageEnd: 50,
 	
         showPreview: false
       }
@@ -71,7 +71,7 @@ module.exports = function (componentsState) {
           toCallback((err, answer) => {
             const results = this.filterResultsByFollow(answer.results)
             this.messages = this.messages.concat(results)
-            this.displayPageStart = this.offset + 1
+            this.displayPageEnd = this.offset + this.pageSize
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
@@ -93,7 +93,7 @@ module.exports = function (componentsState) {
 	    if(!err) {
               const results = this.filterResultsByFollow(answer.results)
               this.messages = this.messages.concat(results)
-              this.displayPageStart = this.offset + 1
+              this.displayPageEnd = this.offset + this.pageSize
               this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
 	    }
             document.body.classList.remove('refreshing')
