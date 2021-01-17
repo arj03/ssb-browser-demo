@@ -30,12 +30,12 @@ Vue.component('ssb-msg', {
         <span v-html="body"></span>
         <span v-if="forks.length > 0"><b>Forks:</b>
           <li v-for="msg in forks">
-            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
+            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>
         </span>
         <span v-if="mentions.length > 0"><b>Mentions:</b>
           <li v-for="msg in mentions">
-            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
+            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>
         </span>
         <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
@@ -95,6 +95,12 @@ Vue.component('ssb-msg', {
   },
 
   methods: {
+    smallText: function(msg) {
+      if (msg.value.content && msg.value.content.text)
+        return msg.value.content.text.substring(0,50)
+      else
+        return ''
+    },
     getOOO: function() {
       SSB.getOOO(this.msg.key, (err, msgValue) => {
         if (err) return alert("Failed to get msg " + err)
