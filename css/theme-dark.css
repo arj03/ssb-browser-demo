@@ -10,7 +10,8 @@
   color: #999;
 }
 
-.theme-dark .message
+.theme-dark .message,
+.theme-dark #channels ol
 {
   background-color: #999;
   color: #000;

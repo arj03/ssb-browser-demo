@@ -70,6 +70,7 @@ code {
   line-height: 1;
 }
 
+.theme-dark #channels ol,
 .message {
   padding: 1.5rem 1.5rem 0.5rem 1.5rem;
   margin: 1rem 0;
