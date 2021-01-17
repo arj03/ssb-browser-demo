@@ -18,7 +18,7 @@ module.exports = function (state) {
       reset() {
         // render public resets the newPublicMessages state
         if (this.$route.path == "/public")
-          this.$route.matched[0].instances.default.renderPublic()
+          this.$route.matched[0].instances.default.refresh()
         else
           this.$router.push({ path: '/public'})
       }
