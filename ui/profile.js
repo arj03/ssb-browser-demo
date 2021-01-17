@@ -227,7 +227,9 @@ module.exports = function () {
           }, () => {
             alert("followed!") // FIXME: proper UI
             // wait for db sync
-            SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+            SSB.connectedWithData(() => {
+              SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+            })
           })
         }
       },
