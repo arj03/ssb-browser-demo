@@ -68,6 +68,37 @@ SSB.getThread = function(msgId, cb) {
   })
 }
 
+SSB.activeConnections = 0
+SSB.callbacksWaitingForConnection = []
+function runConnectedCallbacks() {
+  while(SSB.callbacksWaitingForConnection.length > 0) {
+    const cb = SSB.callbacksWaitingForConnection.shift()
+    cb(SSB)
+  }
+}
+
+SSB.connected = function(cb) {
+  // Add the callback to the list.
+  SSB.callbacksWaitingForConnection.push(cb);
+
+  if(SSB.activeConnections > 0) {
+    // Already connected.  Run all the callbacks.
+    runConnectedCallbacks()
+  }
+}
+
+// Register for the connect event so we can keep track of it.
+SSB.net.on('rpc:connect', (rpc) => {
+  // Now we're connected.  Run all the callbacks.
+  ++SSB.activeConnections
+  runConnectedCallbacks()
+
+  // Register an event handler for disconnects so we know to trigger waiting again.
+  rpc.on('closed', () => --SSB.activeConnections)
+})
+
 SSB.getOOO = function(msgId, cb) {
-  SSB.net.ooo.get(msgId, cb)
+  SSB.connected((rpc) => {
+    SSB.net.ooo.get(msgId, cb)
+  })
 }
