@@ -37,6 +37,7 @@ rimraf("dist", function () {
   fs.copyFileSync('favicon.ico', 'dist/favicon.ico')
   fs.copyFileSync('assets/noavatar.svg', 'dist/assets/noavatar.svg')
   fs.copyFileSync('assets/openclipart-1392738806.svg', 'dist/assets/openclipart-1392738806.svg')
+  fs.copyFileSync('assets/openclipart-261618.svg', 'dist/assets/openclipart-261618.svg')
 
   pull(
     pull.values(html.split('\n')),
