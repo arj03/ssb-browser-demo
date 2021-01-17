@@ -23,7 +23,7 @@ exports.getCaps = function() {
 
 exports.setCaps = function(caps) { setPref('caps', caps) }
 
-exports.getAppTitle = function() { return getPref('appTitle', 'SSB Browser Demo') }
+exports.getAppTitle = function() { return getPref('appTitle', (defaultPrefs.appTitle || 'SSB Browser Demo')) }
 
 exports.setAppTitle = function(title) { setPref('appTitle', title) }
 
