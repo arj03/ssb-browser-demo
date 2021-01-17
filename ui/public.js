@@ -18,14 +18,17 @@ module.exports = function (componentsState) {
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-      <h2>Last 50 messages</h2>
+      <h2>Last {{ pageSize }} messages</h2>
       <fieldset><legend>Filters</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>Only show posts from people you follow</label><br />
       <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>Hide replies (only show the first message of a thread)</label>
       </fieldset>
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
-      <button class="clickButton" v-on:click="loadMore">Load more</button>
+      <p v-if="messages.length == 0">(No messages to display)</p>
+      <p>Showing messages from 1-{{ displayPageStart + pageSize - 1 }}<br />
+      <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
+      </p>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
@@ -37,7 +40,9 @@ module.exports = function (componentsState) {
         onlyThreads: false,
         messages: [],
         offset: 0,
-
+        pageSize: 50,
+        displayPageStart: 1,
+	
         showPreview: false
       }
     },
@@ -61,12 +66,13 @@ module.exports = function (componentsState) {
         SSB.db.query(
           getQuery(this.onlyThreads),
           startFrom(this.offset),
-          paginate(25),
+          paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
             const results = this.filterResultsByFollow(answer.results)
             this.messages = this.messages.concat(results)
-            this.offset += results.length
+            this.displayPageStart = this.offset + 1
+            this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
       },
@@ -81,13 +87,14 @@ module.exports = function (componentsState) {
         SSB.db.query(
           getQuery(this.onlyThreads),
           startFrom(this.offset),
-          paginate(25),
+          paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
 	    if(!err) {
               const results = this.filterResultsByFollow(answer.results)
               this.messages = this.messages.concat(results)
-              this.offset += results.length
+              this.displayPageStart = this.offset + 1
+              this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
 	    }
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
