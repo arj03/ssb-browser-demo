@@ -1,5 +1,6 @@
 {
   "appTitle": "SSB Browser Demo",
   "replicationHops": 1,
+  "publicFilters": "",
   "theme": "default"
 }

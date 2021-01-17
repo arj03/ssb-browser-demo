@@ -3,6 +3,7 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
+  const localPrefs = require('../localprefs')
   const { and, or, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   function getQuery(onlyThreads) {
@@ -99,6 +100,18 @@ module.exports = function (componentsState) {
         )
       },
 
+      saveFilters: function() {
+        var filterNames = [];
+        if(this.onlyDirectFollow)
+          filterNames.push('onlydirectfollow')
+
+        if(this.onlyThreads)
+          filterNames.push('onlythreads')
+
+        // If we have no filters, set it to 'none' since we don't have a filter named that and it will keep it from dropping down to default.
+        localPrefs.setPublicFilters(filterNames.length > 0 ? filterNames.join('|') : 'none')
+      },
+
       onFileSelect: function(ev) {
         var self = this
         helpers.handleFileSelect(ev, false, (err, text) => {
@@ -137,6 +150,11 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      // Pull preferences for filters.
+      const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
+      this.onlyDirectFollow = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlydirectfollow') >= 0)
+      this.onlyThreads = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlythreads') >= 0)
+
       this.renderPublic()
     },
 
@@ -145,12 +163,14 @@ module.exports = function (componentsState) {
         this.messages = []
         this.offset = 0
         this.renderPublic()
+        this.saveFilters()
       },
 
       onlyThreads: function (newValue, oldValue) {
         this.messages = []
         this.offset = 0
         this.renderPublic()
+        this.saveFilters()
       }
     }
   }
