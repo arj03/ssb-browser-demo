@@ -5,6 +5,7 @@
   color: #999;
 }
 
+.theme-dark #profile .description a,
 .theme-dark #navigation > a
 {
   color: #999;
