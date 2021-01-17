@@ -1,7 +1,6 @@
 module.exports = function (componentsState) {
   const pull = require('pull-stream')
-  const { and, not, equal, isPublic, type, startFrom, paginate, descending, toCallback } = SSB.dbOperators
-  const { seekChannel } = require('ssb-db2/seekers')
+  const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   return {
     template: `
@@ -80,9 +79,7 @@ module.exports = function (componentsState) {
         if(this.sortMode == "recent") {
           // Only look at the most recent posts.
           SSB.db.query(
-            and(not(equal(seekChannel, '', { indexType: 'value_content_type' }))),
-            and(type('post')),
-            and(isPublic()),
+            and(not(channel('')), type('post'), isPublic()),
             descending(),
             startFrom(0),
             paginate(500),
@@ -91,9 +88,7 @@ module.exports = function (componentsState) {
         } else {
           // Look at all posts.
           SSB.db.query(
-            and(not(equal(seekChannel, '', { indexType: 'value_content_type' }))),
-            and(type('post')),
-            and(isPublic()),
+            and(not(channel('')), type('post'), isPublic()),
             resultCallback
           )
         }
