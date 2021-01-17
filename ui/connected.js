@@ -6,15 +6,17 @@ Vue.component('connected', {
 
   data: function() {
     return {
-      connected: false
+      connected: false,
+      numConnections: 0
     }
   },
 
   created: function() {
     var self = this
     SSB.net.on('rpc:connect', (rpc) => {
+      ++self.numConnections
       self.connected = true
-      rpc.on('closed', () => self.connected = false)
+      rpc.on('closed', () => self.connected = (--(self.numConnections) > 0))
     })
   }
 })
