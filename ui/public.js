@@ -6,9 +6,9 @@ module.exports = function (componentsState) {
   const localPrefs = require('../localprefs')
   const { and, or, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
-  function getQuery(onlyThreads) {
+  function getQuery(onlyDirectFollow, onlyThreads) {
     let feedFilter = null
-    if (this.onlyDirectFollow) {
+    if (onlyDirectFollow) {
       const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
       feedFilter = or(...graph.following.map(x => author(x)))
     }
@@ -25,7 +25,9 @@ module.exports = function (componentsState) {
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-      <h2>Last {{ pageSize }} messages</h2>
+      <h2>Last {{ pageSize }} messages
+      <a href="javascript:void(0);" title="Refresh messages" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
+      </h2>
       <fieldset><legend>Filters</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>Only show posts from people you follow</label><br />
       <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>Hide replies (only show the first message of a thread)</label>
@@ -57,7 +59,7 @@ module.exports = function (componentsState) {
     methods: {
       loadMore: function() {
         SSB.db.query(
-          getQuery(this.onlyThreads),
+          getQuery(this.onlyDirectFollow, this.onlyThreads),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
@@ -77,7 +79,7 @@ module.exports = function (componentsState) {
         console.time("latest messages")
         
         SSB.db.query(
-          getQuery(this.onlyThreads),
+          getQuery(this.onlyDirectFollow, this.onlyThreads),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
@@ -147,6 +149,12 @@ module.exports = function (componentsState) {
           self.renderPublic()
         })
       },
+
+      refresh: function() {
+        this.messages = []
+        this.offset = 0
+        this.renderPublic()
+      }
     },
 
     created: function () {
@@ -160,17 +168,11 @@ module.exports = function (componentsState) {
 
     watch: {
       onlyDirectFollow: function (newValue, oldValue) {
-        this.messages = []
-        this.offset = 0
-        this.renderPublic()
-        this.saveFilters()
+        this.refresh()
       },
 
       onlyThreads: function (newValue, oldValue) {
-        this.messages = []
-        this.offset = 0
-        this.renderPublic()
-        this.saveFilters()
+        this.refresh()
       }
     }
   }
