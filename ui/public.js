@@ -18,11 +18,17 @@ module.exports = function (componentsState) {
       <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
       <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
       <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-      <h2>Last 50 messages</h2>
-      Threads only: <input id='onlyThreads' type='checkbox' v-model="onlyThreads">
+      <h2>Last {{ pageSize }} messages</h2>
+      <fieldset><legend>Filters</legend>
+      <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>Only show posts from people you follow</label><br />
+      <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>Hide replies (only show the first message of a thread)</label>
+      </fieldset>
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
-      <button class="clickButton" v-on:click="loadMore">Load more</button>
+      <p v-if="messages.length == 0">(No messages to display)</p>
+      <p>Showing messages from 1-{{ displayPageEnd }}<br />
+      <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
+      </p>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
@@ -30,24 +36,43 @@ module.exports = function (componentsState) {
       return {
         postMessageVisible: false,
         postText: "",
+	onlyDirectFollow: false,
         onlyThreads: false,
         messages: [],
         offset: 0,
-
+        pageSize: 50,
+        displayPageEnd: 50,
+	
         showPreview: false
       }
     },
 
     methods: {
+      filterResultsByFollow: function(rawResults) {
+        if(!this.onlyDirectFollow)
+          return rawResults
+
+        // Filter out any results from people our profile doesn't follow.
+        var filtered = []
+        const contacts = SSB.db.getIndex('contacts')
+        for(r in rawResults)
+          if(contacts.isFollowing(SSB.net.id, rawResults[r].value.author))
+            filtered.push(rawResults[r])
+
+        return filtered
+      },
+
       loadMore: function() {
         SSB.db.query(
           getQuery(this.onlyThreads),
           startFrom(this.offset),
-          paginate(25),
+          paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
-            this.messages = this.messages.concat(answer.results)
-            this.offset += answer.results.length
+            const results = this.filterResultsByFollow(answer.results)
+            this.messages = this.messages.concat(results)
+            this.displayPageEnd = this.offset + this.pageSize
+            this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
       },
@@ -62,12 +87,14 @@ module.exports = function (componentsState) {
         SSB.db.query(
           getQuery(this.onlyThreads),
           startFrom(this.offset),
-          paginate(25),
+          paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
 	    if(!err) {
-              this.messages = this.messages.concat(answer.results)
-              this.offset += answer.results.length
+              const results = this.filterResultsByFollow(answer.results)
+              this.messages = this.messages.concat(results)
+              this.displayPageEnd = this.offset + this.pageSize
+              this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
 	    }
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
@@ -122,6 +149,12 @@ module.exports = function (componentsState) {
     },
 
     watch: {
+      onlyDirectFollow: function (newValue, oldValue) {
+        this.messages = []
+        this.offset = 0
+        this.renderPublic()
+      },
+
       onlyThreads: function (newValue, oldValue) {
         this.messages = []
         this.offset = 0
