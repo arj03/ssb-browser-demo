@@ -48,6 +48,10 @@ module.exports = function () {
 
       add: function() {
         var s = this.address.split(":")
+	if (s[0] != 'ws' && s[0] != 'wss' && s[0] != 'dht' && s[0] != 'bt') {
+	  alert("This SSB client does support connections of type '" + s[0] + "'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!")
+	  return
+	}
         SSB.net.connectAndRemember(this.address, {
           key: '@' + s[s.length-1] + '.ed25519',
           type: this.type
