@@ -1,0 +1,39 @@
+.theme-dark
+{
+  background-color: #222;
+  background-image: linear-gradient(#222, #000);
+  color: #999;
+}
+
+.theme-dark #navigation > a
+{
+  color: #999;
+}
+
+.theme-dark .message,
+.theme-dark #channels ol
+{
+  background-color: #999;
+  color: #000;
+}
+
+.theme-dark .message a
+{
+  color: #333;
+}
+
+.theme-dark .clickButton
+{
+  background-color: #111;
+  background-image: linear-gradient(#333, #000);
+  color: #999;
+  border-radius: 3px;
+}
+
+.theme-dark input[type="text"]
+{
+  background-color: #000;
+  background-image: linear-gradient(#000, #333);
+  color: #999;
+  border: 1px solid rgb(169, 169, 169)
+}

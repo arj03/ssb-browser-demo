@@ -27,6 +27,10 @@ exports.getAppTitle = function() { return getPref('appTitle', (defaultPrefs.appT
 
 exports.setAppTitle = function(title) { setPref('appTitle', title) }
 
+exports.getTheme = function() { return getPref('theme', (defaultPrefs.theme || 'default')) }
+
+exports.setTheme = function(theme) { setPref('theme', theme) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()
@@ -34,4 +38,12 @@ exports.updateStateFromSettings = function() {
     SSB.net.config.conn.hops = this.getHops()
 
   document.title = this.getAppTitle()
+  document.body.classList.add('theme-' + this.getTheme())
+  for(var i = 0; i < document.body.classList.length; ++i) {
+    const cur = document.body.classList.item(i)
+    if(cur.substring(0, ('theme-').length) == 'theme-' && cur != 'theme-' + this.getTheme()) {
+      document.body.classList.remove(cur)
+      --i
+    }
+  }
 }
