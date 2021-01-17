@@ -2920,9 +2920,9 @@
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA="
     },
     "jitdb": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.0.0.tgz",
-      "integrity": "sha512-yMaHKxkfYUhFNH0chlrKaUQRrlWxwXIkbMgIEYeK+FMialhcstoq99/h4dCP7xl4YyutN/IAsgasLBu7t6FwtA==",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.0.1.tgz",
+      "integrity": "sha512-VcGwqiXAwBo8PUBjEpNpy5Mkzs3KCw9HuO6Qv1Oqj2GN6k6C8VAgzVTvFS5Q9w45727aOl4GQpsKgtmp20x3cg==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -4985,9 +4985,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "6.0.1",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.1.tgz",
-      "integrity": "sha512-VEnmWa05IbRG9q8+BuncVUVGkt1zae8dQkfn1uEa9Y6Z+2D+n1Mo6awf09r2QBwoD0Kut8wcgLuk2gJSxgBEng==",
+      "version": "6.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.2.tgz",
+      "integrity": "sha512-qMfQilgRkVpyFhYnreoExasyhNZsSfzwtFx2nBFZMQh6CkkjrgIlqeRNmgncKutOWqlpUWL0KQp2yJx0t1bYOg==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
