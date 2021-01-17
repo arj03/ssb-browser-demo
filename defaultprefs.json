@@ -1,4 +1,5 @@
 {
   "appTitle": "SSB Browser Demo",
-  "replicationHops": 1
+  "replicationHops": 1,
+  "theme": "default"
 }

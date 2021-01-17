@@ -13,6 +13,14 @@ module.exports = function () {
 	 <input id="appTitle" v-model="appTitle" placeholder="(Use default)" />
 	 </p>
 
+         <p>
+         <label for="theme">Color theme:</label><br />
+         <select id="theme" v-model="theme">
+         <option value="default">Default</option>
+         <option value="dark">Dark</option>
+         </select>
+         </p>
+
 	 <p>
 	 <label for="replicationHops">Number of hops to replicate:</label><br />
 	 <select id="replicationHops" v-model="hops">
@@ -39,6 +47,7 @@ module.exports = function () {
     data: function() {
       return {
         appTitle: '',
+        theme: 'default',
         caps: '',
         hops: 1
       }
@@ -47,12 +56,14 @@ module.exports = function () {
     methods: {
       render: function () {
         this.appTitle = localPrefs.getAppTitle()
+        this.theme = localPrefs.getTheme()
         this.hops = localPrefs.getHops()
 	this.caps = (localPrefs.getCaps() == caps.shs ? '' : localPrefs.getCaps())
       },
 
       save: function () {
         localPrefs.setAppTitle(this.appTitle)
+        localPrefs.setTheme(this.theme)
         localPrefs.setHops(this.hops)
 	localPrefs.setCaps(this.caps)
         localPrefs.updateStateFromSettings()
