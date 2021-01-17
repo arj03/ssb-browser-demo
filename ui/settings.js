@@ -18,6 +18,7 @@ module.exports = function () {
          <select id="theme" v-model="theme">
          <option value="default">Default</option>
          <option value="dark">Dark</option>
+         <option value="ethereal">Ethereal</option>
          </select>
          </p>
 
