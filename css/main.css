@@ -263,3 +263,14 @@ body, html {
   display: inline-block;
   padding: 0.75em;
 }
+
+.get-started-button
+{
+  background-color: #393;
+  color: #fff;
+}
+
+.get-started-button:hover
+{
+  background-color: #6c6;
+}

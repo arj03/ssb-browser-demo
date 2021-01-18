@@ -2,6 +2,7 @@ module.exports = function () {
   require('./ssb-profile-link')
   require('./ssb-msg')
   require('./ssb-msg-preview')
+  require('./onboarding-dialog')
   require('./connected')
 
   Vue.component('v-select', VueSelect.VueSelect)
