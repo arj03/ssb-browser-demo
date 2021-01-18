@@ -69,10 +69,19 @@ SSB.getThread = function(msgId, cb) {
 }
 
 SSB.activeConnections = 0
+SSB.activeConnectionsWithData = 0
 SSB.callbacksWaitingForConnection = []
+SSB.callbacksWaitingForConnectionWithData = []
 function runConnectedCallbacks() {
   while(SSB.callbacksWaitingForConnection.length > 0) {
     const cb = SSB.callbacksWaitingForConnection.shift()
+    cb(SSB)
+  }
+}
+
+function runConnectedWithDataCallbacks() {
+  while(SSB.callbacksWaitingForConnectionWithData.length > 0) {
+    const cb = SSB.callbacksWaitingForConnectionWithData.shift()
     cb(SSB)
   }
 }
@@ -87,6 +96,16 @@ SSB.connected = function(cb) {
   }
 }
 
+SSB.connectedWithData = function(cb) {
+  // Register a callback for when we're connected to a peer with data (not a room).
+  SSB.callbacksWaitingForConnectionWithData.push(cb);
+
+  if(SSB.activeConnectionsWithData > 0) {
+    // Already connected.  Run all the callbacks.
+    runConnectedWithDataCallbacks()
+  }
+}
+
 // Register for the connect event so we can keep track of it.
 SSB.net.on('rpc:connect', (rpc) => {
   // Now we're connected.  Run all the callbacks.
@@ -95,10 +114,26 @@ SSB.net.on('rpc:connect', (rpc) => {
 
   // Register an event handler for disconnects so we know to trigger waiting again.
   rpc.on('closed', () => --SSB.activeConnections)
+
+  // See if we're operating on a connection with actual data (not a room).
+  let connPeers = Array.from(SSB.net.conn.hub().entries())
+  connPeers = connPeers.filter(([,x])=>!!x.key).map(([address,data])=>({
+    address,
+    data
+  }))
+  var peer = connPeers.find(x=>x.data.key == rpc.id)
+  if (peer && peer.data.type != 'room') {
+    // It's not a room.
+    ++SSB.activeConnectionsWithData
+    runConnectedWithDataCallbacks()
+
+    // Register another callback to decrement our "connections with data" reference count.
+    rpc.on('closed', () => --SSB.activeConnectionsWithData)
+  }
 })
 
 SSB.getOOO = function(msgId, cb) {
-  SSB.connected((rpc) => {
+  SSB.connectedWithData((rpc) => {
     SSB.net.ooo.get(msgId, cb)
   })
 }
