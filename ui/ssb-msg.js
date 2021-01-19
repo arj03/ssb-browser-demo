@@ -68,6 +68,7 @@ Vue.component('ssb-msg', {
       mentions: [],
       reactions: [],
       myReactions: [],
+      body: '',
       //emojiOptions: ['👍', '👎', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞']
       emojiOptions: ['👍', '🖖', '❤']
     }
@@ -88,9 +89,6 @@ Vue.component('ssb-msg', {
     },
     isOOO: function() {
       return this.msg.value.content.text == "Message outside follow graph" && !this.msg.value.author
-    },
-    body: function() {
-      return md.markdown(this.msg.value.content.text)
     }
   },
 
@@ -156,6 +154,18 @@ Vue.component('ssb-msg', {
 
     const profiles = SSB.db.getIndex('profiles').getProfiles()
     this.name = getName(profiles, this.msg.value.author)
+
+    // Render the body, which may need to wait until we're connected to a peer.
+    var self = this
+    if(self.msg.value.content.text.indexOf('(&') >= 0) {
+      // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
+      self.body = "(Loading...please wait)"
+      SSB.connectedWithData(() => {
+        self.body = md.markdown(self.msg.value.content.text)
+      })
+    } else {
+      self.body = md.markdown(this.msg.value.content.text)
+    }
 
     SSB.db.query(
       and(votesFor(this.msg.key)),
