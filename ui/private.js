@@ -45,22 +45,13 @@ module.exports = function (componentsState) {
         var self = this
         if (this.feedId && this.feedId != '') {
           this.postMessageVisible = true
-          SSB.connectedWithData(() => {
-            let rpc = SSB.getPeer()
-            pull(
-              rpc.partialReplication.getMessagesOfType({id: self.feedId, type: 'contact'}),
-              pull.asyncMap(SSB.db.addOOO),
-              pull.collect((err, msgs) => {
-                const profiles = SSB.db.getIndex('profiles').getProfiles()
-                const profile = profiles[self.feedId]
-                if (self.people.length == 0)
-                  self.people = [{ id: self.feedId, name: (profile.name || self.feedId) }]
-                self.recipients = [{ id: self.feedId, name: (profile.name || self.feedId) }]
-
-                // Done connecting and loading the box, so now we can take down the refreshing indicator
-                document.body.classList.remove('refreshing')
-              })
-            )
+          SSB.getProfileAsync(this.feedId, (err, profile) => {
+            if (self.people.length == 0)
+              self.people = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+            self.recipients = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+    
+            // Done connecting and loading the box, so now we can take down the refreshing indicator
+            document.body.classList.remove('refreshing')
           })
         }
 

@@ -137,3 +137,41 @@ SSB.getOOO = function(msgId, cb) {
     SSB.net.ooo.get(msgId, cb)
   })
 }
+
+SSB.getProfileAsync = function(profileId, cb) {
+  const profiles = SSB.db.getIndex('profiles').getProfiles()
+
+  if(profiles[profileId]) {
+    // We've got it already.
+    cb(null, profiles[profileId])
+  } else {
+    // Don't have it yet.  Let's try loading the graph.
+    SSB.db.getIndex('contacts').getGraphForFeedHops1(profileId, (err, data) => {
+      const profiles = SSB.db.getIndex('profiles').getProfiles()
+
+      if(!err && profiles[profileId]) {
+        // Got it from graph.
+        cb(null, profiles[profileId])
+      } else {
+        // Going to have to fetch it when a connection comes up.
+        SSB.connectedWithData(() => {
+          let rpc = SSB.getPeer()
+
+          if(!rpc) cb("No peer to connect to")
+
+          pull(
+            rpc.partialReplication.getMessagesOfType({id: profileId, type: 'contact'}),
+            pull.asyncMap(SSB.db.addOOO),
+            pull.collect((err, msgs) => {
+              if(err) cb(err)
+
+              const profiles = SSB.db.getIndex('profiles').getProfiles()
+              if (profiles[profileId])
+                cb(null, profiles[profileId])
+            })
+          )
+        })
+      }
+    })
+  }
+}
