@@ -207,7 +207,7 @@ module.exports = function (componentsState) {
           self.postMessageVisible = false
           self.showPreview = false
 
-          self.renderPublic()
+          self.refresh()
         })
       },
 
