@@ -161,7 +161,7 @@ Vue.component('ssb-msg', {
     if(self.msg.value.content.text.match(blobRegEx)) {
       // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
       // We'll display a sanitized version of it until it loads.
-      if(!SSB.connectedWithData())
+      if(!SSB.isConnectedWithData())
         self.body = md.markdown(self.msg.value.content.text.replaceAll(blobRegEx, 'Loading...'))
 
       SSB.connectedWithData(() => {
