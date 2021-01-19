@@ -59,12 +59,14 @@ syncThread = function(messages, cb) {
 
 // this uses https://github.com/arj03/ssb-partial-replication
 SSB.getThread = function(msgId, cb) {
-  let rpc = SSB.getPeer()
-
-  rpc.partialReplication.getTangle(msgId, (err, messages) => {
-    if (err) return cb(err)
-
-    syncThread(messages, cb)
+  SSB.connectedWithData(() => {
+    let rpc = SSB.getPeer()
+  
+    rpc.partialReplication.getTangle(msgId, (err, messages) => {
+      if (err) return cb(err)
+  
+      syncThread(messages, cb)
+    })
   })
 }
 
