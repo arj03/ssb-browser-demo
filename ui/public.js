@@ -39,6 +39,7 @@ module.exports = function (componentsState) {
       <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
       </p>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
+      <onboarding-dialog v-bind:show="showOnboarding" v-bind:onClose="closeOnboarding"></onboarding-dialog>
     </div>`,
 
     data: function() {
@@ -52,6 +53,7 @@ module.exports = function (componentsState) {
         pageSize: 50,
         displayPageEnd: 50,
 	
+        showOnboarding: window.firstTimeLoading,
         showPreview: false
       }
     },
@@ -69,6 +71,13 @@ module.exports = function (componentsState) {
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
+      },
+
+      closeOnboarding: function() {
+        this.showOnboarding = false
+
+	// We're set up.  We don't need this anymore and don't want it popping back up next time Public is loaded.
+	window.firstTimeLoading = false
       },
 
       renderPublic: function () {

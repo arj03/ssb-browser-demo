@@ -8,6 +8,14 @@ const optionsForCore = {
     populatePubs: false
   }
 }
+// Before we start up ssb-browser-core, let's check to see if we do not yet have an id, since this would mean that we need to display the onboarding screen.
+const ssbKeys = require('ssb-keys')
+window.firstTimeLoading = false
+try {
+  ssbKeys.loadSync('/.ssb-lite/secret')
+} catch(err) {
+  window.firstTimeLoading = true
+}
 require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
 
 (function() {

@@ -1,4 +1,5 @@
 const pull = require('pull-stream')
+const defaultPrefs = require("../defaultprefs.json")
 
 module.exports = function () {
   return {
@@ -16,12 +17,15 @@ module.exports = function () {
         <button class="clickButton" v-on:click="add">Add</button>
       </div>
       <h3>Possible connections</h3>
+      <div v-for="suggestedPeer in suggestedPeers">
+        <button class="clickButton" v-on:click="connectSuggested(suggestedPeer)">Connect to {{ suggestedPeer.name }}</button>
+      </div>
       <div v-for="stagedPeer in stagedPeers">
-        <button class="clickButton" v-on:click="connect(stagedPeer)">Connect to {{ stagedPeer.data.key }}</button>
+        <button class="clickButton" v-on:click="connect(stagedPeer)">Connect to {{ stagedPeer.name || stagedPeer.data.key }}</button>
       </div>
       <h3>Connections</h3>
       <div v-for="peer in peers">
-        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
+        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
       </div>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
@@ -33,6 +37,7 @@ module.exports = function () {
 
         statusHTML: '',
         running: true,
+        suggestedPeers: [],
         stagedPeers: [],
         peers: []
       }
@@ -40,10 +45,6 @@ module.exports = function () {
 
     methods: {
       onTypeChange: function() {
-        if (this.type == 'room')
-          this.address = 'wss:between-two-worlds.dk:9999~shs:7R5/crt8/icLJNpGwP2D7Oqz2WUd7ObCIinFKVR6kNY='
-        else
-          this.address = 'wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8='
       },
 
       add: function() {
@@ -57,12 +58,29 @@ module.exports = function () {
           type: this.type
         })
       },
+      connectSuggested: function(suggestedPeer) {
+        var s = suggestedPeer.address.split(":")
+        SSB.net.connectAndRemember(suggestedPeer.address, {
+          key: '@' + s[s.length-1] + '.ed25519',
+          type: suggestedPeer.type
+        })
+        this.updateSuggestedPeers()
+      },
+      updateSuggestedPeers: function() {
+        // Load suggested peer list and filter out any we're already connected to.
+        if (defaultPrefs.suggestPeers) {
+          const peerAddresses = this.peers.map(x => x.address)
+          this.suggestedPeers = defaultPrefs.suggestPeers.filter((x) => peerAddresses.indexOf(x.address) < 0)
+        }
+      },
       connect: function(stagedPeer) {
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
+        this.updateSuggestedPeers()
       },
       disconnect: function(peer) {
         SSB.net.conn.forget(peer.address)
         SSB.net.conn.disconnect(peer.address)
+        this.updateSuggestedPeers()
       }
     },
 
@@ -78,6 +96,7 @@ module.exports = function () {
         SSB.net.conn.stagedPeers(),
         pull.drain((entries) => {
           self.stagedPeers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
+          self.updateSuggestedPeers()
         })
       )
 
@@ -85,6 +104,7 @@ module.exports = function () {
         SSB.net.conn.peers(),
         pull.drain((entries) => {
           self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
+          self.updateSuggestedPeers()
         })
       )
 
