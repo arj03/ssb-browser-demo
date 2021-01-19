@@ -45,6 +45,7 @@ module.exports = function () {
          <span v-else>
            <div class="avatar">
              <img :src='image'><br>
+             <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">Send Message</router-link>
              <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
              <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
              <button class="clickButton" v-on:click="deleteFeed">Remove feed &#x2622</button>
