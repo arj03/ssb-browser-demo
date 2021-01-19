@@ -2920,9 +2920,9 @@
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA="
     },
     "jitdb": {
-      "version": "1.0.1",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.0.1.tgz",
-      "integrity": "sha512-VcGwqiXAwBo8PUBjEpNpy5Mkzs3KCw9HuO6Qv1Oqj2GN6k6C8VAgzVTvFS5Q9w45727aOl4GQpsKgtmp20x3cg==",
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.0.4.tgz",
+      "integrity": "sha512-i6O+J09WmlyU9JT2B3TN5i/eGYTBZD8MYg3jknKfPbAeb5AqdqD/6rCy7kXHUFAZAvN9ot0JGQ5755gxhIC4Ww==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -2942,7 +2942,7 @@
         "sanitize-filename": "^1.6.3",
         "traverse": "^0.6.6",
         "typedarray-to-buffer": "^4.0.0",
-        "typedfastbitset": "^0.1.5"
+        "typedfastbitset": "~0.2.1"
       },
       "dependencies": {
         "debug": {
@@ -4985,9 +4985,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "6.0.2",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.2.tgz",
-      "integrity": "sha512-qMfQilgRkVpyFhYnreoExasyhNZsSfzwtFx2nBFZMQh6CkkjrgIlqeRNmgncKutOWqlpUWL0KQp2yJx0t1bYOg==",
+      "version": "6.0.3",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.3.tgz",
+      "integrity": "sha512-Jrye3+vRZ9FohA5oDXGqqzgyjLNvUBtu4EJLI73RGF9rfYOKpEc1ChsqdFXk8jm37PzGLySryNaM2ca9TRJy5A==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
@@ -5008,7 +5008,7 @@
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^0.19.1",
-        "ssb-db2": "^1.0.0",
+        "ssb-db2": "^1.1.0",
         "ssb-keys": "^8.0.1",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
@@ -5255,9 +5255,9 @@
       }
     },
     "ssb-db2": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.0.0.tgz",
-      "integrity": "sha512-6aDOfXM+lmgQdpfiSjQ1hufu1+8FMlp/N3RLOoDKg5RZSrTpXU/FadTbn3XybZ57UV6pUk1Ub3tJRwIi1H6X0Q==",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.1.0.tgz",
+      "integrity": "sha512-cKi5gl0jdwNe5TxlzjiD8x5vuJN+JMa3aFUiHGXuIdp9h92fauBUL3fuF8FTapDxa7zGPMO30WBFF9JXq1K5uQ==",
       "requires": {
         "async-append-only-log": "^3.0.2",
         "atomically-universal": "^0.1.1",
@@ -5267,7 +5267,7 @@
         "fastintcompression": "0.0.4",
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
-        "jitdb": "^1.0.0",
+        "jitdb": "^1.0.3",
         "level": "^6.0.1",
         "lodash.debounce": "^4.0.8",
         "mkdirp": "^1.0.4",
@@ -6086,9 +6086,9 @@
       "integrity": "sha512-6dOYeZfS3O9RtRD1caom0sMxgK59b27+IwoNy8RDPsmslSGOyU+mpTamlaIW7aNKi90ZQZ9DFaZL3YRoiSCULQ=="
     },
     "typedfastbitset": {
-      "version": "0.1.5",
-      "resolved": "https://registry.npmjs.org/typedfastbitset/-/typedfastbitset-0.1.5.tgz",
-      "integrity": "sha512-GZ9rXwlReOQL1HCD+Kw/HaOfv3veVivULuoRL2RYZjvgxxJA5aig4BwL7eqYUnZHUGRAXU/JuCbLax5Vk0FPqg=="
+      "version": "0.2.1",
+      "resolved": "https://registry.npmjs.org/typedfastbitset/-/typedfastbitset-0.2.1.tgz",
+      "integrity": "sha512-B2B+wo5gC7VRAqcFEiUCjS6CJ1vmeYZ7uzY3Jsu6UNStHiF+W0vkhZAmQaj5m9sC2KVrpyHGRzGuhz3M6+n/8A=="
     },
     "uc.micro": {
       "version": "1.0.6",
