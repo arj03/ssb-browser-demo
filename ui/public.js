@@ -4,7 +4,7 @@ module.exports = function (componentsState) {
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
   const localPrefs = require('../localprefs')
-  const { and, or, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, or, not, channel, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   function getQuery(onlyDirectFollow, onlyThreads) {
     let feedFilter = null
@@ -22,9 +22,13 @@ module.exports = function (componentsState) {
   return {
     template: `
     <div id="public">
-      <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
-      <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
-      <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
+      <div class="new-message">
+        <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
+        <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
+        <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
+        <div class="channel-selector" v-if="postMessageVisible"><v-select placeholder="Channel (optional)" v-model="postChannel" :options="channels" taggable>
+        </v-select></div>
+      </div>
       <h2>Last {{ pageSize }} messages
       <a href="javascript:void(0);" title="Refresh messages" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
       </h2>
@@ -46,6 +50,8 @@ module.exports = function (componentsState) {
       return {
         postMessageVisible: false,
         postText: "",
+        postChannel: "",
+        channels: [],
 	onlyDirectFollow: false,
         onlyThreads: false,
         messages: [],
@@ -134,10 +140,51 @@ module.exports = function (componentsState) {
         this.showPreview = false
       },
 
+      channelResultCallback: function(err, answer) {
+        if (!err) {
+          var newChannels = []
+
+          var posts = (answer.results ? answer.results : answer);
+
+          for (r in posts) {
+            var channel = posts[r].value.content.channel
+
+            if(channel && channel.charAt(0) == '#')
+              channel = channel.substring(1, channel.length)
+
+            if (channel && channel != '' && channel != '"')
+              if (newChannels.indexOf(channel) < 0)
+                newChannels.push(channel)
+          }
+
+          // Sort and add a # at the start so it displays like it would normally for a user.
+          var sortFunc = Intl.Collator().compare
+          this.channels = newChannels.map((x) => '#' + x).sort(sortFunc)
+        }
+      },
+
       onPost: function() {
         if (!this.postMessageVisible) {
+          // Load the list of channels.
+          var self = this
+          SSB.connectedWithData((rpc) => {
+            SSB.db.query(
+              and(not(channel('')), type('post'), isPublic()),
+              toCallback(self.channelResultCallback)
+            )
+          })
+
           this.postMessageVisible = true
           return
+        }
+
+        if(this.postChannel && this.postChannel != '') {
+          // Exceedingly basic validation.
+          // FIXME: Validate this properly.  We would need a list of characters which are valid for channels.
+          if(this.postChannel.indexOf(' ') >= 0) {
+            alert("Channels cannot contain spaces.")
+            return
+          }
         }
 
         this.showPreview = true
@@ -148,10 +195,17 @@ module.exports = function (componentsState) {
 
         var mentions = ssbMentions(this.postText)
 
-        SSB.db.publish({ type: 'post', text: this.postText, mentions: mentions }, (err) => {
+        var postData = { type: 'post', text: this.postText, mentions: mentions }
+
+        if(this.postChannel && this.postChannel != '') {
+          postData.channel = this.postChannel.replace(/^#+/, '')
+        }
+
+        SSB.db.publish(postData, (err) => {
           if (err) console.log(err)
 
           self.postText = ""
+          self.postChannel = ""
           self.postMessageVisible = false
           self.showPreview = false
 
