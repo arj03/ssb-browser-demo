@@ -32,6 +32,7 @@ module.exports = function () {
         offset: 0,
         pageSize: 50,
         displayPageEnd: 50,
+        autorefreshTimer: 0,
         showPreview: false,
         messages: []
       }
@@ -51,6 +52,23 @@ module.exports = function () {
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
+      },
+
+      onScroll: function() {
+        const scrollTop = (typeof document.body.scrollTop != 'undefined' ? document.body.scrollTop : window.scrollY)
+
+        if (scrollTop == 0) {
+          // At the top of the page.  Enable autorefresh
+          var self = this
+          this.autorefreshTimer = setTimeout(() => {
+            self.autorefreshTimer = 0
+            self.onScroll()
+            self.refresh()
+          }, (this.messages.length > 0 ? 30000 : 3000))
+        } else {
+          clearTimeout(this.autorefreshTimer)
+          this.autorefreshTimer = 0
+        }
       },
 
       render: function () {
@@ -94,6 +112,7 @@ module.exports = function () {
       },
 
       refresh: function() {
+        console.log("Refreshing")
         this.messages = []
         this.offset = 0
         this.render()
@@ -101,7 +120,13 @@ module.exports = function () {
     },
 
     created: function () {
+      window.addEventListener('scroll', this.onScroll)
+      this.onScroll()
       this.render()
     },
+
+    destroyed: function() {
+      window.removeEventListener('scroll', this.onScroll)
+    }
   }
 }
