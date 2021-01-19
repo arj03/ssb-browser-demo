@@ -86,11 +86,19 @@ function runConnectedWithDataCallbacks() {
   }
 }
 
+SSB.isConnected = function() {
+  return (SSB.activeConnections > 0)
+}
+
+SSB.isConnectedWithData = function() {
+  return (SSB.activeConnectionsWithData > 0)
+}
+
 SSB.connected = function(cb) {
   // Add the callback to the list.
   SSB.callbacksWaitingForConnection.push(cb);
 
-  if(SSB.activeConnections > 0) {
+  if(SSB.isConnected()) {
     // Already connected.  Run all the callbacks.
     runConnectedCallbacks()
   }
@@ -100,7 +108,7 @@ SSB.connectedWithData = function(cb) {
   // Register a callback for when we're connected to a peer with data (not a room).
   SSB.callbacksWaitingForConnectionWithData.push(cb);
 
-  if(SSB.activeConnectionsWithData > 0) {
+  if(SSB.isConnectedWithData()) {
     // Already connected.  Run all the callbacks.
     runConnectedWithDataCallbacks()
   }
