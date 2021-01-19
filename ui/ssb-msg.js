@@ -157,9 +157,11 @@ Vue.component('ssb-msg', {
 
     // Render the body, which may need to wait until we're connected to a peer.
     var self = this
-    if(self.msg.value.content.text.indexOf('(&') >= 0) {
+    const blobRegEx = /!\[.*\]\(&.*\)/g
+    if(self.msg.value.content.text.match(blobRegEx)) {
       // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
-      self.body = "(Loading...please wait)"
+      // We'll display a sanitized version of it until it loads.
+      self.body = md.markdown(self.msg.value.content.text.replaceAll(blobRegEx, 'Loading...'))
       SSB.connectedWithData(() => {
         self.body = md.markdown(self.msg.value.content.text)
       })
