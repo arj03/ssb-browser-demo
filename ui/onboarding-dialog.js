@@ -3,7 +3,7 @@ const defaultPrefs = require("../defaultprefs.json")
 Vue.component('onboarding-dialog', {
   template: `
         <transition name="modal" v-if="show">
-          <div class="modal-mask">
+          <div id="onboarding-dialog" class="modal-mask">
             <div class="modal-wrapper">
               <div class="modal-container">
                 <h3>New user</h3>

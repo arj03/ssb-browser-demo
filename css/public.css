@@ -2,3 +2,6 @@
   float: right;
 }
 
+#onboarding-dialog {
+  position: absolute;
+}
