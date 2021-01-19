@@ -138,7 +138,7 @@ module.exports = function () {
 
     computed: {
       followText: function() { return this.following ? "Unfollow" : "Follow" },
-      blockText: function() { return this.blocking ? "Unblock" : "Block" },
+      blockText: function() { return this.blocking ? "Unblock" : "Block and delete" },
       isSelf: function() { return SSB.net.id == this.feedId },
       description: function() { return md.markdown(this.descriptionText) }
     },
@@ -250,7 +250,15 @@ module.exports = function () {
             contact: this.feedId,
             blocking: true
           }, () => {
-            alert("blocked!") // FIXME: proper UI
+            SSB.db.deleteFeed(this.feedId, (err) => {
+              if (err) {
+                alert("Failed to delete messages, but user is blocked.")
+              } else {
+                alert("Blocked and messages deleted!") // FIXME: proper UI
+
+                this.$router.push({ path: '/public'})
+              }
+	    })
           })
         }
       },

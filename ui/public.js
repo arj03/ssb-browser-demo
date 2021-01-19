@@ -39,19 +39,21 @@ module.exports = function (componentsState) {
       <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
       </p>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
+      <onboarding-dialog v-bind:show="showOnboarding" v-bind:onClose="closeOnboarding"></onboarding-dialog>
     </div>`,
 
     data: function() {
       return {
         postMessageVisible: false,
         postText: "",
-	onlyDirectFollow: false,
+        onlyDirectFollow: false,
         onlyThreads: false,
         messages: [],
         offset: 0,
         pageSize: 50,
         displayPageEnd: 50,
-	
+
+        showOnboarding: window.firstTimeLoading,
         showPreview: false
       }
     },
@@ -71,33 +73,38 @@ module.exports = function (componentsState) {
         )
       },
 
+      closeOnboarding: function() {
+        this.showOnboarding = false
+
+        // We're set up.  We don't need this anymore and don't want it popping back up next time Public is loaded.
+        window.firstTimeLoading = false
+      },
+
       renderPublic: function () {
         componentsState.newPublicMessages = false
 
         document.body.classList.add('refreshing')
 
         console.time("latest messages")
-        
+
         SSB.db.query(
           getQuery(this.onlyDirectFollow, this.onlyThreads),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
-	    if (!err) {
-              this.messages = this.messages.concat(answer.results)
-              this.displayPageEnd = this.offset + this.pageSize
-              this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
-	    }
-
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
 
-	    if (err) {
-	      this.messages = []
-	      alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
-	      throw err
-	    }
+            if (err) {
+              this.messages = []
+              alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
+              throw err
+            } else {
+              this.messages = this.messages.concat(answer.results)
+              this.displayPageEnd = this.offset + this.pageSize
+              this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+            }
           })
         )
       },
@@ -120,7 +127,7 @@ module.exports = function (componentsState) {
           self.postText += text
         })
       },
-      
+
       closePreview: function() {
         this.showPreview = false
       },
@@ -168,10 +175,12 @@ module.exports = function (componentsState) {
 
     watch: {
       onlyDirectFollow: function (newValue, oldValue) {
+        if (newValue === '') return
         this.refresh()
       },
 
       onlyThreads: function (newValue, oldValue) {
+        if (newValue === '') return
         this.refresh()
       }
     }
