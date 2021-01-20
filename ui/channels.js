@@ -6,27 +6,27 @@ module.exports = function (componentsState) {
   return {
     template: `
     <div id="channels">
-      <h2>Channels</h2>
+      <h2>{{ $t('channels.title') }}</h2>
       <div v-if="favoriteChannels.length > 0">
-        <h3>Favorite channels</h3>
+        <h3>{{ $t('channels.favoriteChannels') }}</h3>
         <ol>
           <li v-for="channel in favoriteChannels">
             <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}</router-link>
           </li>
         </ol>
-        <h3>Other channels</h3>
+        <h3>{{ $t('channels.otherChannels') }}</h3>
       </div>
-      <label for="sortMode">Show:</label> <select id="shortMode" v-model="sortMode" v-on:change="load()">
-      <option value="recent">Recent popular channels (latest 500 posts)</option>
-      <option value="popular">Overall popular channels</option>
-      <option value="all">All channels alphabetically</option>
+      <label for="sortMode">{{ $t('channels.showChannels') }}</label> <select id="shortMode" v-model="sortMode" v-on:change="load()">
+      <option value="recent">{{ $t('channels.showChannelsRecent') }}</option>
+      <option value="popular">{{ $t('channels.showChannelsPopular') }}</option>
+      <option value="all">{{ $t('channels.showChannelsAll') }}</option>
       </select>
       <ol>
         <li v-for="(count, channel) in channels">
           <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}<sup>[&nbsp;{{ count }}&nbsp;]</sup></router-link>
 	</li>
       </ol>
-      <p v-if="channels.length == 0">Searching for channels...</p>
+      <p v-if="channels.length == 0">{{ $t('channels.loading') }}</p>
     </div>`,
 
     data: function() {

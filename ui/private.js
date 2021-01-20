@@ -16,9 +16,9 @@ module.exports = function (componentsState) {
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
         <textarea class="messageText" v-model="postText"></textarea><br>
         </span>
-        <button class="clickButton" v-on:click="onPost">Post private message</button>
+        <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-        <h2>Private messages</h2>
+        <h2>{{ $t('private.privateMessages') }}</h2>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
         <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
@@ -89,7 +89,7 @@ module.exports = function (componentsState) {
         }
 
         if (this.postText == '' || this.subject == '') {
-          alert("Please provide both subject and text in private messages")
+          alert(this.$root.$t('private.blankFieldError'))
           return
         }
 
@@ -100,7 +100,7 @@ module.exports = function (componentsState) {
         let recps = this.recipients.map(x => x.id)
 
         if (!recps.every(x => x.startsWith("@"))) {
-          alert("recipients must start with @")
+          alert(this.$root.$t('private.badRecipientError'))
           return
         }
 

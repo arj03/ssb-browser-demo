@@ -7,14 +7,14 @@ module.exports = function () {
   return {
     template: `
        <div id="channel">
-         <h2>Settings</h2>
+         <h2>{{ $t('settings.title') }}</h2>
 	 <p>
-	 <label for="appTitle">App/browser tab title:</label><br />
-	 <input type="text" id="appTitle" v-model="appTitle" placeholder="(Use default)" />
+	 <label for="appTitle">{{ $t('settings.appTitle') }}</label><br />
+	 <input type="text" id="appTitle" v-model="appTitle" :placeholder="$t('settings.appTitlePlaceholder')" />
 	 </p>
 
          <p>
-         <label for="theme">Color theme:</label><br />
+         <label for="theme">{{ $t('settings.colorTheme') }}</label><br />
          <select id="theme" v-model="theme">
          <option value="default">Default</option>
          <option value="dark">Dark</option>
@@ -25,9 +25,9 @@ module.exports = function () {
          </p>
 
 	 <p>
-	 <label for="replicationHops">Number of hops to replicate:</label><br />
+	 <label for="replicationHops">{{ $t('settings.replicateHops') }}</label><br />
 	 <select id="replicationHops" v-model="hops">
-	 <option value="0">0 (only people you follow)</option>
+	 <option value="0">0 {{ $t('settings.directFollows') }}</option>
 	 <option value="1">1</option>
 	 <option value="2">2</option>
 	 <option value="3">3</option>
@@ -37,12 +37,12 @@ module.exports = function () {
 	 </p>
 
 	 <p>
-	 <label for="caps"><strong>ADVANCED</strong> - Caps key (leave blank to use default):</label><br />
-	 <input type="text" id="caps" v-model="caps" placeholder="(Use default)" /><br />
-	 <small>(Only change this if you really, really know what you're doing.)</small>
+	 <label for="caps"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.capsKey') }}</label><br />
+	 <input type="text" id="caps" v-model="caps" :placeholder="$t('settings.capsKeyPlaceholder')" /><br />
+	 <small>{{ $t('settings.capsKeyWarning') }}</small>
 	 </p>
 
-         <button class="clickButton" v-on:click="save()">Save</button>
+         <button class="clickButton" v-on:click="save()">{{ $t('common.save') }}</button>
        <div>`,
 
     props: ['channel'],
@@ -71,7 +71,7 @@ module.exports = function () {
 	localPrefs.setCaps(this.caps)
         localPrefs.updateStateFromSettings()
 
-	alert("You may have to refresh your browser for these changes to take effect.");
+	alert(this.$root.$t('settings.refreshForChanges'));
       }
     },
 

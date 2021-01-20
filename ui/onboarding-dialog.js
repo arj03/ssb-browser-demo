@@ -6,22 +6,22 @@ Vue.component('onboarding-dialog', {
           <div id="onboarding-dialog" class="modal-mask">
             <div class="modal-wrapper">
               <div class="modal-container">
-                <h3>New user</h3>
-		<p>Welcome!  It looks like you're new here.  All of this informataion is <strong>entirely optional</strong>, but it does tend to help get you up and running quickly and easily.</p>
+                <h3>{{ $t('onboarding.title') }}</h3>
+                <p v-html="$t('onboarding.welcomeMessage')"></p>
 
 		<hr />
 
-		<p><label for="name">Pick a name for yourself (you can change this later under Profile):</label><br />
-		<input type="text" v-model="name" id="name" placeholder="(Your name/nickname)" /></p>
+		<p><label for="name">{{ $t('onboarding.profileName') }}</label><br />
+		<input type="text" v-model="name" id="name" :placeholder="$t('onboarding.profileNamePlaceholder')" /></p>
 
 		<hr />
 
-		<p><label for="descriptionText">If you want, you can type up a short bio:</label><br />
-		<textarea cols="40" rows="6" id="descriptionText" v-model="descriptionText" placeholder="(A short bio about you - Markdown formatting is supported)"></textarea></p>
+		<p><label for="descriptionText">{{ $t('onboarding.profileDescription') }}</label><br />
+		<textarea cols="40" rows="6" id="descriptionText" v-model="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')"></textarea></p>
 
                 <div v-if="suggestedPeers.length > 0">
 		<hr />
-		<p>Here are some preset servers you can connect to:<br />
+		<p>{{ $t('onboarding.suggestedPeers') }}<br />
                 <div v-for="(peer, index) in suggestedPeers">
                   <input type="checkbox" :id="'peer' + index" :value="peer" v-model="usePeers" />&nbsp;<label :for="'peer' + index">{{ peer.name }}</label>
                 </div>
@@ -30,7 +30,7 @@ Vue.component('onboarding-dialog', {
 
                 <div v-if="suggestedFollows.length > 0">
 		<hr />
-		<p>And here are some people you might like to follow:<br />
+		<p>{{ $t('onboarding.suggestedFollows') }}<br />
                 <div v-for="(follow, index) in suggestedFollows">
                   <input type="checkbox" :id="'follow' + index" :value="follow" v-model="useFollows" />&nbsp;<label :for="'follow' + index">{{ follow.name }}</label>
                 </div>
@@ -39,10 +39,10 @@ Vue.component('onboarding-dialog', {
 
                 <div class="modal-footer">
                   <button class="clickButton" @click="onClose">
-                    Cancel - Manual setup
+                    {{ $t('onboarding.manualSetup') }}
                   </button>
                   <button class="modal-default-button clickButton get-started-button" v-on:click="getStarted">
-                    Get started!
+                    {{ $t('onboarding.getStarted') }}
                   </button>
                 </div>
               </div>

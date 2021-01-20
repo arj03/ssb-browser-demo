@@ -6,15 +6,15 @@ Vue.component('ssb-msg-preview', {
           <div class="modal-mask">
             <div class="modal-wrapper">
               <div class="modal-container">
-                <h3>Post preview</h3>
+                <h3>{{ $t('messagePreview.postPreview') }}</h3>
                 <div class="modal-body" v-html="msgPreview"></div>
 
                 <div class="modal-footer">
                   <button class="clickButton" @click="onClose">
-                    Close
+                    {{ $t('common.close') }}
                   </button>
                   <button class="modal-default-button clickButton" v-on:click="confirmPost">
-                    Post message
+                    {{ $t('messagePreview.postMessage') }}
                   </button>
                 </div>
               </div>

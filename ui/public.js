@@ -29,26 +29,26 @@ module.exports = function (componentsState) {
     <div id="public">
       <div class="new-message">
         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
-        <button class="clickButton" id="postMessage" v-on:click="onPost">Post new thread</button>
+        <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('public.postNewThread') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-        <div class="channel-selector" v-if="postMessageVisible"><v-select placeholder="Channel (optional)" v-model="postChannel" :options="channels" taggable>
+        <div class="channel-selector" v-if="postMessageVisible"><v-select :placeholder="$t('public.channelOptional')" v-model="postChannel" :options="channels" taggable>
         </v-select></div>
       </div>
-      <h2>Last {{ pageSize }} messages
-      <a href="javascript:void(0);" title="Refresh messages" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
+      <h2>{{ $t('common.lastXMessages', { count: pageSize }) }}
+      <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
       </h2>
-      <fieldset><legend>Filters</legend>
-      <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>Only show posts from people you follow</label><br />
-      <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>Hide replies (only show the first message of a thread)</label><br />
-      <input id='onlyChannels' type='checkbox' v-model="onlyChannels"> <label for='onlyChannels'>Show only these channels:</label>
-      <div class="channel-selector"><v-select placeholder="Channels (optional)" v-model="onlyChannelsList" :options="channels" taggable multiple push-tags>
+      <fieldset><legend>{{ $t('public.filters') }}</legend>
+      <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>{{ $t('public.filterOnlyDirectFollow') }}</label><br />
+      <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>{{ $t('public.filterOnlyThreads') }}</label><br />
+      <input id='onlyChannels' type='checkbox' v-model="onlyChannels"> <label for='onlyChannels'>{{ $t('public.filterOnlyChannels') }}</label>
+      <div class="channel-selector"><v-select :placeholder="$t('public.channelsOptional')" v-model="onlyChannelsList" :options="channels" taggable multiple push-tags>
       </v-select></div>
       </fieldset>
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
-      <p v-if="messages.length == 0">(No messages to display)</p>
-      <p>Showing messages from 1-{{ displayPageEnd }}<br />
-      <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
+      <p v-if="messages.length == 0">{{ $t('common.noMessages') }}</p>
+      <p>{{ $t('common.showingMessagesFrom') }} 1-{{ displayPageEnd }}<br />
+      <button class="clickButton" v-on:click="loadMore">{{ $t('common.loadXMore', { count: pageSize }) }}</button>
       </p>
       <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
       <onboarding-dialog v-bind:show="showOnboarding" v-bind:onClose="closeOnboarding"></onboarding-dialog>
@@ -216,7 +216,7 @@ module.exports = function (componentsState) {
           // Exceedingly basic validation.
           // FIXME: Validate this properly.  We would need a list of characters which are valid for channels.
           if(this.postChannel.indexOf(' ') >= 0) {
-            alert("Channels cannot contain spaces.")
+            alert(this.$root.$t('public.channelsCannotContainSpaces'))
             return
           }
         }

@@ -20,6 +20,8 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
 
 (function() {
   const componentsState = require('./components')()
+  const VueI18n = require('vue-i18n').default
+  const i18nMessages = require('../messages.json')
 
   // Load local preferences.
   localPrefs.updateStateFromSettings();
@@ -65,8 +67,18 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       routes
     })
 
+    var defaultLocale = (navigator.language || (navigator.languages ? navigator.languages[0] : navigator.browserLanguage ? navigator.browserLanguage : 'en'))
+    if (!i18nMessages[defaultLocale])
+      defaultLocale = 'en'
+    const i18n = new VueI18n({
+      locale: defaultLocale,
+      messages: i18nMessages
+    })
+
     const app = new Vue({
       router,
+
+      i18n,
 
       data: function() {
         return {

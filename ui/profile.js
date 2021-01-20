@@ -32,58 +32,58 @@ module.exports = function () {
            <div class="avatar">
              <img :src='image'><br>
              <input type="file" v-on:change="onFileSelect"><br>
-             <input id="name" type="text" v-model="name" placeholder="Your name / nick">
+             <input id="name" type="text" v-model="name" :placeholder="$t('profile.profileNamePlaceholder')">
              <br>
            </div>
            <div class="description">
-             <textarea placeholder="Description (markdown is supported)" v-model="descriptionText"></textarea><br>
-             <button class="clickButton" v-on:click="exportKey">Export feed key to mnemonic code</button>
-             <button class="clickButton" v-on:click="showImportKey = true">Load feed key from mnemonic code</button>
-             <button class="clickButton" v-on:click="saveProfile">Save profile</button>
+             <textarea :placeholder="$t('profile.profileDescriptionPlaceholder')" v-model="descriptionText"></textarea><br>
+             <button class="clickButton" v-on:click="exportKey">{{ $t('profile.exportKey') }}</button>
+             <button class="clickButton" v-on:click="showImportKey = true">{{ $t('profile.loadKey') }}</button>
+             <button class="clickButton" v-on:click="saveProfile">{{ $t('profile.saveProfile') }}</button>
            </div>
          </span>
          <span v-else>
            <div class="avatar">
              <img :src='image'><br>
-             <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">Send Message</router-link>
+             <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">{{ $t('profile.sendMessage') }}</router-link>
              <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
              <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
-             <button class="clickButton" v-on:click="deleteFeed">Remove feed &#x2622</button>
+             <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button>
              <br><br>
            </div>
            <div class="description">
              <span v-html="description"></span>
            </div>
          </span>
-         <h2 v-if="friends">Following</h2>
+         <h2 v-if="friends">{{ $t('profile.following') }}</h2>
          <div id="follows">
            <div v-for="friend in friends">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
-         <h2 v-if="blocked">Blocking</h2>
+         <h2 v-if="blocked">{{ $t('profile.blocking') }}</h2>
          <div id="blocked">
            <div v-for="block in blocked">
              <ssb-profile-link v-bind:key="block" v-bind:feedId="block"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
-         <h2>Last 25 messages for {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
-         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">Download following</button>
-         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">Download profile</button>
+         <h2>{{ $t('profile.lastXMessagesFor', { count: 25 }) }} {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
+         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">{{ $t('profile.downloadFollowing') }}</button>
+         <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">{{ $t('profile.downloadProfile') }}</button>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
-         <button class="clickButton" v-on:click="loadMore">Load more</button>
-         <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">Download latest messages for user</button>
+         <button class="clickButton" v-on:click="loadMore">{{ $t('profile.loadMore') }}</button>
+         <button v-if="canDownloadMessages" class="clickButton" v-on:click="downloadMessages">{{ $t('profile.downloadLatestMessages') }}</button>
 
          <transition name="modal" v-if="showExportKey">
            <div class="modal-mask">
              <div class="modal-wrapper">
                <div class="modal-container">
                  <div>
-                   <b>A mnemonic code has been generated from your private feed key.</b>
+                   <b>{{ $t('profile.showMnemonicCodeAbout') }}</b>
                    <div style="padding-top: 10px;">
-                     This code can be used to restore your identitfy later. Store this somewhere safe.
+                     {{ $t('profile.showMnemonicCodeWarning') }}
                    </div>
                  </div>
 
@@ -93,7 +93,7 @@ module.exports = function () {
 
                  <div class="modal-footer">
                    <button class="modal-default-button clickButton" @click="showExportKey = false">
-                     Close
+                     {{ $t('common.close') }}
                    </button>
                  </div>
                </div>
@@ -106,22 +106,22 @@ module.exports = function () {
              <div class="modal-wrapper">
                <div class="modal-container">
                  <div>
-                   <b>Enter mnemonic code below to restore your feed key.</b>
+                   <b>{{ $t('profile.enterMnemonicCodeAbout') }}</b>
                    <div style="padding-top: 10px;">
-                     WARNING: this will overwrite your current feed key!
+                     {{ $t('profile.enterMnemonicCodeWarning') }}
                    </div>
                  </div>
 
                  <div class="modal-body">
-                    <textarea placeholder="Mnemonic code" v-model="mnemonic"></textarea><br>
+                    <textarea :placeholder="$t('profile.enterMnemonicCodePlaceholder')" v-model="mnemonic"></textarea><br>
                  </div>
 
                  <div class="modal-footer">
                     <button class="modal-default-button clickButton" style="margin-left: 20px;" v-on:click="restoreKey">
-                      Restore feed
+                      {{ $t('profile.restoreFeed') }}
                    </button>
                    <button class="modal-default-button clickButton" @click="showImportKey = false">
-                     Close
+                     {{ $t('common.close') }}
                    </button>
                  </div>
                </div>
@@ -137,8 +137,8 @@ module.exports = function () {
     },
 
     computed: {
-      followText: function() { return this.following ? "Unfollow" : "Follow" },
-      blockText: function() { return this.blocking ? "Unblock" : "Block and delete" },
+      followText: function() { return this.following ? this.$root.$t('profile.unfollow') : this.$root.$t('profile.follow') },
+      blockText: function() { return this.blocking ? this.$root.$t('profile.unblock') : this.$root.$t('profile.block') },
       isSelf: function() { return SSB.net.id == this.feedId },
       description: function() { return md.markdown(this.descriptionText) }
     },
@@ -211,22 +211,22 @@ module.exports = function () {
       },
 
       changeFollowStatus: function() {
+        var self = this
         if (this.following) {
           SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             following: false
           }, () => {
-            alert("unfollowed!") // FIXME: proper UI
+            alert(self.$root.$t('profile.unfollowed')) // FIXME: proper UI
           })
         } else {
-          var self = this
           SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             following: true
           }, () => {
-            alert("followed!") // FIXME: proper UI
+            alert(self.$root.$t('profile.followed')) // FIXME: proper UI
             // wait for db sync
             SSB.connectedWithData(() => {
               SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
@@ -236,13 +236,14 @@ module.exports = function () {
       },
 
       changeBlockStatus: function() {
+        var self = this
         if (this.blocking) {
           SSB.db.publish({
             type: 'contact',
             contact: this.feedId,
             blocking: false
           }, () => {
-            alert("unblocked!") // FIXME: proper UI
+            alert(self.$root.$t('profile.unblocked')) // FIXME: proper UI
           })
         } else {
           SSB.db.publish({
@@ -252,9 +253,9 @@ module.exports = function () {
           }, () => {
             SSB.db.deleteFeed(this.feedId, (err) => {
               if (err) {
-                alert("Failed to delete messages, but user is blocked.")
+                alert(self.$root.$t('profile.blockedButNotDeleted'))
               } else {
-                alert("Blocked and messages deleted!") // FIXME: proper UI
+                alert(self.$root.$t('profile.blocked')) // FIXME: proper UI
 
                 this.$router.push({ path: '/public'})
               }
@@ -264,8 +265,9 @@ module.exports = function () {
       },
 
       deleteFeed: function() {
+        var self = this
         SSB.db.deleteFeed(this.feedId, (err) => {
-          if (err) return alert("Failed to remove feed", err)
+          if (err) return alert(self.$root.$t('profile.failedToRemoveFeed'), err)
 
           this.$router.push({ path: '/public'})
         })

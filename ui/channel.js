@@ -6,19 +6,19 @@ module.exports = function () {
   return {
     template: `
        <div id="channel">
-         <h2>Channel #{{ channel }}</h2>
+         <h2>{{ $t('channel.title', { name: channel }) }}</h2>
          <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
-         <button class="clickButton" id="postMessage" v-on:click="onPost">Post new message</button>
+         <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('channel.postNewMessage') }}</button>
          <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
 
-         <h2>Last {{ pageSize }} messages
-         <a href="javascript:void(0);" title="Refresh messages" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
+         <h2>{{ $t('common.lastXMessages', { count: pageSize }) }}
+         <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
          </h2>
 
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-         <p v-if="messages.length == 0">(No messages to display)</p>
-         <p>Showing messages from 1-{{ displayPageEnd }}<br />
-         <button class="clickButton" v-on:click="loadMore">Load {{ pageSize }} more</button>
+         <p v-if="messages.length == 0">{{ $t('common.noMessages') }}</p>
+         <p>{{ $t('common.showingMessagesFrom') }} 1-{{ displayPageEnd }}<br />
+         <button class="clickButton" v-on:click="loadMore">{{ $t('common.loadXMore', { count: pageSize }) }}</button>
          </p>
          <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
        <div>`,
