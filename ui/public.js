@@ -52,6 +52,7 @@ module.exports = function (componentsState) {
         offset: 0,
         pageSize: 50,
         displayPageEnd: 50,
+        autorefreshTimer: 0,
 
         showOnboarding: window.firstTimeLoading,
         showPreview: false
@@ -71,6 +72,23 @@ module.exports = function (componentsState) {
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
+      },
+
+      onScroll: function() {
+        const scrollTop = (typeof document.body.scrollTop != 'undefined' ? document.body.scrollTop : window.scrollY)
+
+        if (scrollTop == 0) {
+          // At the top of the page.  Enable autorefresh
+          var self = this
+          this.autorefreshTimer = setTimeout(() => {
+            self.autorefreshTimer = 0
+            self.onScroll()
+            self.refresh()
+          }, (this.messages.length > 0 ? 30000 : 3000))
+        } else {
+          clearTimeout(this.autorefreshTimer)
+          this.autorefreshTimer = 0
+        }
       },
 
       closeOnboarding: function() {
@@ -158,6 +176,7 @@ module.exports = function (componentsState) {
       },
 
       refresh: function() {
+        console.log("Refreshing")
         this.messages = []
         this.offset = 0
         this.renderPublic()
@@ -165,12 +184,19 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      window.addEventListener('scroll', this.onScroll)
+      this.onScroll()
+
       // Pull preferences for filters.
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
       this.onlyDirectFollow = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlydirectfollow') >= 0)
       this.onlyThreads = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlythreads') >= 0)
 
       this.renderPublic()
+    },
+
+    destroyed: function () {
+      window.removeEventListener('scroll', this.onScroll)
     },
 
     watch: {
