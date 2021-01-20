@@ -1,11 +1,21 @@
 module.exports = function (componentsState) {
   const pull = require('pull-stream')
+  const localPrefs = require('../localprefs')
   const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   return {
     template: `
     <div id="channels">
       <h2>Channels</h2>
+      <div v-if="favoriteChannels.length > 0">
+        <h3>Favorite channels</h3>
+        <ol>
+          <li v-for="channel in favoriteChannels">
+            <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}</router-link>
+          </li>
+        </ol>
+        <h3>Other channels</h3>
+      </div>
       <label for="sortMode">Show:</label> <select id="shortMode" v-model="sortMode" v-on:change="load()">
       <option value="recent">Recent popular channels (latest 500 posts)</option>
       <option value="popular">Overall popular channels</option>
@@ -22,6 +32,7 @@ module.exports = function (componentsState) {
     data: function() {
       return {
         channels: [],
+	favoriteChannels: [],
         sortMode: "recent"
       }
     },
@@ -29,6 +40,9 @@ module.exports = function (componentsState) {
     methods: {
       load: function() {
         document.body.classList.add('refreshing')
+
+        // Get favorite channels from preferences.
+        this.favoriteChannels = localPrefs.getFavoriteChannels().map(x => x.replace(/^#+/, '')).sort(Intl.Collator().compare)
 
         console.time("channel list")
         

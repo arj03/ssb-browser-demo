@@ -35,6 +35,10 @@ exports.getPublicFilters = function() { return getPref('publicFilters', (default
 
 exports.setPublicFilters = function(filterNamesSeparatedByPipes) { setPref('publicFilters', filterNamesSeparatedByPipes) }
 
+exports.getFavoriteChannels = function() { return JSON.parse(getPref('favoriteChannels', JSON.stringify(defaultPrefs.favoriteChannels || []))) }
+
+exports.setFavoriteChannels = function(favoriteChannelsArray) { setPref('favoriteChannels', JSON.stringify(favoriteChannelsArray)) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()
