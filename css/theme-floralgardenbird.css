@@ -1,0 +1,79 @@
+@font-face
+{
+  /* From: https://fontlibrary.org/en/font/tt2020-style-b */
+  font-family: "TT2020StyleBRegular";
+  src: url("./TT2020StyleB-Regular.ttf");
+}
+
+.theme-floralgardenbird
+{
+  background-color: #fcebf3;
+  background-image: url("../assets/openclipart-223534.svg"); /* By: GDJ, from: https://openclipart.org/detail/223534/floral-garden-seamless-pattern */
+  background-size: 50%;
+  color: #000;
+}
+
+.theme-floralgardenbird h1,
+.theme-floralgardenbird h2
+{
+  color: #8d2a89;
+  font-family: "TT2020StyleBRegular", monospace;
+}
+
+.theme-floralgardenbird h1
+{
+  font-size: 400%;
+  margin: 0;
+}
+
+.theme-floralgardenbird h2
+{
+  font-size: 170%;
+}
+
+.theme-floralgardenbird #app
+{
+  margin: -3em;
+  padding: 3em;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.theme-floralgardenbird #profile .description a,
+.theme-floralgardenbirg #navigation > a
+{
+  color: #fff;
+}
+
+.theme-floralgardenbird .message,
+.theme-floatlgardenbird #channels ol
+{
+  border-color: #ccc;
+  border-radius: 5px;
+  color: #000;
+}
+
+.theme-floralgardenbird .message a
+{
+  color: #333;
+}
+
+.theme-floralgardenbird .clickButton
+{
+  background-color: #ccc;
+  background-image: linear-gradient(#fff, #aaa);
+  color: #000;
+  border-radius: 3px;
+  border-color: #000;
+}
+
+.theme-floralgardenbird input[type="text"]
+{
+  background-color: #ddd;
+  background-image: linear-gradient(#bbb, #fff);
+  color: #000;
+  border: 1px solid #000;
+}
+
