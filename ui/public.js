@@ -6,17 +6,22 @@ module.exports = function (componentsState) {
   const localPrefs = require('../localprefs')
   const { and, or, not, channel, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
-  function getQuery(onlyDirectFollow, onlyThreads) {
+  function getQuery(onlyDirectFollow, onlyThreads, onlyChannels, channelList) {
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
       feedFilter = or(...graph.following.map(x => author(x)))
     }
 
+    let channelFilter = null
+    if (onlyChannels) {
+      channelFilter = or(...channelList.map(x => channel(x.replace(/^#+/, ''))))
+    }
+
     if (onlyThreads)
-      return and(type('post'), isRoot(), isPublic(), feedFilter)
+      return and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter)
     else
-      return and(type('post'), isPublic(), feedFilter)
+      return and(type('post'), isPublic(), feedFilter, channelFilter)
   }
 
   return {
@@ -34,7 +39,10 @@ module.exports = function (componentsState) {
       </h2>
       <fieldset><legend>Filters</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>Only show posts from people you follow</label><br />
-      <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>Hide replies (only show the first message of a thread)</label>
+      <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>Hide replies (only show the first message of a thread)</label><br />
+      <input id='onlyChannels' type='checkbox' v-model="onlyChannels"> <label for='onlyChannels'>Show only these channels:</label>
+      <div class="channel-selector"><v-select placeholder="Channels (optional)" v-model="onlyChannelsList" :options="channels" taggable multiple push-tags>
+      </v-select></div>
       </fieldset>
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
@@ -54,6 +62,8 @@ module.exports = function (componentsState) {
         channels: [],
         onlyDirectFollow: false,
         onlyThreads: false,
+        onlyChannels: false,
+        onlyChannelsList: [],
         messages: [],
         offset: 0,
         pageSize: 50,
@@ -67,7 +77,7 @@ module.exports = function (componentsState) {
     methods: {
       loadMore: function() {
         SSB.db.query(
-          getQuery(this.onlyDirectFollow, this.onlyThreads),
+          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
@@ -94,7 +104,7 @@ module.exports = function (componentsState) {
         console.time("latest messages")
 
         SSB.db.query(
-          getQuery(this.onlyDirectFollow, this.onlyThreads),
+          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
@@ -123,8 +133,12 @@ module.exports = function (componentsState) {
         if(this.onlyThreads)
           filterNames.push('onlythreads')
 
+        if(this.onlyChannels)
+          filterNames.push('onlychannels')
+
         // If we have no filters, set it to 'none' since we don't have a filter named that and it will keep it from dropping down to default.
         localPrefs.setPublicFilters(filterNames.length > 0 ? filterNames.join('|') : 'none')
+        localPrefs.setFavoriteChannels(this.onlyChannelsList)
       },
 
       onFileSelect: function(ev) {
@@ -161,8 +175,8 @@ module.exports = function (componentsState) {
         }
       },
 
-      onPost: function() {
-        if (!this.postMessageVisible) {
+      loadChannels: function() {
+        if (this.channels.length == 0) {
           // Load the list of channels.
           var self = this
           SSB.connectedWithData((rpc) => {
@@ -171,7 +185,11 @@ module.exports = function (componentsState) {
               toCallback(self.channelResultCallback)
             )
           })
+        }
+      },
 
+      onPost: function() {
+        if (!this.postMessageVisible) {
           this.postMessageVisible = true
           return
         }
@@ -223,18 +241,36 @@ module.exports = function (componentsState) {
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
       this.onlyDirectFollow = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlydirectfollow') >= 0)
       this.onlyThreads = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlythreads') >= 0)
+      this.onlyChannels = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlychannels') >= 0)
+      this.onlyChannelsList = localPrefs.getFavoriteChannels()
 
       this.renderPublic()
+
+      // Start this loading to make it easier for the user to filter by channels.
+      this.loadChannels()
     },
 
     watch: {
       onlyDirectFollow: function (newValue, oldValue) {
-        if (newValue === '') return
+        this.saveFilters()
         this.refresh()
       },
 
+      onlyChannels: function (newValue, oldValue) {
+        this.saveFilters()
+        this.refresh()
+      },
+
+      onlyChannelsList: function (newValue, oldValue) {
+        this.saveFilters()
+
+        // Only refresh if it changed while the checkbox is checked.
+        if (this.onlyChannels)
+          this.refresh()
+      },
+
       onlyThreads: function (newValue, oldValue) {
-        if (newValue === '') return
+        this.saveFilters()
         this.refresh()
       }
     }
