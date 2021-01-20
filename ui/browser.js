@@ -55,6 +55,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
+      { name: 'private-feed', path: '/private/:feedId', component: Private, props: true },
       { path: '/connections', component: Connections },
       { path: '/settings', component: Settings },
       { path: '/', redirect: 'public' },

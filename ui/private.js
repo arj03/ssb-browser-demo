@@ -1,5 +1,6 @@
 module.exports = function (componentsState) {
   const helpers = require('./helpers')
+  const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
   const { and, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
 
@@ -22,6 +23,8 @@ module.exports = function (componentsState) {
         <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
 
+    props: ['feedId'],
+
     data: function() {
       return {
         postMessageVisible: false,
@@ -37,18 +40,33 @@ module.exports = function (componentsState) {
 
     methods: {
       renderPrivate: function() {
-        componentsState.newPrivateMessages = false
-
         document.body.classList.add('refreshing')
 
+        var self = this
+        if (this.feedId && this.feedId != '') {
+          this.postMessageVisible = true
+          SSB.getProfileAsync(this.feedId, (err, profile) => {
+            if (self.people.length == 0)
+              self.people = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+            self.recipients = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+    
+            // Done connecting and loading the box, so now we can take down the refreshing indicator
+            document.body.classList.remove('refreshing')
+          })
+        }
+
+        componentsState.newPrivateMessages = false
+
         console.time("private messages")
+
         SSB.db.query(
           and(isPrivate(), isRoot(), type('post')),
           toCallback((err, results) => {
             this.messages = results
             console.timeEnd("private messages")
 
-            document.body.classList.remove('refreshing')
+            if (!self.feedId || self.feedId == '')
+              document.body.classList.remove('refreshing')
           })
         )
       },
@@ -114,8 +132,14 @@ module.exports = function (componentsState) {
     created: function () {
       this.renderPrivate()
 
+      // Try it right away, and then try again when we're connected in case this is a fresh load and we're only connected to rooms.
       helpers.getPeople((err, people) => {
         this.people = people
+      })
+      SSB.connectedWithData(() => {
+        helpers.getPeople((err, people) => {
+          this.people = people
+        })
       })
     }
   }
