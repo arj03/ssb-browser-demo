@@ -32,12 +32,14 @@ rimraf("dist", function () {
 
   // other
   fs.copyFileSync('css/NotoColorEmoji.ttf', 'dist/css/NotoColorEmoji.ttf')
+  fs.copyFileSync('css/TT2020StyleB-Regular.ttf', 'dist/css/TT2020StyleB-Regular.ttf')
   fs.copyFileSync('manifest.json', 'dist/manifest.json')
   fs.copyFileSync('hermies.png', 'dist/hermies.png')
   fs.copyFileSync('favicon.ico', 'dist/favicon.ico')
   fs.copyFileSync('assets/noavatar.svg', 'dist/assets/noavatar.svg')
   fs.copyFileSync('assets/openclipart-1392738806.svg', 'dist/assets/openclipart-1392738806.svg')
   fs.copyFileSync('assets/openclipart-261618.svg', 'dist/assets/openclipart-261618.svg')
+  fs.copyFileSync('assets/openclipart-223534.svg', 'dist/assets/openclipart-223534.svg')
 
   pull(
     pull.values(html.split('\n')),
