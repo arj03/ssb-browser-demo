@@ -67,7 +67,10 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       routes
     })
 
-    var defaultLocale = (navigator.language || (navigator.languages ? navigator.languages[0] : navigator.browserLanguage ? navigator.browserLanguage : 'en'))
+    var defaultLocale = (navigator.language || (navigator.languages ? navigator.languages[0] : navigator.browserLanguage ? navigator.browserLanguage : null))
+    var localePref = localPrefs.getLocale()
+    if(localePref && localePref != '')
+      defaultLocale = localePref
     if (!i18nMessages[defaultLocale])
       defaultLocale = 'en'
     const i18n = new VueI18n({

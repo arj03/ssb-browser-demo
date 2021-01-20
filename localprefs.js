@@ -39,6 +39,10 @@ exports.getFavoriteChannels = function() { return JSON.parse(getPref('favoriteCh
 
 exports.setFavoriteChannels = function(favoriteChannelsArray) { setPref('favoriteChannels', JSON.stringify(favoriteChannelsArray)) }
 
+exports.getLocale = function() { return getPref('locale', (defaultPrefs.locale || '')) }
+
+exports.setLocale = function(locale) { setPref('locale', locale) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()

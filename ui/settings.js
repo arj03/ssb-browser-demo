@@ -1,4 +1,5 @@
 const localPrefs = require('../localprefs')
+const i18nMessages = require('../messages.json')
 const caps = require('ssb-caps')
 
 module.exports = function () {
@@ -12,6 +13,13 @@ module.exports = function () {
 	 <label for="appTitle">{{ $t('settings.appTitle') }}</label><br />
 	 <input type="text" id="appTitle" v-model="appTitle" :placeholder="$t('settings.appTitlePlaceholder')" />
 	 </p>
+
+         <p>
+         <label for="locale">{{ $t('settings.language') }}</label><br />
+         <select id="locale" v-model="locale">
+           <option v-for="locale in localeOptions" :value="locale.locale">{{ locale.name }}</option>
+         </select>
+         </p>
 
          <p>
          <label for="theme">{{ $t('settings.colorTheme') }}</label><br />
@@ -52,6 +60,8 @@ module.exports = function () {
         appTitle: '',
         theme: 'default',
         caps: '',
+        locale: 'en',
+        localeOptions: [],
         hops: 1
       }
     },
@@ -62,6 +72,10 @@ module.exports = function () {
         this.theme = localPrefs.getTheme()
         this.hops = localPrefs.getHops()
 	this.caps = (localPrefs.getCaps() == caps.shs ? '' : localPrefs.getCaps())
+        this.locale = localPrefs.getLocale()
+        this.localeOptions = [{ locale: "", name: this.$root.$t('settings.useSystemDefault')}];
+        for (var l in i18nMessages)
+          this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
       },
 
       save: function () {
@@ -69,6 +83,15 @@ module.exports = function () {
         localPrefs.setTheme(this.theme)
         localPrefs.setHops(this.hops)
 	localPrefs.setCaps(this.caps)
+        var defaultLocale = (navigator.language || (navigator.languages ? navigator.languages[0] : navigator.browserLanguage ? navigator.browserLanguage : null))
+        localPrefs.setLocale(this.locale)
+        if(this.locale && this.locale != '')
+          this.$i18n.locale = this.locale
+        else if(i18nMessages[defaultLocale])
+          this.$i18n.locale = defaultLocale
+        else
+          this.$i18n.locale = 'en'
+
         localPrefs.updateStateFromSettings()
 
 	alert(this.$root.$t('settings.refreshForChanges'));
