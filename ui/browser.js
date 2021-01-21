@@ -78,6 +78,9 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       messages: i18nMessages
     })
 
+    // Just in case a tab doesn't set this.
+    document.title = localPrefs.getAppTitle()
+
     const app = new Vue({
       router,
 

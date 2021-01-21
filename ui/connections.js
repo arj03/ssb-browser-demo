@@ -87,6 +87,8 @@ module.exports = function () {
     created: function() {
       var self = this
 
+      document.title = this.$root.appTitle + " - " + this.$root.$t('connections.title')
+
       self.onTypeChange()
 
       var lastStatus = null

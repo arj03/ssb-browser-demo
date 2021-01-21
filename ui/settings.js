@@ -99,6 +99,8 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('settings.title')
+
       this.render()
     },
   }

@@ -120,6 +120,8 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('channel.title', { name: this.channel })
+
       window.addEventListener('scroll', this.onScroll)
       this.onScroll()
       this.render()

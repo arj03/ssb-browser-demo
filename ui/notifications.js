@@ -28,6 +28,8 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('notifications.title')
+
       this.render()
     },
   }

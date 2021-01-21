@@ -49,7 +49,6 @@ exports.updateStateFromSettings = function() {
   if(SSB.net)
     SSB.net.config.conn.hops = this.getHops()
 
-  document.title = this.getAppTitle()
   document.body.classList.add('theme-' + this.getTheme())
   for(var i = 0; i < document.body.classList.length; ++i) {
     const cur = document.body.classList.item(i)

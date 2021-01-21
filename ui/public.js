@@ -256,6 +256,8 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
+
       window.addEventListener('scroll', this.onScroll)
       this.onScroll()
 

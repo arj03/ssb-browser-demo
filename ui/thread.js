@@ -167,6 +167,8 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('thread.title', { title: this.title })
+
       this.renderThread()
     },
   }

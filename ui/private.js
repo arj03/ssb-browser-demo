@@ -130,6 +130,8 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('private.title')
+
       this.renderPrivate()
 
       // Try it right away, and then try again when we're connected in case this is a fresh load and we're only connected to rooms.

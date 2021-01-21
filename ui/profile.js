@@ -420,7 +420,16 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('profile.title', { name: this.feedId })
+
       this.renderProfile()
     },
+
+    watch: {
+      name: function (newValue, oldValue) {
+        // Do this here so it isn't possibly fired off by renderProfile() running SSB.db.query() inside of beforeRouteUpdate(), which messes up the history.
+        document.title = this.$root.appTitle + " - " + this.$root.$t('profile.title', { name: this.name })
+      }
+    }
   }
 }

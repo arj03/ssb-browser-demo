@@ -110,6 +110,8 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('channels.title')
+
       this.load()
     }
   }
