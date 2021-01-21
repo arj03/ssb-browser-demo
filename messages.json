@@ -23,6 +23,7 @@
     },
     "public": {
       "title": "Public messages",
+      "threadTitlePlaceholder": "Thread title (optional, not all clients show this)",
       "postNewThread": "Post new thread",
       "channelOptional": "Channel (optional)",
       "channelsOptional": "Channels (optional)",

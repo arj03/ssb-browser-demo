@@ -118,6 +118,11 @@ code {
   margin-bottom: 5px;
 }
 
+.messageTitle {
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+
 .messageText {
   height: 10rem;
   width: 100%;
