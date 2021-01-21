@@ -75,6 +75,8 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       defaultLocale = 'en'
     const i18n = new VueI18n({
       locale: defaultLocale,
+      fallbackLocale: 'en',
+      silentFallbackWarn: true,
       messages: i18nMessages
     })
 
