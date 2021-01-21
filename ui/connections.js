@@ -21,11 +21,11 @@ module.exports = function () {
         <button class="clickButton" v-on:click="connectSuggested(suggestedPeer)">{{ $t('connections.connectToX', { peer: suggestedPeer.name }) }}</button>
       </div>
       <div v-for="stagedPeer in stagedPeers">
-        <button class="clickButton" v-on:click="connect(stagedPeer)">{{ $t('connections.connectToX', { peer: stagedPeer.name || stagedPeer.data.key }) }}</button>
+        <button class="clickButton" v-on:click="connect(stagedPeer)">{{ $t('connections.connectToX', { peer: stagedPeer.name || stagedPeer.data.name || stagedPeer.data.key }) }}</button>
       </div>
       <h3>{{ $t('connections.existingConnections') }}</h3>
       <div v-for="peer in peers">
-        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
+        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
       </div>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
@@ -143,6 +143,61 @@ module.exports = function () {
     beforeRouteLeave: function(from, to, next) {
       this.running = false
       next()
+    },
+
+    watch: {
+      stagedPeers: function(oldValue, newValue) {
+        var self = this
+        for (x in this.stagedPeers) {
+          (function(p) {
+            var suggestNamesForPeer = defaultPrefs.suggestPeers.filter((x) => x.address == self.stagedPeers[p].address)
+            if (suggestNamesForPeer.length > 0)
+              self.stagedPeers[p].name = suggestNamesForPeer[0].name
+            else if (self.stagedPeers[p].data && self.stagedPeers[p].data.type == 'room-endpoint') {
+              var key = self.stagedPeers[p].data.key
+              SSB.getProfileAsync(key, (err, profile) => {
+                // See if we have a room name in our suggestions list.
+                var roomName = self.stagedPeers[p].data.roomName
+                var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
+                  var r = x.address.split(":")
+                  var peerKey = '@' + r[r.length-1] + '.ed25519'
+                  return (peerKey == self.stagedPeers[p].data.room)
+                })
+                if (suggestNamesForRoom.length > 0)
+                  roomName = suggestNamesForRoom[0].name
+                
+                self.stagedPeers[p].name = (profile.name || key) + (roomName ? " via " + roomName : "")
+              })
+            }
+          })(x)
+        }
+      },
+      peers: function(oldValue, newValue) {
+        var self = this
+        for (x in this.peers) {
+          (function(p) {
+            var suggestNamesForPeer = defaultPrefs.suggestPeers.filter((x) => x.address == self.peers[p].address)
+            if (suggestNamesForPeer.length > 0)
+              self.peers[p].name = suggestNamesForPeer[0].name
+            else if (self.peers[p].data && self.peers[p].data.type == 'room-endpoint') {
+              var key = self.peers[p].data.key
+              SSB.getProfileAsync(key, (err, profile) => {
+                // See if we have a room name in our suggestions list.
+                var roomName = self.peers[p].data.roomName
+                var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
+                  var r = x.address.split(":")
+                  var peerKey = '@' + r[r.length-1] + '.ed25519'
+                  return (peerKey == self.peers[p].data.room)
+                })
+                if (suggestNamesForRoom.length > 0)
+                  roomName = suggestNamesForRoom[0].name
+                
+                self.peers[p].name = (profile.name || key) + (roomName ? " via " + roomName : "")
+              })
+            }
+          })(x)
+        }
+      }
     }
   }
 }
