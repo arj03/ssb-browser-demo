@@ -1,5 +1,5 @@
 html {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,NotoColorEmoji;
   line-height: 1.5;
   overflow-wrap: break-word;
 }
@@ -42,7 +42,7 @@ a {
 }
 
 #goTo {
-  width: 200px;
+  width: 170px;
   padding: 5px;
   float: right;
 }
@@ -70,6 +70,7 @@ code {
   line-height: 1;
 }
 
+.theme-dark #channels ol,
 .message {
   padding: 1.5rem 1.5rem 0.5rem 1.5rem;
   margin: 1rem 0;
@@ -115,6 +116,11 @@ code {
 .message > .header > .text > .date {
   font-size: small;
   margin-bottom: 5px;
+}
+
+.messageTitle {
+  width: 100%;
+  margin-bottom: 0.5em;
 }
 
 .messageText {
@@ -213,4 +219,63 @@ body, html {
   #footer {
     display: flex;
   }
+}
+
+.reactions
+{
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #ccc;
+}
+
+.reactions .reactions-existing,
+.reactions .reactions-mine,
+.reactions .reactions-new
+{
+  display: inline-block;
+  padding: 0.5em;
+}
+
+.reactions .reactions-mine,
+.reactions .reactions-new
+{
+  border-left: 1px solid #ccc;
+}
+
+.reactions .reactions-mine a,
+.reactions .reactions-new a
+{
+  text-decoration: none;
+}
+
+#channels ol
+{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  column-count: 3;
+  column-gap: 3em;
+  line-height: 125%;
+}
+
+#channels ol li
+{
+  display: block;
+}
+
+#channels ol li a
+{
+  display: inline-block;
+  padding: 0.75em;
+}
+
+.get-started-button
+{
+  background-color: #393;
+  color: #fff;
+}
+
+.get-started-button:hover
+{
+  background-color: #6c6;
 }

@@ -1,0 +1,154 @@
+{
+  "en": {
+    "language": "English",
+    "pages": {
+      "channel": "Channel",
+      "channels": "Channels",
+      "connections": "Connections",
+      "notifications": "Notifications",
+      "private": "Private",
+      "profile": "Profile",
+      "public": "Public",
+      "settings": "Settings",
+      "thread": "Thread"
+    },
+    "common": {
+      "refreshMessages": "Refresh messages",
+      "lastXMessages": "Last {count} messages",
+      "noMessages": "(No messages to display)",
+      "showingMessagesFrom": "Showing messages from",
+      "loadXMore": "Load {count} more",
+      "close": "Close",
+      "save": "Save"
+    },
+    "public": {
+      "title": "Public messages",
+      "threadTitlePlaceholder": "Thread title (optional, not all clients show this)",
+      "postNewThread": "Post new thread",
+      "channelOptional": "Channel (optional)",
+      "channelsOptional": "Channels (optional)",
+      "filters": "Filters",
+      "filterOnlyDirectFollow": "Only show posts from people you follow",
+      "filterOnlyThreads": "Hide replies (only show the first message of a thread)",
+      "filterOnlyChannels": "Show only these channels:",
+      "channelsCannotContainSpaces": "Channels cannot contain spaces."
+    },
+    "channel": {
+      "title": "Channel #{name}",
+      "postNewMessage": "Post new message"
+    },
+    "channels": {
+      "title": "Channels",
+      "favoriteChannels": "Favorite channels",
+      "otherChannels": "Other channels",
+      "showChannels": "Show:",
+      "showChannelsRecent": "Recent popular channels (latest 500 posts)",
+      "showChannelsPopular": "Overall popular channels",
+      "showChannelsAll": "All channels alphabetically",
+      "loading": "Searching for channels..."
+    },
+    "connected": {
+      "connectedToPeer": "Connected to remote peer"
+    },
+    "connections": {
+      "title": "Connections",
+      "addPeer": "Add pub server or room",
+      "addPeerButton": "Add",
+      "possibleConnections": "Possible connections",
+      "connectToX": "Connect to {peer}",
+      "existingConnections": "Connections",
+      "unsupportedConnectionTypeX": "This SSB client does support connections of type '{connType}'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!",
+      "dbStatus": "DB status",
+      "ebtStatus": "EBT status"
+    },
+    "messagePreview": {
+      "postPreview": "Post preview",
+      "postMessage": "Post message"
+    },
+    "notifications": {
+      "title": "Notifications"
+    },
+    "onboarding": {
+      "title": "New user",
+      "welcomeMessage": "Welcome!  It looks like you're new here.  All of this information is <strong>entirely optional</strong>, but it does tend to help get you up and running quickly and easily.",
+      "profileName": "Pick a name for yourself (you can change this later under Profile):",
+      "profileNamePlaceholder": "(Your name/nickname)",
+      "profileDescription": "If you want, you can type up a short bio:",
+      "profileDescriptionPlaceholder": "(A short bio about you - Markdown formatting is supported)",
+      "suggestedPeers": "Here are some preset servers you can connect to:",
+      "suggestedFollows": "And here are some people you might like to follow:",
+      "manualSetup": "Cancel - Manual setup",
+      "getStarted": "Get started!"
+    },
+    "private": {
+      "title": "Private messages",
+      "postPrivateMessage": "Post private message",
+      "privateMessages": "Private messages",
+      "blankFieldError": "Please provide both subject and text in private messages",
+      "badRecipientError": "Recipients must start with @"
+    },
+    "profile": {
+      "title": "Profile {name}",
+      "profileNamePlaceholder": "Your name / nick",
+      "profileDescriptionPlaceholder": "Description (markdown is supported)",
+      "exportKey": "Export feed key to mnemonic code",
+      "loadKey": "Load feed key from mnemonic code",
+      "saveProfile": "Save profile",
+      "sendMessage": "Send message",
+      "removeFeed": "Remove feed",
+      "following": "Following",
+      "blocking": "Blocking",
+      "lastXMessagesFor": "Last {count} messages for",
+      "downloadFollowing": "Download following",
+      "downloadProfile": "Download profile",
+      "loadMore": "Load more",
+      "downloadLatestMessages": "Download latest messages for user",
+      "showMnemonicCodeAbout": "A mnemonic code has been generated from your private feed key.",
+      "showMnemonicCodeWarning": "This code can be used to restore your identitfy later. Store this somewhere safe.",
+      "enterMnemonicCodeAbout": "Enter mnemonic code below to restore your feed key.",
+      "enterMnemonicCodeWarning": "WARNING: this will overwrite your current feed key!",
+      "enterMnemonicCodePlaceholder": "Mnemonic code",
+      "restoreFeed": "Restore feed",
+      "follow": "Follow",
+      "unfollow": "Unfollow",
+      "block": "Block and delete",
+      "unblock": "Unblock",
+      "unfollowed": "Unfollowed!",
+      "followed": "Followed!",
+      "unblocked": "Unblocked!",
+      "blockedButNotDeleted": "Failed to delete messages, but user is blocked.",
+      "blocked": "Blocked and messages deleted!",
+      "failedToRemoveFeed": "Failed to remove feed"
+    },
+    "settings": {
+      "title": "Settings",
+      "appTitle": "App/browser tab title:",
+      "appTitlePlaceholder": "(Use default)",
+      "language": "Language:",
+      "useSystemDefault": "(Use system default)",
+      "colorTheme": "Color theme:",
+      "replicateHops": "Number of hops to replicate:",
+      "directFollows": "(only people you follow)",
+      "advanced": "ADVANCED",
+      "capsKey": "Caps key (leave blank to use default):",
+      "capsKeyPlaceholder": "(Use default)",
+      "capsKeyWarning": "(Only change this if you really, really know what you're doing.)",
+      "refreshForChanges": "You may have to refresh your browser for these changes to take effect."
+    },
+    "ssb-msg": {
+      "threadTitlePlaceholder": "a thread"
+    },
+    "thread": {
+      "title": "Thread \"{title}\"",
+      "postReply": "Post reply",
+      "messageOutsideGraph": "Message outside follow graph",
+      "unknownMessage": "Unknown message type or message outside follow graph"
+    }
+  },
+  "en-GB": {
+    "language": "English (UK)",
+    "channels": {
+      "favoriteChannels": "Favourite channels"
+    }
+  }
+}

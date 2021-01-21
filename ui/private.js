@@ -1,5 +1,6 @@
 module.exports = function (componentsState) {
   const helpers = require('./helpers')
+  const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
   const { and, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
 
@@ -15,12 +16,14 @@ module.exports = function (componentsState) {
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
         <textarea class="messageText" v-model="postText"></textarea><br>
         </span>
-        <button class="clickButton" v-on:click="onPost">Post private message</button>
+        <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
-        <h2>Private messages</h2>
+        <h2>{{ $t('private.privateMessages') }}</h2>
         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
         <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
     </div>`,
+
+    props: ['feedId'],
 
     data: function() {
       return {
@@ -37,18 +40,33 @@ module.exports = function (componentsState) {
 
     methods: {
       renderPrivate: function() {
-        componentsState.newPrivateMessages = false
-
         document.body.classList.add('refreshing')
 
+        var self = this
+        if (this.feedId && this.feedId != '') {
+          this.postMessageVisible = true
+          SSB.getProfileAsync(this.feedId, (err, profile) => {
+            if (self.people.length == 0)
+              self.people = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+            self.recipients = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+    
+            // Done connecting and loading the box, so now we can take down the refreshing indicator
+            document.body.classList.remove('refreshing')
+          })
+        }
+
+        componentsState.newPrivateMessages = false
+
         console.time("private messages")
+
         SSB.db.query(
           and(isPrivate(), isRoot(), type('post')),
           toCallback((err, results) => {
             this.messages = results
             console.timeEnd("private messages")
 
-            document.body.classList.remove('refreshing')
+            if (!self.feedId || self.feedId == '')
+              document.body.classList.remove('refreshing')
           })
         )
       },
@@ -71,7 +89,7 @@ module.exports = function (componentsState) {
         }
 
         if (this.postText == '' || this.subject == '') {
-          alert("Please provide both subject and text in private messages")
+          alert(this.$root.$t('private.blankFieldError'))
           return
         }
 
@@ -82,7 +100,7 @@ module.exports = function (componentsState) {
         let recps = this.recipients.map(x => x.id)
 
         if (!recps.every(x => x.startsWith("@"))) {
-          alert("recipients must start with @")
+          alert(this.$root.$t('private.badRecipientError'))
           return
         }
 
@@ -112,10 +130,18 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('private.title')
+
       this.renderPrivate()
 
+      // Try it right away, and then try again when we're connected in case this is a fresh load and we're only connected to rooms.
       helpers.getPeople((err, people) => {
         this.people = people
+      })
+      SSB.connectedWithData(() => {
+        helpers.getPeople((err, people) => {
+          this.people = people
+        })
       })
     }
   }

@@ -1,0 +1,16 @@
+{
+  "appTitle": "SSB Browser Demo",
+  "replicationHops": 1,
+  "publicFilters": "",
+  "favoriteChannels": [],
+  "suggestPeers": [
+    { "name": "Between Two Worlds Pub", "type": "pub", "address": "wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=" },
+    { "name": "Between Two Worlds Room", "type": "room", "address": "wss:between-two-worlds.dk:9999~shs:7R5/crt8/icLJNpGwP2D7Oqz2WUd7ObCIinFKVR6kNY=", "default": false }
+  ],
+  "suggestFollows": [
+    { "name": "arj03 Phone", "key": "@VIOn+8a/vaQvv/Ew3+KriCngyUXHxHbjXkj4GafBAY0=.ed25519" },
+    { "name": "arj03 Desktop", "key": "@6CAxOI3f+LUOVrbAl0IemqiS7ATpQvr9Mdw9LC4+Uv0=.ed25519", "default": false },
+    { "name": "andrestaltz", "key": "@QlCTpvY7p9ty2yOFrv1WU1AE88aoQc4Y7wYal7PFc+w=.ed25519", "default": false }
+  ],
+  "theme": "default"
+}

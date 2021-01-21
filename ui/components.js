@@ -3,6 +3,7 @@ module.exports = function () {
   require('./ssb-msg')
   require('./ssb-msg-preview')
   require('./dht-invite')
+  require('./onboarding-dialog')
   require('./connected')
 
   Vue.component('v-select', VueSelect.VueSelect)

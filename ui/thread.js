@@ -9,6 +9,7 @@ module.exports = function () {
   let initialState = function(rootId) {
     return {
       fixedRootId: rootId,
+      title: rootId,
       latestMsgIdInThread: rootId,
       recipients: undefined, // for private messages only
       postText: '',
@@ -22,11 +23,11 @@ module.exports = function () {
   return {
     template: `
        <div id="thread">
-         <h2>Thread <small>{{ fixedRootId }}</small></h2>
+         <h2>{{ $t('thread.title', { title: title }) }}</h2>
          <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg" v-bind:thread="fixedRootId"></ssb-msg>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <textarea class="messageText" v-model="postText"></textarea><br>
-         <button class="clickButton" v-on:click="postReply">Post reply</button>
+         <button class="clickButton" v-on:click="postReply">{{ $t('thread.postReply') }}</button>
          <input type="file" class="fileInput" v-on:change="onFileSelect">
          <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
        <div>`,
@@ -77,8 +78,12 @@ module.exports = function () {
       },
 
       render: function(rootMsg) {
+        var self = this
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
+
+        this.title = helpers.getMessageTitle(this.fixedRootId, rootMsg)
+        document.title = this.$root.appTitle + " - " + this.$root.$t('thread.title', { title: this.title })
 
         SSB.db.query(
           and(hasRoot(this.fixedRootId)),
@@ -98,7 +103,7 @@ module.exports = function () {
                       key: msg.value.content.branch,
                       value: {
                         content: {
-                          text: "Message outside follow graph"
+                          text: self.$root.$t('thread.messageOutsideGraph')
                         }
                       }
                     })
@@ -112,7 +117,7 @@ module.exports = function () {
                         key: branch,
                         value: {
                           content: {
-                            text: "Message outside follow graph"
+                            text: self.$root.$t('thread.messageOutsideGraph')
                           }
                         }
                       })
@@ -136,15 +141,18 @@ module.exports = function () {
 
       renderThread: function() {
         var self = this
+        console.log("rendering thread", self.fixedRootId)
         SSB.db.get(self.fixedRootId, (err, rootMsg) => {
-          if (err) { // FIXME: make this configurable
+          console.log("root err", err)
+          console.log("root msg", rootMsg)
+          if (err || rootMsg === undefined) { // FIXME: make this configurable
             SSB.getThread(self.fixedRootId, (err) => {
               if (err) console.error(err)
 
               SSB.db.get(self.fixedRootId, (err, rootMsg) => {
-                if (err) {
+                if (err || rootMsg === undefined) {
                   console.error(err)
-                  self.render({ content: { text: 'Unknown message type or message outside follow graph' }})
+                  self.render({ content: { text: self.$root.$t('thread.unknownMessage') }})
                 } else
                   self.render(rootMsg)
               })
@@ -162,6 +170,8 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('thread.title', { title: this.title })
+
       this.renderThread()
     },
   }

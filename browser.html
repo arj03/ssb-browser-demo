@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/theme-dark.css">
+    <link rel="stylesheet" type="text/css" href="css/theme-ethereal.css">
+    <link rel="stylesheet" type="text/css" href="css/theme-seigaihasubtle.css">
+    <link rel="stylesheet" type="text/css" href="css/theme-floralgardenbird.css">
     <link rel="stylesheet" type="text/css" href="css/public.css">
     <link rel="stylesheet" type="text/css" href="css/private.css">
     <link rel="stylesheet" type="text/css" href="css/profile.css">
@@ -18,24 +22,26 @@
       <img src="hermies.png">
     </div>
     <div id="app">
-      <h1>SSB browser demo</h1>
+      <h1>{{ appTitle }}</h1>
       <p id="navigation">
-        <router-link to="/public">Public</router-link><new-public-messages></new-public-messages> |
-        <router-link to="/private">Private</router-link><new-private-messages></new-private-messages> |
-        <router-link to="/notifications">Notifications</router-link> |
-        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">Profile</router-link> |
-        <router-link to="/connections">Connections</router-link><connected></connected>
+        <router-link to="/public">{{ $t('pages.public') }}</router-link><new-public-messages></new-public-messages> |
+        <router-link to="/private">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages> |
+        <router-link to="/channels">{{ $t('pages.channels') }}</router-link> |
+        <router-link to="/notifications">{{ $t('pages.notifications') }}</router-link> |
+        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">{{ $t('pages.profile') }}</router-link> |
+        <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected></connected> |
+        <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
         <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup.enter="goToTarget">
       </p>
 
       <router-view></router-view>
 
       <div id="footer">
-        <router-link to="/public" class="navButton">Public</router-link><new-public-messages></new-public-messages>
-        <router-link to="/private" class="navButton">Private</router-link><new-private-messages></new-private-messages>
-        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}" class="navButton">Profile</router-link>
-        <router-link to="/notifications" class="navButton">Notifications</router-link>
-        <router-link to="/settings" class="navButton">Settings</router-link><connected></connected>
+        <router-link to="/public" class="navButton">{{ $t('pages.public') }}</router-link><new-public-messages></new-public-messages>
+        <router-link to="/private" class="navButton">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages>
+        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}" class="navButton">{{ $t('pages.profile') }}</router-link>
+        <router-link to="/notifications" class="navButton">{{ $t('pages.notifications') }}</router-link>
+        <router-link to="/settings" class="navButton">{{ $t('pages.settings') }}</router-link><connected></connected>
       </div>
     </div>
   </body>
@@ -44,6 +50,5 @@
   <script src="node_modules/vue-router/dist/vue-router.min.js"></script>
   <script src="node_modules/vue-select/dist/vue-select.js"></script>
 
-  <script src="node_modules/ssb-browser-core/dist/bundle-core.js"></script>
   <script src="build/bundle-ui.js"></script>
 </html>

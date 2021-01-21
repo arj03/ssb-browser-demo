@@ -1,5 +1,6 @@
 const human = require('human-time')
 const md = require('./markdown')
+const helpers = require('./helpers')
 
 Vue.component('ssb-msg', {
   template: `
@@ -12,7 +13,7 @@ Vue.component('ssb-msg', {
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
-              in reply <router-link :to="{name: 'thread', params: { rootId: rootId }}">to</router-link>
+              in reply to <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
             </span>
             <span v-else>
               a <router-link :to="{name: 'thread', params: { rootId: rootId }}">thread</router-link>
@@ -30,20 +31,33 @@ Vue.component('ssb-msg', {
         <span v-html="body"></span>
         <span v-if="forks.length > 0"><b>Forks:</b>
           <li v-for="msg in forks">
-            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
+            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>
         </span>
         <span v-if="mentions.length > 0"><b>Mentions:</b>
           <li v-for="msg in mentions">
-            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.text.substring(0,50) }}</router-link>
+            <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>
         </span>
-        <span v-if="reactions.length > 0"><b>Reactions:</b>
-          <span v-for="reaction in reactions">
-            <span v-bind:title="reaction.author">{{ reaction.expression }}</span>
-          </span>
-        </span>
         <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
+        <div class='reactions'>
+          <span class='reactions-existing'>
+            <span v-for="reaction in reactions">
+              <span v-bind:title="reaction.author">{{ reaction.expression }}</span>
+            </span>
+          </span>
+          <span class='reactions-mine' v-if="myReactions.length > 0">
+            <span v-for="reaction in myReactions">
+              <a title='Remove reaction' href="javascript:void(0);" v-on:click="unlike()">{{ reaction.expression }}</a> 
+            </span>
+          </span>
+          <span class='reactions-new' v-if="myReactions.length == 0">
+            <span class='reactions-label'>Add: </span>
+            <span v-for="emoji in emojiOptions">
+              <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
+            </span>
+          </span>
+        </div>
       </div>`,
 
   props: ['msg', 'thread'],
@@ -53,7 +67,12 @@ Vue.component('ssb-msg', {
       name: this.msg.value.author,
       forks: [],
       mentions: [],
-      reactions: []
+      reactions: [],
+      myReactions: [],
+      body: '',
+      parentThreadTitle: this.$root.$t('ssb-msg.threadTitlePlaceholder'),
+      //emojiOptions: ['👍', '👎', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞']
+      emojiOptions: ['👍', '🖖', '❤']
     }
   },
 
@@ -72,22 +91,51 @@ Vue.component('ssb-msg', {
     },
     isOOO: function() {
       return this.msg.value.content.text == "Message outside follow graph" && !this.msg.value.author
-    },
-    body: function() {
-      return md.markdown(this.msg.value.content.text)
     }
   },
 
   methods: {
+    smallText: function(msg) {
+      if (msg.value.content && msg.value.content.text)
+        return msg.value.content.text.substring(0,50)
+      else
+        return ''
+    },
     getOOO: function() {
       SSB.getOOO(this.msg.key, (err, msgValue) => {
         if (err) return alert("Failed to get msg " + err)
 
-        if (net.db.getIndex('contacts').isBlocking(SSB.net.id, msgValue.author))
+        if (SSB.net.db.getIndex('contacts').isBlocking(SSB.net.id, msgValue.author))
           this.msg.value.content.text = "Blocked user"
         else
           this.msg = { key: this.msg.key, value: msgValue }
       })
+    },
+    react: function(emoji) {
+      var voteValue = 1
+      if (emoji == 'Unlike') {
+        this.myReactions = []
+        voteValue = 0
+      } else
+        this.myReactions.push({ expression: emoji })
+
+      var reactTo = this.msg.key
+      var message = {
+        type: 'vote',
+        vote: {
+          link: reactTo,
+          value: voteValue,
+          expression: emoji
+        }
+      }
+
+      SSB.db.publish(message, (err) => {
+        if (err) console.log(err)
+      })
+    },
+    unlike: function() {
+      if (confirm("Are you sure you want to remove your reaction from this post?"))
+        this.react('Unlike')
     }
   },
   
@@ -95,6 +143,8 @@ Vue.component('ssb-msg', {
     if (!this.msg.key) return
 
     const { and, votesFor, hasRoot, mentions, toCallback } = SSB.dbOperators
+
+    var self = this
 
     function getName(profiles, author) {
       if (author == SSB.net.id)
@@ -108,28 +158,61 @@ Vue.component('ssb-msg', {
 
     const profiles = SSB.db.getIndex('profiles').getProfiles()
     this.name = getName(profiles, this.msg.value.author)
+    if (!this.name) {
+      // Don't already have a name.  Let's see if we can fetch one.
+      SSB.getProfileAsync(this.msg.value.author, (err, profile) => {
+        if(profile.name)
+          self.name = profile.name
+      })
+    }
+
+    // Render the body, which may need to wait until we're connected to a peer.
+    const blobRegEx = /!\[.*\]\(&.*\)/g
+    if(self.msg.value.content.text && self.msg.value.content.text.match(blobRegEx)) {
+      // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
+      // We'll display a sanitized version of it until it loads.
+      if(!SSB.isConnectedWithData())
+        self.body = md.markdown(self.msg.value.content.text.replaceAll(blobRegEx, 'Loading...'))
+
+      SSB.connectedWithData(() => {
+        self.body = md.markdown(self.msg.value.content.text)
+      })
+    } else {
+      self.body = md.markdown(this.msg.value.content.text)
+    }
 
     SSB.db.query(
       and(votesFor(this.msg.key)),
       toCallback((err, msgs) => {    
-        const unlikes = msgs.filter(x => x.value.content.vote.expression == 'Unlike').map(x => { author: x.value.author })
-        this.reactions = msgs.map(x => {
-          const expression = x.value.content.vote.expression
-          if (expression === 'Like') {
-            if (unlikes.indexOf(x.value.author) == -1)
-              return { author: getName(profiles, x.value.author), expression: '👍' }
+        if (err) {
+          console.log("Error getting votes: " + err)
+          return
+        }
+
+        let authorToReaction = {}
+
+        function isUnlike(msg) {
+          return msg.value.content.vote.expression == 'Unlike' || msg.value.content.vote.value == 0
+        }
+
+        msgs.forEach(msg => {
+          if (isUnlike(msg))
+            delete authorToReaction[msg.value.author]
+          else {
+            let expression = msg.value.content.vote.expression
+            if (expression === 'Like')
+              expression = '👍'
+            else if (expression === 'dig')
+              expression = '🖖'
+            else if (expression === 'heart')
+              expression = '❤'
+
+            authorToReaction[msg.value.author] = { author: getName(profiles, msg.value.author), expression }
           }
-          else if (expression === 'dig') {
-            if (unlikes.indexOf(x.value.author) == -1)
-              return { author: getName(profiles, x.value.author), expression: '🖖' }
-          }
-          else if (expression === 'heart') {
-            if (unlikes.indexOf(x.value.author) == -1)
-              return { author: getName(profiles, x.value.author), expression: '❤' }
-          }
-          else
-            return { author: getName(profiles, x.value.author), expression }
         })
+
+        this.reactions = Object.entries(authorToReaction).filter(([k,v]) => k != SSB.net.id).map(([k,v]) => v)
+        this.myReactions = authorToReaction[SSB.net.id] ? [authorToReaction[SSB.net.id]] : []
       })
     )
 
@@ -140,6 +223,27 @@ Vue.component('ssb-msg', {
           this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
         })
       )
+    }
+
+    // If it's a reply to a thread, try to pull the thread title.
+    if (this.msg.key != this.thread) {
+      // Try local first.
+      SSB.db.get(this.thread, (err, rootMsg) => {
+        if (rootMsg) {
+          var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
+          self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
+        } else {
+          // Not local.  Wait until the connection comes up and try to fetch it.
+          SSB.connectedWithData(() => {
+            SSB.getOOO(self.thread, (err, rootMsg) => {
+              if (rootMsg) {
+                var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
+                self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
+              }
+            })
+          })
+        }
+      })
     }
 
     SSB.db.query(
