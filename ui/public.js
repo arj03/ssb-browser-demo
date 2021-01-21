@@ -28,6 +28,7 @@ module.exports = function (componentsState) {
     template: `
     <div id="public">
       <div class="new-message">
+        <span v-if="postMessageVisible"><input type="text" class="messageTitle" v-model="postTitle" :placeholder="$t('public.threadTitlePlaceholder')" /><br /></span>
         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
         <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('public.postNewThread') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
@@ -57,6 +58,7 @@ module.exports = function (componentsState) {
     data: function() {
       return {
         postMessageVisible: false,
+        postTitle: "",
         postText: "",
         postChannel: "",
         channels: [],
@@ -230,6 +232,9 @@ module.exports = function (componentsState) {
         var mentions = ssbMentions(this.postText)
 
         var postData = { type: 'post', text: this.postText, mentions: mentions }
+        
+        if (this.postTitle && this.postTitle.trim() != '')
+          postData.title = this.postTitle.trim()
 
         if(this.postChannel && this.postChannel != '') {
           postData.channel = this.postChannel.replace(/^#+/, '')
