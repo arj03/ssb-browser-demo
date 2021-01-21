@@ -135,7 +135,7 @@
       "refreshForChanges": "You may have to refresh your browser for these changes to take effect."
     },
     "thread": {
-      "title": "Thread {title}",
+      "title": "Thread \"{title}\"",
       "postReply": "Post reply",
       "messageOutsideGraph": "Message outside follow graph",
       "unknownMessage": "Unknown message type or message outside follow graph"
