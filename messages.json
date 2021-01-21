@@ -135,6 +135,9 @@
       "capsKeyWarning": "(Only change this if you really, really know what you're doing.)",
       "refreshForChanges": "You may have to refresh your browser for these changes to take effect."
     },
+    "ssb-msg": {
+      "threadTitlePlaceholder": "a thread"
+    },
     "thread": {
       "title": "Thread \"{title}\"",
       "postReply": "Post reply",
