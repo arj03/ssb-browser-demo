@@ -8,22 +8,22 @@ module.exports = function () {
       <div>
       </div>
       <div>
-        <h3>Add pub server or room</h3>
+        <h3>{{ $t('connections.addPeer') }}</h3>
         <select v-model="type" v-on:change="onTypeChange(this.value)">
            <option value='room'>Room</option>
            <option value='pub'>Pub</option>
         </select>
         <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
-        <button class="clickButton" v-on:click="add">Add</button>
+        <button class="clickButton" v-on:click="add">{{ $t('connections.addPeerButton') }}</button>
       </div>
-      <h3>Possible connections</h3>
+      <h3>{{ $t('connections.possibleConnections') }}</h3>
       <div v-for="suggestedPeer in suggestedPeers">
-        <button class="clickButton" v-on:click="connectSuggested(suggestedPeer)">Connect to {{ suggestedPeer.name }}</button>
+        <button class="clickButton" v-on:click="connectSuggested(suggestedPeer)">{{ $t('connections.connectToX', { peer: suggestedPeer.name }) }}</button>
       </div>
       <div v-for="stagedPeer in stagedPeers">
-        <button class="clickButton" v-on:click="connect(stagedPeer)">Connect to {{ stagedPeer.name || stagedPeer.data.key }}</button>
+        <button class="clickButton" v-on:click="connect(stagedPeer)">{{ $t('connections.connectToX', { peer: stagedPeer.name || stagedPeer.data.key }) }}</button>
       </div>
-      <h3>Connections</h3>
+      <h3>{{ $t('connections.existingConnections') }}</h3>
       <div v-for="peer in peers">
         <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
       </div>
@@ -50,7 +50,7 @@ module.exports = function () {
       add: function() {
         var s = this.address.split(":")
 	if (s[0] != 'ws' && s[0] != 'wss' && s[0] != 'dht' && s[0] != 'bt') {
-	  alert("This SSB client does support connections of type '" + s[0] + "'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!")
+          alert(this.$root.$t('connections.unsupportedConnectionTypeX', { connType: s[0] }))
 	  return
 	}
         SSB.net.connectAndRemember(this.address, {
@@ -86,6 +86,8 @@ module.exports = function () {
 
     created: function() {
       var self = this
+
+      document.title = this.$root.appTitle + " - " + this.$root.$t('connections.title')
 
       self.onTypeChange()
 
@@ -125,9 +127,9 @@ module.exports = function () {
           lastStatus = status
           lastEbtStatus = ebtStatus
 
-          var html = "<h3>DB status</h3>"
+          var html = "<h3>" + self.$root.$t('connections.dbStatus') + "</h3>"
           html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
-          html += "<h3>EBT status</h3>"
+          html += "<h3>" + self.$root.$t('connections.ebtStatus') + "</h3>"
           html += "<pre>" + JSON.stringify(ebtStatus, null, 2) + "</pre>"
           self.statusHTML = html
 

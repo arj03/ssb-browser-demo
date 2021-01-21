@@ -6274,6 +6274,11 @@
       "resolved": "https://registry.npmjs.org/vue/-/vue-2.6.12.tgz",
       "integrity": "sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg=="
     },
+    "vue-i18n": {
+      "version": "8.22.4",
+      "resolved": "https://registry.npmjs.org/vue-i18n/-/vue-i18n-8.22.4.tgz",
+      "integrity": "sha512-XLI5s0AdqMP2Lf4I4CmdmOq8kjb5DDFGR77wAuxCfpEuYSfhTRyyx6MetgZMiL6Lxa0DasjBOiOcciU3NkL3/Q=="
+    },
     "vue-router": {
       "version": "3.4.9",
       "resolved": "https://registry.npmjs.org/vue-router/-/vue-router-3.4.9.tgz",

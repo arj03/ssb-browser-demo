@@ -4,7 +4,7 @@ module.exports = function () {
   return {
     template: `
        <div id="channel">
-         <h2>Notifications</h2>
+         <h2>{{ $t('notifications.title') }}</h2>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
        <div>`,
 
@@ -28,6 +28,8 @@ module.exports = function () {
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('notifications.title')
+
       this.render()
     },
   }

@@ -39,13 +39,16 @@ exports.getFavoriteChannels = function() { return JSON.parse(getPref('favoriteCh
 
 exports.setFavoriteChannels = function(favoriteChannelsArray) { setPref('favoriteChannels', JSON.stringify(favoriteChannelsArray)) }
 
+exports.getLocale = function() { return getPref('locale', (defaultPrefs.locale || '')) }
+
+exports.setLocale = function(locale) { setPref('locale', locale) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()
   if(SSB.net)
     SSB.net.config.conn.hops = this.getHops()
 
-  document.title = this.getAppTitle()
   document.body.classList.add('theme-' + this.getTheme())
   for(var i = 0; i < document.body.classList.length; ++i) {
     const cur = document.body.classList.item(i)

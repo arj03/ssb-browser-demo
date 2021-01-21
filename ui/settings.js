@@ -1,4 +1,5 @@
 const localPrefs = require('../localprefs')
+const i18nMessages = require('../messages.json')
 const caps = require('ssb-caps')
 
 module.exports = function () {
@@ -7,14 +8,21 @@ module.exports = function () {
   return {
     template: `
        <div id="channel">
-         <h2>Settings</h2>
+         <h2>{{ $t('settings.title') }}</h2>
 	 <p>
-	 <label for="appTitle">App/browser tab title:</label><br />
-	 <input type="text" id="appTitle" v-model="appTitle" placeholder="(Use default)" />
+	 <label for="appTitle">{{ $t('settings.appTitle') }}</label><br />
+	 <input type="text" id="appTitle" v-model="appTitle" :placeholder="$t('settings.appTitlePlaceholder')" />
 	 </p>
 
          <p>
-         <label for="theme">Color theme:</label><br />
+         <label for="locale">{{ $t('settings.language') }}</label><br />
+         <select id="locale" v-model="locale">
+           <option v-for="locale in localeOptions" :value="locale.locale">{{ locale.name }}</option>
+         </select>
+         </p>
+
+         <p>
+         <label for="theme">{{ $t('settings.colorTheme') }}</label><br />
          <select id="theme" v-model="theme">
          <option value="default">Default</option>
          <option value="dark">Dark</option>
@@ -25,9 +33,9 @@ module.exports = function () {
          </p>
 
 	 <p>
-	 <label for="replicationHops">Number of hops to replicate:</label><br />
+	 <label for="replicationHops">{{ $t('settings.replicateHops') }}</label><br />
 	 <select id="replicationHops" v-model="hops">
-	 <option value="0">0 (only people you follow)</option>
+	 <option value="0">0 {{ $t('settings.directFollows') }}</option>
 	 <option value="1">1</option>
 	 <option value="2">2</option>
 	 <option value="3">3</option>
@@ -37,12 +45,12 @@ module.exports = function () {
 	 </p>
 
 	 <p>
-	 <label for="caps"><strong>ADVANCED</strong> - Caps key (leave blank to use default):</label><br />
-	 <input type="text" id="caps" v-model="caps" placeholder="(Use default)" /><br />
-	 <small>(Only change this if you really, really know what you're doing.)</small>
+	 <label for="caps"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.capsKey') }}</label><br />
+	 <input type="text" id="caps" v-model="caps" :placeholder="$t('settings.capsKeyPlaceholder')" /><br />
+	 <small>{{ $t('settings.capsKeyWarning') }}</small>
 	 </p>
 
-         <button class="clickButton" v-on:click="save()">Save</button>
+         <button class="clickButton" v-on:click="save()">{{ $t('common.save') }}</button>
        <div>`,
 
     props: ['channel'],
@@ -52,6 +60,8 @@ module.exports = function () {
         appTitle: '',
         theme: 'default',
         caps: '',
+        locale: 'en',
+        localeOptions: [],
         hops: 1
       }
     },
@@ -62,6 +72,10 @@ module.exports = function () {
         this.theme = localPrefs.getTheme()
         this.hops = localPrefs.getHops()
 	this.caps = (localPrefs.getCaps() == caps.shs ? '' : localPrefs.getCaps())
+        this.locale = localPrefs.getLocale()
+        this.localeOptions = [{ locale: "", name: this.$root.$t('settings.useSystemDefault')}];
+        for (var l in i18nMessages)
+          this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
       },
 
       save: function () {
@@ -69,13 +83,24 @@ module.exports = function () {
         localPrefs.setTheme(this.theme)
         localPrefs.setHops(this.hops)
 	localPrefs.setCaps(this.caps)
+        var defaultLocale = (navigator.language || (navigator.languages ? navigator.languages[0] : navigator.browserLanguage ? navigator.browserLanguage : null))
+        localPrefs.setLocale(this.locale)
+        if(this.locale && this.locale != '')
+          this.$i18n.locale = this.locale
+        else if(i18nMessages[defaultLocale])
+          this.$i18n.locale = defaultLocale
+        else
+          this.$i18n.locale = 'en'
+
         localPrefs.updateStateFromSettings()
 
-	alert("You may have to refresh your browser for these changes to take effect.");
+	alert(this.$root.$t('settings.refreshForChanges'));
       }
     },
 
     created: function () {
+      document.title = this.$root.appTitle + " - " + this.$root.$t('settings.title')
+
       this.render()
     },
   }
