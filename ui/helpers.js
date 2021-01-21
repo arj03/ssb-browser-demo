@@ -43,7 +43,7 @@ exports.getMessageTitle = function(msgId, msg) {
   if (msg.content)
     if (msg.content.title)
       return msg.content.title
-    else {
+    else if (msg.content.text) {
       const maxLength = 40
       const breakCharacters = ' .,/[]()#'
       var lastBreakChar = 0

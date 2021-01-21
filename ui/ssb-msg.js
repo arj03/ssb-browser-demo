@@ -1,5 +1,6 @@
 const human = require('human-time')
 const md = require('./markdown')
+const helpers = require('./helpers')
 
 Vue.component('ssb-msg', {
   template: `
@@ -12,7 +13,7 @@ Vue.component('ssb-msg', {
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
-              in reply <router-link :to="{name: 'thread', params: { rootId: rootId }}">to</router-link>
+              in reply to <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
             </span>
             <span v-else>
               a <router-link :to="{name: 'thread', params: { rootId: rootId }}">thread</router-link>
@@ -69,6 +70,7 @@ Vue.component('ssb-msg', {
       reactions: [],
       myReactions: [],
       body: '',
+      parentThreadTitle: this.$root.$t('ssb-msg.threadTitlePlaceholder'),
       //emojiOptions: ['👍', '👎', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞']
       emojiOptions: ['👍', '🖖', '❤']
     }
@@ -142,6 +144,8 @@ Vue.component('ssb-msg', {
 
     const { and, votesFor, hasRoot, mentions, toCallback } = SSB.dbOperators
 
+    var self = this
+
     function getName(profiles, author) {
       if (author == SSB.net.id)
         return "You"
@@ -154,9 +158,15 @@ Vue.component('ssb-msg', {
 
     const profiles = SSB.db.getIndex('profiles').getProfiles()
     this.name = getName(profiles, this.msg.value.author)
+    if (!this.name) {
+      // Don't already have a name.  Let's see if we can fetch one.
+      SSB.getProfileAsync(this.msg.value.author, (err, profile) => {
+        if(profile.name)
+          self.name = profile.name
+      })
+    }
 
     // Render the body, which may need to wait until we're connected to a peer.
-    var self = this
     const blobRegEx = /!\[.*\]\(&.*\)/g
     if(self.msg.value.content.text && self.msg.value.content.text.match(blobRegEx)) {
       // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
@@ -213,6 +223,27 @@ Vue.component('ssb-msg', {
           this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
         })
       )
+    }
+
+    // If it's a reply to a thread, try to pull the thread title.
+    if (this.msg.key != this.thread) {
+      // Try local first.
+      SSB.db.get(this.thread, (err, rootMsg) => {
+        if (rootMsg) {
+          var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
+          self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
+        } else {
+          // Not local.  Wait until the connection comes up and try to fetch it.
+          SSB.connectedWithData(() => {
+            SSB.getOOO(self.thread, (err, rootMsg) => {
+              if (rootMsg) {
+                var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
+                self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
+              }
+            })
+          })
+        }
+      })
     }
 
     SSB.db.query(
