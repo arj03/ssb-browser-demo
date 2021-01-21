@@ -146,6 +146,32 @@ module.exports = function () {
     },
 
     watch: {
+      stagedPeers: function(oldValue, newValue) {
+        var self = this
+        for (x in this.stagedPeers) {
+          (function(p) {
+            var suggestNamesForPeer = defaultPrefs.suggestPeers.filter((x) => x.address == self.stagedPeers[p].address)
+            if (suggestNamesForPeer.length > 0)
+              self.stagedPeers[p].name = suggestNamesForPeer[0].name
+            else if (self.stagedPeers[p].data && self.stagedPeers[p].data.type == 'room-endpoint') {
+              var key = self.stagedPeers[p].data.key
+              SSB.getProfileAsync(key, (err, profile) => {
+                // See if we have a room name in our suggestions list.
+                var roomName = self.stagedPeers[p].data.roomName
+                var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
+                  var r = x.address.split(":")
+                  var peerKey = '@' + r[r.length-1] + '.ed25519'
+                  return (peerKey == self.stagedPeers[p].data.room)
+                })
+                if (suggestNamesForRoom.length > 0)
+                  roomName = suggestNamesForRoom[0].name
+                
+                self.stagedPeers[p].name = (profile.name || key) + (roomName ? " via " + roomName : "")
+              })
+            }
+          })(x)
+        }
+      },
       peers: function(oldValue, newValue) {
         var self = this
         for (x in this.peers) {
