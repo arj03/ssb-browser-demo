@@ -82,6 +82,9 @@ module.exports = function () {
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
 
+        this.title = helpers.getMessageTitle(this.fixedRootId, rootMsg)
+        document.title = this.$root.appTitle + " - " + this.$root.$t('thread.title', { title: this.title })
+
         SSB.db.query(
           and(hasRoot(this.fixedRootId)),
           toCallback((err, msgs) => {
