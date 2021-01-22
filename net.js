@@ -155,7 +155,7 @@ SSB.getProfileNameAsync = function(profileId, cb) {
     if (err)
       cb(err)
     else
-      cb(null, profileId.name)
+      cb(null, profile.name)
   })
 }
 
