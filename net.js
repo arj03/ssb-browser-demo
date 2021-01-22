@@ -148,6 +148,17 @@ SSB.getOOO = function(msgId, cb) {
   })
 }
 
+SSB.getProfileNameAsync = function(profileId, cb) {
+  // Get only the name from a profile.
+  // Encapsulated differently so that implementation can be changed out for faster versions without changing the API.
+  SSB.getProfileAsync(profileId, (err, profile) => {
+    if (err)
+      cb(err)
+    else
+      cb(null, profileId.name)
+  })
+}
+
 SSB.getProfileAsync = function(profileId, cb) {
   const profiles = SSB.db.getIndex('profiles').getProfiles()
 
