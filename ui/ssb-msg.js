@@ -160,9 +160,9 @@ Vue.component('ssb-msg', {
     this.name = getName(profiles, this.msg.value.author)
     if (!this.name) {
       // Don't already have a name.  Let's see if we can fetch one.
-      SSB.getProfileAsync(this.msg.value.author, (err, profile) => {
-        if(profile.name)
-          self.name = profile.name
+      SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
+        if(name)
+          self.name = name
       })
     }
 

@@ -45,10 +45,10 @@ module.exports = function (componentsState) {
         var self = this
         if (this.feedId && this.feedId != '') {
           this.postMessageVisible = true
-          SSB.getProfileAsync(this.feedId, (err, profile) => {
+          SSB.getProfileNameAsync(this.feedId, (err, name) => {
             if (self.people.length == 0)
-              self.people = [{ id: self.feedId, name: (profile.name || self.feedId) }]
-            self.recipients = [{ id: self.feedId, name: (profile.name || self.feedId) }]
+              self.people = [{ id: self.feedId, name: (name || self.feedId) }]
+            self.recipients = [{ id: self.feedId, name: (name || self.feedId) }]
     
             // Done connecting and loading the box, so now we can take down the refreshing indicator
             document.body.classList.remove('refreshing')
