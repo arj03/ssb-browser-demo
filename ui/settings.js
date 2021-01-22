@@ -3,8 +3,6 @@ const i18nMessages = require('../messages.json')
 const caps = require('ssb-caps')
 
 module.exports = function () {
-  const { and, mentions, toCallback } = SSB.dbOperators
-  
   return {
     template: `
        <div id="channel">
