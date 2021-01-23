@@ -281,6 +281,10 @@ module.exports = function (componentsState) {
 
     destroyed: function () {
       window.removeEventListener('scroll', this.onScroll)
+      if (this.autorefreshTimer) {
+        clearTimeout(this.autorefreshTimer)
+        this.autorefreshTimer = 0
+      }
     },
 
     watch: {
