@@ -32,29 +32,35 @@ module.exports = function () {
            <div class="avatar">
              <img :src='image'><br>
              <input type="file" v-on:change="onFileSelect"><br>
-             <input id="name" type="text" v-model="name" :placeholder="$t('profile.profileNamePlaceholder')">
-             <br>
            </div>
            <div class="description">
+             <input id="name" type="text" v-model="name" :placeholder="$t('profile.profileNamePlaceholder')">
+             <br>
              <textarea :placeholder="$t('profile.profileDescriptionPlaceholder')" v-model="descriptionText"></textarea><br>
-             <button class="clickButton" v-on:click="exportKey">{{ $t('profile.exportKey') }}</button>
-             <button class="clickButton" v-on:click="showImportKey = true">{{ $t('profile.loadKey') }}</button>
-             <button class="clickButton" v-on:click="saveProfile">{{ $t('profile.saveProfile') }}</button>
            </div>
          </span>
          <span v-else>
            <div class="avatar">
              <img :src='image'><br>
-             <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">{{ $t('profile.sendMessage') }}</router-link>
-             <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
-             <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
-             <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button>
-             <br><br>
            </div>
            <div class="description">
+             <h2 class="profileName">{{ name }}</h2>
              <span v-html="description"></span>
            </div>
          </span>
+         <div class="profileButtons" v-if="isSelf">
+           <button class="clickButton" v-on:click="saveProfile">{{ $t('profile.saveProfile') }}</button>
+           <hr />
+           <button class="clickButton" v-on:click="exportKey">{{ $t('profile.exportKey') }}</button>
+           <button class="clickButton" v-on:click="showImportKey = true">{{ $t('profile.loadKey') }}</button>
+         </div>
+         <div class="profileButtons" v-else>
+           <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">{{ $t('profile.sendMessage') }}</router-link>
+           <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
+           <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
+           <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button>
+           <br><br>
+         </div>
          <h2 v-if="friends">{{ $t('profile.following') }}</h2>
          <div id="follows">
            <div v-for="friend in friends">
