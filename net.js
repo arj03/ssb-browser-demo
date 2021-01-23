@@ -151,11 +151,24 @@ SSB.getOOO = function(msgId, cb) {
 SSB.getProfileNameAsync = function(profileId, cb) {
   // Get only the name from a profile.
   // Encapsulated differently so that implementation can be changed out for faster versions without changing the API.
-  SSB.getProfileAsync(profileId, (err, profile) => {
-    if (err)
+  console.log("Getting profile name using ssb-social-value")
+  SSB.net.about.socialValue({ key: 'name', dest: profileId }, (err, value) => {
+    if (err) {
+      console.log("Got error from ssb-social-value: " + err)
       cb(err)
-    else
-      cb(null, profile.name)
+    } else if (value) {
+      console.log("Got name from ssb-social-value: " + value)
+      cb(null, value)
+    } else {
+      // Fall back to pulling it from the server.
+      console.log("Falling back to getProfileAsync")
+      SSB.getProfileAsync(profileId, (err, profile) => {
+        if(err)
+	  cb(err)
+	else
+	  cb(null, profile.name)
+      })
+    }
   })
 }
 
