@@ -114,13 +114,15 @@ module.exports = function (componentsState) {
         if (scrollTop == 0) {
           // At the top of the page.  Enable autorefresh
           var self = this
-          this.autorefreshTimer = setTimeout(() => {
-            console.log("refreshing from auto timer!")
-            self.autorefreshTimer = 0
-            self.onScroll()
-            self.refresh()
-          }, (this.messages.length > 0 ? 30000 : 3000))
-        } else {
+          if (localPrefs.getAutorefresh() && this.autorefreshTimer == 0) {
+            this.autorefreshTimer = setTimeout(() => {
+              console.log("refreshing from auto timer!")
+              self.autorefreshTimer = 0
+              self.onScroll()
+              self.refresh()
+            }, (this.messages.length > 0 ? 60000 : 5000))
+          }
+        } else if (this.autorefreshTimer) {
           clearTimeout(this.autorefreshTimer)
           this.autorefreshTimer = 0
         }

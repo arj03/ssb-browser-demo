@@ -7,10 +7,10 @@ module.exports = function () {
     template: `
        <div id="channel">
          <h2>{{ $t('settings.title') }}</h2>
-	 <p>
-	 <label for="appTitle">{{ $t('settings.appTitle') }}</label><br />
-	 <input type="text" id="appTitle" v-model="appTitle" :placeholder="$t('settings.appTitlePlaceholder')" />
-	 </p>
+         <p>
+         <label for="appTitle">{{ $t('settings.appTitle') }}</label><br />
+         <input type="text" id="appTitle" v-model="appTitle" :placeholder="$t('settings.appTitlePlaceholder')" />
+         </p>
 
          <p>
          <label for="locale">{{ $t('settings.language') }}</label><br />
@@ -25,28 +25,33 @@ module.exports = function () {
          <option value="default">Default</option>
          <option value="dark">Dark</option>
          <option value="ethereal">Ethereal</option>
-	 <option value="seigaihasubtle">Seigaiha Subtle</option>
+         <option value="seigaihasubtle">Seigaiha Subtle</option>
          <option value="floralgardenbird">Floral Garden Bird</option>
          </select>
          </p>
 
-	 <p>
-	 <label for="replicationHops">{{ $t('settings.replicateHops') }}</label><br />
-	 <select id="replicationHops" v-model="hops">
-	 <option value="0">0 {{ $t('settings.directFollows') }}</option>
-	 <option value="1">1</option>
-	 <option value="2">2</option>
-	 <option value="3">3</option>
-	 <option value="4">4</option>
-	 <option value="5">5</option>
-	 </select>
-	 </p>
+         <p>
+         <label for="replicationHops">{{ $t('settings.replicateHops') }}</label><br />
+         <select id="replicationHops" v-model="hops">
+         <option value="0">0 {{ $t('settings.directFollows') }}</option>
+         <option value="1">1</option>
+         <option value="2">2</option>
+         <option value="3">3</option>
+         <option value="4">4</option>
+         <option value="5">5</option>
+         </select>
+         </p>
 
-	 <p>
-	 <label for="caps"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.capsKey') }}</label><br />
-	 <input type="text" id="caps" v-model="caps" :placeholder="$t('settings.capsKeyPlaceholder')" /><br />
-	 <small>{{ $t('settings.capsKeyWarning') }}</small>
-	 </p>
+         <p>
+         <input type="checkbox" id="autorefresh" v-model="autorefresh" />
+         <label for="autorefresh">{{ $t('settings.autorefresh') }}</label>
+         </p>
+
+         <p>
+         <label for="caps"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.capsKey') }}</label><br />
+         <input type="text" id="caps" v-model="caps" :placeholder="$t('settings.capsKeyPlaceholder')" /><br />
+         <small>{{ $t('settings.capsKeyWarning') }}</small>
+         </p>
 
          <button class="clickButton" v-on:click="save()">{{ $t('common.save') }}</button>
        <div>`,
@@ -60,6 +65,7 @@ module.exports = function () {
         caps: '',
         locale: 'en',
         localeOptions: [],
+        autorefresh: true,
         hops: 1
       }
     },
@@ -69,18 +75,19 @@ module.exports = function () {
         this.appTitle = localPrefs.getAppTitle()
         this.theme = localPrefs.getTheme()
         this.hops = localPrefs.getHops()
-	this.caps = (localPrefs.getCaps() == caps.shs ? '' : localPrefs.getCaps())
+        this.caps = (localPrefs.getCaps() == caps.shs ? '' : localPrefs.getCaps())
         this.locale = localPrefs.getLocale()
         this.localeOptions = [{ locale: "", name: this.$root.$t('settings.useSystemDefault')}];
         for (var l in i18nMessages)
           this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
+        this.autorefresh = localPrefs.getAutorefresh()
       },
 
       save: function () {
         localPrefs.setAppTitle(this.appTitle)
         localPrefs.setTheme(this.theme)
         localPrefs.setHops(this.hops)
-	localPrefs.setCaps(this.caps)
+        localPrefs.setCaps(this.caps)
         var defaultLocale = (navigator.language || (navigator.languages ? navigator.languages[0] : navigator.browserLanguage ? navigator.browserLanguage : null))
         localPrefs.setLocale(this.locale)
         if(this.locale && this.locale != '')
@@ -90,9 +97,11 @@ module.exports = function () {
         else
           this.$i18n.locale = 'en'
 
+        localPrefs.setAutorefresh(this.autorefresh)
+
         localPrefs.updateStateFromSettings()
 
-	alert(this.$root.$t('settings.refreshForChanges'));
+        alert(this.$root.$t('settings.refreshForChanges'));
       }
     },
 
