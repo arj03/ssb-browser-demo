@@ -233,7 +233,7 @@ Vue.component('ssb-msg', {
           var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
           self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
         } else {
-          // Not local.  Wait until the connection comes up and try to fetch it.
+          // Not local. Wait until the connection comes up and try to fetch it.
           SSB.connectedWithData(() => {
             SSB.getOOO(self.thread, (err, rootMsg) => {
               if (rootMsg) {
