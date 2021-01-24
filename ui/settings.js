@@ -43,11 +43,6 @@ module.exports = function () {
          </p>
 
          <p>
-         <input type="checkbox" id="autorefresh" v-model="autorefresh" />
-         <label for="autorefresh">{{ $t('settings.autorefresh') }}</label>
-         </p>
-
-         <p>
          <label for="caps"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.capsKey') }}</label><br />
          <input type="text" id="caps" v-model="caps" :placeholder="$t('settings.capsKeyPlaceholder')" /><br />
          <small>{{ $t('settings.capsKeyWarning') }}</small>
@@ -65,7 +60,6 @@ module.exports = function () {
         caps: '',
         locale: 'en',
         localeOptions: [],
-        autorefresh: true,
         hops: 1
       }
     },
@@ -80,7 +74,6 @@ module.exports = function () {
         this.localeOptions = [{ locale: "", name: this.$root.$t('settings.useSystemDefault')}];
         for (var l in i18nMessages)
           this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
-        this.autorefresh = localPrefs.getAutorefresh()
       },
 
       save: function () {
@@ -96,8 +89,6 @@ module.exports = function () {
           this.$i18n.locale = defaultLocale
         else
           this.$i18n.locale = 'en'
-
-        localPrefs.setAutorefresh(this.autorefresh)
 
         localPrefs.updateStateFromSettings()
 

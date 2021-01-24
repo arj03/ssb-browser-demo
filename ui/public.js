@@ -86,7 +86,6 @@ module.exports = function (componentsState) {
         offset: 0,
         pageSize: 50,
         displayPageEnd: 50,
-        autorefreshTimer: 0,
 
         showOnboarding: window.firstTimeLoading,
         showPreview: false
@@ -106,26 +105,6 @@ module.exports = function (componentsState) {
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
-      },
-
-      onScroll: function() {
-        const scrollTop = (typeof document.body.scrollTop != 'undefined' ? document.body.scrollTop : window.scrollY)
-
-        if (scrollTop == 0) {
-          // At the top of the page.  Enable autorefresh
-          var self = this
-          if (localPrefs.getAutorefresh() && this.autorefreshTimer == 0) {
-            this.autorefreshTimer = setTimeout(() => {
-              console.log("refreshing from auto timer!")
-              self.autorefreshTimer = 0
-              self.onScroll()
-              self.refresh()
-            }, (this.messages.length > 0 ? 60000 : 5000))
-          }
-        } else if (this.autorefreshTimer) {
-          clearTimeout(this.autorefreshTimer)
-          this.autorefreshTimer = 0
-        }
       },
 
       closeOnboarding: function() {
@@ -286,9 +265,6 @@ module.exports = function (componentsState) {
     created: function () {
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
 
-      window.addEventListener('scroll', this.onScroll)
-      this.onScroll()
-
       // Pull preferences for filters.
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
       this.onlyDirectFollow = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlydirectfollow') >= 0)
@@ -302,14 +278,6 @@ module.exports = function (componentsState) {
 
       // Start this loading to make it easier for the user to filter by channels.
       this.loadChannels()
-    },
-
-    destroyed: function () {
-      window.removeEventListener('scroll', this.onScroll)
-      if (this.autorefreshTimer) {
-        clearTimeout(this.autorefreshTimer)
-        this.autorefreshTimer = 0
-      }
     },
 
     watch: {
