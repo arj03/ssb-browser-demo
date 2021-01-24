@@ -151,6 +151,89 @@
       "favoriteChannels": "Favourite channels"
     }
   },
+  "en-PR": {
+    "language": "English (Pirate)",
+    "pages": {
+      "public": "Scuttlebutt",
+      "private": "Captain's quarters",
+      "profile": "Shipmates"
+    },
+    "common": {
+      "refreshMessages": "Avast ye scurvy dogs!",
+      "noMessages": "(There be nuthin' to show)",
+      "close": "Shove off"
+    },
+    "public": {
+      "filterOnlyDirectFollow": "Scuttlebutt from yer shipmates",
+      "channelsCannotContainSpaces": "Aaargh!  Channels cannot contain spaces, ye lily-livered son of a biscuit eater."
+    },
+    "channel": {
+      "postNewMessage": "Fire!"
+    },
+    "connected": {
+      "connectedToPeer": "Jolly Roger sighted on the horizon"
+    },
+    "connections": {
+      "addPeer": "Visit a pub",
+      "possibleConnections": "Possible freebooters",
+      "existingConnections": "Shipmates"
+    },
+    "messagePreview": {
+      "postMessage": "Fire!"
+    },
+    "onboarding": {
+      "title": "Landlubber",
+      "welcomeMessage": "Ahoy, matey!  Welcome aboard!  Git yerself signed onto the register, so we know who be aboard.  It'll help ye get yer sealegs.",
+      "profileName": "Yer name ('ye can change this under Profile):",
+      "profileNamePlaceholder": "(Aaaaargh!)",
+      "profileDescription": "Tell us somethin' about yerself:",
+      "profileDescriptionPlaceholder": "(Aaaaargh, Markdown be supported here)",
+      "suggestedPeers": "Here be some good servers to plunder:",
+      "suggestedFollows": "Best be takin advice from some of these old seadogs:",
+      "manualSetup": "Shove off, ye bilge rat",
+      "getStarted": "Heave ho and set sail!"
+    },
+    "private": {
+      "title": "Captain's quarters",
+      "privateMessages": "Pirate messages",
+      "blankFieldError": "Please provide both subject and text in pirate messages",
+      "badRecipientError": "Good pirates must start with @"
+    },
+    "profile": {
+      "title": "Shipmate {name}",
+      "profileNamePlaceholder": "What ye be called",
+      "profileDescriptionPlaceholder": "Somethin' about yerself (Markdown be supported here)",
+      "exportKey": "Turn yer key to pirate code",
+      "loadKey": "Turn yer pirate code back to a key",
+      "sendMessage": "Fire a message!",
+      "removeFeed": "Keelhaul messages",
+      "following": "Friends",
+      "blocking": "Foes",
+      "downloadFollowing": "Download friends",
+      "downloadProfile": "Interrogate",
+      "downloadLatestMessages": "Listen up to latest scuttlebutt from user",
+      "showMnemonicCodeAbout": "We built a pirate code from yer key.",
+      "showMnemonicCodeWarning": "This code is yer life.  Guard it like ya mean it.",
+      "enterMnemonicCodeAbout": "Gimme yer pirate code below to git yer feed back.",
+      "enterMnemonicCodeWarning": "WARNING: this'll sink yer current key!",
+      "enterMnemonicCodePlaceholder": "Pirate code",
+      "block": "Block their festering gob",
+      "unfollowed": "They be unfollowed!",
+      "followed": "They be followed now!",
+      "blockedButNotDeleted": "They've walked the plank, but their scuttlebutt lives on.",
+      "blocked": "Blocked and keelhauled!"
+    },
+    "settings": {
+      "appTitle": "Set sail under this flag:",
+      "colorTheme": "Paint the ship:",
+      "advanced": "AAAAARGH!"
+    },
+    "thread": {
+      "postReply": "Fire!",
+      "messageOutsideGraph": "Message be over the horizon",
+      "unknownMessage": "Unknown message type or message be over the horizon"
+    }
+  },
   "ja-JP": {
     "language": "日本語",
     "pages": {
