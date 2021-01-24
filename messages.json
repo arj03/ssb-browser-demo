@@ -31,6 +31,7 @@
       "filterOnlyDirectFollow": "Only show posts from people you follow",
       "filterOnlyThreads": "Hide replies (only show the first message of a thread)",
       "filterOnlyChannels": "Show only these channels:",
+      "filterHideChannels": "Do not show these channels:",
       "channelsCannotContainSpaces": "Channels cannot contain spaces."
     },
     "channel": {
@@ -266,6 +267,7 @@
       "filterOnlyDirectFollow": "フォローしている人からの投稿のみを表示する",
       "filterOnlyThreads": "返信を非表示にします（スレッドの最初のメッセージのみを表示します）",
       "filterOnlyChannels": "これらのチャネルのみを表示する：",
+      "filterHideChannels": "これらのチャネルを表示しないでください：",
       "channelsCannotContainSpaces": "チャネルにスペースを含めることはできません。"
     },
     "channel": {
