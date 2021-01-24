@@ -27,6 +27,7 @@ module.exports = function () {
          <option value="ethereal">Ethereal</option>
          <option value="seigaihasubtle">Seigaiha Subtle</option>
          <option value="floralgardenbird">Floral Garden Bird</option>
+         <option value="pirateship">Pirate ship</option>
          </select>
          </p>
 
