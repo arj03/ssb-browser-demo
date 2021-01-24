@@ -57,7 +57,7 @@
       "possibleConnections": "Possible connections",
       "connectToX": "Connect to {peer}",
       "existingConnections": "Connections",
-      "unsupportedConnectionTypeX": "This SSB client does support connections of type '{connType}'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!",
+      "unsupportedConnectionTypeX": "This SSB client does not support connections of type '{connType}'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!",
       "dbStatus": "DB status",
       "ebtStatus": "EBT status"
     },
@@ -104,7 +104,7 @@
       "loadMore": "Load more",
       "downloadLatestMessages": "Download latest messages for user",
       "showMnemonicCodeAbout": "A mnemonic code has been generated from your private feed key.",
-      "showMnemonicCodeWarning": "This code can be used to restore your identitfy later. Store this somewhere safe.",
+      "showMnemonicCodeWarning": "This code can be used to restore your identity later. Store this somewhere safe.",
       "enterMnemonicCodeAbout": "Enter mnemonic code below to restore your feed key.",
       "enterMnemonicCodeWarning": "WARNING: this will overwrite your current feed key!",
       "enterMnemonicCodePlaceholder": "Mnemonic code",
@@ -149,6 +149,152 @@
     "language": "English (UK)",
     "channels": {
       "favoriteChannels": "Favourite channels"
+    }
+  },
+  "ja-JP": {
+    "language": "日本語",
+    "pages": {
+      "channel": "チャンネル",
+      "channels": "チャンネル",
+      "connections": "接続",
+      "notifications": "通知",
+      "private": "プライベートメッセージ",
+      "profile": "プロフィール",
+      "public": "公衆のメッセージ",
+      "settings": "設定",
+      "thread": "スレッド"
+    },
+    "common": {
+      "refreshMessages": "リフレッシュ",
+      "lastXMessages": "最後の{count}メッセージ",
+      "noMessages": "(表示するメッセージはありません)",
+      "showingMessagesFrom": "メッセージ",
+      "loadXMore": "さらに{count}をダウンロード",
+      "close": "閉じて",
+      "save": "変更を保存"
+    },
+    "public": {
+      "title": "公衆のメッセージ",
+      "threadTitlePlaceholder": "スレッドタイトル（オプション-すべてのクライアントがこれを表示するわけではありません）",
+      "postNewThread": "掲示します",
+      "channelOptional": "チャンネル（オプション）",
+      "channelsOptional": "チャンネル（オプション）",
+      "filters": "フィルター",
+      "filterOnlyDirectFollow": "フォローしている人からの投稿のみを表示する",
+      "filterOnlyThreads": "返信を非表示にします（スレッドの最初のメッセージのみを表示します）",
+      "filterOnlyChannels": "これらのチャネルのみを表示する：",
+      "channelsCannotContainSpaces": "チャネルにスペースを含めることはできません。"
+    },
+    "channel": {
+      "title": "チャンネル #{name}",
+      "postNewMessage": "掲示します"
+    },
+    "channels": {
+      "title": "チャンネル",
+      "favoriteChannels": "お気に入りのチャンネル",
+      "otherChannels": "他のチャネル",
+      "showChannels": "見るに：",
+      "showChannelsRecent": "最近の人気チャンネル（最新の500件の投稿）",
+      "showChannelsPopular": "全体的に人気のあるチャンネル",
+      "showChannelsAll": "名前でソートされたすべてのチャネル",
+      "loading": "チャンネルを検索しています..."
+    },
+    "connected": {
+      "connectedToPeer": "リモートピアに接続"
+    },
+    "connections": {
+      "title": "接続",
+      "addPeer": "サーバー接続を追加する",
+      "addPeerButton": "追加する",
+      "possibleConnections": "可能な接続",
+      "connectToX": "「{peer}」に接続します",
+      "existingConnections": "接続",
+      "unsupportedConnectionTypeX": "このSSBクライアントは、タイプ「{connType」の接続をサポートしていません。\n\n残念ながら、ブラウザーでは、接続方法に多くの制限があります。ほとんどの通信はWebSocketを介して行われる必要があり、使用している招待コードはWebSocketをサポートしていないようです。ごめんなさい！",
+      "dbStatus": "データベースのステータス",
+      "ebtStatus": "EBTのステータス"
+    },
+    "messagePreview": {
+      "postPreview": "プレビュー",
+      "postMessage": "掲示します"
+    },
+    "notifications": {
+      "title": "通知"
+    },
+    "onboarding": {
+      "title": "新しいユーザー",
+      "welcomeMessage": "ようこそ！ あなたはここで新しいようです。この情報はすべて<strong>完全にオプション</strong>ですが、すばやく簡単に開始するのに役立ちます。",
+      "profileName": "自分の名前を選択してください（後で「プロファイル」で変更できます）：",
+      "profileNamePlaceholder": "（あなたの名前またはニックネーム）",
+      "profileDescription": "必要に応じて、短い経歴を入力できます：",
+      "profileDescriptionPlaceholder": "（あなたについての短い経歴。「Markdown」フォーマットがサポートされています。）",
+      "suggestedPeers": "接続できるプリセットサーバーは次のとおりです：",
+      "suggestedFollows": "そしてここにあなたがフォローしたいと思うかもしれない何人かの人々がいます：",
+      "manualSetup": "キャンセル/手動セットアップ",
+      "getStarted": "始めましょう！"
+    },
+    "private": {
+      "title": "プライベートメッセージ",
+      "postPrivateMessage": "掲示します",
+      "privateMessages": "プライベートメッセージ",
+      "blankFieldError": "プライベートメッセージで件名とテキストの両方を提供してください",
+      "badRecipientError": "受信者は「@」で始まる必要があります"
+    },
+    "profile": {
+      "title": "プロフィール {name}",
+      "profileNamePlaceholder": "あなたの名前またはニックネーム",
+      "profileDescriptionPlaceholder": "あなたについての短い経歴。「Markdown」フォーマットがサポートされています。",
+      "exportKey": "フィードキーをニーモニックコードにエクスポートする",
+      "loadKey": "ニーモニックコードからフィードキーをロードする",
+      "saveProfile": "プロファイルを保存",
+      "sendMessage": "メッセージを送る",
+      "removeFeed": "フィードを削除する",
+      "following": "フォローする",
+      "blocking": "ブロックする",
+      "lastXMessagesFor": "最後の{count}つのメッセージ：",
+      "downloadFollowing": "フォローをダウンロード",
+      "downloadProfile": "プロファイルをダウンロード",
+      "loadMore": "もっと読み込む",
+      "downloadLatestMessages": "ユーザー向けの最新メッセージをダウンロードする",
+      "showMnemonicCodeAbout": "ニーモニックコードは、秘密のフィードキーから生成されました。",
+      "showMnemonicCodeWarning": "このコードは、後でIDを復元するために使用できます。 これを安全な場所に保管してください。",
+      "enterMnemonicCodeAbout": "以下にニーモニックコードを入力して、フィードキーを復元します。",
+      "enterMnemonicCodeWarning": "警告！これにより、現在のフィードキーが上書きされます。",
+      "enterMnemonicCodePlaceholder": "ニーモニックコード",
+      "restoreFeed": "フィードを復元",
+      "follow": "フォロー",
+      "unfollow": "フォローじゃない",
+      "block": "ブロックして削除",
+      "unblock": "ブロックじゃない",
+      "unfollowed": "フォローじゃない！",
+      "followed": "フォロー！",
+      "unblocked": "ブロックじゃない！",
+      "blockedButNotDeleted": "メッセージの削除に失敗しましたが、ユーザーはブロックされています。",
+      "blocked": "ブロックされ、メッセージが削除されました！",
+      "failedToRemoveFeed": "フィードの削除に失敗しました"
+    },
+    "settings": {
+      "title": "設定",
+      "appTitle": "アプリまたはブラウザのタブタイトル：",
+      "appTitlePlaceholder": "（デフォルトを使用します）",
+      "language": "言葉：",
+      "useSystemDefault": "（システムデフォルトを使用）",
+      "colorTheme": "カラーテーマ：",
+      "replicateHops": "複製するホップ数：",
+      "directFollows": "（あなたがフォローしている人だけ）",
+      "advanced": "高度な",
+      "capsKey": "「Caps key」（デフォルトを使用するには空白のままにします）：",
+      "capsKeyPlaceholder": "（デフォルトを使用します）",
+      "capsKeyWarning": "（これを変更するのは、自分が何をしているかを本当に知っている場合のみにしてください。）",
+      "refreshForChanges": "これらの変更を有効にするには、ブラウザを更新する必要がある場合があります。"
+    },
+    "ssb-msg": {
+      "threadTitlePlaceholder": "スレッド"
+    },
+    "thread": {
+      "title": "スレッド 「{title}」",
+      "postReply": "掲示します",
+      "messageOutsideGraph": "メッセージがフォローグラフの外にあります",
+      "unknownMessage": "不明なメッセージタイプまたはメッセージがフォローグラフの範囲外です"
     }
   }
 }
