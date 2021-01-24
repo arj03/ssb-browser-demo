@@ -6,22 +6,24 @@ module.exports = function (componentsState) {
   const localPrefs = require('../localprefs')
   const { and, or, not, channel, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
-  function getQuery(onlyDirectFollow, onlyThreads, onlyChannels, channelList, hideChannels, hideChannelsList) {
+  function getQuery(onlyDirectFollow, onlyThreads, onlyChannels,
+                    channelList, hideChannels, hideChannelsList) {
+
+
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
-      feedFilter = or(...graph.following.map(x => author(x)))
+      if (graph.following.length > 0)
+        feedFilter = or(...graph.following.map(x => author(x)))
     }
 
     let channelFilter = null
-    if (onlyChannels) {
+    if (onlyChannels && channelList.length > 0)
       channelFilter = or(...channelList.map(x => channel(x.replace(/^#+/, ''))))
-    }
 
     let hideChannelFilter = null
-    if (hideChannels && hideChannelsList.length > 0) {
+    if (hideChannels && hideChannelsList.length > 0)
       hideChannelFilter = and(...hideChannelsList.map(x => not(channel(x.replace(/^#+/, '')))))
-    }
 
     if (onlyThreads)
       return and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter)
@@ -114,6 +116,7 @@ module.exports = function (componentsState) {
           var self = this
           if (localPrefs.getAutorefresh() && this.autorefreshTimer == 0) {
             this.autorefreshTimer = setTimeout(() => {
+              console.log("refreshing from auto timer!")
               self.autorefreshTimer = 0
               self.onScroll()
               self.refresh()
