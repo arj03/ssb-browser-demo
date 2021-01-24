@@ -85,6 +85,7 @@
       "postPrivateMessage": "Post private message",
       "privateMessages": "Private messages",
       "blankFieldError": "Please provide both subject and text in private messages",
+      "noRecipientError": "You must specify at least one valid recipient from the list - addressing recipients solely by name is not supported.",
       "badRecipientError": "Recipients must start with @"
     },
     "profile": {
@@ -320,6 +321,7 @@
       "postPrivateMessage": "掲示します",
       "privateMessages": "プライベートメッセージ",
       "blankFieldError": "プライベートメッセージで件名とテキストの両方を提供してください",
+      "noRecipientError": "リストから少なくとも1人の有効な受信者を指定する必要があります。 名前だけで受信者にアドレス指定することはサポートされていません。",
       "badRecipientError": "受信者は「@」で始まる必要があります"
     },
     "profile": {
