@@ -168,7 +168,8 @@
     },
     "public": {
       "filterOnlyDirectFollow": "Scuttlebutt from yer shipmates",
-      "channelsCannotContainSpaces": "Aaargh!  Channels cannot contain spaces, ye lily-livered son of a biscuit eater."
+      "channelsCannotContainSpaces": "Aaargh!  Channels cannot contain spaces, ye lily-livered son of a biscuit eater.",
+      "postNewThread": "Fire the cannon!"
     },
     "channel": {
       "postNewMessage": "Fire!"
