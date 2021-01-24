@@ -39,6 +39,10 @@ exports.getFavoriteChannels = function() { return JSON.parse(getPref('favoriteCh
 
 exports.setFavoriteChannels = function(favoriteChannelsArray) { setPref('favoriteChannels', JSON.stringify(favoriteChannelsArray)) }
 
+exports.getHiddenChannels = function() { return JSON.parse(getPref('hiddenChannels', JSON.stringify(defaultPrefs.hiddenChannels || []))) }
+
+exports.setHiddenChannels = function(hiddenChannelsArray) { setPref('hiddenChannels', JSON.stringify(hiddenChannelsArray)) }
+
 exports.getLocale = function() { return getPref('locale', (defaultPrefs.locale || '')) }
 
 exports.setLocale = function(locale) { setPref('locale', locale) }
