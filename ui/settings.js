@@ -65,7 +65,7 @@ module.exports = function () {
         caps: '',
         locale: 'en',
         localeOptions: [],
-        autorefresh: true,
+        autorefresh: false,
         hops: 1
       }
     },

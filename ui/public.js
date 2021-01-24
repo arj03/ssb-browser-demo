@@ -114,7 +114,7 @@ module.exports = function (componentsState) {
         if (scrollTop == 0) {
           // At the top of the page.  Enable autorefresh
           var self = this
-          if (localPrefs.getAutorefresh() && this.autorefreshTimer == 0) {
+          if (this.autorefreshTimer == 0) {
             this.autorefreshTimer = setTimeout(() => {
               console.log("refreshing from auto timer!")
               self.autorefreshTimer = 0
@@ -286,8 +286,10 @@ module.exports = function (componentsState) {
     created: function () {
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
 
-      window.addEventListener('scroll', this.onScroll)
-      this.onScroll()
+      if (localPrefs.getAutorefresh()) {
+        window.addEventListener('scroll', this.onScroll)
+        this.onScroll()
+      }
 
       // Pull preferences for filters.
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
@@ -305,10 +307,12 @@ module.exports = function (componentsState) {
     },
 
     destroyed: function () {
-      window.removeEventListener('scroll', this.onScroll)
-      if (this.autorefreshTimer) {
-        clearTimeout(this.autorefreshTimer)
-        this.autorefreshTimer = 0
+      if (localPrefs.getAutorefresh()) {
+        window.removeEventListener('scroll', this.onScroll)
+        if (this.autorefreshTimer) {
+          clearTimeout(this.autorefreshTimer)
+          this.autorefreshTimer = 0
+        }
       }
     },
 
