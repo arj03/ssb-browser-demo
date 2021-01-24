@@ -97,6 +97,11 @@ module.exports = function (componentsState) {
       },
 
       confirmPost: function() {
+        if (this.recipients.length == 0) {
+          alert(this.$root.$t('private.noRecipientError'))
+          return
+        }
+
         let recps = this.recipients.map(x => x.id)
 
         if (!recps.every(x => x.startsWith("@"))) {
