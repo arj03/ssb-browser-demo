@@ -47,6 +47,10 @@ exports.getLocale = function() { return getPref('locale', (defaultPrefs.locale |
 
 exports.setLocale = function(locale) { setPref('locale', locale) }
 
+exports.getAutorefresh = function() { return (getPref('autorefresh', (typeof defaultPrefs.autorefresh != 'undefined' ? (defaultPrefs.autorefresh ? 'true' : 'false') : 'true')) != 'false') }
+
+exports.setAutorefresh = function(isOn) { setPref('autorefresh', (isOn ? 'true' : 'false')) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()
