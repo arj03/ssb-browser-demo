@@ -87,6 +87,7 @@ module.exports = function (componentsState) {
         pageSize: 50,
         displayPageEnd: 50,
         autorefreshTimer: 0,
+        isRefreshing: false,
 
         showOnboarding: window.firstTimeLoading,
         showPreview: false
@@ -108,26 +109,6 @@ module.exports = function (componentsState) {
         )
       },
 
-      onScroll: function() {
-        const scrollTop = (typeof document.body.scrollTop != 'undefined' ? document.body.scrollTop : window.scrollY)
-
-        if (scrollTop == 0) {
-          // At the top of the page.  Enable autorefresh
-          var self = this
-          if (this.autorefreshTimer == 0) {
-            this.autorefreshTimer = setTimeout(() => {
-              console.log("refreshing from auto timer!")
-              self.autorefreshTimer = 0
-              self.onScroll()
-              self.refresh()
-            }, (this.messages.length > 0 ? 60000 : 5000))
-          }
-        } else if (this.autorefreshTimer) {
-          clearTimeout(this.autorefreshTimer)
-          this.autorefreshTimer = 0
-        }
-      },
-
       closeOnboarding: function() {
         this.showOnboarding = false
 
@@ -135,7 +116,7 @@ module.exports = function (componentsState) {
         window.firstTimeLoading = false
       },
 
-      renderPublic: function () {
+      renderPublic: function (cb) {
         componentsState.newPublicMessages = false
 
         document.body.classList.add('refreshing')
@@ -154,11 +135,15 @@ module.exports = function (componentsState) {
             if (err) {
               this.messages = []
               alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
+              if (cb)
+                cb(err)
               throw err
             } else {
               this.messages = this.messages.concat(answer.results)
               this.displayPageEnd = this.offset + this.pageSize
               this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+              if (cb)
+                cb(null, true)
             }
           })
         )
@@ -276,20 +261,24 @@ module.exports = function (componentsState) {
       },
 
       refresh: function() {
+        // Don't allow concurrent refreshing.
+        if(this.isRefreshing)
+          return
+
+        this.isRefreshing = true
+
         console.log("Refreshing")
         this.messages = []
         this.offset = 0
-        this.renderPublic()
+        this.renderPublic((err, success) => {
+          // Clear the refreshing flag.
+          this.isRefreshing = false
+        })
       }
     },
 
     created: function () {
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
-
-      if (localPrefs.getAutorefresh()) {
-        window.addEventListener('scroll', this.onScroll)
-        this.onScroll()
-      }
 
       // Pull preferences for filters.
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
@@ -307,13 +296,6 @@ module.exports = function (componentsState) {
     },
 
     destroyed: function () {
-      if (localPrefs.getAutorefresh()) {
-        window.removeEventListener('scroll', this.onScroll)
-        if (this.autorefreshTimer) {
-          clearTimeout(this.autorefreshTimer)
-          this.autorefreshTimer = 0
-        }
-      }
     },
 
     watch: {
