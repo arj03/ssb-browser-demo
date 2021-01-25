@@ -1,14 +1,44 @@
+#profile > span {
+  display: flex;
+}
+
+#profile > span > .avatar {
+  flex: none;
+  width: 13rem;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+
 #profile > span > .avatar > img {
   width: 13rem;
   height: 13rem;
+}
+
+#profile > span > .description {
+  flex-grow: 4;
+}
+
+#profile > span > .description h2 {
+  margin-top: 0;
 }
 
 #profile > h2 {
   clear: both;
 }
 
-#profile > span > div > button.clickButton {
+#profile .profileButtons {
+  clear: both;
+  margin: 16px 0px 0px 0px;
+}
+
+#profile .profileButtons button.clickButton {
   margin-left: 1rem;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+#profile .profileButtons hr {
+  clear: both;
 }
 
 #profile > div#follows > div > a > img {
@@ -38,14 +68,14 @@
   height: 15rem;
 }
 
-#profile > span > div > button {
-  margin: 32px 0px 0px 0px;
+#profile .profileButtons button {
   float: right;
 }
 
 #profile > span > div > input#name {
   padding: 5px;
-  margin: 10px 0px 10px 0px;
+  margin: 0 0px 10px 0px;
+  width: 100%;
 }
 
 #profile > span > div > input {

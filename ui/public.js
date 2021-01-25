@@ -6,22 +6,29 @@ module.exports = function (componentsState) {
   const localPrefs = require('../localprefs')
   const { and, or, not, channel, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
-  function getQuery(onlyDirectFollow, onlyThreads, onlyChannels, channelList) {
+  function getQuery(onlyDirectFollow, onlyThreads, onlyChannels,
+                    channelList, hideChannels, hideChannelsList) {
+
+
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
-      feedFilter = or(...graph.following.map(x => author(x)))
+      if (graph.following.length > 0)
+        feedFilter = or(...graph.following.map(x => author(x)))
     }
 
     let channelFilter = null
-    if (onlyChannels) {
+    if (onlyChannels && channelList.length > 0)
       channelFilter = or(...channelList.map(x => channel(x.replace(/^#+/, ''))))
-    }
+
+    let hideChannelFilter = null
+    if (hideChannels && hideChannelsList.length > 0)
+      hideChannelFilter = and(...hideChannelsList.map(x => not(channel(x.replace(/^#+/, '')))))
 
     if (onlyThreads)
-      return and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter)
+      return and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter)
     else
-      return and(type('post'), isPublic(), feedFilter, channelFilter)
+      return and(type('post'), isPublic(), feedFilter, channelFilter, hideChannelFilter)
   }
 
   return {
@@ -41,9 +48,16 @@ module.exports = function (componentsState) {
       <fieldset><legend>{{ $t('public.filters') }}</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>{{ $t('public.filterOnlyDirectFollow') }}</label><br />
       <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>{{ $t('public.filterOnlyThreads') }}</label><br />
-      <input id='onlyChannels' type='checkbox' v-model="onlyChannels"> <label for='onlyChannels'>{{ $t('public.filterOnlyChannels') }}</label>
-      <div class="channel-selector"><v-select :placeholder="$t('public.channelsOptional')" v-model="onlyChannelsList" :options="channels" taggable multiple push-tags>
-      </v-select></div>
+      <div class='filter-line'>
+        <input id='onlyChannels' type='checkbox' v-model="onlyChannels"> <label for='onlyChannels'>{{ $t('public.filterOnlyChannels') }}</label>
+        <div class="channel-selector"><v-select :placeholder="$t('public.channelsOptional')" v-model="onlyChannelsList" :options="channels" taggable multiple push-tags>
+        </v-select></div>
+      </div>
+      <div class='filter-line'>
+        <input id='hideChannels' type='checkbox' v-model="hideChannels"> <label for='hideChannels'>{{ $t('public.filterHideChannels') }}</label>
+        <div class="channel-selector"><v-select :placeholder="$t('public.channelsOptional')" v-model="hideChannelsList" :options="channels" taggable multiple push-tags>
+        </v-select></div>
+      </div>
       </fieldset>
       <br>
       <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
@@ -66,6 +80,8 @@ module.exports = function (componentsState) {
         onlyThreads: false,
         onlyChannels: false,
         onlyChannelsList: [],
+        hideChannels: false,
+        hideChannelsList: [],
         messages: [],
         offset: 0,
         pageSize: 50,
@@ -80,7 +96,7 @@ module.exports = function (componentsState) {
     methods: {
       loadMore: function() {
         SSB.db.query(
-          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList),
+          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList, this.hideChannels, this.hideChannelsList),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
@@ -98,12 +114,15 @@ module.exports = function (componentsState) {
         if (scrollTop == 0) {
           // At the top of the page.  Enable autorefresh
           var self = this
-          this.autorefreshTimer = setTimeout(() => {
-            self.autorefreshTimer = 0
-            self.onScroll()
-            self.refresh()
-          }, (this.messages.length > 0 ? 30000 : 3000))
-        } else {
+          if (this.autorefreshTimer == 0) {
+            this.autorefreshTimer = setTimeout(() => {
+              console.log("refreshing from auto timer!")
+              self.autorefreshTimer = 0
+              self.onScroll()
+              self.refresh()
+            }, (this.messages.length > 0 ? 60000 : 5000))
+          }
+        } else if (this.autorefreshTimer) {
           clearTimeout(this.autorefreshTimer)
           this.autorefreshTimer = 0
         }
@@ -124,7 +143,7 @@ module.exports = function (componentsState) {
         console.time("latest messages")
 
         SSB.db.query(
-          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList),
+          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList, this.hideChannels, this.hideChannelsList),
           startFrom(this.offset),
           paginate(this.pageSize),
           descending(),
@@ -156,9 +175,13 @@ module.exports = function (componentsState) {
         if(this.onlyChannels)
           filterNames.push('onlychannels')
 
+        if(this.hideChannels)
+          filterNames.push('hidechannels')
+
         // If we have no filters, set it to 'none' since we don't have a filter named that and it will keep it from dropping down to default.
         localPrefs.setPublicFilters(filterNames.length > 0 ? filterNames.join('|') : 'none')
         localPrefs.setFavoriteChannels(this.onlyChannelsList)
+        localPrefs.setHiddenChannels(this.hideChannelsList)
       },
 
       onFileSelect: function(ev) {
@@ -263,8 +286,10 @@ module.exports = function (componentsState) {
     created: function () {
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
 
-      window.addEventListener('scroll', this.onScroll)
-      this.onScroll()
+      if (localPrefs.getAutorefresh()) {
+        window.addEventListener('scroll', this.onScroll)
+        this.onScroll()
+      }
 
       // Pull preferences for filters.
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();
@@ -272,6 +297,8 @@ module.exports = function (componentsState) {
       this.onlyThreads = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlythreads') >= 0)
       this.onlyChannels = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlychannels') >= 0)
       this.onlyChannelsList = localPrefs.getFavoriteChannels()
+      this.hideChannels = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('hidechannels') >= 0)
+      this.hideChannelsList = localPrefs.getHiddenChannels()
 
       this.renderPublic()
 
@@ -280,7 +307,13 @@ module.exports = function (componentsState) {
     },
 
     destroyed: function () {
-      window.removeEventListener('scroll', this.onScroll)
+      if (localPrefs.getAutorefresh()) {
+        window.removeEventListener('scroll', this.onScroll)
+        if (this.autorefreshTimer) {
+          clearTimeout(this.autorefreshTimer)
+          this.autorefreshTimer = 0
+        }
+      }
     },
 
     watch: {
@@ -294,11 +327,24 @@ module.exports = function (componentsState) {
         this.refresh()
       },
 
+      hideChannels: function (newValue, oldValue) {
+        this.saveFilters()
+        this.refresh()
+      },
+
       onlyChannelsList: function (newValue, oldValue) {
         this.saveFilters()
 
         // Only refresh if it changed while the checkbox is checked.
         if (this.onlyChannels)
+          this.refresh()
+      },
+
+      hideChannelsList: function (newValue, oldValue) {
+        this.saveFilters()
+
+        // Only refresh if it changed while the checkbox is checked.
+        if (this.hideChannels)
           this.refresh()
       },
 

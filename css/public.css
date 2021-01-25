@@ -10,3 +10,7 @@
   float: right;
   width: 15rem;
 }
+
+#public .filter-line {
+  clear: both;
+}

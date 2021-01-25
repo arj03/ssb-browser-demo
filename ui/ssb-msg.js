@@ -227,21 +227,10 @@ Vue.component('ssb-msg', {
 
     // If it's a reply to a thread, try to pull the thread title.
     if (this.msg.key != this.thread) {
-      // Try local first.
       SSB.db.get(this.thread, (err, rootMsg) => {
         if (rootMsg) {
           var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
           self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
-        } else {
-          // Not local.  Wait until the connection comes up and try to fetch it.
-          SSB.connectedWithData(() => {
-            SSB.getOOO(self.thread, (err, rootMsg) => {
-              if (rootMsg) {
-                var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
-                self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
-              }
-            })
-          })
         }
       })
     }

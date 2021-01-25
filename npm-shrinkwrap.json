@@ -570,9 +570,9 @@
       }
     },
     "async-append-only-log": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/async-append-only-log/-/async-append-only-log-3.0.2.tgz",
-      "integrity": "sha512-A63klRwVpJnxpM0V68x8EqbijOFWCPUneMrT/z9Tf9sUll4IfHl9z2RxVKcz4qrqtWNxtK7AfGAOGZoi5aeVHA==",
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/async-append-only-log/-/async-append-only-log-3.0.3.tgz",
+      "integrity": "sha512-w6F/oWReK4qyNBnCFe/cfYZHXMs07BZjS0LmpHQ5JByK5yEVzvvWGdNMStFPVbQhVJnT1PdmP+/LwEzmoe33qA==",
       "requires": {
         "debug": "^4.2.0",
         "hashlru": "^2.3.0",
@@ -1426,6 +1426,11 @@
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz",
       "integrity": "sha1-tf1UIgqivFq1eqtxQMlAdUUDwac="
+    },
+    "cpu-percentage": {
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/cpu-percentage/-/cpu-percentage-1.0.3.tgz",
+      "integrity": "sha1-ho/ZCS9DnR75X0qF5fpLnwfvyVw="
     },
     "create-ecdh": {
       "version": "4.0.4",
@@ -2920,9 +2925,9 @@
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA="
     },
     "jitdb": {
-      "version": "1.0.4",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.0.4.tgz",
-      "integrity": "sha512-i6O+J09WmlyU9JT2B3TN5i/eGYTBZD8MYg3jknKfPbAeb5AqdqD/6rCy7kXHUFAZAvN9ot0JGQ5755gxhIC4Ww==",
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.2.1.tgz",
+      "integrity": "sha512-67vV9USAN7s3dgB+J6BDE1jkTACar8OuQC1chQR9rEuno/LD0iaS5J0X2FIGMRcGza54vIMpiJSkqfnGYrMPzA==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -4985,9 +4990,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "6.0.3",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.3.tgz",
-      "integrity": "sha512-Jrye3+vRZ9FohA5oDXGqqzgyjLNvUBtu4EJLI73RGF9rfYOKpEc1ChsqdFXk8jm37PzGLySryNaM2ca9TRJy5A==",
+      "version": "6.0.5",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.5.tgz",
+      "integrity": "sha512-tLkn24idufNMm16OCVhXldquDw+K0vxHr6i/qqP5uuD+pRU8oG2OkZCmO2XSE5dlehTK08dWTT6KJC/eHMYlBQ==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
@@ -5008,7 +5013,7 @@
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^0.19.1",
-        "ssb-db2": "^1.1.0",
+        "ssb-db2": "^1.3.0",
         "ssb-keys": "^8.0.1",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
@@ -5255,11 +5260,11 @@
       }
     },
     "ssb-db2": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.1.0.tgz",
-      "integrity": "sha512-cKi5gl0jdwNe5TxlzjiD8x5vuJN+JMa3aFUiHGXuIdp9h92fauBUL3fuF8FTapDxa7zGPMO30WBFF9JXq1K5uQ==",
+      "version": "1.3.0",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.3.0.tgz",
+      "integrity": "sha512-yAwsPXWAlMxWZbeqvWfiRhKCe43UHq2mY39HHww+//VbYPULDHAB5BVvnqAkvBifX3P173Q1UUDkc9j85orjVQ==",
       "requires": {
-        "async-append-only-log": "^3.0.2",
+        "async-append-only-log": "^3.0.3",
         "atomically-universal": "^0.1.1",
         "binary-search-bounds": "^2.0.4",
         "bipf": "~1.4.0",
@@ -5267,7 +5272,7 @@
         "fastintcompression": "0.0.4",
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
-        "jitdb": "^1.0.3",
+        "jitdb": "^1.2.0",
         "level": "^6.0.1",
         "lodash.debounce": "^4.0.8",
         "mkdirp": "^1.0.4",
@@ -5284,6 +5289,7 @@
         "ssb-ref": "^2.14.3",
         "ssb-sort": "^1.1.3",
         "ssb-validate": "^4.1.3",
+        "too-hot": "^1.0.0",
         "typedarray-to-buffer": "^4.0.0"
       },
       "dependencies": {
@@ -6020,6 +6026,14 @@
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.0.tgz",
       "integrity": "sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw=="
+    },
+    "too-hot": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/too-hot/-/too-hot-1.0.0.tgz",
+      "integrity": "sha512-RqtHvVffaf+ORMlpFjEWh3czDy6Q5wFfdGq9JXVBXu2L8/ssjDTnong8f1+I2xWGlKslXUkHU7m1HBj6MyoLqw==",
+      "requires": {
+        "cpu-percentage": "~1.0.3"
+      }
     },
     "traverse": {
       "version": "0.6.6",
