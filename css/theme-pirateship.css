@@ -1,0 +1,115 @@
+@font-face
+{
+  /* From: https://fontlibrary.org/en/font/silverblade */
+  font-family: "SilverbladeDecorative";
+  src: url("./SilverbladeDecorative.ttf");
+}
+
+.theme-pirateship
+{
+  background-color: #0193cc;
+  background-image: url("../assets/seabed-155896303267m-optimized.jpg"); /* By: Petr Kratochvil, licensed as CC0, from: https://www.publicdomainpictures.net/en/view-image.php?image=295900 */
+  background-attachment: fixed;
+  background-size: 100%;
+  background-repeat: none;
+  background-position: center bottom;
+  color: #fff;
+}
+
+.theme-pirateship a
+{
+  color: #fff;
+}
+
+.theme-pirateship #app
+{
+  margin: -3em;
+  padding: 3em;
+  background-image: url("../assets/old-barn-wood-background-recolored-2-tiled.jpg"); /* By: Sheila Brown, licensed as CC0, from: https://www.publicdomainpictures.net/en/view-image.php?image=265825 */
+  background-color: #35271b;
+  background-repeat: repeat;
+  background-size: 100%;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 1.0);
+  border-left: 0.25em solid #5c4c3e;
+  border-right: 0.5em solid #26190b;
+}
+
+.theme-pirateship h1,
+.theme-pirateship h2
+{
+  font-family: "SilverbladeDecorative", serif;
+}
+
+.theme-pirateship h1
+{
+  font-size: 405%;
+  margin: 0;
+  text-align: justify;
+}
+
+.theme-pirateship h2
+{
+  font-size: 170%;
+}
+
+.theme-pirateship #profile .description a,
+.theme-pirateship #navigation > a
+{
+  color: #fff;
+}
+
+.theme-pirateship .message,
+.theme-pirateship #channels ol
+{
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  color: #000;
+  border-radius: 5px;
+}
+
+.theme-pirateship .message a
+{
+  color: #333;
+}
+
+.theme-pirateship .clickButton
+{
+  background-color: #333;
+  background-image: linear-gradient(#999, #000);
+  color: #fff;
+  border-radius: 3px;
+  border: 3px solid #fff;
+}
+
+.theme-pirateship input[type="text"],
+.theme-pirateship .v-select
+{
+  background-color: #666;
+  background-image: linear-gradient(#000, #333);
+  color: #fff;
+  border: 3px solid #fff;
+}
+
+.theme-pirateship .v-select input[type="search"]
+{
+  color: #ccc;
+}
+
+.theme-pirateship input[type="text"]::placeholder
+{
+  color: #999;
+}
+
+.theme-pirateship .newPublic > span,
+.theme-pirateship .newPrivate > span
+{
+  font-size: 0;
+}
+
+.theme-pirateship .newPublic > span:before,
+.theme-pirateship .newPrivate > span:before
+{
+  content: "☠️";
+  font-size: medium;
+  padding-left: 0.25em;
+}
