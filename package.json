@@ -14,7 +14,7 @@
     "pull-abortable": "^4.1.1",
     "pull-stream": "^3.6.14",
     "rimraf": "^3.0.2",
-    "ssb-browser-core": "^6.0.5",
+    "ssb-browser-core": "git://github.com/KyleMaas/ssb-browser-core.git#add-dht-support-runnable",
     "ssb-contact-msg": "^1.1.0",
     "ssb-keys-mnemonic": "^0.3.0",
     "ssb-markdown": "^6.0.7",
@@ -36,6 +36,7 @@
     "uglifyify": "^5.0.2"
   },
   "scripts": {
+    "postinstall": "pushd node_modules/ssb-browser-core; npm install; popd",
     "build": "mkdir -p build && browserify -p esmify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js",
     "release": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js > build/bundle-ui.js && node write-dist.js",
     "inline": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js > build/bundle-ui.js && node write-dist.js && node node_modules/inline-source-cli/dist/index.js --compress false --attribute '' --root dist/ dist/index.html dist/index-inlined.html && sed -i -e \"s~assets/noavatar.svg~data:image/svg+xml;base64,$(base64 -w 0 assets/noavatar.svg)~\" dist/index-inlined.html && pushd dist && find . \\! -name 'index-inlined.html' \\! -name 'favicon.ico' -delete && mv index-inlined.html index.html && popd"
