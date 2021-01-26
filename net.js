@@ -161,7 +161,7 @@ SSB.getProfileNameAsync = function(profileId, cb) {
 
 SSB.getProfileAsync = function(profileId, cb) {
   const keysWeWant = ['name', 'description', 'image']
-  SSB.net.about.socialValues({ keys: keysWeWant, dest: profileId }, (err, values) => {
+  SSB.net.about.latestValues({ keys: keysWeWant, dest: profileId }, (err, values) => {
     if (err) {
       console.log("Got error from ssb-social-value: " + err)
       return cb(err)

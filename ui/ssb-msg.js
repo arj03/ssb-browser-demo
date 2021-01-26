@@ -150,7 +150,7 @@ Vue.component('ssb-msg', {
       self.name = "You"
     else
       SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
-        if(name)
+        if (name)
           self.name = name
       })
 
