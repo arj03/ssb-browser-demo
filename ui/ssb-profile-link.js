@@ -26,8 +26,6 @@ Vue.component('ssb-profile-link', {
         if (this.feedId != SSB.net.id)
           this.name = profile.name
         if (profile.image) {
-          if (typeof profile.image === 'object' && profile.image.link)
-            profile.image = profile.image.link
           SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
             if (err)
               return console.error("failed to get img", err)

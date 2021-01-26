@@ -7,7 +7,7 @@ module.exports = function (componentsState) {
   return {
     template: `<div id="private">
         <span v-if="postMessageVisible">
-        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name" @search="suggest">
+        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name" @search="suggest" @open="recipientsOpen">
           <template #option="{ name, image }">
             <img v-if='image' class="tinyAvatar" :src='image' />
             <span>{{ name }}</span>
@@ -42,34 +42,33 @@ module.exports = function (componentsState) {
       suggest: function(searchString, loading) {
         var self = this
         loading(true)
-        console.log("Searching for:")
-        console.log(searchString)
-        // I have no idea why, but we have to run this twice to get the results we're looking for.
-        SSB.net.suggest.profile({ text: searchString }, (err, matches) => {
-          SSB.net.suggest.profile({ text: searchString }, (err, matches) => {
-            if (matches) {
-              console.log("Found:")
-              console.log(matches)
-              for (m in matches) {
-                var alreadyInPeople = false
-                for (p in self.people) {
-                  if (matches[m].id == self.people[p].id) {
-                    alreadyInPeople = true
-                    break
-                  }
-                }
-                if (!alreadyInPeople)
-                  // Strip out the image, because I don't know how to pull that.
-                  self.people.push({ id: matches[m].id, name: matches[m].name })
-              }
-            }
-  
-            // Sort the people array.
-            var collator = new Intl.Collator()
-            self.people = self.people.sort((a, b) => { return collator.compare(a.name, b.name) })
-  
-            loading(false)
-          })
+        let searchOpts = {}
+        if (searchString !== "")
+          searchOpts['text'] = searchString 
+
+        SSB.net.suggest.profile(searchOpts, (err, matches) => {
+          self.people = []
+          if (matches) {
+            // FIXME: img
+            matches.forEach(match => {
+              self.people.push({ id: match.id, name: match.name })
+            })
+          }
+
+          loading(false)
+        })
+      },
+
+      recipientsOpen: function() {
+        var self = this
+        SSB.net.suggest.profile({}, (err, matches) => {
+          if (matches) {
+            self.people = []
+            // FIXME: need to lazy get the img
+            matches.forEach(match => {
+              self.people.push({ id: match.id, name: match.name })
+            })
+          }
         })
       },
 
@@ -80,8 +79,6 @@ module.exports = function (componentsState) {
         if (this.feedId && this.feedId != '') {
           this.postMessageVisible = true
           SSB.getProfileNameAsync(this.feedId, (err, name) => {
-            if (self.people.length == 0)
-              self.people = [{ id: self.feedId, name: (name || self.feedId) }]
             self.recipients = [{ id: self.feedId, name: (name || self.feedId) }]
     
             // Done connecting and loading the box, so now we can take down the refreshing indicator
