@@ -149,57 +149,24 @@ SSB.getOOO = function(msgId, cb) {
 }
 
 SSB.getProfileNameAsync = function(profileId, cb) {
-  // Get only the name from a profile.
-  // Encapsulated differently so that implementation can be changed out for faster versions without changing the API.
-  console.log("Getting profile name using ssb-social-value")
   SSB.net.about.socialValue({ key: 'name', dest: profileId }, (err, value) => {
     if (err) {
       console.log("Got error from ssb-social-value: " + err)
-      cb(err)
-    } else if (value) {
-      console.log("Got name from ssb-social-value: " + value)
-      cb(null, value)
-    } else {
-      // Fall back to pulling it from the server.
-      console.log("Falling back to getProfileAsync")
-      SSB.getProfileAsync(profileId, (err, profile) => {
-        if(err)
-	  cb(err)
-	else
-	  cb(null, profile.name)
-      })
+      return cb(err)
     }
+
+    cb(null, value)
   })
 }
 
 SSB.getProfileAsync = function(profileId, cb) {
   const keysWeWant = ['name', 'description', 'image']
   SSB.net.about.socialValues({ keys: keysWeWant, dest: profileId }, (err, values) => {
-
-  if(values) {
-    // We've got it already.
-    cb(null, values)
-  } else {
-    // Going to have to fetch it when a connection comes up.
-    SSB.connectedWithData(() => {
-      let rpc = SSB.getPeer()
-
-      if(!rpc) cb("No peer to connect to")
-
-      pull(
-        rpc.partialReplication.getMessagesOfType({id: profileId, type: 'contact'}),
-        pull.asyncMap(SSB.db.addOOO),
-        pull.collect((err, msgs) => {
-          SSB.net.about.socialValues({ keys: keysWeWant, dest: profileId }, (err, values) => {
-            if(values) {
-              cb(null, values)
-            } else {
-              cb(err)
-            }
-          })
-        })
-      )
-      })
+    if (err) {
+      console.log("Got error from ssb-social-value: " + err)
+      return cb(err)
     }
+
+    cb(null, values)
   })
 }
