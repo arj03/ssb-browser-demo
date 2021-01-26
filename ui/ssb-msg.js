@@ -160,9 +160,9 @@ Vue.component('ssb-msg', {
     this.name = getName(profiles, this.msg.value.author)
     if (!this.name) {
       // Don't already have a name.  Let's see if we can fetch one.
-      SSB.getProfileAsync(this.msg.value.author, (err, profile) => {
-        if(profile.name)
-          self.name = profile.name
+      SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
+        if(name)
+          self.name = name
       })
     }
 
@@ -227,21 +227,10 @@ Vue.component('ssb-msg', {
 
     // If it's a reply to a thread, try to pull the thread title.
     if (this.msg.key != this.thread) {
-      // Try local first.
       SSB.db.get(this.thread, (err, rootMsg) => {
         if (rootMsg) {
           var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
           self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
-        } else {
-          // Not local.  Wait until the connection comes up and try to fetch it.
-          SSB.connectedWithData(() => {
-            SSB.getOOO(self.thread, (err, rootMsg) => {
-              if (rootMsg) {
-                var newTitle = helpers.getMessageTitle(self.thread, rootMsg)
-                self.parentThreadTitle = (newTitle != self.thread ? newTitle : self.$root.$t('ssb-msg.threadTitlePlaceholder'))
-              }
-            })
-          })
         }
       })
     }

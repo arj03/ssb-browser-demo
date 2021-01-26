@@ -5,7 +5,7 @@ module.exports = function () {
     template: `
        <div id="channel">
          <h2>{{ $t('notifications.title') }}</h2>
-         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
        <div>`,
 
     props: ['channel'],
