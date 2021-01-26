@@ -7,7 +7,7 @@ module.exports = function (componentsState) {
   return {
     template: `<div id="private">
         <span v-if="postMessageVisible">
-        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name">
+        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name" @search="suggest">
           <template #option="{ name, image }">
             <img v-if='image' class="tinyAvatar" :src='image' />
             <span>{{ name }}</span>
@@ -39,6 +39,40 @@ module.exports = function (componentsState) {
     },
 
     methods: {
+      suggest: function(searchString, loading) {
+        var self = this
+        loading(true)
+        console.log("Searching for:")
+        console.log(searchString)
+        // I have no idea why, but we have to run this twice to get the results we're looking for.
+        SSB.net.suggest.profile({ text: searchString }, (err, matches) => {
+          SSB.net.suggest.profile({ text: searchString }, (err, matches) => {
+            if (matches) {
+              console.log("Found:")
+              console.log(matches)
+              for (m in matches) {
+                var alreadyInPeople = false
+                for (p in self.people) {
+                  if (matches[m].id == self.people[p].id) {
+                    alreadyInPeople = true
+                    break
+                  }
+                }
+                if (!alreadyInPeople)
+                  // Strip out the image, because I don't know how to pull that.
+                  self.people.push({ id: matches[m].id, name: matches[m].name })
+              }
+            }
+  
+            // Sort the people array.
+            var collator = new Intl.Collator()
+            self.people = self.people.sort((a, b) => { return collator.compare(a.name, b.name) })
+  
+            loading(false)
+          })
+        })
+      },
+
       renderPrivate: function() {
         document.body.classList.add('refreshing')
 
@@ -138,16 +172,6 @@ module.exports = function (componentsState) {
       document.title = this.$root.appTitle + " - " + this.$root.$t('private.title')
 
       this.renderPrivate()
-
-      // Try it right away, and then try again when we're connected in case this is a fresh load and we're only connected to rooms.
-      helpers.getPeople((err, people) => {
-        this.people = people
-      })
-      SSB.connectedWithData(() => {
-        helpers.getPeople((err, people) => {
-          this.people = people
-        })
-      })
     }
   }
 }

@@ -396,25 +396,22 @@ module.exports = function () {
           })
         )
 
-        const profiles = SSB.db.getIndex('profiles').getProfiles()
-        const profile = profiles[this.feedId]
-
-        if (!profile) return
-
-        if (profile.name)
-          this.name = profile.name
-
-        if (profile.description)
-          this.descriptionText = profile.description
-
-        if (profile.image) {
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
-            if (!err) {
-              self.image = url
-              self.imageBlobId = profile.image
-            }
-          })
-        }
+        SSB.getProfileAsync(this.feedId, (err, profile) => {
+          if (profile.name)
+            this.name = profile.name
+  
+          if (profile.description)
+            this.descriptionText = profile.description
+  
+          if (profile.image) {
+            SSB.net.blobs.localGet(profile.image, (err, url) => {
+              if (!err) {
+                self.image = url
+                self.imageBlobId = profile.image
+              }
+            })
+          }
+        })
       }
     },
 
