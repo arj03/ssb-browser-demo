@@ -146,25 +146,13 @@ Vue.component('ssb-msg', {
 
     var self = this
 
-    function getName(profiles, author) {
-      if (author == SSB.net.id)
-        return "You"
-      else if (profiles) {
-        const profile = profiles[author]
-        if (profile)
-          return profile.name
-      }
-    }
-
-    const profiles = SSB.db.getIndex('profiles').getProfiles()
-    this.name = getName(profiles, this.msg.value.author)
-    if (!this.name) {
-      // Don't already have a name.  Let's see if we can fetch one.
+    if (this.msg.value.author == SSB.net.id)
+      self.name = "You"
+    else
       SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
         if(name)
           self.name = name
       })
-    }
 
     // Render the body, which may need to wait until we're connected to a peer.
     const blobRegEx = /!\[.*\]\(&.*\)/g
@@ -207,7 +195,7 @@ Vue.component('ssb-msg', {
             else if (expression === 'heart')
               expression = '❤'
 
-            authorToReaction[msg.value.author] = { author: getName(profiles, msg.value.author), expression }
+            authorToReaction[msg.value.author] = { author: msg.value.author, expression } // Pulling names for these has to be done async now, which is annoyingly complicated.  Since we hardly do anything with this right now anyway, just use the ID.
           }
         })
 
