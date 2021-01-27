@@ -92,27 +92,27 @@ module.exports = function (componentsState) {
           usageStatistics: false,
           hooks: {
             addImageBlobHook: self.addImageBlobHook
-          } /*,
+          },
           customHTMLRenderer: {
             image(node, context) {
-              console.log("Image renderer")
-              console.log(node)
-              console.log(context)
-
               const { destination } = node
-              const { getChildrenText } = context
+              const { getChildrenText, skipChildren } = context
+
+              skipChildren()
 
               return {
                 type: "openTag",
                 tagName: "img",
                 selfClose: true,
                 attributes: {
-                  src: 
+                  src: self.blobUrlCache[destination],
+                  alt: getChildrenText(node)
                 }
               }
-            }*/
+            }
           }
         },
+        blobUrlCache: [],
 
         showOnboarding: window.firstTimeLoading,
         showPreview: false
@@ -135,8 +135,12 @@ module.exports = function (componentsState) {
       },
 
       addImageBlobHook: function(blob, cb) {
+        var self = this
         helpers.handleFileSelectParts([ blob ], false, (err, res) => {
-          cb(res.link, res.name)
+          SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
+            self.blobUrlCache[res.link] = blobURL
+            cb(res.link, res.name)
+          })
         })
         return false
       },
