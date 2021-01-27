@@ -24,7 +24,7 @@ exports.getPeople = function(cb) {
   cb(null, people)
 }
 
-exports.handleFileSelect = function(ev, isPrivate, cb) {
+exports.handleFileSelectParts = function(files, isPrivate, cb) {
   var opts = {
     stripExif: true,
     quality: 0.9,
@@ -32,7 +32,13 @@ exports.handleFileSelect = function(ev, isPrivate, cb) {
     isPrivate
   }
 
-  SSB.blobFiles(ev.target.files, SSB.net, opts, (err, res) => {
+  SSB.blobFiles(files, SSB.net, opts, (err, res) => {
+    cb(null, res)
+  })
+}
+
+exports.handleFileSelect = function(ev, isPrivate, cb) {
+  this.handleFileSelectParts(ev.target.files, isPrivate, (err, res) => {
     cb(null, " ![" + res.name + "](" + res.link + ")")
   })
 }
