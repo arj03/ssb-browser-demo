@@ -6,6 +6,11 @@ SSB.getProfileName = function(profileId) {
   else return profileId
 }
 
+SSB.getProfile = function(profileId) {
+  if (profileCache[profileId]) return profileCache[profileId]
+  else return {}
+}
+
 SSB.getProfileNameAsync = function(profileId, cb) {
   if (profileCache[profileId]) return cb(null, profileCache[profileId].name)
 
@@ -33,6 +38,10 @@ SSB.getProfileAsync = function(profileId, cb) {
       profile.image = profile.image.link
 
     profileCache[profileId] = profile
+
+    SSB.net.blobs.localGet(profile.image, (err, url) => {
+      profileCache[profileId].imageURL = err ? '' : url
+    })
     
     cb(null, profile)
   })

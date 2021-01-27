@@ -49,9 +49,12 @@ module.exports = function (componentsState) {
         SSB.net.suggest.profile(searchOpts, (err, matches) => {
           self.people = []
           if (matches) {
-            // FIXME: img
             matches.forEach(match => {
-              self.people.push({ id: match.id, name: match.name })
+              const p = SSB.getProfile(match.id)
+              if (p && p.imageURL)
+                self.people.push({ id: match.id, name: match.name, image: p.imageURL })
+              else
+                self.people.push({ id: match.id, name: match.name })
             })
           }
 
@@ -64,9 +67,12 @@ module.exports = function (componentsState) {
         SSB.net.suggest.profile({}, (err, matches) => {
           if (matches) {
             self.people = []
-            // FIXME: need to lazy get the img
             matches.forEach(match => {
-              self.people.push({ id: match.id, name: match.name })
+              const p = SSB.getProfile(match.id)
+              if (p && p.imageURL)
+                self.people.push({ id: match.id, name: match.name, image: p.imageURL })
+              else
+                self.people.push({ id: match.id, name: match.name })
             })
           }
         })
