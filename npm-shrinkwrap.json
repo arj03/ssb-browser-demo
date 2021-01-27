@@ -3288,6 +3288,8 @@
     },
     "ssb-browser-core": {
       "version": "6.0.5",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-6.0.5.tgz",
+      "integrity": "sha512-tLkn24idufNMm16OCVhXldquDw+K0vxHr6i/qqP5uuD+pRU8oG2OkZCmO2XSE5dlehTK08dWTT6KJC/eHMYlBQ==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
@@ -3305,9 +3307,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-backlinks": "^2.1.1",
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
-        "ssb-blobs-purge": "^0.2.0",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^0.19.1",
         "ssb-db2": "^1.3.0",
@@ -3315,9 +3315,7 @@
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
         "ssb-room": "^1.3.0",
-        "ssb-social-index": "^1.1.0",
         "ssb-sort": "^1.1.3",
-        "ssb-suggest": "git://github.com/ssbc/ssb-suggest.git#db2",
         "ssb-validate": "^4.1.3",
         "ssb-ws": "^6.2.3"
       },

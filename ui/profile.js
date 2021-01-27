@@ -412,7 +412,8 @@ module.exports = function () {
           if (self.feedId == SSB.net.id) {
             // Editing self.
             // Load the editor.
-            this.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+	    if (self.$refs.tuiEditor)
+              self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
           }
         }
 
