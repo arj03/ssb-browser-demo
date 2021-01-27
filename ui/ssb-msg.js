@@ -195,7 +195,8 @@ Vue.component('ssb-msg', {
             else if (expression === 'heart')
               expression = '❤'
 
-            authorToReaction[msg.value.author] = { author: msg.value.author, expression } // Pulling names for these has to be done async now, which is annoyingly complicated.  Since we hardly do anything with this right now anyway, just use the ID.
+            // FIXME: use name from cache
+            authorToReaction[msg.value.author] = { author: msg.value.author, expression } 
           }
         })
 
