@@ -4,8 +4,10 @@ module.exports = function () {
   require('./ssb-msg-preview')
   require('./onboarding-dialog')
   require('./connected')
+  const { Editor } = require('@toast-ui/vue-editor')
 
   Vue.component('v-select', VueSelect.VueSelect)
+  Vue.component('editor', Editor)
 
   const state = {
     newPublicMessages: false,

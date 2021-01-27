@@ -14,7 +14,7 @@ module.exports = function (componentsState) {
           </template>
         </v-select>
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
-        <textarea class="messageText" v-model="postText"></textarea><br>
+        <editor usageStatustics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
         </span>
         <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
@@ -87,6 +87,8 @@ module.exports = function (componentsState) {
           this.postMessageVisible = true
           return
         }
+
+        this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
 
         if (this.postText == '' || this.subject == '') {
           alert(this.$root.$t('private.blankFieldError'))

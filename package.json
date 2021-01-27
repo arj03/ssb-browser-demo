@@ -8,6 +8,7 @@
     "url": "git@github.com:arj03/ssb-browser-demo.git"
   },
   "dependencies": {
+    "@toast-ui/vue-editor": "^2.5.1",
     "human-time": "0.0.2",
     "lodash.throttle": "^4.1.1",
     "node-emoji": "^1.10.0",

@@ -7,7 +7,7 @@ module.exports = function () {
     template: `
        <div id="channel">
          <h2>{{ $t('channel.title', { name: channel }) }}</h2>
-         <textarea class="messageText" v-if="postMessageVisible" v-model="postText"></textarea>
+         <editor v-if="postMessageVisible" usageStatustics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
          <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('channel.postNewMessage') }}</button>
          <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
 
@@ -91,6 +91,8 @@ module.exports = function () {
           this.postMessageVisible = true
           return
         }
+
+        this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
 
         this.showPreview = true
       },
