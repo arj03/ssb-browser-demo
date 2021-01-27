@@ -7,7 +7,7 @@ module.exports = function () {
     template: `
        <div id="channel">
          <h2>{{ $t('channel.title', { name: channel }) }}</h2>
-         <editor v-if="postMessageVisible" usageStatustics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
+         <editor v-if="postMessageVisible" usageStatistics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
          <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('channel.postNewMessage') }}</button>
          <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
 

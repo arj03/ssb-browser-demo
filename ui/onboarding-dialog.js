@@ -17,7 +17,7 @@ Vue.component('onboarding-dialog', {
 		<hr />
 
 		<p><label for="descriptionText">{{ $t('onboarding.profileDescription') }}</label><br />
-		<textarea cols="40" rows="6" id="descriptionText" v-model="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')"></textarea></p>
+                <editor id="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')" usageStatistics="false" :initialValue="descriptionText" initialEditType="wysiwyg" ref="tuiEditor" />
 
                 <div v-if="suggestedPeers.length > 0">
 		<hr />
@@ -65,6 +65,8 @@ Vue.component('onboarding-dialog', {
 
   methods: {
     saveProfile: function() {
+      this.descriptionText = this.$refs.tuiEditor.invoke('getMarkdown')
+
       var msg = { type: 'about', about: SSB.net.id }
       if (this.name)
         msg.name = this.name

@@ -36,7 +36,7 @@ module.exports = function (componentsState) {
     <div id="public">
       <div class="new-message">
         <span v-if="postMessageVisible"><input type="text" class="messageTitle" v-model="postTitle" :placeholder="$t('public.threadTitlePlaceholder')" /><br /></span>
-        <editor v-if="postMessageVisible" usageStatustics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
+        <editor v-if="postMessageVisible" usageStatistics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
         <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('public.postNewThread') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
         <div class="channel-selector" v-if="postMessageVisible"><v-select :placeholder="$t('public.channelOptional')" v-model="postChannel" :options="channels" taggable>

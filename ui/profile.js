@@ -36,7 +36,7 @@ module.exports = function () {
            <div class="description">
              <input id="name" type="text" v-model="name" :placeholder="$t('profile.profileNamePlaceholder')">
              <br>
-             <textarea :placeholder="$t('profile.profileDescriptionPlaceholder')" v-model="descriptionText"></textarea><br>
+             <editor :placeholder="$t('profile.profileDescriptionPlaceholder')" usageStatistics="false" :initialValue="descriptionText" initialEditType="wysiwyg" ref="tuiEditor" />
            </div>
          </span>
          <span v-else>
@@ -198,6 +198,8 @@ module.exports = function () {
       },
 
       saveProfile: function() {
+        this.descriptionText = this.$refs.tuiEditor.invoke('getMarkdown')
+
         var msg = { type: 'about', about: SSB.net.id }
         if (this.name)
           msg.name = this.name
@@ -404,8 +406,15 @@ module.exports = function () {
         if (profile.name)
           this.name = profile.name
 
-        if (profile.description)
+        if (profile.description) {
           this.descriptionText = profile.description
+
+          if (self.feedId == SSB.net.id) {
+            // Editing self.
+            // Load the editor.
+            this.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+          }
+        }
 
         if (profile.image) {
           SSB.net.blobs.localGet(profile.image, (err, url) => {

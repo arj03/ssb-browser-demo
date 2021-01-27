@@ -3287,7 +3287,7 @@
       "integrity": "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="
     },
     "ssb-browser-core": {
-      "version": "file:../ssb-browser-core",
+      "version": "6.0.5",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",

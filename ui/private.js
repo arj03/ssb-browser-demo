@@ -14,7 +14,7 @@ module.exports = function (componentsState) {
           </template>
         </v-select>
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
-        <editor usageStatustics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
+        <editor usageStatistics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
         </span>
         <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
