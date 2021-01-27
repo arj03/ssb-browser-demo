@@ -1774,11 +1774,6 @@
       "resolved": "https://registry.npmjs.org/dash-ast/-/dash-ast-1.0.0.tgz",
       "integrity": "sha512-Vy4dx7gquTeMcQR/hDkYLGUnwVil6vk4FOOct+djUnHOUWt+zJPJAaRIXaAFkPXtJjvlY7o3rfRu0/3hpnwoUA=="
     },
-    "dat-swarm-defaults": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/dat-swarm-defaults/-/dat-swarm-defaults-1.0.2.tgz",
-      "integrity": "sha512-gz9RuhUxq3coYBrelzuFXCNyC579aO3Bm1Wlwa12/9tJr1NP0AAGxpHJYA1HZvt8X7ZdrtMzpFyNvs2Y9PFG6w=="
-    },
     "debug": {
       "version": "4.1.1",
       "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.1.tgz",
@@ -4013,10 +4008,9 @@
       }
     },
     "multiserver-dht": {
-      "version": "git://github.com/KyleMaas/multiserver-dht.git#6c420b2135c258eaad1f959b4e8187bc606a20c4",
+      "version": "git://github.com/KyleMaas/multiserver-dht.git#f8fbfb44473a6f381ee64e0ce227ced40edd80c3",
       "from": "git://github.com/KyleMaas/multiserver-dht.git#port-to-hyperswarm",
       "requires": {
-        "dat-swarm-defaults": "^1.0.1",
         "hyperswarm": "^2.15.2",
         "hyperswarm-web": "^2.1.1",
         "pull-stream": "^3.6.9",
