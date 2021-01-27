@@ -195,8 +195,10 @@ Vue.component('ssb-msg', {
             else if (expression === 'heart')
               expression = '❤'
 
-            // FIXME: use name from cache
-            authorToReaction[msg.value.author] = { author: msg.value.author, expression } 
+            authorToReaction[msg.value.author] = {
+              author: SSB.getProfileName(msg.value.author),
+              expression
+            } 
           }
         })
 
