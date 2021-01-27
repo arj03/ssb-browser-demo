@@ -39,7 +39,7 @@ SSB.getProfileAsync = function(profileId, cb) {
 
     profileCache[profileId] = profile
 
-    SSB.net.blobs.localGet(profile.image, (err, url) => {
+    SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
       profileCache[profileId].imageURL = err ? '' : url
     })
     

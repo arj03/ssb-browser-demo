@@ -21,11 +21,13 @@ Vue.component('ssb-profile-link', {
     this.imgURL = 'assets/noavatar.svg';
 
     var self = this
-    SSB.getProfileAsync(this.feedId, (err, profile) => {
+    SSB.getProfileAsync(self.feedId, (err, profile) => {
       if (profile) {
-        if (this.feedId != SSB.net.id)
-          this.name = profile.name
-        if (profile.image) {
+        if (self.feedId != SSB.net.id)
+          self.name = profile.name
+
+        if (profile.imageURL) self.imgURL = profile.imageURL
+        else if (profile.image) {
           SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
             if (err)
               return console.error("failed to get img", err)
