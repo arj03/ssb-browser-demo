@@ -2925,9 +2925,9 @@
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA="
     },
     "jitdb": {
-      "version": "1.3.0",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-1.3.0.tgz",
-      "integrity": "sha512-1miuwMwmfTLc61IaPsoA7qu3NpUhFO/PuisXnwZoP991EcuHERFMaA4ZO5GzALeylUCZsGXE+mV+34a0GpspmQ==",
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.0.0.tgz",
+      "integrity": "sha512-EBxxnOkn3c08aKMIkPhz+d7eBO3RFYzvNepfb8EST4HlCNu4PnZH0RyWrzHgqKq/OUad5ymiBgNDDSV2oW4Hcg==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -5001,8 +5001,8 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git://github.com/KyleMaas/ssb-browser-core.git#db70e7ca788d5c465b460b00e306e370462e3e92",
-      "from": "git://github.com/KyleMaas/ssb-browser-core.git#new-ssb-plugins",
+      "version": "git://github.com/arj03/ssb-browser-core.git#c49cfbd298e2a4701c085b58e61ca13774a40894",
+      "from": "git://github.com/arj03/ssb-browser-core.git",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
@@ -5023,12 +5023,12 @@
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^0.19.1",
-        "ssb-db2": "^1.3.0",
+        "ssb-db2": "^1.7.0",
         "ssb-keys": "^8.0.1",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
         "ssb-room": "^1.3.0",
-        "ssb-social-index": "git://github.com/ssbc/ssb-social-index.git#db2",
+        "ssb-social-index": "^1.1.0",
         "ssb-sort": "^1.1.3",
         "ssb-suggest": "git://github.com/ssbc/ssb-suggest.git#db2",
         "ssb-validate": "^4.1.3",
@@ -5272,9 +5272,9 @@
       }
     },
     "ssb-db2": {
-      "version": "1.3.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.3.0.tgz",
-      "integrity": "sha512-yAwsPXWAlMxWZbeqvWfiRhKCe43UHq2mY39HHww+//VbYPULDHAB5BVvnqAkvBifX3P173Q1UUDkc9j85orjVQ==",
+      "version": "1.7.0",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.7.0.tgz",
+      "integrity": "sha512-OnOq+aL5SCFKGIY9p5498EJrDBffjCcVIc1eGNgAML8MShNYJlLZdiDWRUixMxEVExX8BkYQtdmtC1VR8YAuqw==",
       "requires": {
         "async-append-only-log": "^3.0.3",
         "atomically-universal": "^0.1.1",
@@ -5284,7 +5284,8 @@
         "fastintcompression": "0.0.4",
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
-        "jitdb": "^1.2.0",
+        "hoox": "0.0.1",
+        "jitdb": "^2.0.0",
         "level": "^6.0.1",
         "lodash.debounce": "^4.0.8",
         "mkdirp": "^1.0.4",
@@ -5542,8 +5543,9 @@
       }
     },
     "ssb-social-index": {
-      "version": "git://github.com/ssbc/ssb-social-index.git#e23ca31e97cc4c781d2d3e28f52e227e225afb20",
-      "from": "git://github.com/ssbc/ssb-social-index.git#db2",
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/ssb-social-index/-/ssb-social-index-1.1.0.tgz",
+      "integrity": "sha512-XY6LUt1VDd8vXePuQMqXCLawc+i4y3oN2TdXTnJE5wKIEWRQUGHXY+rLRSjjZOALNORQj4MleLFwjw5lTOsg7A==",
       "requires": {
         "bipf": "^1.4.0",
         "pull-defer": "^0.2.3",
@@ -5560,7 +5562,7 @@
       }
     },
     "ssb-suggest": {
-      "version": "git://github.com/ssbc/ssb-suggest.git#a660c97a545aaf2e8854f4aaa53f67c7c7f3a4c8",
+      "version": "git://github.com/ssbc/ssb-suggest.git#621a023324cca363bc2cd89551277ab65576b7ba",
       "from": "git://github.com/ssbc/ssb-suggest.git#db2",
       "requires": {
         "lodash.merge": "^4.6.1",
