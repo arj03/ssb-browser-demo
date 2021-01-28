@@ -48,7 +48,7 @@ module.exports = function (state) {
               self.newPublicMessages = true
 
               // If we're scrolled to the top of the page and autorefresh is on, refresh.
-              if (self.publicRefreshTimer == 0) {
+              if (self.publicRefreshTimer == 0 && localPrefs.getAutorefresh()) {
                 // Only allow refreshing every 30 seconds, but at the end of that, check once again if we have queued messages.
                 self.publicRefreshTimer = setTimeout(function() {
                   console.log("Checking for new data via timer...")

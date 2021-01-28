@@ -271,7 +271,6 @@ module.exports = function (componentsState) {
         this.messages = []
         this.offset = 0
         this.renderPublic((err, success) => {
-          // Clear the refreshing flag.
           this.isRefreshing = false
         })
       }
