@@ -210,7 +210,8 @@ Vue.component('ssb-msg', {
     if (this.msg.key != this.thread) {
       SSB.db.query(
         and(hasRoot(this.msg.key)),
-        toCallback((err, msgs) => {    
+        toCallback((err, msgs) => {
+          if (err) return console.error("error getting root", err)
           this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
         })
       )

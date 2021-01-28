@@ -2925,9 +2925,9 @@
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA="
     },
     "jitdb": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.0.0.tgz",
-      "integrity": "sha512-EBxxnOkn3c08aKMIkPhz+d7eBO3RFYzvNepfb8EST4HlCNu4PnZH0RyWrzHgqKq/OUad5ymiBgNDDSV2oW4Hcg==",
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.0.1.tgz",
+      "integrity": "sha512-taeI/2hg8aNAPZ2AZqwlbsjGm/CYBXTUsF5/mzETXQpMlQeAeyNjOcdSOCHq+3XPszoyqFjNK5VSmwSRocHHuA==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
