@@ -1,4 +1,5 @@
 const defaultPrefs = require("../defaultprefs.json")
+const helpers = require('./helpers')
 
 Vue.component('onboarding-dialog', {
   template: `
@@ -9,32 +10,32 @@ Vue.component('onboarding-dialog', {
                 <h3>{{ $t('onboarding.title') }}</h3>
                 <p v-html="$t('onboarding.welcomeMessage')"></p>
 
-		<hr />
+                <hr />
 
-		<p><label for="name">{{ $t('onboarding.profileName') }}</label><br />
-		<input type="text" v-model="name" id="name" :placeholder="$t('onboarding.profileNamePlaceholder')" /></p>
+                <p><label for="name">{{ $t('onboarding.profileName') }}</label><br />
+                <input type="text" v-model="name" id="name" :placeholder="$t('onboarding.profileNamePlaceholder')" /></p>
 
-		<hr />
+                <hr />
 
-		<p><label for="descriptionText">{{ $t('onboarding.profileDescription') }}</label><br />
-                <editor id="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')" usageStatistics="false" :initialValue="descriptionText" initialEditType="wysiwyg" ref="tuiEditor" />
+                <p><label for="descriptionText">{{ $t('onboarding.profileDescription') }}</label><br />
+                <editor id="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')" :initialValue="descriptionText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
 
                 <div v-if="suggestedPeers.length > 0">
-		<hr />
-		<p>{{ $t('onboarding.suggestedPeers') }}<br />
+                <hr />
+                <p>{{ $t('onboarding.suggestedPeers') }}<br />
                 <div v-for="(peer, index) in suggestedPeers">
                   <input type="checkbox" :id="'peer' + index" :value="peer" v-model="usePeers" />&nbsp;<label :for="'peer' + index">{{ peer.name }}</label>
                 </div>
-		</p>
+                </p>
                 </div>
 
                 <div v-if="suggestedFollows.length > 0">
-		<hr />
-		<p>{{ $t('onboarding.suggestedFollows') }}<br />
+                <hr />
+                <p>{{ $t('onboarding.suggestedFollows') }}<br />
                 <div v-for="(follow, index) in suggestedFollows">
                   <input type="checkbox" :id="'follow' + index" :value="follow" v-model="useFollows" />&nbsp;<label :for="'follow' + index">{{ follow.name }}</label>
                 </div>
-		</p>
+                </p>
                 </div>
 
                 <div class="modal-footer">
@@ -53,9 +54,37 @@ Vue.component('onboarding-dialog', {
   props: ['onClose', 'show'],
 
   data: function() {
+    var self = this
     return {
       name: '',
       descriptionText: '',
+      editorOptions: {
+        usageStatistics: false,
+        hideModeSwitch: true,
+        initialEditType: 'markdown',
+        hooks: {
+          addImageBlobHook: self.addImageBlobHook
+        },
+        customHTMLRenderer: {
+          image(node, context) {
+            const { destination } = node
+            const { getChildrenText, skipChildren } = context
+
+            skipChildren()
+
+            return {
+              type: "openTag",
+              tagName: "img",
+              selfClose: true,
+              attributes: {
+                src: self.blobUrlCache[destination],
+                alt: getChildrenText(node)
+              }
+            }
+          }
+        }
+      },
+      blobUrlCache: [],
       suggestedPeers: (defaultPrefs.suggestPeers || []),
       suggestedFollows: (defaultPrefs.suggestFollows || []),
       usePeers: (defaultPrefs.suggestPeers || []).filter((x) => typeof x.default == "undefined" || x.default),
@@ -64,6 +93,17 @@ Vue.component('onboarding-dialog', {
   },
 
   methods: {
+    addImageBlobHook: function(blob, cb) {
+      var self = this
+      helpers.handleFileSelectParts([ blob ], false, (err, res) => {
+        SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
+          self.blobUrlCache[res.link] = blobURL
+          cb(res.link, res.name)
+        })
+      })
+      return false
+    },
+
     saveProfile: function() {
       this.descriptionText = this.$refs.tuiEditor.invoke('getMarkdown')
 
