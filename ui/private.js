@@ -2,7 +2,8 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
+  const ref = require('ssb-ref')
+  const { and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
 
   return {
     template: `<div id="private">
@@ -14,7 +15,7 @@ module.exports = function (componentsState) {
           </template>
         </v-select>
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
-        <editor usageStatistics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
+        <editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
         </span>
         <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
@@ -26,6 +27,7 @@ module.exports = function (componentsState) {
     props: ['feedId'],
 
     data: function() {
+      var self = this
       return {
         postMessageVisible: false,
         postText: "",
@@ -33,6 +35,33 @@ module.exports = function (componentsState) {
         people: [],
         recipients: [],
         messages: [],
+        editorOptions: {
+          usageStatistics: false,
+          hideModeSwitch: true,
+          initialEditType: 'markdown',
+          hooks: {
+            addImageBlobHook: self.addImageBlobHook
+          },
+          customHTMLRenderer: {
+            image(node, context) {
+              const { destination } = node
+              const { getChildrenText, skipChildren } = context
+
+              skipChildren()
+
+              return {
+                type: "openTag",
+                tagName: "img",
+                selfClose: true,
+                attributes: {
+                  src: self.blobUrlCache[destination],
+                  alt: getChildrenText(node)
+                }
+              }
+            }
+          }
+        },
+        blobUrlCache: [],
 
         showPreview: false
       }
@@ -61,6 +90,7 @@ module.exports = function (componentsState) {
 
         SSB.db.query(
           and(isPrivate(), isRoot(), type('post')),
+          descending(),
           toCallback((err, results) => {
             this.messages = results
             console.timeEnd("private messages")
@@ -69,6 +99,26 @@ module.exports = function (componentsState) {
               document.body.classList.remove('refreshing')
           })
         )
+      },
+
+      addImageBlobHook: function(blob, cb) {
+        var self = this
+        helpers.handleFileSelectParts([ blob ], true, (err, res) => {
+	  var link = ref.parseLink(res.link)
+          if (link.query && link.query.unbox) {
+            // Have to unbox it first.
+            SSB.net.blobs.privateGet(link.link, link.query.unbox, (err, newLink) => {
+              self.blobUrlCache[res.link] = newLink
+              cb(res.link, res.name)
+            })
+          } else {
+            SSB.net.blobs.privateFsURL(res.link, (err, blobURL) => {
+              self.blobUrlCache[res.link] = blobURL
+              cb(res.link, res.name)
+            })
+          }
+        })
+        return false
       },
 
       onFileSelect: function(ev) {
@@ -99,6 +149,8 @@ module.exports = function (componentsState) {
       },
 
       confirmPost: function() {
+        var self = this
+
         if (this.recipients.length == 0) {
           alert(this.$root.$t('private.noRecipientError'))
           return
@@ -130,6 +182,8 @@ module.exports = function (componentsState) {
           this.subject = ""
           this.recipients = []
           this.showPreview = false
+	  if (self.$refs.tuiEditor)
+            self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
 
           this.renderPrivate()
         })

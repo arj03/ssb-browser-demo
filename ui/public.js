@@ -311,6 +311,8 @@ module.exports = function (componentsState) {
           self.postChannel = ""
           self.postMessageVisible = false
           self.showPreview = false
+	  if (self.$refs.tuiEditor)
+            self.$refs.tuiEditor.invoke('setMarkdown', self.descriptionText)
 
           self.refresh()
         })
