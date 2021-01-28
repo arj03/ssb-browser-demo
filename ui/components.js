@@ -8,6 +8,7 @@ module.exports = function () {
   Vue.component('v-select', VueSelect.VueSelect)
 
   const state = {
+    publicRefreshTimer: 0,
     newPublicMessages: false,
     newPrivateMessages: false
   }
