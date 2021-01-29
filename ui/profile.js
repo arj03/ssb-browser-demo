@@ -1,9 +1,10 @@
 module.exports = function () {
   const pull = require('pull-stream')
+  const helpers = require('./helpers')
   const md = require('./markdown')
   const { and, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
-  let initialState = function() {
+  let initialState = function(self) {
     return {
       following: false,
       blocking: false,
@@ -16,6 +17,34 @@ module.exports = function () {
       canDownloadProfile: true,
       friends: [],
       blocked: [],
+      editorOptions: {
+        usageStatistics: false,
+        hideModeSwitch: true,
+        initialEditType: 'markdown',
+        hooks: {
+          addImageBlobHook: self.addImageBlobHook
+        },
+        customHTMLRenderer: {
+          image(node, context) {
+            const { destination } = node
+            const { getChildrenText, skipChildren } = context
+
+            skipChildren()
+
+            return {
+              type: "openTag",
+              tagName: "img",
+              selfClose: true,
+              attributes: {
+                src: self.blobUrlCache[destination],
+                alt: getChildrenText(node)
+              }
+            }
+          }
+        }
+      },
+      blobUrlCache: [],
+      waitingForBlobURLs: 0,
 
       showExportKey: false,
       showImportKey: false,
@@ -36,7 +65,7 @@ module.exports = function () {
            <div class="description">
              <input id="name" type="text" v-model="name" :placeholder="$t('profile.profileNamePlaceholder')">
              <br>
-             <textarea :placeholder="$t('profile.profileDescriptionPlaceholder')" v-model="descriptionText"></textarea><br>
+             <editor :placeholder="$t('profile.profileDescriptionPlaceholder')" :initialValue="descriptionText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
            </div>
          </span>
          <span v-else>
@@ -139,7 +168,7 @@ module.exports = function () {
     props: ['feedId'],
 
     data: function() {
-      return initialState()
+      return initialState(this)
     },
 
     computed: {
@@ -150,6 +179,30 @@ module.exports = function () {
     },
     
     methods: {
+      addImageBlobHook: function(blob, cb) {
+        var self = this
+        helpers.handleFileSelectParts([ blob ], false, (err, res) => {
+          SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
+            self.blobUrlCache[res.link] = blobURL
+            cb(res.link, res.name)
+          })
+        })
+        return false
+      },
+
+      cacheImageURLForPreview: function(blobId, cb) {
+        var self = this
+        ++this.waitingForBlobURLs
+        SSB.net.blobs.fsURL(blobId, (err, blobURL) => {
+          self.blobUrlCache[blobId] = blobURL
+
+          // If this is the last blob we were waiting for, call the callback.
+          --self.waitingForBlobURLs
+          if (self.waitingForBlobURLs == 0)
+            cb(null, true)
+        })
+      },
+
       onFileSelect: function(ev) {
         const file = ev.target.files[0]
 
@@ -191,13 +244,15 @@ module.exports = function () {
 
         SSB.net.id = this.feedId = key.id
         SSB.net.config.keys = key
-        Object.assign(this.$data, initialState())
+        Object.assign(this.$data, initialState(this))
 
         // FIXME: this won't work
         SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
       },
 
       saveProfile: function() {
+        this.descriptionText = this.$refs.tuiEditor.invoke('getMarkdown')
+
         var msg = { type: 'about', about: SSB.net.id }
         if (this.name)
           msg.name = this.name
@@ -265,7 +320,7 @@ module.exports = function () {
 
                 this.$router.push({ path: '/public'})
               }
-	    })
+            })
           })
         }
       },
@@ -290,7 +345,7 @@ module.exports = function () {
               })
             })
           }
-	})
+        })
       },
       
       downloadProfile: function() {
@@ -317,7 +372,7 @@ module.exports = function () {
               })
             })
           )
-	})
+        })
       },
 
       downloadFollowing: function() {
@@ -345,7 +400,7 @@ module.exports = function () {
               })
             })
           )
-	})
+        })
       },
 
       loadMore: function() {
@@ -400,8 +455,34 @@ module.exports = function () {
           if (profile.name)
             this.name = profile.name
   
-          if (profile.description)
+          if (profile.description) {
             this.descriptionText = profile.description
+  
+            if (self.feedId == SSB.net.id) {
+              // Editing self.
+              // Check for images.  If there are any, cache them.
+              var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
+              var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
+              for (b in blobMatches)
+                this.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
+                  // Reload the editor with the new image.
+                  // This is only triggered when the last image is loaded.
+                  // Set it to something different and back again to get it to refresh the preview.
+                  if (self.$refs.tuiEditor) {
+                    self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText + " ")
+                    self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+                  }
+                })
+  
+              // Load the editor.
+              if (self.$refs.tuiEditor) {
+                if (blobMatches.length == 0) {
+                  // If we're not waiting for any images to load, load the editor right away.
+                  self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+                }
+              }
+            }
+          }
   
           if (profile.image) {
             SSB.net.blobs.localGet(profile.image, (err, url) => {
@@ -412,12 +493,22 @@ module.exports = function () {
             })
           }
         })
+
+
+        if (profile.image) {
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            if (!err) {
+              self.image = url
+              self.imageBlobId = profile.image
+            }
+          })
+        }
       }
     },
 
     beforeRouteUpdate(to, from, next) {
       this.feedId = to.params.feedId
-      Object.assign(this.$data, initialState())
+      Object.assign(this.$data, initialState(this))
       this.renderProfile()
       next()
     },
