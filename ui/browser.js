@@ -48,6 +48,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
 
     // add helper methods
     require('../net')
+    require('../profile')
 
     const routes = [
       { name: 'public', path: '/public', component: Public },

@@ -146,29 +146,17 @@ Vue.component('ssb-msg', {
 
     var self = this
 
-    function getName(profiles, author) {
-      if (author == SSB.net.id)
-        return "You"
-      else if (profiles) {
-        const profile = profiles[author]
-        if (profile)
-          return profile.name
-      }
-    }
-
-    const profiles = SSB.db.getIndex('profiles').getProfiles()
-    this.name = getName(profiles, this.msg.value.author)
-    if (!this.name) {
-      // Don't already have a name.  Let's see if we can fetch one.
+    if (this.msg.value.author == SSB.net.id)
+      self.name = "You"
+    else
       SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
-        if(name)
+        if (name)
           self.name = name
       })
-    }
 
     // Render the body, which may need to wait until we're connected to a peer.
     const blobRegEx = /!\[.*\]\(&.*\)/g
-    if(self.msg.value.content.text && self.msg.value.content.text.match(blobRegEx)) {
+    if (typeof self.msg.value.content.text === 'string' && self.msg.value.content.text.match(blobRegEx)) {
       // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
       // We'll display a sanitized version of it until it loads.
       if(!SSB.isConnectedWithData())
@@ -207,7 +195,10 @@ Vue.component('ssb-msg', {
             else if (expression === 'heart')
               expression = '❤'
 
-            authorToReaction[msg.value.author] = { author: getName(profiles, msg.value.author), expression }
+            authorToReaction[msg.value.author] = {
+              author: SSB.getProfileName(msg.value.author),
+              expression
+            } 
           }
         })
 
@@ -219,7 +210,8 @@ Vue.component('ssb-msg', {
     if (this.msg.key != this.thread) {
       SSB.db.query(
         and(hasRoot(this.msg.key)),
-        toCallback((err, msgs) => {    
+        toCallback((err, msgs) => {
+          if (err) return console.error("error getting root", err)
           this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
         })
       )

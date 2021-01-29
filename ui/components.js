@@ -10,6 +10,7 @@ module.exports = function () {
   Vue.component('editor', Editor)
 
   const state = {
+    publicRefreshTimer: 0,
     newPublicMessages: false,
     newPrivateMessages: false
   }

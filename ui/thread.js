@@ -141,10 +141,7 @@ module.exports = function () {
 
       renderThread: function() {
         var self = this
-        console.log("rendering thread", self.fixedRootId)
         SSB.db.get(self.fixedRootId, (err, rootMsg) => {
-          console.log("root err", err)
-          console.log("root msg", rootMsg)
           if (err || rootMsg === undefined) { // FIXME: make this configurable
             SSB.getThread(self.fixedRootId, (err) => {
               if (err) console.error(err)
