@@ -452,6 +452,8 @@ module.exports = function () {
         )
 
         SSB.getProfileAsync(this.feedId, (err, profile) => {
+          if (err) return console.error("Error getting profile", err)
+
           if (profile.name)
             this.name = profile.name
   
@@ -493,16 +495,6 @@ module.exports = function () {
             })
           }
         })
-
-
-        if (profile.image) {
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
-            if (!err) {
-              self.image = url
-              self.imageBlobId = profile.image
-            }
-          })
-        }
       }
     },
 
