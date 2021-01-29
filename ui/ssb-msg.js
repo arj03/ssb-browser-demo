@@ -156,7 +156,7 @@ Vue.component('ssb-msg', {
 
     // Render the body, which may need to wait until we're connected to a peer.
     const blobRegEx = /!\[.*\]\(&.*\)/g
-    if(self.msg.value.content.text && self.msg.value.content.text.match(blobRegEx)) {
+    if (typeof self.msg.value.content.text === 'string' && self.msg.value.content.text.match(blobRegEx)) {
       // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
       // We'll display a sanitized version of it until it loads.
       if(!SSB.isConnectedWithData())
