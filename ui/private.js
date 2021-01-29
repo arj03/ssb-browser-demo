@@ -7,7 +7,7 @@ module.exports = function (componentsState) {
   return {
     template: `<div id="private">
         <span v-if="postMessageVisible">
-        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name">
+        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name" @search="suggest" @open="recipientsOpen">
           <template #option="{ name, image }">
             <img v-if='image' class="tinyAvatar" :src='image' />
             <span>{{ name }}</span>
@@ -39,6 +39,45 @@ module.exports = function (componentsState) {
     },
 
     methods: {
+      suggest: function(searchString, loading) {
+        var self = this
+        loading(true)
+        let searchOpts = {}
+        if (searchString !== "")
+          searchOpts['text'] = searchString 
+
+        SSB.net.suggest.profile(searchOpts, (err, matches) => {
+          self.people = []
+          if (matches) {
+            matches.forEach(match => {
+              const p = SSB.getProfile(match.id)
+              if (p && p.imageURL)
+                self.people.push({ id: match.id, name: match.name, image: p.imageURL })
+              else
+                self.people.push({ id: match.id, name: match.name })
+            })
+          }
+
+          loading(false)
+        })
+      },
+
+      recipientsOpen: function() {
+        var self = this
+        SSB.net.suggest.profile({}, (err, matches) => {
+          if (matches) {
+            self.people = []
+            matches.forEach(match => {
+              const p = SSB.getProfile(match.id)
+              if (p && p.imageURL)
+                self.people.push({ id: match.id, name: match.name, image: p.imageURL })
+              else
+                self.people.push({ id: match.id, name: match.name })
+            })
+          }
+        })
+      },
+
       renderPrivate: function() {
         document.body.classList.add('refreshing')
 
@@ -138,16 +177,6 @@ module.exports = function (componentsState) {
       document.title = this.$root.appTitle + " - " + this.$root.$t('private.title')
 
       this.renderPrivate()
-
-      // Try it right away, and then try again when we're connected in case this is a fresh load and we're only connected to rooms.
-      helpers.getPeople((err, people) => {
-        this.people = people
-      })
-      SSB.connectedWithData(() => {
-        helpers.getPeople((err, people) => {
-          this.people = people
-        })
-      })
     }
   }
 }
