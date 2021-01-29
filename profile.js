@@ -34,7 +34,7 @@ SSB.getProfileAsync = function(profileId, cb) {
       return cb(err)
     }
 
-    if (typeof profile.image === 'object' && profile.image.link)
+    if (profile.image && typeof profile.image === 'object' && profile.image.link)
       profile.image = profile.image.link
 
     profileCache[profileId] = profile
