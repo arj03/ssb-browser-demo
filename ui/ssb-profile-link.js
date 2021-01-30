@@ -1,3 +1,5 @@
+const helpers = require('./helpers')
+
 Vue.component('ssb-profile-link', {
   template: `
         <router-link :to="{name: 'profile', params: { feedId: feedId }}">
@@ -18,7 +20,7 @@ Vue.component('ssb-profile-link', {
       this.name = "You"
     
     // Set a default image to be overridden if there is an actual avatar to show.
-    this.imgURL = 'assets/noavatar.svg';
+    this.imgURL = helpers.getMissingProfileImage()
 
     var self = this
     SSB.getProfileAsync(self.feedId, (err, profile) => {

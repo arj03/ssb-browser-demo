@@ -83,7 +83,7 @@ module.exports = function (componentsState) {
               if (p && p.imageURL)
                 self.people.push({ id: match.id, name: match.name, image: p.imageURL })
               else
-                self.people.push({ id: match.id, name: match.name })
+                self.people.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
             })
           }
 
@@ -101,7 +101,7 @@ module.exports = function (componentsState) {
               if (p && p.imageURL)
                 self.people.push({ id: match.id, name: match.name, image: p.imageURL })
               else
-                self.people.push({ id: match.id, name: match.name })
+                self.people.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
             })
           }
         })
