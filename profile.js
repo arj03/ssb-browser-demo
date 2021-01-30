@@ -8,7 +8,11 @@ SSB.getProfileName = function(profileId) {
 
 SSB.getProfile = function(profileId) {
   if (profileCache[profileId]) return profileCache[profileId]
-  else return {}
+  else {
+    // fire off a getProfileAsync so it's ready the next time around
+    SSB.getProfileAsync(profileId, () => {})
+    return {}
+  }
 }
 
 SSB.getProfileNameAsync = function(profileId, cb) {
