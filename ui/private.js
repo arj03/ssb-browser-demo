@@ -188,12 +188,17 @@ module.exports = function (componentsState) {
           return
         }
 
+        // Make sure the full post (including headers) is not larger than the 8KiB limit.
+        var postData = this.buildPostData()
+        if (JSON.stringify(postData).length > 8192) {
+          alert(this.$root.$t('common.postTooLarge'))
+          return
+        }
+
         this.showPreview = true
       },
 
-      confirmPost: function() {
-        var self = this
-
+      buildPostData: function() {
         if (this.recipients.length == 0) {
           alert(this.$root.$t('private.noRecipientError'))
           return
@@ -216,6 +221,14 @@ module.exports = function (componentsState) {
           content.recps = recps
           content = SSB.box(content, recps.map(x => x.substr(1)))
         }
+
+        return content
+      },
+
+      confirmPost: function() {
+        var self = this
+
+        var content = this.buildPostData()
 
         SSB.db.publish(content, (err) => {
           if (err) console.log(err)

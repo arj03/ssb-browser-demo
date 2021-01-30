@@ -94,15 +94,30 @@ module.exports = function () {
 
         this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
 
+        // Make sure the full post (including headers) is not larger than the 8KiB limit.
+        var postData = this.buildPostData()
+        if (JSON.stringify(postData).length > 8192) {
+          alert(this.$root.$t('common.postTooLarge'))
+          return
+        }
+
         this.showPreview = true
+      },
+
+      buildPostData: function() {
+        var mentions = ssbMentions(this.postText)
+
+        var postData = { type: 'post', channel: this.channel, text: this.postText, mentions: mentions }
+
+        return postData
       },
 
       confirmPost: function() {
         var self = this
 
-        var mentions = ssbMentions(this.postText)
+        var postData = this.buildPostData()
 
-        SSB.db.publish({ type: 'post', channel: this.channel, text: this.postText, mentions: mentions }, (err) => {
+        SSB.db.publish(postData, (err) => {
           if (err) console.log(err)
 
           self.postText = ""
