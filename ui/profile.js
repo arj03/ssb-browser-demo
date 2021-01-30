@@ -451,7 +451,7 @@ module.exports = function () {
           })
         )
 
-        SSB.getProfileAsync(this.feedId, (err, profile) => {
+        SSB.getFullProfileAsync(this.feedId, (err, profile) => {
           if (err) return console.error("Error getting profile", err)
 
           if (profile.name)
