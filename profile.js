@@ -30,7 +30,7 @@ SSB.getProfileNameAsync = function(profileId, cb) {
 
   SSB.net.about.socialValue({ key: 'name', dest: profileId }, (err, value) => {
     if (err) {
-      console.log("Got error from ssb-social-value: " + err)
+      console.error("Got error from ssb-social-value: " + err)
       return cb(err)
     }
 
@@ -44,14 +44,14 @@ SSB.getProfileNameAsync = function(profileId, cb) {
 SSB.getProfileAsync = function(profileId, cb) {
   if (profileCache[profileId] && profileCache[profileId].image) return cb(null, profileCache[profileId])
 
-  console.log("getting profile", profileId)
+  //console.log("getting profile", profileId)
 
   SSB.getProfileNameAsync(profileId, (err) => {
     const profile = profileCache[profileId]
 
     SSB.net.about.socialValue({ key: 'image', dest: profileId }, (err, value) => {
       if (err) {
-        console.log("Got error from ssb-social-value: " + err)
+        console.error("Got error from ssb-social-value: " + err)
         return cb(err)
       }
 
@@ -66,6 +66,7 @@ SSB.getProfileAsync = function(profileId, cb) {
         })
       }
 
+      //console.log("got profile", profileId)
       profileCache[profileId] = profile
 
       cb(null, profile)
@@ -76,12 +77,12 @@ SSB.getProfileAsync = function(profileId, cb) {
 SSB.getFullProfileAsync = function(profileId, cb) {
   if (fullProfileCache[profileId] && fullProfileCache[profileId].description) return cb(null, fullProfileCache[profileId])
 
-  console.log("getting full profile", profileId)
+  //console.log("getting full profile", profileId)
 
   SSB.getProfileAsync(profileId, (profile) => {
     SSB.net.about.socialValue({ key: 'description', dest: profileId }, (err, value) => {
       if (err) {
-        console.log("Got error from ssb-social-value: " + err)
+        console.error("Got error from ssb-social-value: " + err)
         return cb(err)
       }
 

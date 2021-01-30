@@ -9,7 +9,6 @@ module.exports = function (componentsState) {
   function getQuery(onlyDirectFollow, onlyThreads, onlyChannels,
                     channelList, hideChannels, hideChannelsList) {
 
-
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
@@ -223,7 +222,7 @@ module.exports = function (componentsState) {
         if (!err) {
           var newChannels = []
 
-          var posts = (answer.results ? answer.results : answer);
+          var posts = answer.results
 
           for (r in posts) {
             var channel = posts[r].value.content.channel
@@ -244,11 +243,10 @@ module.exports = function (componentsState) {
 
       loadChannels: function() {
         if (this.channels.length == 0) {
-          // Load the list of channels.
           var self = this
           SSB.connectedWithData((rpc) => {
             SSB.db.query(
-              and(not(channel('')), type('post'), isPublic()),
+              and(type('post'), isPublic(), paginate(500)),
               toCallback(self.channelResultCallback)
             )
           })
@@ -333,8 +331,11 @@ module.exports = function (componentsState) {
 
       this.renderPublic()
 
-      // Start this loading to make it easier for the user to filter by channels.
-      this.loadChannels()
+      // delay a bit as other things are more important
+      setTimeout(() => {
+        // Start this loading to make it easier for the user to filter by channels.
+        this.loadChannels()
+      }, 3000)
     },
 
     destroyed: function () {
