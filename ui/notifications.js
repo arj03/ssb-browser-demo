@@ -2,7 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const cat = require('pull-cat')
 
-  const { and, mentions, author, type, toCallback, toPullStream, hasRoot } = SSB.dbOperators
+  const { and, mentions, author, type, toCallback, toPullStream, hasRoot, descending } = SSB.dbOperators
   
   return {
     template: `
@@ -23,10 +23,11 @@ module.exports = function () {
       getSameRoot: function(read) {
         return function readable (end, cb) {
           read(end, function(end, data) {
-            if (data && data.value.content.root) {
+            if (data) {
+              const root = data.value.content.root ? data.value.content.root : data.key
               // Get all messages with the same root, but only the ones after the user's most recent post.
               SSB.db.query(
-                and(hasRoot(data.value.content.root), type('post')),
+                and(hasRoot(root), type('post')),
                 toCallback((err, results) => {
                   // Look through the results from the end backwards and look for a post from the user.
                   // If we find one, stop passing along results, so we only have the posts since the user last replied.
@@ -51,15 +52,23 @@ module.exports = function () {
         pull(
           cat([
             // Messages directly mentioning the user.
-            SSB.db.query(
-              and(mentions(SSB.net.id)),
-              toPullStream()
+            pull(
+              SSB.db.query(
+                and(mentions(SSB.net.id)),
+                descending(),
+                toPullStream()
+              ),
+              pull.take(25)
             ),
             // Messages the user has posted.
-            SSB.db.query(
-              and(author(SSB.net.id), type('post')),
-              toPullStream()
-            ),
+            pull(
+              SSB.db.query(
+                and(author(SSB.net.id), type('post')),
+                descending(),
+                toPullStream()
+              ),
+              pull.take(25)
+            )
           ]),
           self.getSameRoot,
           pull.unique('key'),
