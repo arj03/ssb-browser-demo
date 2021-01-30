@@ -143,7 +143,7 @@ module.exports = function (componentsState) {
       addImageBlobHook: function(blob, cb) {
         var self = this
         helpers.handleFileSelectParts([ blob ], true, (err, res) => {
-	  var link = ref.parseLink(res.link)
+          var link = ref.parseLink(res.link)
           if (link.query && link.query.unbox) {
             // Have to unbox it first.
             SSB.net.blobs.privateGet(link.link, link.query.unbox, (err, newLink) => {
@@ -221,7 +221,7 @@ module.exports = function (componentsState) {
           this.subject = ""
           this.recipients = []
           this.showPreview = false
-	  if (self.$refs.tuiEditor)
+          if (self.$refs.tuiEditor)
             self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
 
           this.renderPrivate()
