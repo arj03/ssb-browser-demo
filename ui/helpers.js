@@ -40,3 +40,9 @@ exports.getMessageTitle = function(msgId, msg) {
   // Fallback - use the message ID.
   return msgId
 }
+
+exports.getMissingProfileImage = function() {
+  // This is centralized here so that when building to a single inlined HTML file,
+  // we're only swapping in the base64-encoded version once.
+  return "assets/noavatar.svg"
+}

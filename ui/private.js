@@ -76,15 +76,17 @@ module.exports = function (componentsState) {
           searchOpts['text'] = searchString 
 
         SSB.net.suggest.profile(searchOpts, (err, matches) => {
-          self.people = []
           if (matches) {
+            var unsortedPeople = []
             matches.forEach(match => {
               const p = SSB.getProfile(match.id)
               if (p && p.imageURL)
-                self.people.push({ id: match.id, name: match.name, image: p.imageURL })
+                unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
               else
-                self.people.push({ id: match.id, name: match.name })
+                unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
             })
+            const sortFunc = new Intl.Collator().compare
+            self.people = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
           }
 
           loading(false)
@@ -95,14 +97,16 @@ module.exports = function (componentsState) {
         var self = this
         SSB.net.suggest.profile({}, (err, matches) => {
           if (matches) {
-            self.people = []
+            var unsortedPeople = []
             matches.forEach(match => {
               const p = SSB.getProfile(match.id)
               if (p && p.imageURL)
-                self.people.push({ id: match.id, name: match.name, image: p.imageURL })
+                unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
               else
-                self.people.push({ id: match.id, name: match.name })
+                unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
             })
+            const sortFunc = new Intl.Collator().compare
+            self.people = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
           }
         })
       },
@@ -143,7 +147,7 @@ module.exports = function (componentsState) {
       addImageBlobHook: function(blob, cb) {
         var self = this
         helpers.handleFileSelectParts([ blob ], true, (err, res) => {
-	  var link = ref.parseLink(res.link)
+          var link = ref.parseLink(res.link)
           if (link.query && link.query.unbox) {
             // Have to unbox it first.
             SSB.net.blobs.privateGet(link.link, link.query.unbox, (err, newLink) => {
@@ -221,7 +225,7 @@ module.exports = function (componentsState) {
           this.subject = ""
           this.recipients = []
           this.showPreview = false
-	  if (self.$refs.tuiEditor)
+          if (self.$refs.tuiEditor)
             self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
 
           this.renderPrivate()
