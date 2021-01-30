@@ -18,6 +18,7 @@
       "noMessages": "(No messages to display)",
       "showingMessagesFrom": "Showing messages from",
       "loadXMore": "Load {count} more",
+      "postTooLarge": "Your post is too large.  Each post can only be 8KiB.  Please shorten your post or split it into multiple posts.",
       "close": "Close",
       "save": "Save"
     },
@@ -259,6 +260,7 @@
       "noMessages": "(表示するメッセージはありません)",
       "showingMessagesFrom": "メッセージ",
       "loadXMore": "さらに{count}をダウンロード",
+      "postTooLarge": "投稿が大きすぎます。 各投稿は8KiBのみです。 投稿を短くするか、複数の投稿に分割してください。",
       "close": "閉じて",
       "save": "変更を保存"
     },

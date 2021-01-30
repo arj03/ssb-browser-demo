@@ -264,6 +264,12 @@ module.exports = function () {
           }
         }
 
+        // Make sure the full post (including headers) is not larger than the 8KiB limit.
+        if (JSON.stringify(msg).length > 8192) {
+          alert(this.$root.$t('common.postTooLarge'))
+          return
+        }
+
         SSB.db.publish(msg, (err) => {
           if (err) return alert(err)
 
