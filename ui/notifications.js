@@ -49,6 +49,8 @@ module.exports = function () {
       render: function () {
         var self = this
 
+        const contacts = SSB.net.db.getIndex('contacts')
+
         pull(
           cat([
             // Messages directly mentioning the user.
@@ -73,8 +75,8 @@ module.exports = function () {
           self.getSameRoot,
           pull.unique('key'),
           pull.filter((msg) => {
-            // Exclude messages from user.
-            return (msg.value.author != SSB.net.id)
+            // Exclude messages from user and blocked authors.
+            return (msg.value.author != SSB.net.id) && !(contacts.isBlocking(SSB.net.id, msg.value.author))
           }),
           pull.collect((err, msgs) => {
             // Only show the most recent 50.
