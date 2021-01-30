@@ -113,14 +113,24 @@ Vue.component('onboarding-dialog', {
       if (this.descriptionText)
         msg.description = this.descriptionText
 
+      // Make sure the full post (including headers) is not larger than the 8KiB limit.
+      if (JSON.stringify(msg).length > 8192) {
+        throw this.$root.$t('common.postTooLarge')
+      }
+
       SSB.db.publish(msg, (err) => {
-        if (err) return alert(err)
+        if (err) throw err
       })
     },
 
     getStarted: function() {
       // Save the person's name and description.
-      this.saveProfile()
+      try {
+        this.saveProfile()
+      } catch(err) {
+        alert(err)
+        return
+      }
 
       // Connect to peers.
       for (p in this.usePeers) {
