@@ -270,6 +270,11 @@ module.exports = function (componentsState) {
         
         this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
 
+        if (this.postText == '') {
+          alert(this.$root.$t('public.blankFieldError'))
+          return
+        }
+
         this.showPreview = true
       },
 
