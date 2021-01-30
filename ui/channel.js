@@ -94,6 +94,11 @@ module.exports = function () {
 
         this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
 
+        if (this.postText == '') {
+          alert(this.$root.$t('channel.blankFieldError'))
+          return
+        }
+
         this.showPreview = true
       },
 
