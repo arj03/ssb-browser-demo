@@ -98,6 +98,9 @@ module.exports = function () {
         var postData = this.buildPostData()
         if (JSON.stringify(postData).length > 8192) {
           alert(this.$root.$t('common.postTooLarge'))
+
+        if (this.postText == '') {
+          alert(this.$root.$t('channel.blankFieldError'))
           return
         }
 

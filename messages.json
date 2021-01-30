@@ -33,10 +33,12 @@
       "filterOnlyThreads": "Hide replies (only show the first message of a thread)",
       "filterOnlyChannels": "Show only these channels:",
       "filterHideChannels": "Do not show these channels:",
+      "blankFieldError": "Please provide a message to publish.",
       "channelsCannotContainSpaces": "Channels cannot contain spaces."
     },
     "channel": {
       "title": "Channel #{name}",
+      "blankFieldError": "Please provide a message to publish.",
       "postNewMessage": "Post new message"
     },
     "channels": {
@@ -273,10 +275,12 @@
       "filterOnlyThreads": "返信を非表示にします（スレッドの最初のメッセージのみを表示します）",
       "filterOnlyChannels": "これらのチャネルのみを表示する：",
       "filterHideChannels": "これらのチャネルを表示しないでください：",
+      "blankFieldError": "公開するメッセージを入力してください。",
       "channelsCannotContainSpaces": "チャネルにスペースを含めることはできません。"
     },
     "channel": {
       "title": "チャンネル #{name}",
+      "blankFieldError": "公開するメッセージを入力してください。",
       "postNewMessage": "掲示します"
     },
     "channels": {

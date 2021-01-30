@@ -277,6 +277,11 @@ module.exports = function (componentsState) {
           return
         }
 
+        if (this.postText == '') {
+          alert(this.$root.$t('public.blankFieldError'))
+          return
+        }
+
         this.showPreview = true
       },
 
