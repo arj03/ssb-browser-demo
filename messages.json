@@ -147,6 +147,7 @@
     "thread": {
       "title": "Thread \"{title}\"",
       "postReply": "Post reply",
+      "blankFieldError": "Please provide a message to publish.",
       "messageOutsideGraph": "Message outside follow graph",
       "unknownMessage": "Unknown message type or message outside follow graph"
     }
@@ -389,6 +390,7 @@
     "thread": {
       "title": "スレッド 「{title}」",
       "postReply": "掲示します",
+      "blankFieldError": "公開するメッセージを入力してください。",
       "messageOutsideGraph": "メッセージがフォローグラフの外にあります",
       "unknownMessage": "不明なメッセージタイプまたはメッセージがフォローグラフの範囲外です"
     }

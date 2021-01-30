@@ -91,12 +91,22 @@ module.exports = function () {
       postReply: function() {
         this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
 
+        // Make sure the full post (including headers) is not larger than the 8KiB limit.
+        var postData = this.buildPostData()
+        if (JSON.stringify(postData).length > 8192) {
+          alert(this.$root.$t('common.postTooLarge'))
+          return
+        }
+
+        if (this.postText == '') {
+          alert(this.$root.$t('thread.blankFieldError'))
+          return
+        }
+
         this.showPreview = true
       },
 
-      confirmPost: function() {
-        if (this.postText == '') return
-
+      buildPostData: function() {
         var mentions = ssbMentions(this.postText)
         var content = { type: 'post', text: this.postText, root: this.fixedRootId, branch: this.latestMsgIdInThread, mentions }
 
@@ -105,14 +115,20 @@ module.exports = function () {
           content = SSB.box(content, this.recipients.map(x => (typeof(x) === 'string' ? x : x.link).substr(1)))
         }
 
+        return content
+      },
+
+      confirmPost: function() {
         var self = this
+
+        content = this.buildPostData()
 
         SSB.db.publish(content, (err) => {
           if (err) console.error(err)
 
           self.postText = ""
           self.showPreview = false
-	  if (self.$refs.tuiEditor)
+          if (self.$refs.tuiEditor)
             self.$refs.tuiEditor.invoke('setMarkdown', self.descriptionText)
 
           self.renderThread()
