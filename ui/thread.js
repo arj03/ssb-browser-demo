@@ -6,7 +6,7 @@ module.exports = function () {
 
   const { and, hasRoot, toCallback } = SSB.dbOperators
 
-  let initialState = function(rootId) {
+  let initialState = function(self, rootId) {
     return {
       fixedRootId: rootId,
       title: rootId,
@@ -15,6 +15,33 @@ module.exports = function () {
       postText: '',
       messages: [],
       rootMsg: { key: '', value: { content: {} } },
+      editorOptions: {
+        usageStatistics: false,
+        hideModeSwitch: true,
+        initialEditType: 'markdown',
+        hooks: {
+          addImageBlobHook: self.addImageBlobHook
+        },
+        customHTMLRenderer: {
+          image(node, context) {
+            const { destination } = node
+            const { getChildrenText, skipChildren } = context
+
+            skipChildren()
+
+            return {
+              type: "openTag",
+              tagName: "img",
+              selfClose: true,
+              attributes: {
+                src: self.blobUrlCache[destination],
+                alt: getChildrenText(node)
+              }
+            }
+          }
+        }
+      },
+      blobUrlCache: [],
 
       showPreview: false
     }
@@ -26,7 +53,7 @@ module.exports = function () {
          <h2>{{ $t('thread.title', { title: title }) }}</h2>
          <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg" v-bind:thread="fixedRootId"></ssb-msg>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-         <textarea class="messageText" v-model="postText"></textarea><br>
+         <editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" /><br>
          <button class="clickButton" v-on:click="postReply">{{ $t('thread.postReply') }}</button>
          <input type="file" class="fileInput" v-on:change="onFileSelect">
          <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
@@ -35,10 +62,21 @@ module.exports = function () {
     props: ['rootId'],
     
     data: function() {
-      return initialState('%' + this.rootId)
+      return initialState(this, '%' + this.rootId)
     },
 
     methods: {
+      addImageBlobHook: function(blob, cb) {
+        var self = this
+        helpers.handleFileSelectParts([ blob ], false, (err, res) => {
+          SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
+            self.blobUrlCache[res.link] = blobURL
+            cb(res.link, res.name)
+          })
+        })
+        return false
+      },
+
       onFileSelect: function(ev) {
         var self = this
         helpers.handleFileSelect(ev, this.recipients != undefined, (err, text) => {
@@ -51,6 +89,8 @@ module.exports = function () {
       },
 
       postReply: function() {
+        this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
+
         this.showPreview = true
       },
 
@@ -72,6 +112,8 @@ module.exports = function () {
 
           self.postText = ""
           self.showPreview = false
+	  if (self.$refs.tuiEditor)
+            self.$refs.tuiEditor.invoke('setMarkdown', self.descriptionText)
 
           self.renderThread()
         })
@@ -161,7 +203,7 @@ module.exports = function () {
     },
 
     beforeRouteUpdate(to, from, next) {
-      Object.assign(this.$data, initialState('%' + to.params.rootId))
+      Object.assign(this.$data, initialState(this, '%' + to.params.rootId))
       this.renderThread()
       next()
     },
