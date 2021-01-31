@@ -5,9 +5,10 @@ module.exports = function () {
   require('./onboarding-dialog')
   require('./connected')
   const { Editor } = require('@toast-ui/vue-editor')
+  require('./markdown-editor')
 
   Vue.component('v-select', VueSelect.VueSelect)
-  Vue.component('editor', Editor)
+  Vue.component('tui-editor', Editor)
 
   const state = {
     publicRefreshTimer: 0,

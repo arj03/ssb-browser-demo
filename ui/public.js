@@ -35,7 +35,7 @@ module.exports = function (componentsState) {
     <div id="public">
       <div class="new-message">
         <span v-if="postMessageVisible"><input type="text" class="messageTitle" v-model="postTitle" :placeholder="$t('public.threadTitlePlaceholder')" /><br /></span>
-        <editor v-if="postMessageVisible" :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
+        <markdown-editor v-if="postMessageVisible" :initialValue="postText" ref="markdownEditor" />
         <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('public.postNewThread') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
         <div class="channel-selector" v-if="postMessageVisible"><v-select :placeholder="$t('public.channelOptional')" v-model="postChannel" :options="channels" taggable>
@@ -87,33 +87,6 @@ module.exports = function (componentsState) {
         pageSize: 50,
         displayPageEnd: 50,
         autorefreshTimer: 0,
-        editorOptions: {
-          usageStatistics: false,
-          hideModeSwitch: true,
-          initialEditType: 'markdown',
-          hooks: {
-            addImageBlobHook: self.addImageBlobHook
-          },
-          customHTMLRenderer: {
-            image(node, context) {
-              const { destination } = node
-              const { getChildrenText, skipChildren } = context
-
-              skipChildren()
-
-              return {
-                type: "openTag",
-                tagName: "img",
-                selfClose: true,
-                attributes: {
-                  src: self.blobUrlCache[destination],
-                  alt: getChildrenText(node)
-                }
-              }
-            }
-          }
-        },
-        blobUrlCache: [],
         isRefreshing: false,
 
         showOnboarding: window.firstTimeLoading,
@@ -134,17 +107,6 @@ module.exports = function (componentsState) {
             this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
           })
         )
-      },
-
-      addImageBlobHook: function(blob, cb) {
-        var self = this
-        helpers.handleFileSelectParts([ blob ], false, (err, res) => {
-          SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
-            self.blobUrlCache[res.link] = blobURL
-            cb(res.link, res.name)
-          })
-        })
-        return false
       },
 
       closeOnboarding: function() {
@@ -268,7 +230,7 @@ module.exports = function (componentsState) {
           }
         }
         
-        this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
+        this.postText = this.$refs.markdownEditor.getMarkdown()
 
         // Make sure the full post (including headers) is not larger than the 8KiB limit.
         var postData = this.buildPostData()
@@ -312,8 +274,8 @@ module.exports = function (componentsState) {
           self.postChannel = ""
           self.postMessageVisible = false
           self.showPreview = false
-	  if (self.$refs.tuiEditor)
-            self.$refs.tuiEditor.invoke('setMarkdown', self.descriptionText)
+          if (self.$refs.markdownEditor)
+            self.$refs.markdownEditor.setMarkdown(self.descriptionText)
 
           self.refresh()
         })

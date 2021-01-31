@@ -17,33 +17,6 @@ module.exports = function () {
       canDownloadProfile: true,
       friends: [],
       blocked: [],
-      editorOptions: {
-        usageStatistics: false,
-        hideModeSwitch: true,
-        initialEditType: 'markdown',
-        hooks: {
-          addImageBlobHook: self.addImageBlobHook
-        },
-        customHTMLRenderer: {
-          image(node, context) {
-            const { destination } = node
-            const { getChildrenText, skipChildren } = context
-
-            skipChildren()
-
-            return {
-              type: "openTag",
-              tagName: "img",
-              selfClose: true,
-              attributes: {
-                src: self.blobUrlCache[destination],
-                alt: getChildrenText(node)
-              }
-            }
-          }
-        }
-      },
-      blobUrlCache: [],
       waitingForBlobURLs: 0,
 
       showExportKey: false,
@@ -65,7 +38,7 @@ module.exports = function () {
            <div class="description">
              <input id="name" type="text" v-model="name" :placeholder="$t('profile.profileNamePlaceholder')">
              <br>
-             <editor :placeholder="$t('profile.profileDescriptionPlaceholder')" :initialValue="descriptionText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
+             <markdown-editor :placeholder="$t('profile.profileDescriptionPlaceholder')" :initialValue="descriptionText" ref="markdownEditor" />
            </div>
          </span>
          <span v-else>
@@ -179,22 +152,12 @@ module.exports = function () {
     },
     
     methods: {
-      addImageBlobHook: function(blob, cb) {
-        var self = this
-        helpers.handleFileSelectParts([ blob ], false, (err, res) => {
-          SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
-            self.blobUrlCache[res.link] = blobURL
-            cb(res.link, res.name)
-          })
-        })
-        return false
-      },
-
       cacheImageURLForPreview: function(blobId, cb) {
         var self = this
         ++this.waitingForBlobURLs
         SSB.net.blobs.fsURL(blobId, (err, blobURL) => {
-          self.blobUrlCache[blobId] = blobURL
+          if (self.$refs.markdownEditor)
+            self.$refs.markdownEditor.addBlobURLToCache(blobId, blobURL)
 
           // If this is the last blob we were waiting for, call the callback.
           --self.waitingForBlobURLs
@@ -251,7 +214,7 @@ module.exports = function () {
       },
 
       saveProfile: function() {
-        this.descriptionText = this.$refs.tuiEditor.invoke('getMarkdown')
+        this.descriptionText = this.$refs.markdownEditor.getMarkdown()
 
         var msg = { type: 'about', about: SSB.net.id }
         if (this.name)
@@ -476,17 +439,17 @@ module.exports = function () {
                   // Reload the editor with the new image.
                   // This is only triggered when the last image is loaded.
                   // Set it to something different and back again to get it to refresh the preview.
-                  if (self.$refs.tuiEditor) {
-                    self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText + " ")
-                    self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+                  if (self.$refs.markdownEditor) {
+                    self.$refs.markdownEditor.setMarkdown(this.descriptionText + " ")
+                    self.$refs.markdownEditor.setMarkdown(this.descriptionText)
                   }
                 })
   
               // Load the editor.
-              if (self.$refs.tuiEditor) {
+              if (self.$refs.markdownEditor) {
                 if (blobMatches.length == 0) {
                   // If we're not waiting for any images to load, load the editor right away.
-                  self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+                  self.$refs.markdownEditor.setMarkdown(this.descriptionText)
                 }
               }
             }

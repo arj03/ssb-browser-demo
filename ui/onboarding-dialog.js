@@ -18,7 +18,7 @@ Vue.component('onboarding-dialog', {
                 <hr />
 
                 <p><label for="descriptionText">{{ $t('onboarding.profileDescription') }}</label><br />
-                <editor id="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')" :initialValue="descriptionText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
+                <markdown-editor id="descriptionText" :placeholder="$t('onboarding.profileDescriptionPlaceholder')" :initialValue="descriptionText" ref="markdownEditor" />
 
                 <div v-if="suggestedPeers.length > 0">
                 <hr />
@@ -58,33 +58,6 @@ Vue.component('onboarding-dialog', {
     return {
       name: '',
       descriptionText: '',
-      editorOptions: {
-        usageStatistics: false,
-        hideModeSwitch: true,
-        initialEditType: 'markdown',
-        hooks: {
-          addImageBlobHook: self.addImageBlobHook
-        },
-        customHTMLRenderer: {
-          image(node, context) {
-            const { destination } = node
-            const { getChildrenText, skipChildren } = context
-
-            skipChildren()
-
-            return {
-              type: "openTag",
-              tagName: "img",
-              selfClose: true,
-              attributes: {
-                src: self.blobUrlCache[destination],
-                alt: getChildrenText(node)
-              }
-            }
-          }
-        }
-      },
-      blobUrlCache: [],
       suggestedPeers: (defaultPrefs.suggestPeers || []),
       suggestedFollows: (defaultPrefs.suggestFollows || []),
       usePeers: (defaultPrefs.suggestPeers || []).filter((x) => typeof x.default == "undefined" || x.default),
@@ -93,19 +66,8 @@ Vue.component('onboarding-dialog', {
   },
 
   methods: {
-    addImageBlobHook: function(blob, cb) {
-      var self = this
-      helpers.handleFileSelectParts([ blob ], false, (err, res) => {
-        SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
-          self.blobUrlCache[res.link] = blobURL
-          cb(res.link, res.name)
-        })
-      })
-      return false
-    },
-
     saveProfile: function() {
-      this.descriptionText = this.$refs.tuiEditor.invoke('getMarkdown')
+      this.descriptionText = this.$refs.markdownEditor.getMarkdown()
 
       var msg = { type: 'about', about: SSB.net.id }
       if (this.name)

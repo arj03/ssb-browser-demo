@@ -15,7 +15,7 @@ module.exports = function (componentsState) {
           </template>
         </v-select>
         <input type="text" id="subject" v-model="subject" placeholder="subject" />
-        <editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" />
+        <markdown-editor :initialValue="postText" ref="markdownEditor" :privateBlobs="true" />
         </span>
         <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>
         <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
@@ -35,33 +35,6 @@ module.exports = function (componentsState) {
         people: [],
         recipients: [],
         messages: [],
-        editorOptions: {
-          usageStatistics: false,
-          hideModeSwitch: true,
-          initialEditType: 'markdown',
-          hooks: {
-            addImageBlobHook: self.addImageBlobHook
-          },
-          customHTMLRenderer: {
-            image(node, context) {
-              const { destination } = node
-              const { getChildrenText, skipChildren } = context
-
-              skipChildren()
-
-              return {
-                type: "openTag",
-                tagName: "img",
-                selfClose: true,
-                attributes: {
-                  src: self.blobUrlCache[destination],
-                  alt: getChildrenText(node)
-                }
-              }
-            }
-          }
-        },
-        blobUrlCache: [],
 
         showPreview: false
       }
@@ -144,26 +117,6 @@ module.exports = function (componentsState) {
         )
       },
 
-      addImageBlobHook: function(blob, cb) {
-        var self = this
-        helpers.handleFileSelectParts([ blob ], true, (err, res) => {
-          var link = ref.parseLink(res.link)
-          if (link.query && link.query.unbox) {
-            // Have to unbox it first.
-            SSB.net.blobs.privateGet(link.link, link.query.unbox, (err, newLink) => {
-              self.blobUrlCache[res.link] = newLink
-              cb(res.link, res.name)
-            })
-          } else {
-            SSB.net.blobs.privateFsURL(res.link, (err, blobURL) => {
-              self.blobUrlCache[res.link] = blobURL
-              cb(res.link, res.name)
-            })
-          }
-        })
-        return false
-      },
-
       onFileSelect: function(ev) {
         var self = this
         helpers.handleFileSelect(ev, true, (err, text) => {
@@ -181,7 +134,7 @@ module.exports = function (componentsState) {
           return
         }
 
-        this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
+        this.postText = this.$refs.markdownEditor.getMarkdown()
 
         if (this.postText == '' || this.subject == '') {
           alert(this.$root.$t('private.blankFieldError'))
@@ -238,8 +191,8 @@ module.exports = function (componentsState) {
           this.subject = ""
           this.recipients = []
           this.showPreview = false
-          if (self.$refs.tuiEditor)
-            self.$refs.tuiEditor.invoke('setMarkdown', this.descriptionText)
+          if (self.$refs.markdownEditor)
+            self.$refs.markdownEditor.setMarkdown(this.descriptionText)
 
           this.renderPrivate()
         })
