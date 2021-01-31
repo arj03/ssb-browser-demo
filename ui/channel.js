@@ -7,7 +7,7 @@ module.exports = function () {
     template: `
        <div id="channel">
          <h2>{{ $t('channel.title', { name: channel }) }}</h2>
-         <editor v-if="postMessageVisible" usageStatistics="false" :initialValue="postText" initialEditType="wysiwyg" ref="tuiEditor" />
+         <markdown-editor v-if="postMessageVisible" :initialValue="postText" ref="markdownEditor" />
          <button class="clickButton" id="postMessage" v-on:click="onPost">{{ $t('channel.postNewMessage') }}</button>
          <input type="file" class="fileInput" v-if="postMessageVisible" v-on:change="onFileSelect">
 
@@ -92,7 +92,7 @@ module.exports = function () {
           return
         }
 
-        this.postText = this.$refs.tuiEditor.invoke('getMarkdown')
+        this.postText = this.$refs.markdownEditor.getMarkdown()
 
         // Make sure the full post (including headers) is not larger than the 8KiB limit.
         var postData = this.buildPostData()
