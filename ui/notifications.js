@@ -2,7 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const cat = require('pull-cat')
 
-  const { and, mentions, author, type, toCallback, toPullStream, hasRoot, descending } = SSB.dbOperators
+  const { and, mentions, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
   
   return {
     template: `
@@ -51,6 +51,8 @@ module.exports = function () {
 
         const contacts = SSB.net.db.getIndex('contacts')
 
+        console.time("notifications")
+
         pull(
           cat([
             // Messages directly mentioning the user.
@@ -58,18 +60,22 @@ module.exports = function () {
               SSB.db.query(
                 and(mentions(SSB.net.id)),
                 descending(),
+                paginate(25),
                 toPullStream()
               ),
-              pull.take(25)
+              pull.take(1),
+              pull.flatten()
             ),
             // Messages the user has posted.
             pull(
               SSB.db.query(
                 and(author(SSB.net.id), type('post')),
                 descending(),
+                paginate(25),
                 toPullStream()
               ),
-              pull.take(25)
+              pull.take(1),
+              pull.flatten()
             )
           ]),
           self.getSameRoot,
@@ -80,6 +86,7 @@ module.exports = function () {
           }),
           pull.collect((err, msgs) => {
             // Only show the most recent 50.
+            console.timeEnd("notifications")
             this.messages = msgs.sort((a, b) => { if (a.timestamp < b.timestamp) { return 1 } else if (a.timestamp > b.timestamp) { return -1 } else { return 0 } }).slice(0, 50)
           })
         )
