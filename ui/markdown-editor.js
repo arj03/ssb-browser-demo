@@ -4,7 +4,7 @@ const { and, not, isPublic, type, channel, toCallback } = SSB.dbOperators
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">
-               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" />
+               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" @stateChange="hideSuggestions" />
              </div>`,
 
   props: ['initialValue', 'privateBlobs'],
