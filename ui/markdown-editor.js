@@ -1,5 +1,6 @@
 const helpers = require('./helpers')
 const ref = require('ssb-ref')
+const { and, not, isPublic, type, channel, toCallback } = SSB.dbOperators
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">
@@ -73,6 +74,47 @@ Vue.component('markdown-editor', {
 
     addBlobURLToCache: function(blobId, blobURL) {
       this.blobUrlCache[blobId] = blobURL
+    },
+
+    suggestChannels: function(searchString, cb) {
+      const searchForChannel = searchString.substring(1, searchString.length)
+      SSB.db.query(
+        and(not(channel('')), type('post'), isPublic()),
+        toCallback((err, answer) => {
+          if (!err) {
+            var newChannels = []
+
+            var posts = (answer.results ? answer.results : answer);
+            var sortFunc = Intl.Collator().compare
+
+            for (r in posts) {
+              var channel = posts[r].value.content.channel
+              if (!channel) continue
+
+              if(channel && channel.charAt(0) == '#')
+                channel = channel.substring(1, channel.length)
+
+              if (searchForChannel == '' || sortFunc(channel.substring(0, searchForChannel.length), searchForChannel) == 0)
+                if (newChannels.indexOf(channel) < 0)
+                  newChannels.push(channel)
+            }
+
+            // Sort.
+            var suggestions = [];
+            newChannels.sort(sortFunc).forEach((item, index, array) => {
+              suggestions.push({ text: "#" + item, value: item })
+            })
+
+            cb(null, suggestions)
+          } else {
+            cb(err)
+          }
+        })
+      )
+    },
+
+    clickChannel: function(channel) {
+      return "#" + channel
     },
 
     suggestPeople: function(searchString, cb) {
@@ -189,6 +231,7 @@ Vue.component('markdown-editor', {
       }
       const token = cursorLine.substring(tokenStart + 1, tokenEnd)
       const suggestionChars = {
+        '#': { list: this.suggestChannels, click: this.clickChannel },
         '@': { list: this.suggestPeople, click: this.clickPeople }
       }
       if (token && (suggest = suggestionChars[token.charAt(0)])) {
