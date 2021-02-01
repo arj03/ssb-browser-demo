@@ -68,12 +68,14 @@ I made a [blog post][pub-setup] on how to run a server pub to relay messages to 
 
 To run an ssb-room which this can connect to, you will need to enable WebSockets support.  This requires three things:
 
-1. Add a line to `connections` so configure the WebSockets port (external, key, and cert need to be customized for your installation):
+1. In ssb-room's config.js, add a line to `connections` to configure the WebSockets port (external, key, and cert need to be customized for your installation):
 ```
   connections: {
     incoming: {
       net: [{ port: 8888, host: "0.0.0.0", scope: "public", transform: "shs" }],
-      ws: [{ port: 9999, host: "::", scope: "public", transform: "shs", external: ["example.com"], key: "/etc/letsencrypt/live/example.com/privkey.pem", cert: "/etc/letsencrypt/live/example.com/cert.pem" }],
+      ws: [{ port: 9999, host: "::", scope: "public", transform: "shs", external: ["example.com"], http: true }],
+      // Or, to use secure WebSockets:
+      // ws: [{ port: 9999, host: "::", scope: "public", transform: "shs", external: ["example.com"], key: "/etc/letsencrypt/live/example.com/privkey.pem", cert: "/etc/letsencrypt/live/example.com/cert.pem" }],
     },
     outgoing: {
       net: [{transform: 'shs'}],
