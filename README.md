@@ -64,6 +64,30 @@ I made a [blog post][pub-setup] on how to run a server pub to relay messages to 
 
 `npm run build` for developing and `npm run release` for a much smaller bundle.  You can also run `npm run inline` to genereate a single monolithic index.html file with all resources included.
 
+# Enabling WebSockets in ssb-room
+
+To run an ssb-room which this can connect to, you will need to enable WebSockets support.  This requires three things:
+
+1. Add a line to `connections` so configure the WebSockets port (external, key, and cert need to be customized for your installation):
+```
+  connections: {
+    incoming: {
+      net: [{ port: 8888, host: "0.0.0.0", scope: "public", transform: "shs" }],
+      ws: [{ port: 9999, host: "::", scope: "public", transform: "shs", external: ["example.com"], key: "/etc/letsencrypt/live/example.com/privkey.pem", cert: "/etc/letsencrypt/live/example.com/cert.pem" }],
+    },
+    outgoing: {
+      net: [{transform: 'shs'}],
+    },
+  },
+```
+2. Run either `npm install -g ssb-ws` to install the WebSockets connector globally, or cd into the ssb-room directory and `npm install ssb-ws`
+3. In index.js, add the following line to the SecretStack section just below `ssb-logging`:
+```
+  .use(require('ssb-ws'))
+```
+
+After that, your ssb-room will be compatible with ssb-browser-demo.
+
 # Other
 
 ## Force WASM locally (outside browser)
