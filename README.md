@@ -31,7 +31,7 @@ Things that work:
  - partial replication
  - direct connections to other peers using [rooms]
  - viewing posts and threads, including forks, backlinks and reactions
- - posting and replying to messages including posting blobs
+ - posting, adding reactions, replying to messages including posting blobs
  - automatic exif stripping (such as GPS coordinates) on images for better privacy
  - automatic image resizing of large images
  - viewing profiles and setting up your own profile
@@ -42,6 +42,8 @@ Things that work:
  - blocking
  - channels
  - notifications
+ - themes
+ - translations
  - backup / restore feed using mnemonics
  - easily run alternative [networks][pub-setup]
 
