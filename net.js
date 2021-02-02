@@ -90,7 +90,7 @@ function runConnectedWithDataCallbacks() {
 }
 
 function runDisconnectedCallbacks() {
-  while(SSB.callbacksWaitingDisconnect.length > 0) {
+  while(SSB.callbacksWaitingForDisconnect.length > 0) {
     const cb = SSB.callbacksWaitingForDisconnect.shift()
     cb(SSB)
   }
