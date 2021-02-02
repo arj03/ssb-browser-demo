@@ -114,7 +114,7 @@ module.exports = function () {
         if (!self.running) return
 
         setTimeout(() => {
-          const status = Object.assign(SSB.db.getStatus(), SSB.feedSyncer.status())
+          const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
           const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
 
           if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
