@@ -1,8 +1,8 @@
 @font-face
 {
-  /* From: https://fontlibrary.org/en/font/tt2020-style-b */
-  font-family: "TT2020StyleBRegular";
-  src: url("./TT2020StyleB-Regular.ttf");
+  /* From: https://fontlibrary.org/en/font/blocus */
+  font-family: "BlocusRegular";
+  src: url("./blocuswebfont.ttf");
 }
 
 .theme-floralgardenbird
@@ -17,7 +17,7 @@
 .theme-floralgardenbird h2
 {
   color: #8d2a89;
-  font-family: "TT2020StyleBRegular", monospace;
+  font-family: "BlocusRegular", monospace;
 }
 
 .theme-floralgardenbird h1
