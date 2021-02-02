@@ -51,6 +51,10 @@ exports.getAutorefresh = function() { return (getPref('autorefresh', (typeof def
 
 exports.setAutorefresh = function(isOn) { setPref('autorefresh', (isOn ? 'true' : 'false')) }
 
+exports.getOfflineMode = function() { return (getPref('offlineMode', (typeof defaultPrefs.offlineMode != 'undefined' ? (defaultPrefs.offlineMode ? 'true' : 'false') : 'true')) == 'true') }
+
+exports.setOfflineMode = function(isOn) { setPref('offlineMode', (isOn ? 'true' : 'false')) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()

@@ -140,14 +140,6 @@ SSB.net.on('rpc:connect', (rpc) => {
   ++SSB.activeConnections
   runConnectedCallbacks()
 
-  // Register an event handler for disconnects so we know to trigger waiting again.
-  rpc.on('closed', () => {
-    --SSB.activeConnections
-    if (SSB.activeConnections == 0) {
-      runDisconnectedCallbacks()
-    }
-  })
-
   // See if we're operating on a connection with actual data (not a room).
   let connPeers = Array.from(SSB.net.conn.hub().entries())
   connPeers = connPeers.filter(([,x])=>!!x.key).map(([address,data])=>({
@@ -163,6 +155,14 @@ SSB.net.on('rpc:connect', (rpc) => {
     // Register another callback to decrement our "connections with data" reference count.
     rpc.on('closed', () => --SSB.activeConnectionsWithData)
   }
+
+  // Register an event handler for disconnects so we know to trigger waiting again.
+  rpc.on('closed', () => {
+    --SSB.activeConnections
+    if (SSB.activeConnections == 0) {
+      runDisconnectedCallbacks()
+    }
+  })
 })
 
 SSB.getOOO = function(msgId, cb) {

@@ -5,6 +5,7 @@
   "favoriteChannels": [],
   "hiddenChannels": [],
   "autorefresh": false,
+  "offlineMode": false,
   "suggestPeers": [
     { "name": "Between Two Worlds Pub", "type": "pub", "address": "wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=" },
     { "name": "Between Two Worlds Room", "type": "room", "address": "wss:between-two-worlds.dk:9999~shs:7R5/crt8/icLJNpGwP2D7Oqz2WUd7ObCIinFKVR6kNY=", "default": false }

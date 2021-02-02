@@ -32,7 +32,7 @@
         <router-link to="/channels">{{ $t('pages.channels') }}</router-link> |
         <router-link to="/notifications">{{ $t('pages.notifications') }}</router-link> |
         <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">{{ $t('pages.profile') }}</router-link> |
-        <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected></connected> |
+        <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected ref="connected"></connected> |
         <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
         <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup.enter="goToTarget">
       </p>
