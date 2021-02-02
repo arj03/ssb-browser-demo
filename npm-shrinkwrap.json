@@ -4008,8 +4008,9 @@
       }
     },
     "multiserver-dht": {
-      "version": "git://github.com/KyleMaas/multiserver-dht.git#f8fbfb44473a6f381ee64e0ce227ced40edd80c3",
-      "from": "git://github.com/KyleMaas/multiserver-dht.git#port-to-hyperswarm",
+      "version": "5.0.0",
+      "resolved": "https://registry.npmjs.org/multiserver-dht/-/multiserver-dht-5.0.0.tgz",
+      "integrity": "sha512-Xus8GSKC+9vyBHBnvNOaiayhAa1zqfDZr2rFiOjAAAv6ptXmFTS0rbDcrrpF63pDtKloHcdmc1JZQgyBgXurkg==",
       "requires": {
         "hyperswarm": "^2.15.2",
         "hyperswarm-web": "^2.1.1",
@@ -6147,7 +6148,7 @@
         "delay": "^4.0.1",
         "explain-error": "~1.0.4",
         "level": "^5.0.1",
-        "multiserver-dht": "git://github.com/KyleMaas/multiserver-dht.git#port-to-hyperswarm",
+        "multiserver-dht": "^5.0.0",
         "promisify-tuple": "^1.0.0",
         "pull-notify": "~0.1.1",
         "pull-pushable": "~2.2.0",
