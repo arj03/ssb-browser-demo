@@ -53,11 +53,13 @@ Vue.component('ssb-msg', {
           </span>
           <span class='reactions-new' v-if="myReactions.length == 0">
             <span class='reactions-label'>Add: </span>
-            <span v-for="emoji in emojiOptions">
+            <span v-for="emoji in emojiOptionsFavorite">
               <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
             </span>
+            <span><a href="javascript:void(0);" @click.prevent.stop="popupEmojiMenu($event)">…</a></span>
           </span>
         </div>
+        <vue-simple-context-menu :elementId="'emojiMenu'+Math.floor(Math.random() * 9999999999)" :options="emojiOptionsMore" :ref="'emojiMenu'" @option-clicked="reactMenuOption" />
       </div>`,
 
   props: ['msg', 'thread'],
@@ -71,7 +73,9 @@ Vue.component('ssb-msg', {
       myReactions: [],
       body: '',
       parentThreadTitle: this.$root.$t('ssb-msg.threadTitlePlaceholder'),
-      emojiOptions: ['👍', '👎', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞', '🚀', '🍕']
+      emojiOptions: ['👍', '👎', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞', '🚀', '🍕'],
+      emojiOptionsFavorite: [],
+      emojiOptionsMore: []
     }
   },
 
@@ -132,6 +136,19 @@ Vue.component('ssb-msg', {
         if (err) console.log(err)
       })
     },
+    reactMenuOption: function(emojiInfo) {
+      this.react(emojiInfo.option.name)
+    },
+    popupEmojiMenu: function(event) {
+      this.$refs.emojiMenu.showMenu(event, {})
+
+      // Fix the positioning.
+      var menuEl = document.getElementById(this.$refs.emojiMenu.elementId)
+      menuEl.style.left = "auto"
+      menuEl.style.top = "auto"
+      menuEl.style.bottom = (this.$el.offsetHeight - this.$el.getElementsByClassName("reactions")[0].offsetTop - 2) + "px"
+      menuEl.style.right = "0px"
+    },
     unlike: function() {
       if (confirm("Are you sure you want to remove your reaction from this post?"))
         this.react('Unlike')
@@ -142,6 +159,9 @@ Vue.component('ssb-msg', {
     if (!this.msg.key) return
 
     const { and, votesFor, hasRoot, mentions, toCallback } = SSB.dbOperators
+
+    this.emojiOptionsFavorite = this.emojiOptions.slice(0, 3)
+    this.emojiOptionsMore = this.emojiOptions.slice(3, this.emojiOptions.length).map((x) => { return { name: x } })
 
     var self = this
 
