@@ -74,6 +74,7 @@ SSB.activeConnections = 0
 SSB.activeConnectionsWithData = 0
 SSB.callbacksWaitingForConnection = []
 SSB.callbacksWaitingForConnectionWithData = []
+SSB.callbacksWaitingForDisconnect = []
 function runConnectedCallbacks() {
   while(SSB.callbacksWaitingForConnection.length > 0) {
     const cb = SSB.callbacksWaitingForConnection.shift()
@@ -84,6 +85,13 @@ function runConnectedCallbacks() {
 function runConnectedWithDataCallbacks() {
   while(SSB.callbacksWaitingForConnectionWithData.length > 0) {
     const cb = SSB.callbacksWaitingForConnectionWithData.shift()
+    cb(SSB)
+  }
+}
+
+function runDisconnectedCallbacks() {
+  while(SSB.callbacksWaitingForDisconnect.length > 0) {
+    const cb = SSB.callbacksWaitingForDisconnect.shift()
     cb(SSB)
   }
 }
@@ -116,6 +124,16 @@ SSB.connectedWithData = function(cb) {
   }
 }
 
+SSB.disconnected = function(cb) {
+  // Register a callback for when we're no longer connected to any peer.
+  SSB.callbacksWaitingForDisconnect.push(cb);
+
+  if(!SSB.isConnected()) {
+    // Already connected.  Run all the callbacks.
+    runDisconnectedCallbacks()
+  }
+}
+
 // Register for the connect event so we can keep track of it.
 SSB.net.on('rpc:connect', (rpc) => {
   // Now we're connected.  Run all the callbacks.
@@ -123,7 +141,12 @@ SSB.net.on('rpc:connect', (rpc) => {
   runConnectedCallbacks()
 
   // Register an event handler for disconnects so we know to trigger waiting again.
-  rpc.on('closed', () => --SSB.activeConnections)
+  rpc.on('closed', () => {
+    --SSB.activeConnections
+    if (SSB.activeConnections == 0) {
+      runDisconnectedCallbacks()
+    }
+  })
 
   // See if we're operating on a connection with actual data (not a room).
   let connPeers = Array.from(SSB.net.conn.hub().entries())

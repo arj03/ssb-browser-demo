@@ -52,6 +52,7 @@
       "loading": "Searching for channels..."
     },
     "connected": {
+      "connectedNotSynced": "Connected but not yet synced",
       "connectedToPeer": "Connected to remote peer"
     },
     "connections": {
@@ -295,6 +296,7 @@
       "loading": "チャンネルを検索しています..."
     },
     "connected": {
+      "connectedNotSynced": "接続されていますが、まだ同期されていません",
       "connectedToPeer": "リモートピアに接続"
     },
     "connections": {
