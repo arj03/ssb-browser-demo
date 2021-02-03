@@ -288,6 +288,11 @@ body, html {
 }
 
 /* Emoji menu */
+.message
+{
+  position: relative;
+}
+
 .message .vue-simple-context-menu
 {
   max-width: 40%;
