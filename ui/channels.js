@@ -24,7 +24,7 @@ module.exports = function (componentsState) {
       <ol>
         <li v-for="(count, channel) in channels">
           <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}<sup>[&nbsp;{{ count }}&nbsp;]</sup></router-link>
-	</li>
+        </li>
       </ol>
       <p v-if="channels.length == 0">{{ $t('channels.loading') }}</p>
     </div>`,
@@ -32,7 +32,7 @@ module.exports = function (componentsState) {
     data: function() {
       return {
         channels: [],
-	favoriteChannels: [],
+        favoriteChannels: [],
         sortMode: "recent"
       }
     },
