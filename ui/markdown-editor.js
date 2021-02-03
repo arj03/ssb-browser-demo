@@ -75,6 +75,43 @@ Vue.component('markdown-editor', {
       this.blobUrlCache[blobId] = blobURL
     },
 
+    suggestMemes: function(searchString, cb) {
+      let searchOpts = { searchDepth: 2000 }
+      var self = this
+      if (searchString !== "")
+        searchOpts['query'] = searchString.substring(1, searchString.length)
+      SSB.net.meme.search(searchOpts, (err, matches) => {
+        if (matches) {
+          var suggestions = []
+          function getBlobUrlToCache(id) {
+	    if (!self.blobUrlCache[id])
+              SSB.net.blobs.localGet(id, (err, blobURL) => {
+                self.blobUrlCache[id] = blobURL
+              })
+          }
+          for (id in matches) {
+	    if (suggestions.length >= 10) break
+            suggestions.push({ text: matches[id][0].name, value: { id: id, name: matches[id][0].name } })
+            getBlobUrlToCache(id)
+          }
+          // Give it a second to try and get URLs before popping up whatever we've found.
+          setTimeout(function() {
+            for (s in suggestions) {
+              if (self.blobUrlCache[suggestions[s].value.id])
+                suggestions[s].icon = self.blobUrlCache[suggestions[s].value.id]
+            }
+            cb(null, suggestions)
+          }, 500)
+        } else {
+          cb(err)
+        }
+      })
+    },
+
+    clickMeme: function(meme) {
+      return "![" + meme.name + "](" + meme.id + ")"
+    },
+
     suggestPeople: function(searchString, cb) {
       // Suggest a list of people.
       let searchOpts = {}
@@ -191,6 +228,9 @@ Vue.component('markdown-editor', {
       const suggestionChars = {
         '@': { list: this.suggestPeople, click: this.clickPeople }
       }
+      if (SSB.net.meme)
+        suggestionChars['&'] = { list: this.suggestMemes, click: this.clickMeme }
+
       if (token && (suggest = suggestionChars[token.charAt(0)])) {
         // This is a type of token we support.
         // Figure out where in the raw Markdown the token actually is.
