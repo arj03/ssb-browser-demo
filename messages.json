@@ -70,6 +70,11 @@
       "dbStatus": "DB status",
       "ebtStatus": "EBT status"
     },
+    "group": {
+      "title": "Group \"{name}\"",
+      "blankFieldError": "Please provide a message to publish.",
+      "postNewMessage": "Post general public message"
+    },
     "messagePreview": {
       "postPreview": "Post preview",
       "postMessage": "Post message"
@@ -321,6 +326,11 @@
       "unsupportedConnectionTypeX": "このSSBクライアントは、タイプ「{connType」の接続をサポートしていません。\n\n残念ながら、ブラウザーでは、接続方法に多くの制限があります。ほとんどの通信はWebSocketを介して行われる必要があり、使用している招待コードはWebSocketをサポートしていないようです。ごめんなさい！",
       "dbStatus": "データベースのステータス",
       "ebtStatus": "EBTのステータス"
+    },
+    "group": {
+      "title": "グループ「{name}」",
+      "blankFieldError": "公開するメッセージを入力してください。",
+      "postNewMessage": "一般公開メッセージを投稿する"
     },
     "messagePreview": {
       "postPreview": "プレビュー",

@@ -10,7 +10,7 @@ module.exports = function (componentsState) {
       <h2>{{ $t('channels.yourGroups') }}</h2>
       <div>
         <div v-for="group in groups">
-          <h4>{{ group.name }} <a href="javascript:void(0)" v-on:click="deleteGroup(group)" title="Delete group" style="color: #900;">X</a></h4>
+          <h4><router-link :to="{name: 'group', params: { group: group.id }}">{{ group.name }}</router-link> <a href="javascript:void(0)" v-on:click="deleteGroup(group)" title="Delete group" style="color: #900;">X</a></h4>
           <ul class="groupMembers">
             <li v-for="member in group.members">
               <ssb-profile-link v-bind:key="member" v-bind:feedId="member"></ssb-profile-link>
