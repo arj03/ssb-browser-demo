@@ -248,6 +248,13 @@ body, html {
   text-decoration: none;
 }
 
+.reactions .reactions-existing > span,
+.reactions .reactions-mine > span,
+.reactions .reactions-new > span
+{
+  padding: 3px;
+}
+
 #channels ol
 {
   list-style: none;
@@ -278,4 +285,17 @@ body, html {
 .get-started-button:hover
 {
   background-color: #6c6;
+}
+
+/* Emoji menu */
+.message .vue-simple-context-menu
+{
+  max-width: 40%;
+  font-family: inherit;
+}
+
+.message .vue-simple-context-menu li.vue-simple-context-menu__item
+{
+  display: inline-block;
+  padding: 5px;
 }
