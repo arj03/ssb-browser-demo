@@ -2,6 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
   const md = require('./markdown')
+  const userGroups = require('../usergroups')
   const { and, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
   let initialState = function(self) {
@@ -22,6 +23,10 @@ module.exports = function () {
       showExportKey: false,
       showImportKey: false,
       mnemonic: '',
+
+      group: '',
+      alreadyInGroup: false,
+      groups: [],
 
       offset: 0
     }
@@ -60,7 +65,12 @@ module.exports = function () {
            <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">{{ $t('profile.sendMessage') }}</router-link>
            <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
            <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
-           <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button>
+           <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button><br>
+           <span class="addToGroup">
+             <v-select :placeholder="$t('profile.groupDropdownPlaceholder')" v-model="group" :options="groups" label="name" @input="groupChange"></v-select>
+             <button v-if="!alreadyInGroup" class="clickButton" v-on:click="addToGroup">{{ $t('profile.addToGroup') }}</button>
+             <button v-if="alreadyInGroup" class="clickButton" v-on:click="removeFromGroup">{{ $t('profile.removeFromGroup') }}</button>
+           </span>
            <br><br>
          </div>
          <h2 v-if="friends">{{ $t('profile.following') }}</h2>
@@ -152,6 +162,47 @@ module.exports = function () {
     },
     
     methods: {
+      groupChange: function() {
+        var self = this
+        if (this.group && this.group.id && this.group.id != '') {
+          userGroups.getMembers(this.group.id, (err, groupId, members) => {
+            self.alreadyInGroup = (members.indexOf(this.feedId) >= 0)
+          })
+        }
+      },
+
+      addToGroup: function() {
+        var self = this
+        if (!this.group || !this.group.id || this.group.id == '') {
+          alert(this.$root.$t('profile.chooseGroupFirst'))
+          return
+        }
+        userGroups.addMember(this.group.id, this.feedId, (err, success) => {
+          if (err) {
+            alert(err)
+            return
+          }
+
+          self.alreadyInGroup = true
+        })
+      },
+
+      removeFromGroup: function() {
+        var self = this
+        if (!this.group || !this.group.id || this.group.id == '') {
+          alert(this.$root.$t('profile.chooseGroupFirst'))
+          return
+        }
+        userGroups.removeMember(this.group.id, this.feedId, (err, success) => {
+          if (err) {
+            alert(err)
+            return
+          }
+
+          self.alreadyInGroup = false
+        })
+      },
+
       cacheImageURLForPreview: function(blobId, cb) {
         var self = this
         ++this.waitingForBlobURLs
@@ -394,6 +445,13 @@ module.exports = function () {
 
           self.following = self.feedId != SSB.net.id && contacts.isFollowing(SSB.net.id, self.feedId)
           self.blocking = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
+        })
+
+        userGroups.getGroups((err, groups) => {
+          if (groups) {
+            const sortFunc = (new Intl.Collator()).compare
+            self.groups = groups.sort((a, b) => { return sortFunc(a.name, b.name) })
+          }
         })
 
         document.body.classList.add('refreshing')

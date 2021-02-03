@@ -31,6 +31,7 @@
   margin: 16px 0px 0px 0px;
 }
 
+#profile .profileButtons span.addToGroup div.v-select,
 #profile .profileButtons button.clickButton {
   margin-left: 1rem;
   margin-top: 16px;
@@ -87,4 +88,14 @@
 #profile > div.modal-mask > div > div > div > textarea {
   width: 100%;
   height: 10rem;
+}
+
+#profile span.addToGroup {
+  display: inline-block;
+  float: right;
+}
+
+#profile span.addToGroup div.v-select {
+  display: inline-block;
+  width: 20em;
 }
