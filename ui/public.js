@@ -11,7 +11,7 @@ module.exports = function (componentsState) {
 
     let feedFilter = null
     if (onlyDirectFollow) {
-      const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
+      const graph = SSB.getGraphSync()
       if (graph.following.length > 0)
         feedFilter = or(...graph.following.map(x => author(x)))
     }
