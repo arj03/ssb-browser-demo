@@ -76,28 +76,17 @@ Vue.component('markdown-editor', {
     },
 
     suggestPeople: function(searchString, cb) {
-      // Suggest a list of people.
-      let searchOpts = {}
-      if (searchString !== "")
-        searchOpts['text'] = searchString.substring(1, searchString.length)
-      SSB.net.suggest.profile(searchOpts, (err, matches) => {
-        if (matches) {
-          var unsortedPeople = []
-          matches.forEach(match => {
-            const p = SSB.getProfile(match.id)
-            if (p && p.imageURL)
-              unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
-            else
-              unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
-          })
-          const sortFunc = new Intl.Collator().compare
-          const sortedPeople = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
-          const suggestions = sortedPeople.slice(0, 5).map((x) => { return { icon: x.image, text: "@" + x.name, value: x } })
-          cb(null, suggestions)
-        } else {
-          cb(err)
-        }
+      const matches = SSB.searchProfiles(searchString.substring(1))
+      matches.forEach(p => {
+        if (p && p.imageURL)
+          p.image = p.imageURL
+        else
+          p.image = helpers.getMissingProfileImage()
       })
+      const sortFunc = new Intl.Collator().compare
+      const sortedPeople = matches.sort((a, b) => { return sortFunc(a.name, b.name) })
+      const suggestions = sortedPeople.slice(0, 5).map((x) => { return { icon: x.image, text: x.name, value: x } })
+      cb(null, suggestions)
     },
 
     clickPeople: function(person) {
