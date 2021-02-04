@@ -18,11 +18,13 @@ Vue.component('ssb-profile-link', {
   },
 
   created: function () {
-    if (this.feedId == SSB.net.id)
-      this.name = "You"
+    const self = this
+    
+    if (self.feedId == SSB.net.id)
+      self.name = "You"
     
     // Set a default image to be overridden if there is an actual avatar to show.
-    this.imgURL = helpers.getMissingProfileImage()
+    self.imgURL = helpers.getMissingProfileImage()
 
     SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
       if (!err) self.isBlocked = result
