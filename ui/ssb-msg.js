@@ -169,10 +169,7 @@ Vue.component('ssb-msg', {
     if (this.msg.value.author == SSB.net.id)
       self.name = "You"
     else
-      SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
-        if (name)
-          self.name = name
-      })
+      self.name = SSB.getProfileName(this.msg.value.author)
 
     // Render the body, which may need to wait until we're connected to a peer.
     const blobRegEx = /!\[.*\]\(&.*\)/g
