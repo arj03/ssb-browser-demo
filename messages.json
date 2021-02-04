@@ -43,6 +43,10 @@
     },
     "channels": {
       "title": "Channels",
+      "yourGroups": "Your groups",
+      "newGroupName": "New group name",
+      "addGroup": "Add group",
+      "confirmDeleteGroup": "Are you sure you want to delete the group \"{group}\"?",
       "favoriteChannels": "Favorite channels",
       "otherChannels": "Other channels",
       "showChannels": "Show:",
@@ -65,6 +69,11 @@
       "unsupportedConnectionTypeX": "This SSB client does not support connections of type '{connType}'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!",
       "dbStatus": "DB status",
       "ebtStatus": "EBT status"
+    },
+    "group": {
+      "title": "Group \"{name}\"",
+      "blankFieldError": "Please provide a message to publish.",
+      "postNewMessage": "Post general public message"
     },
     "messagePreview": {
       "postPreview": "Post preview",
@@ -102,6 +111,10 @@
       "saveProfile": "Save profile",
       "sendMessage": "Send message",
       "removeFeed": "Remove feed",
+      "groupDropdownPlaceholder": "Add to group",
+      "addToGroup": "Add to group",
+      "removeFromGroup": "Remove from group",
+      "chooseGroupFirst": "Please choose a group first",
       "following": "Following",
       "blocking": "Blocking",
       "lastXMessagesFor": "Last {count} messages for",
@@ -287,6 +300,10 @@
     },
     "channels": {
       "title": "チャンネル",
+      "yourGroups": "あなたのグループ",
+      "newGroupName": "新しいグループ名",
+      "addGroup": "グループを追加",
+      "confirmDeleteGroup": "「{group}」という名前のグループを削除してもよろしいですか？",
       "favoriteChannels": "お気に入りのチャンネル",
       "otherChannels": "他のチャネル",
       "showChannels": "見るに：",
@@ -309,6 +326,11 @@
       "unsupportedConnectionTypeX": "このSSBクライアントは、タイプ「{connType」の接続をサポートしていません。\n\n残念ながら、ブラウザーでは、接続方法に多くの制限があります。ほとんどの通信はWebSocketを介して行われる必要があり、使用している招待コードはWebSocketをサポートしていないようです。ごめんなさい！",
       "dbStatus": "データベースのステータス",
       "ebtStatus": "EBTのステータス"
+    },
+    "group": {
+      "title": "グループ「{name}」",
+      "blankFieldError": "公開するメッセージを入力してください。",
+      "postNewMessage": "一般公開メッセージを投稿する"
     },
     "messagePreview": {
       "postPreview": "プレビュー",
@@ -346,6 +368,10 @@
       "saveProfile": "プロファイルを保存",
       "sendMessage": "メッセージを送る",
       "removeFeed": "フィードを削除する",
+      "groupDropdownPlaceholder": "グループに追加",
+      "addToGroup": "グループに追加",
+      "removeFromGroup": "グループから削除",
+      "chooseGroupFirst": "最初にグループを選択してください",
       "following": "フォローする",
       "blocking": "ブロックする",
       "lastXMessagesFor": "最後の{count}つのメッセージ：",
