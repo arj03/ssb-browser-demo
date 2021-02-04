@@ -24,10 +24,10 @@ Vue.component('ssb-profile-link', {
     // Set a default image to be overridden if there is an actual avatar to show.
     this.imgURL = helpers.getMissingProfileImage()
 
-    const contacts = SSB.db.getIndex('contacts')
-    this.isBlocked = this.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, this.feedId)
+    SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+      if (!err) self.isBlocked = result
+    })
 
-    var self = this
     SSB.getProfileAsync(self.feedId, (err, profile) => {
       if (profile) {
         if (self.feedId != SSB.net.id)
@@ -40,9 +40,6 @@ Vue.component('ssb-profile-link', {
               return console.error("failed to get img", err)
   
             self.imgURL = url
-
-            // Update blocking status now that it's had a chance to load.
-            self.isBlocked = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
           })
         }
       }
