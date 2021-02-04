@@ -441,10 +441,8 @@ module.exports = function () {
       renderProfile: function () {
         var self = this
 
-        // FIXME: wrong this needs to be from the POW if self.feedId
-        SSB.getGraph((err, graph) => {
+        SSB.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
-          // FIXME: not working
           self.blocked = graph.blocking
 
           SSB.net.friends.isFollowing({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
