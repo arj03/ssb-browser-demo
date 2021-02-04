@@ -3,7 +3,7 @@ const ref = require('ssb-ref')
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">
-               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" @stateChange="hideSuggestions" />
+               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" />
              </div>`,
 
   props: ['initialValue', 'privateBlobs'],
@@ -147,6 +147,8 @@ Vue.component('markdown-editor', {
         liEl.appendChild(document.createTextNode(optionList[o].text))
         liEl.addEventListener("click", function (value) { return function(e) {
           self.useSuggestion(replaceStart, replaceEnd, suggest.click(value))
+          e.stopPropagation()
+          return false
         } }(optionList[o].value))
       }
     },
@@ -161,10 +163,14 @@ Vue.component('markdown-editor', {
     },
 
     hideSuggestions: function() {
-      const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
-      var popupEl = editorContainerEl.getElementsByClassName("suggestion-box")[0]
-      if (popupEl) {
-        popupEl.parentNode.removeChild(popupEl)
+      if (this.$refs.tuiEditor && this.$refs.tuiEditor.editor && this.$refs.tuiEditor.editor.mdEditor) {
+        const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
+        if (editorContainerEl) {
+          var popupEl = editorContainerEl.getElementsByClassName("suggestion-box")[0]
+          if (popupEl) {
+            popupEl.parentNode.removeChild(popupEl)
+          }
+        }
       }
     },
 
