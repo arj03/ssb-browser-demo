@@ -2,8 +2,9 @@ const helpers = require('./helpers')
 
 Vue.component('ssb-profile-link', {
   template: `
-        <router-link :to="{name: 'profile', params: { feedId: feedId }}">
+        <router-link :to="{name: 'profile', params: { feedId: feedId }}" v-bind:class="{ blockedAvatar: isBlocked }">
           <img class='avatar' :src='imgURL' :title="name" />
+          <span v-if="isBlocked" class="blockedSymbol">🚫</span>
         </router-link>`,
 
   props: ['feedId'],
@@ -11,6 +12,7 @@ Vue.component('ssb-profile-link', {
   data: function() {
     return {
       imgURL: '',
+      isBlocked: false,
       name: ''
     }
   },
@@ -21,6 +23,9 @@ Vue.component('ssb-profile-link', {
     
     // Set a default image to be overridden if there is an actual avatar to show.
     this.imgURL = helpers.getMissingProfileImage()
+
+    const contacts = SSB.db.getIndex('contacts')
+    this.isBlocked = this.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, this.feedId)
 
     var self = this
     SSB.getProfileAsync(self.feedId, (err, profile) => {
@@ -35,6 +40,9 @@ Vue.component('ssb-profile-link', {
               return console.error("failed to get img", err)
   
             self.imgURL = url
+
+            // Update blocking status now that it's had a chance to load.
+            self.isBlocked = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
           })
         }
       }
