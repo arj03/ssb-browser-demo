@@ -47,8 +47,9 @@ module.exports = function () {
            </div>
          </span>
          <span v-else>
-           <div class="avatar">
+           <div v-bind:class="{ avatar: true, blockedAvatar: blocking }">
              <img :src='image'><br>
+             <span v-if="blocking" class="blockedSymbol">🚫</span>
            </div>
            <div class="description">
              <h2 class="profileName">{{ name }}</h2>

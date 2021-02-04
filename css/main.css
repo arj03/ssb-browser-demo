@@ -287,6 +287,7 @@ body, html {
   background-color: #6c6;
 }
 
+<<<<<<< HEAD
 #channels ul.groupMembers
 {
   list-style: none;
@@ -311,7 +312,36 @@ body, html {
   clear: both;
 }
 
+a.blockedAvatar
+{
+  display: inline-block;
+  position: relative;
+}
+
+a.blockedAvatar img
+{
+  filter: blur(4px);
+  -moz-filter: blur(4px);
+}
+
+a.blockedAvatar span.blockedSymbol
+{
+  display: block;
+  font-size: 35px;
+  line-height: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  text-align: center;
+}
+
 /* Emoji menu */
+.message
+{
+  position: relative;
+}
+
 .message .vue-simple-context-menu
 {
   max-width: 40%;

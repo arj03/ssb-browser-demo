@@ -14,6 +14,30 @@
   height: 13rem;
 }
 
+#profile .avatar.blockedAvatar
+{
+  display: inline-block;
+  position: relative;
+}
+
+#profile .avatar.blockedAvatar img
+{
+  filter: blur(20px);
+  -moz-filter: blur(20px);
+}
+
+#profile .avatar.blockedAvatar span.blockedSymbol
+{
+  display: block;
+  font-size: 9rem;
+  line-height: 13rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13rem;
+  text-align: center;
+}
+
 #profile > span > .description {
   flex-grow: 4;
 }
