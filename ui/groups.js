@@ -85,7 +85,7 @@ module.exports = function (componentsState) {
 
       deleteGroup: function(group) {
         var self = this
-        if (confirm(this.$root.$t('channels.confirmDeleteGroup', { group: group.name }))) {
+        if (confirm(this.$root.$t('groups.confirmDeleteGroup', { group: group.name }))) {
           userGroups.deleteGroup(group.id, (err, success) => {
             if (err)
               alert(err)

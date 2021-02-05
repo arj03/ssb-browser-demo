@@ -1,5 +1,6 @@
 module.exports = function () {
   const pull = require('pull-stream')
+  const asyncFilter = require('pull-async-filter')
   const cat = require('pull-cat')
 
   const { and, mentions, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
@@ -49,8 +50,6 @@ module.exports = function () {
       render: function () {
         var self = this
 
-        const contacts = SSB.net.db.getIndex('contacts')
-
         console.time("notifications")
 
         pull(
@@ -80,9 +79,9 @@ module.exports = function () {
           ]),
           self.getSameRoot,
           pull.unique('key'),
-          pull.filter((msg) => {
-            // Exclude messages from user and blocked authors.
-            return (msg.value.author != SSB.net.id) && !(contacts.isBlocking(SSB.net.id, msg.value.author))
+          asyncFilter((msg, cb) => {
+            if (msg.value.author === SSB.net.id) return cb(null, true)
+            else SSB.net.friends.isBlocking({source: SSB.net.id, dest: msg.value.author }, cb)
           }),
           pull.collect((err, msgs) => {
             // Only show the most recent 50.

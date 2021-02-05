@@ -11,7 +11,7 @@ module.exports = function (componentsState) {
 
     let feedFilter = null
     if (onlyDirectFollow) {
-      const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
+      const graph = SSB.getGraphSync()
       if (graph.following.length > 0)
         feedFilter = or(...graph.following.map(x => author(x)))
     }
@@ -116,9 +116,10 @@ module.exports = function (componentsState) {
         window.firstTimeLoading = false
       },
 
-      renderPublic: function (cb) {
+      renderPublic: function () {
         componentsState.newPublicMessages = false
 
+        this.isRefreshing = true
         document.body.classList.add('refreshing')
 
         console.time("latest messages")
@@ -129,21 +130,18 @@ module.exports = function (componentsState) {
           paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
+            this.isRefreshing = false
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
 
             if (err) {
               this.messages = []
               alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
-              if (cb)
-                cb(err)
               throw err
             } else {
               this.messages = this.messages.concat(answer.results)
               this.displayPageEnd = this.offset + this.pageSize
               this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
-              if (cb)
-                cb(null, true)
             }
           })
         )
@@ -283,17 +281,13 @@ module.exports = function (componentsState) {
 
       refresh: function() {
         // Don't allow concurrent refreshing.
-        if(this.isRefreshing)
+        if (this.isRefreshing)
           return
-
-        this.isRefreshing = true
 
         console.log("Refreshing")
         this.messages = []
         this.offset = 0
-        this.renderPublic((err, success) => {
-          this.isRefreshing = false
-        })
+        this.renderPublic()
       }
     },
 

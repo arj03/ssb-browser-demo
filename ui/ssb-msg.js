@@ -108,10 +108,11 @@ Vue.component('ssb-msg', {
       SSB.getOOO(this.msg.key, (err, msgValue) => {
         if (err) return alert("Failed to get msg " + err)
 
-        if (SSB.net.db.getIndex('contacts').isBlocking(SSB.net.id, msgValue.author))
-          this.msg.value.content.text = "Blocked user"
-        else
-          this.msg = { key: this.msg.key, value: msgValue }
+        this.msg = { key: this.msg.key, value: msgValue }
+
+        SSB.net.friends.isBlocking({ source: SSB.net.id, dest: msgValue.author }, (err, result) => {
+          if (result) this.msg.value.content.text = "Blocked user"
+        })
       })
     },
     react: function(emoji) {
@@ -168,10 +169,7 @@ Vue.component('ssb-msg', {
     if (this.msg.value.author == SSB.net.id)
       self.name = "You"
     else
-      SSB.getProfileNameAsync(this.msg.value.author, (err, name) => {
-        if (name)
-          self.name = name
-      })
+      self.name = SSB.getProfileName(this.msg.value.author)
 
     // Render the body, which may need to wait until we're connected to a peer.
     const blobRegEx = /!\[.*\]\(&.*\)/g

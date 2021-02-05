@@ -309,9 +309,10 @@ module.exports = function () {
             following: true
           }, () => {
             alert(self.$root.$t('profile.followed')) // FIXME: proper UI
-            // wait for db sync
             SSB.connectedWithData(() => {
-              SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+              SSB.net.db.onDrain('contacts', () => {
+                SSB.net.sync(SSB.getPeer())
+              })
             })
           })
         }
@@ -439,13 +440,18 @@ module.exports = function () {
 
       renderProfile: function () {
         var self = this
-        const contacts = SSB.db.getIndex('contacts')
-        contacts.getGraphForFeedHops1(self.feedId, (err, graph) => {
+
+        SSB.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
-          self.following = self.feedId != SSB.net.id && contacts.isFollowing(SSB.net.id, self.feedId)
-          self.blocking = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
+          SSB.net.friends.isFollowing({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+            self.following = result
+          })
+
+          SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+            self.blocking = result
+          })
         })
 
         userGroups.getGroups((err, groups) => {
@@ -479,50 +485,51 @@ module.exports = function () {
           })
         )
 
-        SSB.getFullProfileAsync(this.feedId, (err, profile) => {
-          if (err) return console.error("Error getting profile", err)
+        const profile = SSB.getProfile(this.feedId)
 
-          if (profile.name)
-            this.name = profile.name
-  
-          if (profile.description) {
-            this.descriptionText = profile.description
-  
-            if (self.feedId == SSB.net.id) {
-              // Editing self.
-              // Check for images.  If there are any, cache them.
-              var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
-              var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
-              for (b in blobMatches)
-                this.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
-                  // Reload the editor with the new image.
-                  // This is only triggered when the last image is loaded.
-                  // Set it to something different and back again to get it to refresh the preview.
-                  if (self.$refs.markdownEditor) {
-                    self.$refs.markdownEditor.setMarkdown(this.descriptionText + " ")
-                    self.$refs.markdownEditor.setMarkdown(this.descriptionText)
-                  }
-                })
-  
-              // Load the editor.
-              if (self.$refs.markdownEditor) {
-                if (blobMatches.length == 0) {
-                  // If we're not waiting for any images to load, load the editor right away.
+        if (profile.name)
+          this.name = profile.name
+        
+        if (profile.description) {
+          this.descriptionText = profile.description
+          
+          if (self.feedId == SSB.net.id) {
+            // Editing self.
+            // Check for images.  If there are any, cache them.
+            var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
+            var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
+            for (b in blobMatches)
+              this.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
+                // Reload the editor with the new image.
+                // This is only triggered when the last image is loaded.
+                // Set it to something different and back again to get it to refresh the preview.
+                if (self.$refs.markdownEditor) {
+                  self.$refs.markdownEditor.setMarkdown(this.descriptionText + " ")
                   self.$refs.markdownEditor.setMarkdown(this.descriptionText)
                 }
+              })
+            
+            // Load the editor.
+            if (self.$refs.markdownEditor) {
+              if (blobMatches.length == 0) {
+                // If we're not waiting for any images to load, load the editor right away.
+                self.$refs.markdownEditor.setMarkdown(this.descriptionText)
               }
             }
           }
-  
-          if (profile.image) {
-            SSB.net.blobs.localGet(profile.image, (err, url) => {
-              if (!err) {
-                self.image = url
-                self.imageBlobId = profile.image
-              }
-            })
-          }
-        })
+        }
+
+        if (profile.imageURL) {
+          self.image = profile.imageURL
+          self.imageBlobId = profile.image
+        } else if (profile.image) {
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            if (!err) {
+              self.image = url
+              self.imageBlobId = profile.image
+            }
+          })
+        }
       }
     },
 

@@ -155,19 +155,18 @@ module.exports = function () {
               self.stagedPeers[p].name = suggestNamesForPeer[0].name
             else if (self.stagedPeers[p].data && self.stagedPeers[p].data.type == 'room-endpoint') {
               var key = self.stagedPeers[p].data.key
-              SSB.getProfileNameAsync(key, (err, name) => {
-                // See if we have a room name in our suggestions list.
-                var roomName = self.stagedPeers[p].data.roomName
-                var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
-                  var r = x.address.split(":")
-                  var peerKey = '@' + r[r.length-1] + '.ed25519'
-                  return (peerKey == self.stagedPeers[p].data.room)
-                })
-                if (suggestNamesForRoom.length > 0)
-                  roomName = suggestNamesForRoom[0].name
-                
-                self.stagedPeers[p].name = (name || key) + (roomName ? " via " + roomName : "")
+              const name = SSB.getProfileName(key)
+              // See if we have a room name in our suggestions list.
+              var roomName = self.stagedPeers[p].data.roomName
+              var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
+                var r = x.address.split(":")
+                var peerKey = '@' + r[r.length-1] + '.ed25519'
+                return (peerKey == self.stagedPeers[p].data.room)
               })
+              if (suggestNamesForRoom.length > 0)
+                roomName = suggestNamesForRoom[0].name
+
+              self.stagedPeers[p].name = (name || key) + (roomName ? " via " + roomName : "")
             }
           })(x)
         }
@@ -181,19 +180,18 @@ module.exports = function () {
               self.peers[p].name = suggestNamesForPeer[0].name
             else if (self.peers[p].data && self.peers[p].data.type == 'room-endpoint') {
               var key = self.peers[p].data.key
-              SSB.getProfileNameAsync(key, (err, name) => {
-                // See if we have a room name in our suggestions list.
-                var roomName = self.peers[p].data.roomName
-                var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
-                  var r = x.address.split(":")
-                  var peerKey = '@' + r[r.length-1] + '.ed25519'
-                  return (peerKey == self.peers[p].data.room)
-                })
-                if (suggestNamesForRoom.length > 0)
-                  roomName = suggestNamesForRoom[0].name
-                
-                self.peers[p].name = (name || key) + (roomName ? " via " + roomName : "")
+              const name = SSB.getProfileName(key)
+              // See if we have a room name in our suggestions list.
+              var roomName = self.peers[p].data.roomName
+              var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
+                var r = x.address.split(":")
+                var peerKey = '@' + r[r.length-1] + '.ed25519'
+                return (peerKey == self.peers[p].data.room)
               })
+              if (suggestNamesForRoom.length > 0)
+                roomName = suggestNamesForRoom[0].name
+
+              self.peers[p].name = (name || key) + (roomName ? " via " + roomName : "")
             }
           })(x)
         }
