@@ -4,6 +4,7 @@
     "pages": {
       "channel": "Channel",
       "channels": "Channels",
+      "groups": "Groups",
       "connections": "Connections",
       "notifications": "Notifications",
       "private": "Private",
@@ -43,10 +44,6 @@
     },
     "channels": {
       "title": "Channels",
-      "yourGroups": "Your groups",
-      "newGroupName": "New group name",
-      "addGroup": "Add group",
-      "confirmDeleteGroup": "Are you sure you want to delete the group \"{group}\"?",
       "favoriteChannels": "Favorite channels",
       "otherChannels": "Other channels",
       "showChannels": "Show:",
@@ -74,6 +71,14 @@
       "title": "Group \"{name}\"",
       "blankFieldError": "Please provide a message to publish.",
       "postNewMessage": "Post general public message"
+    },
+    "groups": {
+      "title": "Groups",
+      "yourGroups": "Your groups",
+      "newGroupName": "New group name",
+      "addGroup": "Add group",
+      "deleteGroup": "Delete group",
+      "confirmDeleteGroup": "Are you sure you want to delete the group \"{group}\"?"
     },
     "messagePreview": {
       "postPreview": "Post preview",
@@ -261,6 +266,7 @@
     "pages": {
       "channel": "チャンネル",
       "channels": "チャンネル",
+      "groups": "グループ",
       "connections": "接続",
       "notifications": "通知",
       "private": "プライベートメッセージ",
@@ -300,10 +306,6 @@
     },
     "channels": {
       "title": "チャンネル",
-      "yourGroups": "あなたのグループ",
-      "newGroupName": "新しいグループ名",
-      "addGroup": "グループを追加",
-      "confirmDeleteGroup": "「{group}」という名前のグループを削除してもよろしいですか？",
       "favoriteChannels": "お気に入りのチャンネル",
       "otherChannels": "他のチャネル",
       "showChannels": "見るに：",
@@ -331,6 +333,14 @@
       "title": "グループ「{name}」",
       "blankFieldError": "公開するメッセージを入力してください。",
       "postNewMessage": "一般公開メッセージを投稿する"
+    },
+    "groups": {
+      "title": "グループ",
+      "yourGroups": "あなたのグループ",
+      "newGroupName": "新しいグループ名",
+      "addGroup": "グループを追加",
+      "deleteGroup": "グループを削除",
+      "confirmDeleteGroup": "「{group}」という名前のグループを削除してもよろしいですか？"
     },
     "messagePreview": {
       "postPreview": "プレビュー",

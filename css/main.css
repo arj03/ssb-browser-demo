@@ -287,30 +287,6 @@ body, html {
   background-color: #6c6;
 }
 
-#channels ul.groupMembers
-{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-#channels ul.groupMembers li > a > img
-{
-  width: 50px;
-  height: 50px;
-}
-
-#channels ul.groupMembers li
-{
-  float: left;
-  padding-right: 0.5rem;
-}
-
-#channels .clearingDiv
-{
-  clear: both;
-}
-
 a.blockedAvatar
 {
   display: inline-block;
