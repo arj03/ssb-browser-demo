@@ -41,6 +41,7 @@ Things that work:
  - deleting messages included a whole profile
  - blocking
  - channels
+ - groups
  - notifications
  - themes
  - translations
