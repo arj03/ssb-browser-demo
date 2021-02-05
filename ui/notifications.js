@@ -80,7 +80,7 @@ module.exports = function () {
           self.getSameRoot,
           pull.unique('key'),
           asyncFilter((msg, cb) => {
-            if (msg.value.author === SSB.net.id) return cb(null, false)
+            if (msg.value.author === SSB.net.id) return cb(null, true)
             else SSB.net.friends.isBlocking({source: SSB.net.id, dest: msg.value.author }, cb)
           }),
           pull.collect((err, msgs) => {
