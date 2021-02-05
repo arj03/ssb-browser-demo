@@ -326,6 +326,7 @@ module.exports = function () {
             contact: this.feedId,
             blocking: false
           }, () => {
+            self.blocking = false
             alert(self.$root.$t('profile.unblocked')) // FIXME: proper UI
           })
         } else {
@@ -336,6 +337,7 @@ module.exports = function () {
           }, () => {
             SSB.db.deleteFeed(this.feedId, (err) => {
               if (err) {
+                self.blocking = true
                 alert(self.$root.$t('profile.blockedButNotDeleted'))
               } else {
                 alert(self.$root.$t('profile.blocked')) // FIXME: proper UI
