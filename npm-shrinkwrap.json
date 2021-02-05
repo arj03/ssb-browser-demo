@@ -3016,9 +3016,9 @@
       "integrity": "sha1-6PvzdNxVb/iUehDcsFctYz8s+hA="
     },
     "jitdb": {
-      "version": "2.0.3",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.0.3.tgz",
-      "integrity": "sha512-5CyZfZUPOUdGbBb/btTPPTHzDMHCsY0iFL++YZQ2GnDOmjxor9mxJ0RaikPccFmltOLc4p21pmvRIF2sJk0Cdg==",
+      "version": "2.0.5",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.0.5.tgz",
+      "integrity": "sha512-vlNc8kf6BBohy3z5Dsr4SW8W4f5mLLdPRZ+gszQP7IMolzZPsP5ytXCwje6iAYwjFa4EU2mdn/N0FiORoSaBfQ==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -5142,7 +5142,7 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+https://github.com/arj03/ssb-browser-core.git#ab9eb44c1065dfc8fc228d20cb3b8b84978bdec6",
+      "version": "git+https://github.com/arj03/ssb-browser-core.git#707205100ebfab16280bd5fb3a4f04ee929dfe90",
       "from": "git+https://github.com/arj03/ssb-browser-core.git#ssb-friends-about-db2",
       "requires": {
         "atomic-file": "^2.1.1",
@@ -5385,9 +5385,9 @@
       }
     },
     "ssb-db2": {
-      "version": "1.9.1",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.9.1.tgz",
-      "integrity": "sha512-uAvVCLkeajm2cfJ6q/cMzcbMPFDcD9oCAveUmYc7TsyHkZG3ZcTdtwKw+jWm58iTOh5u1cKeMaELCym6xj47NQ==",
+      "version": "1.9.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.9.2.tgz",
+      "integrity": "sha512-S7QaGaMwEXsda2dt3Y9fx5LBXYIlEHxvv3t1jeBlJ8nb26hNAgtGWmV1cMuL5zKhm3hp2LrVT8qKGZXU7Mp8rw==",
       "requires": {
         "async-append-only-log": "^3.0.3",
         "atomically-universal": "^0.1.1",
@@ -5398,7 +5398,7 @@
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
         "hoox": "0.0.1",
-        "jitdb": "^2.0.3",
+        "jitdb": "^2.0.4",
         "level": "^6.0.1",
         "lodash.debounce": "^4.0.8",
         "mkdirp": "^1.0.4",
@@ -5471,7 +5471,7 @@
       }
     },
     "ssb-friends": {
-      "version": "git+https://github.com/ssbc/ssb-friends.git#235ca911241046fea98bc5df1ef0634b545d5fb9",
+      "version": "git+https://github.com/ssbc/ssb-friends.git#274e0a03bfb89729fd075bf060d6ad0548ea5b5e",
       "from": "git+https://github.com/ssbc/ssb-friends.git#db2",
       "requires": {
         "bipf": "^1.4.0",
