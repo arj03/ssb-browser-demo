@@ -5142,8 +5142,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+https://github.com/arj03/ssb-browser-core.git#707205100ebfab16280bd5fb3a4f04ee929dfe90",
-      "from": "git+https://github.com/arj03/ssb-browser-core.git#ssb-friends-about-db2",
+      "version": "8.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.0.0.tgz",
+      "integrity": "sha512-+2OWljs5Zb6JcKticlHfykmVcoyvvMuUTCzG29VV5fhwh5vGE8quhs8aNhyAetCPgxBAIsrM3w3WvJNBUaeGWg==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
@@ -5165,7 +5166,7 @@
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^1.0.0",
         "ssb-db2": "^1.9.1",
-        "ssb-friends": "git+https://github.com/ssbc/ssb-friends.git#db2",
+        "ssb-friends": "^4.4.0",
         "ssb-keys": "^8.0.2",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
@@ -5471,8 +5472,9 @@
       }
     },
     "ssb-friends": {
-      "version": "git+https://github.com/ssbc/ssb-friends.git#274e0a03bfb89729fd075bf060d6ad0548ea5b5e",
-      "from": "git+https://github.com/ssbc/ssb-friends.git#db2",
+      "version": "4.4.0",
+      "resolved": "https://registry.npmjs.org/ssb-friends/-/ssb-friends-4.4.0.tgz",
+      "integrity": "sha512-HmzC7XXVcmPu+LQJVLRWBTQKRwaDzW1mUEh7n7MLWCWLuip6aUdM3l5F27g1mlggcPGRsMVLgwGNhl9h20arhQ==",
       "requires": {
         "bipf": "^1.4.0",
         "flumecodec": "0.0.1",
@@ -5482,16 +5484,8 @@
         "pull-level": "^2.0.4",
         "pull-notify": "^0.1.1",
         "pull-stream": "^3.6.0",
-        "ssb-caps": "^1.1.0",
         "ssb-db2": "^1.9.1",
         "ssb-ref": "^2.7.1"
-      },
-      "dependencies": {
-        "ssb-caps": {
-          "version": "1.1.0",
-          "resolved": "https://registry.npmjs.org/ssb-caps/-/ssb-caps-1.1.0.tgz",
-          "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
-        }
       }
     },
     "ssb-keys": {
