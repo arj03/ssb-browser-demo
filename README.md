@@ -94,6 +94,16 @@ After that, your ssb-room will be compatible with ssb-browser-demo.
 
 # Other
 
+## How to help with translating
+
+If you know a language other than English, we need your help!  Take a look at our translation efforts here:
+
+[Issue #103][https://github.com/arj03/ssb-browser-demo/issues/103]
+
+We currently have support for English (US), English (UK), English (Pirate), and mostly machine-translated Japanese.  To add a translation, take a look at messages.json.  You'll find sections in there for the different languages we support.  Just take an existing language block (like "en") and copy it to a new block with the locale's name as the key, and start translating!
+
+As a side note, we use [vue-i18n][https://github.com/kazupon/vue-i18n] for internationalization, which supports fallback locales.  So, for example, if your locale is "en-US", then when it finds that we don't have a specific "en-US" translation, it falls back to the generic "en".  The same would be true of "fr-ch" if we had an "fr" translation, for example.  So if your translations are generic enough to be used by multiple local variants, please put them into a generic language block.
+
 ## Force WASM locally (outside browser)
 
 rm -rf node_modules/sodium-chloride/
