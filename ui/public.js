@@ -44,7 +44,9 @@ module.exports = function (componentsState) {
       <h2>{{ $t('common.lastXMessages', { count: pageSize }) }}
       <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
       </h2>
-      <fieldset><legend>{{ $t('public.filters') }}</legend>
+      <button v-if="!showFilters" class="clickButton" v-on:click="clickShowFilters">{{ $t('public.showFilters') }}</button>
+      <button v-if="showFilters" class="clickButton" v-on:click="clickHideFilters">{{ $t('public.hideFilters') }}</button>
+      <fieldset v-if="showFilters"><legend>{{ $t('public.filters') }}</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>{{ $t('public.filterOnlyDirectFollow') }}</label><br />
       <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>{{ $t('public.filterOnlyThreads') }}</label><br />
       <div class='filter-line'>
@@ -76,6 +78,7 @@ module.exports = function (componentsState) {
         postText: "",
         postChannel: "",
         channels: [],
+        showFilters: false,
         onlyDirectFollow: false,
         onlyThreads: false,
         onlyChannels: false,
@@ -95,6 +98,14 @@ module.exports = function (componentsState) {
     },
 
     methods: {
+      clickShowFilters: function() {
+        this.showFilters = true
+      },
+
+      clickHideFilters: function() {
+        this.showFilters = false
+      },
+
       loadMore: function() {
         SSB.db.query(
           getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList, this.hideChannels, this.hideChannelsList),
