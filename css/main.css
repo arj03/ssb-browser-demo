@@ -64,7 +64,7 @@ a {
 
 #searchBox.expanded #goTo {
   width: 200px;
-  box-shadow: 0 3px 2em rgba(0, 0, 0, 1);
+  box-shadow: 0 1px 1em rgba(0, 0, 0, 0.5);
 }
 
 #suggestionPositioning {
@@ -86,9 +86,13 @@ a {
   visibility: visible;
 }
 
+#searchBox .tui-popup-body {
+  font-size: medium;
+}
+
 #searchBox .suggestion-box img {
-  width: 16px;
-  height: 16px;
+  width: 1.5em;
+  height: 1.5em;
   margin-right: 2px;
   margin-left: -8px;
   vertical-align: middle;
