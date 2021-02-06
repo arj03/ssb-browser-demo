@@ -35,7 +35,7 @@
         <router-link to="/channels">{{ $t('pages.channels') }}</router-link> |
         <router-link to="/groups">{{ $t('pages.groups') }}</router-link> |
         <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">{{ $t('pages.profile') }}</router-link> |
-        <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected></connected> |
+        <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected ref="connected"></connected> |
         <router-link to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
         <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
         <div id="searchBox">

@@ -1,5 +1,6 @@
 const pull = require('pull-stream')
 const defaultPrefs = require("../defaultprefs.json")
+const localPrefs = require("../localprefs")
 
 module.exports = function () {
   return {
@@ -8,24 +9,35 @@ module.exports = function () {
       <div>
       </div>
       <div>
-        <h3>{{ $t('connections.addPeer') }}</h3>
-        <select v-model="type" v-on:change="onTypeChange(this.value)">
-           <option value='room'>Room</option>
-           <option value='pub'>Pub</option>
-        </select>
-        <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
-        <button class="clickButton" v-on:click="add">{{ $t('connections.addPeerButton') }}</button>
+        <h3>Connection Status</h3>
+        <span v-if="online">☒</span><span v-if="!online">☐</span>&nbsp;Running in online mode<br />
+        <span v-if="connected">☒</span><span v-if="!connected">☐</span>&nbsp;Connected to a peer<br />
+        <span v-if="connectedWithData">☒</span><span v-if="!connectedWithData">☐</span>&nbsp;At least one peer has data (not just a room)<br />
+        <span v-if="synced">☒</span><span v-if="!synced">☐</span>&nbsp;Synchronizing is complete<br />
+        <button v-if="online" class="clickButton" v-on:click="goOffline">Use offline</button>
+        <button v-if="!online" class="clickButton" v-on:click="goOnline">Connect online</button>
       </div>
-      <h3>{{ $t('connections.possibleConnections') }}</h3>
-      <div v-for="suggestedPeer in suggestedPeers">
-        <button class="clickButton" v-on:click="connectSuggested(suggestedPeer)">{{ $t('connections.connectToX', { peer: suggestedPeer.name }) }}</button>
-      </div>
-      <div v-for="stagedPeer in stagedPeers">
-        <button class="clickButton" v-on:click="connect(stagedPeer)">{{ $t('connections.connectToX', { peer: stagedPeer.name || stagedPeer.data.name || stagedPeer.data.key }) }}</button>
-      </div>
-      <h3>{{ $t('connections.existingConnections') }}</h3>
-      <div v-for="peer in peers">
-        <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
+      <div v-if="online">
+        <div>
+          <h3>{{ $t('connections.addPeer') }}</h3>
+          <select v-model="type" v-on:change="onTypeChange(this.value)">
+             <option value='room'>Room</option>
+             <option value='pub'>Pub</option>
+          </select>
+          <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
+          <button class="clickButton" v-on:click="add">{{ $t('connections.addPeerButton') }}</button>
+        </div>
+        <h3>{{ $t('connections.possibleConnections') }}</h3>
+        <div v-for="suggestedPeer in suggestedPeers">
+          <button class="clickButton" v-on:click="connectSuggested(suggestedPeer)">{{ $t('connections.connectToX', { peer: suggestedPeer.name }) }}</button>
+        </div>
+        <div v-for="stagedPeer in stagedPeers">
+          <button class="clickButton" v-on:click="connect(stagedPeer)">{{ $t('connections.connectToX', { peer: stagedPeer.name || stagedPeer.data.name || stagedPeer.data.key }) }}</button>
+        </div>
+        <h3>{{ $t('connections.existingConnections') }}</h3>
+        <div v-for="peer in peers">
+          <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
+        </div>
       </div>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
@@ -37,6 +49,10 @@ module.exports = function () {
 
         statusHTML: '',
         running: true,
+        connected: false,
+        connectedWithData: false,
+        synced: false,
+        online: false,
         suggestedPeers: [],
         stagedPeers: [],
         peers: []
@@ -47,12 +63,45 @@ module.exports = function () {
       onTypeChange: function() {
       },
 
+      goOffline: function() {
+        localPrefs.setOfflineMode(true)
+        this.online = false
+        SSB.net.conn.stop()
+      },
+
+      goOnline: function() {
+        localPrefs.setOfflineMode(false)
+        this.online = true
+        SSB.net.conn.start()
+      },
+
+      onConnected: function() {
+        // If we're connected, we're definitely online.
+        // Set the preference, too, in case ssb-browser-core is a version which doesn't support offline mode, just to make sure the preference stays in sync with reality.
+        this.online = true
+        localPrefs.setOfflineMode(false)
+        this.connected = true
+        SSB.disconnected(this.onDisconnected)
+      },
+
+      onConnectedWithData: function() {
+        this.connectedWithData = true
+      },
+
+      onDisconnected: function() {
+        this.online = false
+        this.connected = false
+        this.connectedWithData = false
+        SSB.connected(this.onConnected)
+        SSB.connectedWithData(this.onConnectedWithData)
+      },
+
       add: function() {
         var s = this.address.split(":")
-	if (s[0] != 'ws' && s[0] != 'wss' && s[0] != 'dht' && s[0] != 'bt') {
+        if (s[0] != 'ws' && s[0] != 'wss' && s[0] != 'dht' && s[0] != 'bt') {
           alert(this.$root.$t('connections.unsupportedConnectionTypeX', { connType: s[0] }))
-	  return
-	}
+          return
+        }
         SSB.net.connectAndRemember(this.address, {
           key: '@' + s[s.length-1] + '.ed25519',
           type: this.type
@@ -91,6 +140,16 @@ module.exports = function () {
 
       self.onTypeChange()
 
+      this.online = !localPrefs.getOfflineMode()
+      this.connected = SSB.isConnected()
+      this.connectedWithData = SSB.isConnectedWithData()
+      if (this.connected) {
+        SSB.disconnected(this.onDisconnected)
+      } else {
+        SSB.connected(this.onConnected)
+        SSB.connectedWithData(this.onConnectedWithData)
+      }
+
       var lastStatus = null
       var lastEbtStatus = null
 
@@ -109,6 +168,18 @@ module.exports = function () {
           self.updateSuggestedPeers()
         })
       )
+
+      function updateSynced() {
+        if (!self.running) return
+
+        setTimeout(() => {
+          self.synced = self.online && self.connected && self.connectedWithData && self.$root.$refs["connected"].synced
+
+          updateSynced()
+        }, 500)
+      }
+
+      updateSynced()
 
       function updateDBStatus() {
         if (!self.running) return
