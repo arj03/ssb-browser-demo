@@ -128,6 +128,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             const profiles = SSB.db.getIndex("profiles")
             const profile = profiles.getProfile(this.goToTargetText)
             if (!profile || Object.keys(profile).length == 0) {
+              // We could use searchProfiles here, but this gives us a little more exact results in case the user skipped the suggestions.
               const profilesDict = profiles.getProfiles()
               const searchText = this.goToTargetText.substring(1)
               var exactMatch = null
