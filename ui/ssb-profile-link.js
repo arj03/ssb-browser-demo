@@ -17,6 +17,23 @@ Vue.component('ssb-profile-link', {
     }
   },
 
+  methods: {
+    renderProfile: function(profile) {
+      const self = this
+      if (self.feedId != SSB.net.id)
+        self.name = profile.name
+
+      if (profile.imageURL) self.imgURL = profile.imageURL
+      else if (profile.image) {
+        SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
+          if (err) return console.error("failed to get img", err)
+
+          profile.imageURL = self.imgURL = url
+        })
+      }
+    }
+  },
+
   created: function () {
     const self = this
     
@@ -31,18 +48,15 @@ Vue.component('ssb-profile-link', {
     })
 
     const profile = SSB.getProfile(self.feedId)
-    if (profile) {
-      if (self.feedId != SSB.net.id)
-        self.name = profile.name
-
-      if (profile.imageURL) self.imgURL = profile.imageURL
-      else if (profile.image) {
-        SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
-          if (err) return console.error("failed to get img", err)
-
-          profile.imageURL = self.imgURL = url
-        })
-      }
+    if (profile.name || profile.imageURL || profile.image) {
+      self.renderProfile(profile)
+    } else {
+      // Try one more time after the profile index has loaded.
+      setTimeout(() => {
+        const profileAgain = SSB.getProfile(self.feedId)
+	if (profileAgain)
+          self.renderProfile(profileAgain)
+      }, 3000)
     }
   }
 })
