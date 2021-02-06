@@ -23,7 +23,7 @@ module.exports = function (componentsState) {
       </select>
       <ol>
         <li v-for="(count, channel) in channels">
-          <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}<sup>[&nbsp;{{ count }}&nbsp;]</sup></router-link>
+          <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}<sup v-if="count > 0">[&nbsp;{{ count }}&nbsp;]</sup></router-link>
         </li>
       </ol>
       <p v-if="channels.length == 0">{{ $t('channels.loading') }}</p>
@@ -99,12 +99,25 @@ module.exports = function (componentsState) {
             paginate(500),
             resultCallback
           )
-        } else {
+        } else if (this.sortMode == "popular") {
           // Look at all posts.
           SSB.db.query(
             and(not(channel('')), type('post'), isPublic()),
             resultCallback
           )
+        } else {
+          // Just pull channels.
+          const allChannels = SSB.db.getIndex("channels").getChannels()
+          const sortFunc = (new Intl.Collator()).compare
+          const filteredChannels = allChannels.map((x) => { return (x.charAt(0) == "#" ? x.substring(1) : x) })
+            .filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+            .sort(sortFunc)
+          var transformedChannels = {}
+          for (c in filteredChannels)
+            transformedChannels[filteredChannels[c]] = 0
+          this.channels = transformedChannels
+          document.body.classList.remove('refreshing')
+          console.timeEnd("channel list")
         }
       },
     },
