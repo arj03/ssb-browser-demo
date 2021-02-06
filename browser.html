@@ -61,8 +61,10 @@
         <router-link to="/public" class="navButton">{{ $t('pages.public') }}</router-link><new-public-messages></new-public-messages>
         <router-link to="/private" class="navButton">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages>
         <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}" class="navButton">{{ $t('pages.profile') }}</router-link>
-        <router-link to="/notifications" class="navButton">{{ $t('pages.notifications') }}</router-link>
-        <router-link to="/settings" class="navButton">{{ $t('pages.settings') }}</router-link><connected></connected>
+        <router-link to="/groups" class="navButton">{{ $t('pages.groups') }}</router-link>
+        <router-link to="/connections" class="navButton">{{ $t('pages.connections') }}</router-link><connected ref="connected"></connected>
+        <router-link to="/notifications" :title="$t('pages.notifications')" class="navButton">&#128276;</router-link>
+        <router-link to="/settings" :title="$t('pages.settings')" class="navButton">&#9881;</router-link>
       </div>
     </div>
   </body>
