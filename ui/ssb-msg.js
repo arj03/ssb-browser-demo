@@ -171,20 +171,7 @@ Vue.component('ssb-msg', {
     else
       self.name = SSB.getProfileName(this.msg.value.author)
 
-    // Render the body, which may need to wait until we're connected to a peer.
-    const blobRegEx = /!\[.*\]\(&.*\)/g
-    if (typeof self.msg.value.content.text === 'string' && self.msg.value.content.text.match(blobRegEx)) {
-      // It looks like it contains a blob.  There may be better ways to detect this, but this is a fast one.
-      // We'll display a sanitized version of it until it loads.
-      if(!SSB.isConnectedWithData())
-        self.body = md.markdown(self.msg.value.content.text.replaceAll(blobRegEx, 'Loading...'))
-
-      SSB.connectedWithData(() => {
-        self.body = md.markdown(self.msg.value.content.text)
-      })
-    } else {
-      self.body = md.markdown(this.msg.value.content.text)
-    }
+    self.body = md.markdown(this.msg.value.content.text)
 
     SSB.db.query(
       and(votesFor(this.msg.key)),
