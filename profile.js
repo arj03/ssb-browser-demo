@@ -15,5 +15,6 @@ SSB.searchProfiles = function(search, results = 10) {
     const pValue = profilesDict[p]
     profiles.push({ id: p, name: pValue.name, imageURL: pValue.imageURL })
   }
-  return profiles.filter(x => x.name && x.name.toLowerCase().startsWith(search)).slice(0, results)
+  const lowerSearch = search.toLowerCase()
+  return profiles.filter(x => x.name && x.name.toLowerCase().startsWith(lowerSearch)).slice(0, results)
 }
