@@ -39,7 +39,7 @@
         <router-link to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
         <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
         <div id="searchBox">
-          <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget">
+          <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur">
           <div id="suggestionPositioning" v-if="suggestions.length > 0">
             <div class="suggestion-box tui-popup-wrapper te-heading-add">
               <div class="tui-popup-body">
@@ -52,6 +52,7 @@
             </div>
           </div>
         </div>
+        <div id="navClear"></div>
       </p>
 
       <router-view></router-view>

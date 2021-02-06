@@ -103,6 +103,14 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       },
 
       methods: {
+        targetFocus: function() {
+          document.getElementById("searchBox").className = "expanded"
+        },
+
+        targetBlur: function() {
+          document.getElementById("searchBox").className = ""
+        },
+
         suggestTarget: function() {
           if (this.goToTargetText.startsWith('@')) {
             const profiles = SSB.searchProfiles(this.goToTargetText.substring(1), 5)
