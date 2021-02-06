@@ -29,6 +29,8 @@ a {
 
 #navigation {
   font-weight: 600;
+  float: left;
+  margin: 1em 0;
 }
 
 #navigation > a {
@@ -44,22 +46,44 @@ a {
 #searchBox {
   display: inline-block;
   float: right;
-  width: 170px;
+  width: 150px;
+  margin: 1em 0;
 }
 
 #goTo {
-  width: 170px;
+  float: right;
+  width: 150px;
   padding: 5px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: width 0.5s, box-shadow 0.5s;
+}
+
+#goTo::placeholder {
+  text-align: right;
+}
+
+#searchBox.expanded #goTo {
+  width: 200px;
+  box-shadow: 0 3px 2em rgba(0, 0, 0, 1);
 }
 
 #suggestionPositioning {
   position: relative;
+  clear: right;
 }
 
 #searchBox .suggestion-box {
-  width: 170px;
+  width: 200px;
   position: absolute;
   right: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+#searchBox.expanded .suggestion-box {
+  opacity: 1;
+  visibility: visible;
 }
 
 #searchBox .suggestion-box img {
@@ -68,6 +92,10 @@ a {
   margin-right: 2px;
   margin-left: -8px;
   vertical-align: middle;
+}
+
+#navClear {
+  clear: both;
 }
 
 .message > span img {
