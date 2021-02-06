@@ -22,6 +22,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
   const componentsState = require('./components')()
   const VueI18n = require('vue-i18n').default
   const i18nMessages = require('../messages.json')
+  const helpers = require('./helpers')
 
   // Load local preferences.
   localPrefs.updateStateFromSettings();
@@ -96,11 +97,28 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       data: function() {
         return {
           appTitle: localPrefs.getAppTitle(),
+          suggestions: [],
           goToTargetText: ""
         }
       },
 
       methods: {
+        suggestTarget: function() {
+          if (this.goToTargetText.startsWith('@')) {
+            const profiles = SSB.searchProfiles(this.goToTargetText.substring(1), 5)
+            // For consistency with the Markdown editor.
+            const newSuggestions = profiles.map((x) => { return { type: "profile", id: x.id, text: "@" + x.name, icon: x.imageURL || helpers.getMissingProfileImage() }})
+            this.suggestions = newSuggestions
+          } else {
+            this.suggestions = []
+          }
+        },
+
+        useSuggestion: function(suggestion) {
+          this.goToTargetText = suggestion.text
+          this.goToTarget()
+        },
+
         goToTarget: function() {
           if (this.goToTargetText != '' && this.goToTargetText.startsWith('%')) {
             router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
@@ -110,7 +128,6 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             const profiles = SSB.db.getIndex("profiles")
             const profile = profiles.getProfile(this.goToTargetText)
             if (!profile || Object.keys(profile).length == 0) {
-              // We could do a searchProfiles, but that's async, and we want synchronous here.
               const profilesDict = profiles.getProfiles()
               const searchText = this.goToTargetText.substring(1)
               var exactMatch = null
@@ -133,6 +150,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
 
             router.push({ name: 'profile', params: { feedId: this.goToTargetText } })
             this.goToTargetText = ""
+            this.suggestions = []
           }
         }
       }
