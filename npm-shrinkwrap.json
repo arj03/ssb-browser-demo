@@ -5142,9 +5142,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "8.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.0.0.tgz",
-      "integrity": "sha512-+2OWljs5Zb6JcKticlHfykmVcoyvvMuUTCzG29VV5fhwh5vGE8quhs8aNhyAetCPgxBAIsrM3w3WvJNBUaeGWg==",
+      "version": "8.0.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.0.1.tgz",
+      "integrity": "sha512-Xkk+l5Yr0N5kDQAEAIF5gbCBLVkjoomRJnDCud1jPd+s83NLsjmWlwSnnPv9hXys45ZCRTxQK6K4elPTuZimdQ==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
