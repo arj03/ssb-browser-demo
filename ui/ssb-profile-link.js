@@ -36,10 +36,10 @@ Vue.component('ssb-profile-link', {
 
   created: function () {
     const self = this
-    
+
     if (self.feedId == SSB.net.id)
       self.name = "You"
-    
+
     // Set a default image to be overridden if there is an actual avatar to show.
     self.imgURL = helpers.getMissingProfileImage()
 
@@ -54,7 +54,7 @@ Vue.component('ssb-profile-link', {
       // Try one more time after the profile index has loaded.
       setTimeout(() => {
         const profileAgain = SSB.getProfile(self.feedId)
-	if (profileAgain)
+        if (profileAgain)
           self.renderProfile(profileAgain)
       }, 3000)
     }

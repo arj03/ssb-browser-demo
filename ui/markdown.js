@@ -9,15 +9,15 @@ const mdOpts = {
       // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
       function replaceLink(err, newLink) {
         if (err) {
-	  // We probably can't display this because we're not connected to a peer we can download it from.
-	  if (!SSB.isConnectedWithData()) {
-	    // Try again once we're connected.
+          // We probably can't display this because we're not connected to a peer we can download it from.
+          if (!SSB.isConnectedWithData()) {
+            // Try again once we're connected.
             SSB.connectedWithData(() => {
               doReplacement(imageURL, link)
-	    })
-	  }
-	  return
-	}
+            })
+          }
+          return
+        }
 
         if (imageURL != newLink)
         {
@@ -42,7 +42,7 @@ const mdOpts = {
       var imageURL = SSB.net.blobs.remoteURL(link.link)
       if (!imageURL || imageURL == '') {
         // We're not connected to a peer - generate a unique ID so at least we have something to replace.
-	imageURL = '/blobs/get/' + link.link
+        imageURL = '/blobs/get/' + link.link
       }
 
       doReplacement(imageURL, link)
