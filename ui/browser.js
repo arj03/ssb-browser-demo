@@ -106,6 +106,31 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
             this.goToTargetText = ""
           } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('@')) {
+            // If it's not a valid profile ID, try doing a text search.
+            const profiles = SSB.db.getIndex("profiles")
+            const profile = profiles.getProfile(this.goToTargetText)
+            if (!profile || Object.keys(profile).length == 0) {
+              // We could do a searchProfiles, but that's async, and we want synchronous here.
+              const profilesDict = profiles.getProfiles()
+              const searchText = this.goToTargetText.substring(1)
+              var exactMatch = null
+              var caselessMatch = null
+              var similar = null
+              for (p in profilesDict) {
+                if (profilesDict[p].name == searchText) {
+                  exactMatch = p
+                  break
+                } else if (!caselessMatch && profilesDict[p].name.toLowerCase() == searchText.toLowerCase()) {
+                  caselessMatch = p
+                } else if (!similar && profilesDict[p].name.toLowerCase().startsWith(searchText.toLowerCase())) {
+                  similar = p
+                }
+              }
+              this.goToTargetText = (exactMatch || caselessMatch || similar || this.goToTargetText)
+              if (!exactMatch && !caselessMatch && !similar)
+                alert(this.$root.$t('common.unableToFindProfile'))
+            }
+
             router.push({ name: 'profile', params: { feedId: this.goToTargetText } })
             this.goToTargetText = ""
           }
