@@ -5,9 +5,11 @@ module.exports = function () {
   require('./onboarding-dialog')
   require('./connected')
   const { Editor } = require('@toast-ui/vue-editor')
+  const { VueSimpleContextMenu } = require("vue-simple-context-menu")
   require('./markdown-editor')
 
   Vue.component('v-select', VueSelect.VueSelect)
+  Vue.component('vue-simple-context-menu', VueSimpleContextMenu)
   Vue.component('tui-editor', Editor)
 
   const state = {

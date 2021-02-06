@@ -43,7 +43,9 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     const Profile = require('./profile')()
     const Notifications = require('./notifications')()
     const Channel = require('./channel')()
+    const Group = require('./group')()
     const Channels = require('./channels')()
+    const Groups = require('./groups')()
     const Thread = require('./thread')()
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
@@ -56,7 +58,9 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     const routes = [
       { name: 'public', path: '/public', component: Public },
       { name: 'channels', path: '/channels', component: Channels },
+      { name: 'groups', path: '/groups', component: Groups },
       { name: 'channel', path: '/channel/:channel', component: Channel, props: true },
+      { name: 'group', path: '/group/:group', component: Group, props: true },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { name: 'notifications', path: '/notifications', component: Notifications },

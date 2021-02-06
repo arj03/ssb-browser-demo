@@ -11,7 +11,7 @@ module.exports = function (componentsState) {
 
     let feedFilter = null
     if (onlyDirectFollow) {
-      const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
+      const graph = SSB.getGraphSync()
       if (graph.following.length > 0)
         feedFilter = or(...graph.following.map(x => author(x)))
     }
@@ -44,7 +44,9 @@ module.exports = function (componentsState) {
       <h2>{{ $t('common.lastXMessages', { count: pageSize }) }}
       <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
       </h2>
-      <fieldset><legend>{{ $t('public.filters') }}</legend>
+      <button v-if="!showFilters" class="clickButton" v-on:click="clickShowFilters">{{ $t('public.showFilters') }}</button>
+      <button v-if="showFilters" class="clickButton" v-on:click="clickHideFilters">{{ $t('public.hideFilters') }}</button>
+      <fieldset v-if="showFilters"><legend>{{ $t('public.filters') }}</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>{{ $t('public.filterOnlyDirectFollow') }}</label><br />
       <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>{{ $t('public.filterOnlyThreads') }}</label><br />
       <div class='filter-line'>
@@ -76,6 +78,7 @@ module.exports = function (componentsState) {
         postText: "",
         postChannel: "",
         channels: [],
+        showFilters: false,
         onlyDirectFollow: false,
         onlyThreads: false,
         onlyChannels: false,
@@ -95,6 +98,14 @@ module.exports = function (componentsState) {
     },
 
     methods: {
+      clickShowFilters: function() {
+        this.showFilters = true
+      },
+
+      clickHideFilters: function() {
+        this.showFilters = false
+      },
+
       loadMore: function() {
         SSB.db.query(
           getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList, this.hideChannels, this.hideChannelsList),
@@ -116,9 +127,10 @@ module.exports = function (componentsState) {
         window.firstTimeLoading = false
       },
 
-      renderPublic: function (cb) {
+      renderPublic: function () {
         componentsState.newPublicMessages = false
 
+        this.isRefreshing = true
         document.body.classList.add('refreshing')
 
         console.time("latest messages")
@@ -129,21 +141,18 @@ module.exports = function (componentsState) {
           paginate(this.pageSize),
           descending(),
           toCallback((err, answer) => {
+            this.isRefreshing = false
             document.body.classList.remove('refreshing')
             console.timeEnd("latest messages")
 
             if (err) {
               this.messages = []
               alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
-              if (cb)
-                cb(err)
               throw err
             } else {
               this.messages = this.messages.concat(answer.results)
               this.displayPageEnd = this.offset + this.pageSize
               this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
-              if (cb)
-                cb(null, true)
             }
           })
         )
@@ -283,17 +292,13 @@ module.exports = function (componentsState) {
 
       refresh: function() {
         // Don't allow concurrent refreshing.
-        if(this.isRefreshing)
+        if (this.isRefreshing)
           return
-
-        this.isRefreshing = true
 
         console.log("Refreshing")
         this.messages = []
         this.offset = 0
-        this.renderPublic((err, success) => {
-          this.isRefreshing = false
-        })
+        this.renderPublic()
       }
     },
 

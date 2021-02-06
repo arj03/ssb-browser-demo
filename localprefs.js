@@ -55,6 +55,10 @@ exports.getOfflineMode = function() { return (getPref('offlineMode', (typeof def
 
 exports.setOfflineMode = function(isOn) { setPref('offlineMode', (isOn ? 'true' : 'false')) }
 
+exports.getUserGroups = function() { return JSON.parse(getPref('userGroups', JSON.stringify(defaultPrefs.userGroups || []))) }
+
+exports.setUserGroups = function(userGroupArray) { setPref('userGroups', JSON.stringify(userGroupArray)) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   SSB.hops = this.getHops()

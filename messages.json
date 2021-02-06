@@ -4,6 +4,7 @@
     "pages": {
       "channel": "Channel",
       "channels": "Channels",
+      "groups": "Groups",
       "connections": "Connections",
       "notifications": "Notifications",
       "private": "Private",
@@ -28,6 +29,8 @@
       "postNewThread": "Post new thread",
       "channelOptional": "Channel (optional)",
       "channelsOptional": "Channels (optional)",
+      "showFilters": "Show filters",
+      "hideFilters": "Hide filters",
       "filters": "Filters",
       "filterOnlyDirectFollow": "Only show posts from people you follow",
       "filterOnlyThreads": "Hide replies (only show the first message of a thread)",
@@ -66,6 +69,19 @@
       "dbStatus": "DB status",
       "ebtStatus": "EBT status"
     },
+    "group": {
+      "title": "Group \"{name}\"",
+      "blankFieldError": "Please provide a message to publish.",
+      "postNewMessage": "Post general public message"
+    },
+    "groups": {
+      "title": "Groups",
+      "yourGroups": "Your groups",
+      "newGroupName": "New group name",
+      "addGroup": "Add group",
+      "deleteGroup": "Delete group",
+      "confirmDeleteGroup": "Are you sure you want to delete the group \"{group}\"?"
+    },
     "messagePreview": {
       "postPreview": "Post preview",
       "postMessage": "Post message"
@@ -102,6 +118,10 @@
       "saveProfile": "Save profile",
       "sendMessage": "Send message",
       "removeFeed": "Remove feed",
+      "groupDropdownPlaceholder": "Add to group",
+      "addToGroup": "Add to group",
+      "removeFromGroup": "Remove from group",
+      "chooseGroupFirst": "Please choose a group first",
       "following": "Following",
       "blocking": "Blocking",
       "lastXMessagesFor": "Last {count} messages for",
@@ -248,6 +268,7 @@
     "pages": {
       "channel": "チャンネル",
       "channels": "チャンネル",
+      "groups": "グループ",
       "connections": "接続",
       "notifications": "通知",
       "private": "プライベートメッセージ",
@@ -272,6 +293,8 @@
       "postNewThread": "掲示します",
       "channelOptional": "チャンネル（オプション）",
       "channelsOptional": "チャンネル（オプション）",
+      "showFilters": "フィルターを表示",
+      "hideFilters": "フィルターを非表示にする",
       "filters": "フィルター",
       "filterOnlyDirectFollow": "フォローしている人からの投稿のみを表示する",
       "filterOnlyThreads": "返信を非表示にします（スレッドの最初のメッセージのみを表示します）",
@@ -310,6 +333,19 @@
       "dbStatus": "データベースのステータス",
       "ebtStatus": "EBTのステータス"
     },
+    "group": {
+      "title": "グループ「{name}」",
+      "blankFieldError": "公開するメッセージを入力してください。",
+      "postNewMessage": "一般公開メッセージを投稿する"
+    },
+    "groups": {
+      "title": "グループ",
+      "yourGroups": "あなたのグループ",
+      "newGroupName": "新しいグループ名",
+      "addGroup": "グループを追加",
+      "deleteGroup": "グループを削除",
+      "confirmDeleteGroup": "「{group}」という名前のグループを削除してもよろしいですか？"
+    },
     "messagePreview": {
       "postPreview": "プレビュー",
       "postMessage": "掲示します"
@@ -346,6 +382,10 @@
       "saveProfile": "プロファイルを保存",
       "sendMessage": "メッセージを送る",
       "removeFeed": "フィードを削除する",
+      "groupDropdownPlaceholder": "グループに追加",
+      "addToGroup": "グループに追加",
+      "removeFromGroup": "グループから削除",
+      "chooseGroupFirst": "最初にグループを選択してください",
       "following": "フォローする",
       "blocking": "ブロックする",
       "lastXMessagesFor": "最後の{count}つのメッセージ：",

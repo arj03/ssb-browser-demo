@@ -248,6 +248,13 @@ body, html {
   text-decoration: none;
 }
 
+.reactions .reactions-existing > span,
+.reactions .reactions-mine > span,
+.reactions .reactions-new > span
+{
+  padding: 3px;
+}
+
 #channels ol
 {
   list-style: none;
@@ -278,4 +285,46 @@ body, html {
 .get-started-button:hover
 {
   background-color: #6c6;
+}
+
+a.blockedAvatar
+{
+  display: inline-block;
+  position: relative;
+}
+
+a.blockedAvatar img
+{
+  filter: blur(4px);
+  -moz-filter: blur(4px);
+}
+
+a.blockedAvatar span.blockedSymbol
+{
+  display: block;
+  font-size: 35px;
+  line-height: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  text-align: center;
+}
+
+/* Emoji menu */
+.message
+{
+  position: relative;
+}
+
+.message .vue-simple-context-menu
+{
+  max-width: 40%;
+  font-family: inherit;
+}
+
+.message .vue-simple-context-menu li.vue-simple-context-menu__item
+{
+  display: inline-block;
+  padding: 5px;
 }
