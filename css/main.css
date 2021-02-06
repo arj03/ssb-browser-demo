@@ -41,10 +41,33 @@ a {
   font-family: system-ui, sans-serif
 }
 
+#searchBox {
+  display: inline-block;
+  float: right;
+  width: 170px;
+}
+
 #goTo {
   width: 170px;
   padding: 5px;
-  float: right;
+}
+
+#suggestionPositioning {
+  position: relative;
+}
+
+#searchBox .suggestion-box {
+  width: 170px;
+  position: absolute;
+  right: 0;
+}
+
+#searchBox .suggestion-box img {
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+  margin-left: -8px;
+  vertical-align: middle;
 }
 
 .message > span img {
