@@ -38,22 +38,22 @@
         <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected ref="connected"></connected> |
         <router-link to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
         <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
-        <div id="searchBox">
-          <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur">
-          <div id="suggestionPositioning" v-if="suggestions.length > 0">
-            <div class="suggestion-box tui-popup-wrapper te-heading-add">
-              <div class="tui-popup-body">
-                <ul>
-                  <li v-for="suggestion in suggestions" v-on:click="useSuggestion(suggestion)">
-                    <span v-if="suggestion.icon"><img :src="suggestion.icon" />&nbsp;</span>{{ suggestion.text }}
-                  </li>
-                </ul>
-              </div>
+      </p>
+      <div id="searchBox">
+        <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur" />
+        <div id="suggestionPositioning" v-if="suggestions.length > 0">
+          <div class="suggestion-box tui-popup-wrapper te-heading-add">
+            <div class="tui-popup-body">
+              <ul>
+                <li v-for="suggestion in suggestions" v-on:click="useSuggestion(suggestion)">
+                  <span v-if="suggestion.icon"><img :src="suggestion.icon" />&nbsp;</span>{{ suggestion.text }}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-        <div id="navClear"></div>
-      </p>
+      </div>
+      <div id="navClear"></div>
 
       <router-view></router-view>
 
