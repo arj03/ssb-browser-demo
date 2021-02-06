@@ -138,9 +138,9 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
                 if (profilesDict[p].name == searchText) {
                   exactMatch = p
                   break
-                } else if (!caselessMatch && profilesDict[p].name.toLowerCase() == searchText.toLowerCase()) {
+                } else if (!caselessMatch && profilesDict[p].name && profilesDict[p].name.toLowerCase() == searchText.toLowerCase()) {
                   caselessMatch = p
-                } else if (!similar && profilesDict[p].name.toLowerCase().startsWith(searchText.toLowerCase())) {
+                } else if (!similar && profilesDict[p].name && profilesDict[p].name.toLowerCase().startsWith(searchText.toLowerCase())) {
                   similar = p
                 }
               }
