@@ -265,6 +265,18 @@ body, html {
   vertical-align: middle;
 }
 
+.navButton .avatar {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: middle;
+}
+
+#footer .connected-indicator {
+  margin-left: -1em;
+  position: relative;
+  top: -3px;
+}
+
 @media (min-resolution: 2dppx) and (max-width: 40em)
 {
   #navigation {
@@ -274,7 +286,6 @@ body, html {
   #footer {
     display: flex;
   }
-}
 
 .reactions
 {
