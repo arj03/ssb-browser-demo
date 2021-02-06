@@ -78,39 +78,17 @@ Vue.component('markdown-editor', {
 
     suggestChannels: function(searchString, cb) {
       const searchForChannel = searchString.substring(1, searchString.length)
-      SSB.db.query(
-        and(not(channel('')), type('post'), isPublic()),
-        toCallback((err, answer) => {
-          if (!err) {
-            var newChannels = []
-
-            var posts = (answer.results ? answer.results : answer);
-            var sortFunc = Intl.Collator().compare
-
-            for (r in posts) {
-              var channel = posts[r].value.content.channel
-              if (!channel) continue
-
-              if(channel && channel.charAt(0) == '#')
-                channel = channel.substring(1, channel.length)
-
-              if (searchForChannel == '' || sortFunc(channel.substring(0, searchForChannel.length), searchForChannel) == 0)
-                if (newChannels.indexOf(channel) < 0)
-                  newChannels.push(channel)
-            }
-
-            // Sort.
-            var suggestions = [];
-            newChannels.sort(sortFunc).forEach((item, index, array) => {
-              suggestions.push({ text: "#" + item, value: item })
-            })
-
-            cb(null, suggestions)
-          } else {
-            cb(err)
-          }
-        })
-      )
+      const allChannels = SSB.db.getIndex("channels").getChannels()
+      const sortFunc = (new Intl.Collator()).compare
+      const filteredChannels = allChannels.map((x) => { return (x.charAt(0) == "#" ? x.substring(1) : x) })
+        .filter((x) => { return x.toLowerCase().startsWith(searchForChannel.toLowerCase()) })
+        .filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+        .sort(sortFunc)
+        .slice(0, 5)
+      var suggestions = []
+      for (c in filteredChannels)
+        suggestions.push({ text: "#" + filteredChannels[c], value: filteredChannels[c] })
+      cb(null, suggestions)
     },
 
     clickChannel: function(channel) {
