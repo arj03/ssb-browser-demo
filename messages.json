@@ -99,7 +99,7 @@
       "profileDescriptionPlaceholder": "(A short bio about you - Markdown formatting is supported)",
       "suggestedPeers": "Here are some preset servers you can connect to:",
       "suggestedFollows": "And here are some people you might like to follow:",
-      "manualSetup": "Cancel - Manual setup",
+      "manualSetup": "Manual setup",
       "getStarted": "Get started!"
     },
     "private": {
