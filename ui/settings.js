@@ -34,8 +34,7 @@ module.exports = function () {
          <p>
          <label for="replicationHops">{{ $t('settings.replicateHops') }}</label><br />
          <select id="replicationHops" v-model="hops">
-         <option value="0">0 {{ $t('settings.directFollows') }}</option>
-         <option value="1">1</option>
+         <option value="1">1 {{ $t('settings.directFollows') }}</option>
          <option value="2">2</option>
          <option value="3">3</option>
          <option value="4">4</option>
@@ -67,7 +66,7 @@ module.exports = function () {
         locale: 'en',
         localeOptions: [],
         autorefresh: false,
-        hops: 1
+        hops: 2
       }
     },
 

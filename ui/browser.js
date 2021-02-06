@@ -1,6 +1,9 @@
 const localPrefs = require('../localprefs')
 const optionsForCore = {
   caps: { shs: Buffer.from(localPrefs.getCaps(), 'base64') },
+  friends: {
+    hops: localPrefs.getHops()
+  },
   hops: localPrefs.getHops(),
   core: {
     startOffline: localPrefs.getOfflineMode()
