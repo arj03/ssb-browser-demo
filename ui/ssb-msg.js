@@ -73,7 +73,7 @@ Vue.component('ssb-msg', {
       myReactions: [],
       body: '',
       parentThreadTitle: this.$root.$t('ssb-msg.threadTitlePlaceholder'),
-      emojiOptions: ['👍', '👎', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞', '🚀', '🍕'],
+      emojiOptions: ['👍', '🖖', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞', '🚀', '🍕'],
       emojiOptionsFavorite: [],
       emojiOptionsMore: []
     }
