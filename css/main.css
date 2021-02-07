@@ -64,7 +64,7 @@ a {
 
 #searchBox.expanded #goTo {
   width: 200px;
-  box-shadow: 0 3px 2em rgba(0, 0, 0, 1);
+  box-shadow: 0 1px 1em rgba(0, 0, 0, 0.5);
 }
 
 #suggestionPositioning {
@@ -86,9 +86,13 @@ a {
   visibility: visible;
 }
 
+#searchBox .tui-popup-body {
+  font-size: medium;
+}
+
 #searchBox .suggestion-box img {
-  width: 16px;
-  height: 16px;
+  width: 1.5em;
+  height: 1.5em;
   margin-right: 2px;
   margin-left: -8px;
   vertical-align: middle;
@@ -261,7 +265,41 @@ body, html {
   vertical-align: middle;
 }
 
-@media (min-resolution: 2dppx) and (max-width: 40em)
+.navButton .avatar {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: middle;
+}
+
+#footer .newPublic,
+#footer .newPrivate,
+#footer .connected-indicator {
+  margin-left: -1em;
+  position: relative;
+  top: -3px;
+}
+
+@media (max-width: 40em)
+{
+  body {
+    padding: 0.5em;
+  }
+
+  #app > h1 {
+    margin-bottom: 0;
+  }
+
+  #searchBox {
+    margin: 0.5em 0 0 0;
+  }
+
+  .message {
+    padding: 1rem 1rem 0.25rem 1rem;
+  }
+}
+
+/* Only switch to footer-based navigation when we're clearly on a mobile device and the screen's wide enough to support it. */
+@media (min-resolution: 2dppx) and (max-width: 40em) and (min-width: 22em)
 {
   #navigation {
     display: none;
@@ -269,6 +307,8 @@ body, html {
 
   #footer {
     display: flex;
+    width: 100%;
+    margin-left: -0.5em;
   }
 }
 

@@ -5142,8 +5142,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git://github.com/KyleMaas/ssb-browser-core.git#6772b928d132e7ac4769ba56b3e17603454d9379",
-      "from": "git://github.com/KyleMaas/ssb-browser-core.git#channel-index",
+      "version": "8.1.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.1.0.tgz",
+      "integrity": "sha512-XoWhkTIz3D7tymTsm4+4ubatPeTD7GxRJcND+7XjNBIVDU/LvbilHB13Ai9H5vgoZAaAvrt+lCLj+vrra1fGhQ==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",

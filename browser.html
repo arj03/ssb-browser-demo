@@ -38,31 +38,35 @@
         <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected ref="connected"></connected> |
         <router-link to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
         <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
-        <div id="searchBox">
-          <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur">
-          <div id="suggestionPositioning" v-if="suggestions.length > 0">
-            <div class="suggestion-box tui-popup-wrapper te-heading-add">
-              <div class="tui-popup-body">
-                <ul>
-                  <li v-for="suggestion in suggestions" v-on:click="useSuggestion(suggestion)">
-                    <span v-if="suggestion.icon"><img :src="suggestion.icon" />&nbsp;</span>{{ suggestion.text }}
-                  </li>
-                </ul>
-              </div>
+      </p>
+      <div id="searchBox">
+        <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur" />
+        <div id="suggestionPositioning" v-if="suggestions.length > 0">
+          <div class="suggestion-box tui-popup-wrapper te-heading-add">
+            <div class="tui-popup-body">
+              <ul>
+                <li v-for="suggestion in suggestions" v-on:click="useSuggestion(suggestion)">
+                  <span v-if="suggestion.icon"><img :src="suggestion.icon" />&nbsp;</span>{{ suggestion.text }}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-        <div id="navClear"></div>
-      </p>
+      </div>
+      <div id="navClear"></div>
 
       <router-view></router-view>
 
       <div id="footer">
         <router-link to="/public" class="navButton">{{ $t('pages.public') }}</router-link><new-public-messages></new-public-messages>
         <router-link to="/private" class="navButton">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages>
-        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}" class="navButton">{{ $t('pages.profile') }}</router-link>
-        <router-link to="/notifications" class="navButton">{{ $t('pages.notifications') }}</router-link>
-        <router-link to="/settings" class="navButton">{{ $t('pages.settings') }}</router-link><connected></connected>
+        <router-link to="/channels" class="navButton">{{ $t('pages.channels') }}</router-link>
+        <router-link to="/groups" class="navButton">{{ $t('pages.groups') }}</router-link>
+        <ssb-profile-link ref="lowerNavProfileLink" class="navButton" :feed-id="SSB.net.id"></ssb-profile-link>
+        <router-link to="/connections" class="navButton" :title="$t('pages.connections')">&#127760;</router-link>
+        <connected ref="connected2"></connected>
+        <router-link to="/notifications" class="navButton" :title="$t('pages.notifications')">&#128276;</router-link>
+        <router-link to="/settings" class="navButton" :title="$t('pages.settings')">&#9881;</router-link>
       </div>
     </div>
   </body>

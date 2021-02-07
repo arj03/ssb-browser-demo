@@ -16,6 +16,7 @@
     "common": {
       "refreshMessages": "Refresh messages",
       "lastXMessages": "Last {count} messages",
+      "searchingForMessages": "(Searching for messages...)",
       "noMessages": "(No messages to display)",
       "showingMessagesFrom": "Showing messages from",
       "loadXMore": "Load {count} more",
@@ -80,7 +81,9 @@
       "yourGroups": "Your groups",
       "newGroupName": "New group name",
       "addGroup": "Add group",
+      "renameGroup": "Rename group",
       "deleteGroup": "Delete group",
+      "enterGroupName": "What do you want to rename \"{group}\" to?",
       "confirmDeleteGroup": "Are you sure you want to delete the group \"{group}\"?"
     },
     "messagePreview": {
@@ -99,7 +102,7 @@
       "profileDescriptionPlaceholder": "(A short bio about you - Markdown formatting is supported)",
       "suggestedPeers": "Here are some preset servers you can connect to:",
       "suggestedFollows": "And here are some people you might like to follow:",
-      "manualSetup": "Cancel - Manual setup",
+      "manualSetup": "Manual setup",
       "getStarted": "Get started!"
     },
     "private": {
@@ -281,6 +284,7 @@
     "common": {
       "refreshMessages": "リフレッシュ",
       "lastXMessages": "最後の{count}メッセージ",
+      "searchingForMessages": "（メッセージの検索）",
       "noMessages": "(表示するメッセージはありません)",
       "showingMessagesFrom": "メッセージ",
       "loadXMore": "さらに{count}をダウンロード",
@@ -345,7 +349,9 @@
       "yourGroups": "あなたのグループ",
       "newGroupName": "新しいグループ名",
       "addGroup": "グループを追加",
+      "renameGroup": "グループの名前を変更する",
       "deleteGroup": "グループを削除",
+      "enterGroupName": "「{group}」の名前を何に変更しますか？",
       "confirmDeleteGroup": "「{group}」という名前のグループを削除してもよろしいですか？"
     },
     "messagePreview": {

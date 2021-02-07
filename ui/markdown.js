@@ -4,14 +4,20 @@ const ref = require('ssb-ref')
 
 const mdOpts = {
   toUrl: (id) => {
-    var link = ref.parseLink(id)
-    if (link && ref.isBlob(link.link)) {
-      var imageURL = SSB.net.blobs.remoteURL(link.link)
-
+    function doReplacement(imageURL, link) {
       // markdown doesn't support async, so we have to modify the DOM afterwards, see:
       // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
       function replaceLink(err, newLink) {
-        if (err) return
+        if (err) {
+          // We probably can't display this because we're not connected to a peer we can download it from.
+          if (!SSB.isConnectedWithData()) {
+            // Try again once we're connected.
+            SSB.connectedWithData(() => {
+              doReplacement(imageURL, link)
+            })
+          }
+          return
+        }
 
         if (imageURL != newLink)
         {
@@ -28,6 +34,18 @@ const mdOpts = {
       else {
         SSB.net.blobs.localGet(link.link, replaceLink)
       }
+    }
+
+    var self = this
+    var link = ref.parseLink(id)
+    if (link && ref.isBlob(link.link)) {
+      var imageURL = SSB.net.blobs.remoteURL(link.link)
+      if (!imageURL || imageURL == '') {
+        // We're not connected to a peer - generate a unique ID so at least we have something to replace.
+        imageURL = '/blobs/get/' + link.link
+      }
+
+      doReplacement(imageURL, link)
 
       return imageURL
     } else if (ref.isFeed(id)) {

@@ -17,21 +17,9 @@ Vue.component('ssb-profile-link', {
     }
   },
 
-  created: function () {
-    const self = this
-    
-    if (self.feedId == SSB.net.id)
-      self.name = "You"
-    
-    // Set a default image to be overridden if there is an actual avatar to show.
-    self.imgURL = helpers.getMissingProfileImage()
-
-    SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
-      if (!err) self.isBlocked = result
-    })
-
-    const profile = SSB.getProfile(self.feedId)
-    if (profile) {
+  methods: {
+    renderProfile: function(profile) {
+      const self = this
       if (self.feedId != SSB.net.id)
         self.name = profile.name
 
@@ -43,6 +31,32 @@ Vue.component('ssb-profile-link', {
           profile.imageURL = self.imgURL = url
         })
       }
+    }
+  },
+
+  created: function () {
+    const self = this
+
+    if (self.feedId == SSB.net.id)
+      self.name = "You"
+
+    // Set a default image to be overridden if there is an actual avatar to show.
+    self.imgURL = helpers.getMissingProfileImage()
+
+    SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+      if (!err) self.isBlocked = result
+    })
+
+    const profile = SSB.getProfile(self.feedId)
+    if (profile.name || profile.imageURL || profile.image) {
+      self.renderProfile(profile)
+    } else {
+      // Try one more time after the profile index has loaded.
+      setTimeout(() => {
+        const profileAgain = SSB.getProfile(self.feedId)
+        if (profileAgain)
+          self.renderProfile(profileAgain)
+      }, 3000)
     }
   }
 })

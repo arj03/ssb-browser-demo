@@ -37,7 +37,7 @@
 .theme-pirateship h1,
 .theme-pirateship h2
 {
-  font-family: "SilverbladeDecorative", serif;
+  font-family: "SilverbladeDecorative", serif, -apple-system,BlinkMacSystemFont,Segoe UI,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,NotoColorEmoji;
 }
 
 .theme-pirateship h1
@@ -100,16 +100,43 @@
   color: #999;
 }
 
+.theme-pirateship #footer .newPublic > span,
+.theme-pirateship #footer .newPrivate > span,
 .theme-pirateship .newPublic > span,
 .theme-pirateship .newPrivate > span
 {
   font-size: 0;
 }
 
+.theme-pirateship #footer .newPublic > span:before,
+.theme-pirateship #footer .newPrivate > span:before,
 .theme-pirateship .newPublic > span:before,
 .theme-pirateship .newPrivate > span:before
 {
   content: "☠️";
   font-size: medium;
   padding-left: 0.25em;
+}
+
+.theme-pirateship #footer a
+{
+  color: #000;
+}
+
+@media (min-resolution: 2dppx) and (max-width: 40em)
+{
+  .theme-pirateship h1
+  {
+    font-size: 210%;
+  }
+
+  .theme-pirateship h2
+  {
+    font-size: 150%;
+  }
+
+  .theme-pirateship #footer
+  {
+    margin-left: -0.75em;
+  }
 }

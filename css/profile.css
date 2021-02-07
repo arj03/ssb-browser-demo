@@ -123,3 +123,28 @@
   display: inline-block;
   width: 20em;
 }
+
+@media (max-width: 40em)
+{
+  #profile > span > .avatar {
+    width: 7rem;
+  }
+
+  #profile > span > .avatar > img {
+    width: 7rem;
+    height: 7rem;
+  }
+}
+
+@media (max-width: 22em)
+{
+  #profile > span > .avatar {
+    width: 3rem;
+  }
+
+  #profile > span > .avatar > img {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
