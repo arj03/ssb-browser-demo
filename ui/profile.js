@@ -289,9 +289,10 @@ module.exports = function () {
           if (err) return alert(err)
 
           // Re-render the lower nav menu.
-          if (this.imageBlobId != '')
+          if (this.imageBlobId != '') {
             this.$root.$refs["upperNavProfileLink"].renderProfile({ name: "You", imageURL: this.image })
             this.$root.$refs["lowerNavProfileLink"].renderProfile({ name: "You", imageURL: this.image })
+          }
 
           alert("Saved!")
         })
