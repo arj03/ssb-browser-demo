@@ -288,6 +288,10 @@ module.exports = function () {
         SSB.db.publish(msg, (err) => {
           if (err) return alert(err)
 
+          // Re-render the lower nav menu.
+          if (this.imageBlobId != '')
+            this.$root.$refs["lowerNavProfileLink"].renderProfile({ name: "You", imageURL: this.image })
+
           alert("Saved!")
         })
       },
