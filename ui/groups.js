@@ -10,8 +10,14 @@ module.exports = function (componentsState) {
       <h2>{{ $t('groups.yourGroups') }}</h2>
       <div>
         <input type="text" v-model="groupName" :placeholder="$t('groups.newGroupName')" />&nbsp;<button class="clickButton" v-on:click="addGroup">{{ $t('groups.addGroup') }}</button>
-        <div v-for="group in groups">
-          <h4><router-link :to="{name: 'group', params: { group: group.id }}">{{ group.name }}</router-link> <a href="javascript:void(0)" v-on:click="deleteGroup(group)" :title="$t('groups.deleteGroup')" style="color: #900;">X</a></h4>
+        <div class="group" v-for="group in groups">
+          <hr />
+          <h4><router-link :to="{name: 'group', params: { group: group.id }}">{{ group.name }}</router-link></h4>
+          <div class="groupActions">
+            <button class="clickButton" v-on:click="renameGroup(group)">{{ $t('groups.renameGroup') }}</button>
+            <button class="clickButton" v-on:click="deleteGroup(group)">{{ $t('groups.deleteGroup') }}</button>
+          </div>
+          <div class="clearingDiv"></div>
           <ul class="groupMembers">
             <li v-for="member in group.members">
               <ssb-profile-link v-bind:key="member" v-bind:feedId="member"></ssb-profile-link>
@@ -81,6 +87,22 @@ module.exports = function (componentsState) {
             self.groupName = ''
           }
         })
+      },
+
+      renameGroup: function(group) {
+        var self = this
+        const newName = prompt(this.$root.$t('groups.enterGroupName', { group: group.name }), group.name)
+        if (newName && newName.trim() != '' && newName != group.name) {
+          group.name = newName
+          userGroups.updateGroup(group.id, group, (err, success) => {
+            if (err)
+              alert(err)
+            else {
+              self.groups = []
+              self.loadGroups()
+            }
+          })
+        }
       },
 
       deleteGroup: function(group) {

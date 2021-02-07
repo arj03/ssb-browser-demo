@@ -28,3 +28,18 @@
   clear: both;
 }
 
+#groups .group
+{
+  margin-bottom: 4em;
+}
+
+#groups .group > h4
+{
+  margin-top: 0;
+  float: left;
+}
+
+#groups .group > .groupActions
+{
+  float: right;
+}

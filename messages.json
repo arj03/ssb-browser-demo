@@ -81,7 +81,9 @@
       "yourGroups": "Your groups",
       "newGroupName": "New group name",
       "addGroup": "Add group",
+      "renameGroup": "Rename group",
       "deleteGroup": "Delete group",
+      "enterGroupName": "What do you want to rename \"{group}\" to?",
       "confirmDeleteGroup": "Are you sure you want to delete the group \"{group}\"?"
     },
     "messagePreview": {
@@ -347,7 +349,9 @@
       "yourGroups": "あなたのグループ",
       "newGroupName": "新しいグループ名",
       "addGroup": "グループを追加",
+      "renameGroup": "グループの名前を変更する",
       "deleteGroup": "グループを削除",
+      "enterGroupName": "「{group}」の名前を何に変更しますか？",
       "confirmDeleteGroup": "「{group}」という名前のグループを削除してもよろしいですか？"
     },
     "messagePreview": {
