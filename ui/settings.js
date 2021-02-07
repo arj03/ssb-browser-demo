@@ -40,6 +40,7 @@ module.exports = function () {
          <option value="4">4</option>
          <option value="5">5</option>
          </select>
+         <span v-if="hops > 2"><br /><strong>{{ $t('settings.highHopCountWarning') }}</strong></span>
          </p>
 
          <p>
