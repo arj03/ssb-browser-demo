@@ -5142,7 +5142,7 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git://github.com/KyleMaas/ssb-browser-core.git#86b3b7f22d3c121745f84af43e58f9c69ae44271",
+      "version": "git://github.com/KyleMaas/ssb-browser-core.git#6772b928d132e7ac4769ba56b3e17603454d9379",
       "from": "git://github.com/KyleMaas/ssb-browser-core.git#channel-index",
       "requires": {
         "atomic-file": "^2.1.1",

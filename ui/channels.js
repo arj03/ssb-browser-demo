@@ -45,6 +45,7 @@ module.exports = function (componentsState) {
         this.favoriteChannels = localPrefs.getFavoriteChannels().map(x => x.replace(/^#+/, '')).sort(Intl.Collator().compare)
 
         console.time("channel list")
+
         
         const resultCallback = toCallback((err, answer) => {
           if (!err) {
@@ -99,23 +100,33 @@ module.exports = function (componentsState) {
             paginate(500),
             resultCallback
           )
-        } else if (this.sortMode == "popular") {
-          // Look at all posts.
-          SSB.db.query(
-            and(not(channel('')), type('post'), isPublic()),
-            resultCallback
-          )
         } else {
           // Just pull channels.
-          const allChannels = SSB.db.getIndex("channels").getChannels()
+          const channelIndex = SSB.db.getIndex("channels")
+          const allChannels = channelIndex.getChannels()
           const sortFunc = (new Intl.Collator()).compare
-          const filteredChannels = allChannels.map((x) => { return (x.charAt(0) == "#" ? x.substring(1) : x) })
-            .filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
-            .sort(sortFunc)
           var transformedChannels = {}
-          for (c in filteredChannels)
-            transformedChannels[filteredChannels[c]] = 0
-          this.channels = transformedChannels
+          if (this.sortMode == "popular") {
+            for (c in allChannels)
+              transformedChannels[allChannels[c]] = (channelIndex.getChannelUsage(allChannels[c]) || 0)
+            var newChannels = {}
+            const sortByPopularity = (a, b) => {
+              if(transformedChannels[a] < transformedChannels[b])
+                return 1
+              if(transformedChannels[a] > transformedChannels[b])
+                return -1
+              return 0
+            }
+            Object.keys(transformedChannels).sort(sortByPopularity).forEach((item, index, array) => {
+              newChannels[item] = transformedChannels[item]
+            });
+            this.channels = newChannels
+          } else {
+            const filteredChannels = allChannels.sort(sortFunc)
+            for (c in filteredChannels)
+              transformedChannels[filteredChannels[c]] = 0
+            this.channels = transformedChannels
+          }
           document.body.classList.remove('refreshing')
           console.timeEnd("channel list")
         }

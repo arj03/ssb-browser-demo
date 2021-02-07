@@ -124,9 +124,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             const searchForChannel = this.goToTargetText.substring(1)
             const allChannels = SSB.db.getIndex("channels").getChannels()
             const sortFunc = (new Intl.Collator()).compare
-            const filteredChannels = allChannels.map((x) => { return (x.charAt(0) == "#" ? x.substring(1) : x) })
-              .filter((x) => { return x.toLowerCase().startsWith(searchForChannel.toLowerCase()) })
-              .filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+            const filteredChannels = allChannels.filter((x) => { return x.toLowerCase().startsWith(searchForChannel.toLowerCase()) })
               .sort(sortFunc)
               .slice(0, 5)
             var newSuggestions = []
