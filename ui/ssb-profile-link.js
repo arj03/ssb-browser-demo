@@ -38,7 +38,7 @@ Vue.component('ssb-profile-link', {
     const self = this
 
     if (self.feedId == SSB.net.id)
-      self.name = "You"
+      self.name = this.$root.$t('common.selfPronoun')
 
     // Set a default image to be overridden if there is an actual avatar to show.
     self.imgURL = helpers.getMissingProfileImage()
