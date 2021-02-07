@@ -265,10 +265,30 @@ body, html {
   vertical-align: middle;
 }
 
+#navigation .avatar {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: middle;
+}
+
+#navigation .iconButton {
+  text-decoration: none;
+}
+
 .navButton .avatar {
   width: 1.4em;
   height: 1.4em;
   vertical-align: middle;
+}
+
+#navigation .newPublic,
+#navigation .newPrivate,
+#navigation .connected-indicator {
+  width: 0.5em;
+  display: inline-block;
+  margin-left: -0.5em;
+  position: relative;
+  top: -0.5em;
 }
 
 #footer .newPublic,

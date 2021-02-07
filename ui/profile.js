@@ -309,8 +309,10 @@ module.exports = function () {
           if (err) return alert(err)
 
           // Re-render the lower nav menu.
-          if (this.imageBlobId != '')
+          if (this.imageBlobId != '') {
+            this.$root.$refs["upperNavProfileLink"].renderProfile({ name: this.$root.$t('common.selfPronoun'), imageURL: this.image })
             this.$root.$refs["lowerNavProfileLink"].renderProfile({ name: this.$root.$t('common.selfPronoun'), imageURL: this.image })
+          }
 
           alert("Saved!")
         })
