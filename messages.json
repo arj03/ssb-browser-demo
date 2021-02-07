@@ -16,6 +16,7 @@
     "common": {
       "refreshMessages": "Refresh messages",
       "lastXMessages": "Last {count} messages",
+      "searchingForMessages": "(Searching for messages...)",
       "noMessages": "(No messages to display)",
       "showingMessagesFrom": "Showing messages from",
       "loadXMore": "Load {count} more",
@@ -281,6 +282,7 @@
     "common": {
       "refreshMessages": "リフレッシュ",
       "lastXMessages": "最後の{count}メッセージ",
+      "searchingForMessages": "（メッセージの検索）",
       "noMessages": "(表示するメッセージはありません)",
       "showingMessagesFrom": "メッセージ",
       "loadXMore": "さらに{count}をダウンロード",
