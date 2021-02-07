@@ -2,7 +2,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const localPrefs = require('../localprefs')
   const userGroups = require('../usergroups')
-  const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   return {
     template: `
@@ -24,6 +24,8 @@ module.exports = function (componentsState) {
             </li>
           </ul>
           <div class="clearingDiv"></div>
+          <div class="message" v-if="group.noMessages">{{ $t('common.noMessages') }}</div>
+          <ssb-msg v-for="msg in group.latestMessages" v-bind:key="msg.key" v-bind:msg="msg" v-bind:thread="msg.value.content.root ? msg.value.content.root : msg.key"></ssb-msg>
         </div>
       </div>
     </div>`,
@@ -40,7 +42,43 @@ module.exports = function (componentsState) {
         for (g in this.groups) {
           if (this.groups[g].id == groupId) {
             this.groups[g].members = members
+            if (!this.groups[g].latestMessages && !this.groups[g].noMessages) {
+              this.fetchLatestMessage(groupId)
+            }
             return
+          }
+        }
+      },
+
+      fetchLatestMessage: function(groupId) {
+        var self = this
+        for (g in this.groups) {
+          if (this.groups[g].id == groupId) {
+            try {
+              SSB.db.query(
+                and(or(...this.groups[g].members.map(x => author(x))), isPublic(), type('post')),
+                descending(),
+                paginate(1),
+                toCallback((err, answer) => {
+                  // We have to go back through this again, because it may have been sorted to a different position by the time we get results.
+                  for (g in this.groups) {
+                    if (this.groups[g].id == groupId) {
+                      if (answer && answer.results && answer.results.length > 0) {
+                        // Leaving this open to having multiple messages in case we ever want to.
+                        self.groups[g].latestMessages = answer.results
+
+                        // And since Vue doesn't seem to like to pick up message changes.
+                        self.$forceUpdate()
+                      } else
+                        self.groups[g].noMessages = true
+                    }
+                  }
+                })
+              )
+            } catch(e) {
+              self.groups[g].noMessages = true
+            }
+            break
           }
         }
       },
@@ -51,6 +89,7 @@ module.exports = function (componentsState) {
           for (g in groups) {
             var found = false
             var fetchMembers = true
+            var fetchMessage = true
             for (l in self.groups) {
               if (groups[g].id == self.groups[l].id) {
                 found = true
@@ -59,6 +98,8 @@ module.exports = function (componentsState) {
                   groups[g].members = self.groups[l].members
                   fetchMembers = false
                 }
+                if (self.groups[l].latestMessages || self.groups[l].noMessages)
+                  fetchMessage = false
               }
             }
 
@@ -67,7 +108,14 @@ module.exports = function (componentsState) {
               self.groups.push(groups[g])
             }
             if (fetchMembers) {
-              userGroups.getMembers(groups[g].id, self.groupMemberInfoCallback)
+              (function(groupId) {
+                userGroups.getMembers(groupId, self.groupMemberInfoCallback)
+              })(groups[g].id)
+            } else if (fetchMessage) {
+              // Already fetched members, but don't have a message, so we need to fetch it here because the membership callback won't do it.
+              (function(groupId) {
+                this.fetchLatestMessage(groupId)
+              })(groups[g].id)
             }
           }
 
