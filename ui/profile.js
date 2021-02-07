@@ -19,6 +19,7 @@ module.exports = function () {
       friends: [],
       followers: [],
       blocked: [],
+      blockingUs: [],
       waitingForBlobURLs: 0,
 
       showExportKey: false,
@@ -96,6 +97,13 @@ module.exports = function () {
            </div>
          </div>
          <div v-if="followers && followers.length > 0" style="clear: both;"></div>
+         <h2 v-if="blockingUs && blockingUs.length > 0">{{ $t('profile.blockingUs', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ blockingUs.length }})</h2>
+         <div v-if="blockingUs && blockingUs.length > 0" id="blockingUs">
+           <div v-for="friend in blockingUs">
+             <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
+         <div v-if="blockingUs && blockingUs.length > 0" style="clear: both;"></div>
          <h2>{{ $t('profile.lastXMessagesFor', { count: 25 }) }} {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">{{ $t('profile.downloadFollowing') }}</button>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">{{ $t('profile.downloadProfile') }}</button>
@@ -456,6 +464,23 @@ module.exports = function () {
         })
       },
 
+      updateBlockingUs: function() {
+        var self = this
+        var opts = {
+          start: this.feedId,
+          max: 0,
+          reverse: true
+        }
+        SSB.net.friends.hops(opts, (err, feeds) => {
+          var newBlocks = []
+          for(f in feeds) {
+            if (Math.round(feeds[f]) == -1)
+              newBlocks.push(f)
+          }
+          self.blockingUs = newBlocks
+        })
+      },
+
       loadMore: function() {
         SSB.db.query(
           and(author(this.feedId), type('post'), isPublic()),
@@ -517,6 +542,7 @@ module.exports = function () {
         )
 
         this.updateFollowers()
+        this.updateBlockingUs()
 
         const profile = SSB.getProfile(this.feedId)
 
