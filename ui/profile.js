@@ -16,6 +16,10 @@ module.exports = function () {
       messages: [],
       canDownloadMessages: true,
       canDownloadProfile: true,
+      showFriends: true,
+      showBlocked: false,
+      showFollowers: false,
+      showBlockingUs: false,
       friends: [],
       followers: [],
       blocked: [],
@@ -76,29 +80,29 @@ module.exports = function () {
            </span>
            <br><br>
          </div>
-         <h2 v-if="friends">{{ $t('profile.following') }} ({{ friends.length }})</h2>
-         <div id="follows">
+         <h2 v-if="friends"><a href="javascript:void(0)" @click="showFriends=!showFriends"><span v-if="showFriends">▼</span><span v-if="!showFriends">►</span>&nbsp;{{ $t('profile.following') }} ({{ friends.length }})</a></h2>
+         <div v-if="showFriends" id="follows">
            <div v-for="friend in friends">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
-         <h2 v-if="blocked">{{ $t('profile.blocking') }} ({{ blocked.length }})</h2>
-         <div id="blocked">
+         <h2 v-if="blocked"><a href="javascript:void(0)" @click="showBlocked=!showBlocked"><span v-if="showBlocked">▼</span><span v-if="!showBlocked">►</span>&nbsp;{{ $t('profile.blocking') }} ({{ blocked.length }})</a></h2>
+         <div v-if="showBlocked" id="blocked">
            <div v-for="block in blocked">
              <ssb-profile-link v-bind:key="block" v-bind:feedId="block"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
-         <h2 v-if="followers && followers.length > 0">{{ $t('profile.followers', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ followers.length }})</h2>
-         <div v-if="followers && followers.length > 0" id="followers">
+         <h2 v-if="followers && followers.length > 0"><a href="javascript:void(0)" @click="showFollowers=!showFollowers"><span v-if="showFollowers">▼</span><span v-if="!showFollowers">►</span>&nbsp;{{ $t('profile.followers', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ followers.length }})</a></h2>
+         <div v-if="followers && followers.length > 0 && showFollowers" id="followers">
            <div v-for="friend in followers">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
          </div>
          <div v-if="followers && followers.length > 0" style="clear: both;"></div>
-         <h2 v-if="blockingUs && blockingUs.length > 0">{{ $t('profile.blockingUs', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ blockingUs.length }})</h2>
-         <div v-if="blockingUs && blockingUs.length > 0" id="blockingUs">
+         <h2 v-if="blockingUs && blockingUs.length > 0"><a href="javascript:void(0)" @click="showBlockingUs=!showBlockingUs"><span v-if="showBlockingUs">▼</span><span v-if="!showBlockingUs">►</span>&nbsp;{{ $t('profile.blockingUs', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ blockingUs.length }})</a></h2>
+         <div v-if="blockingUs && blockingUs.length > 0 && showBlockingUs" id="blockingUs">
            <div v-for="friend in blockingUs">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
