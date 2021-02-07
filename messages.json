@@ -22,6 +22,7 @@
       "loadXMore": "Load {count} more",
       "postTooLarge": "Your post is too large.  Each post can only be 8KiB.  Please shorten your post or split it into multiple posts.",
       "unableToFindProfile": "We couldn't find anyone with that name, but we'll try to find them on the network.",
+      "selfPronoun": "You",
       "close": "Close",
       "save": "Save"
     },
@@ -128,6 +129,7 @@
       "chooseGroupFirst": "Please choose a group first",
       "following": "Following",
       "blocking": "Blocking",
+      "followers": "Following {name}",
       "lastXMessagesFor": "Last {count} messages for",
       "downloadFollowing": "Download following",
       "downloadProfile": "Download profile",
@@ -290,6 +292,7 @@
       "loadXMore": "さらに{count}をダウンロード",
       "postTooLarge": "投稿が大きすぎます。 各投稿は8KiBのみです。 投稿を短くするか、複数の投稿に分割してください。",
       "unableToFindProfile": "その名前の人は見つかりませんでしたが、ネットワーク上で見つけようとします。",
+      "selfPronoun": "あなた",
       "close": "閉じて",
       "save": "変更を保存"
     },
@@ -396,6 +399,7 @@
       "chooseGroupFirst": "最初にグループを選択してください",
       "following": "フォローする",
       "blocking": "ブロックする",
+      "followers": "{name}をフォロー",
       "lastXMessagesFor": "最後の{count}つのメッセージ：",
       "downloadFollowing": "フォローをダウンロード",
       "downloadProfile": "プロファイルをダウンロード",
