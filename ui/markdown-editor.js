@@ -1,5 +1,6 @@
 const helpers = require('./helpers')
 const ref = require('ssb-ref')
+const { and, not, isPublic, type, channel, toCallback } = SSB.dbOperators
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">
@@ -73,6 +74,23 @@ Vue.component('markdown-editor', {
 
     addBlobURLToCache: function(blobId, blobURL) {
       this.blobUrlCache[blobId] = blobURL
+    },
+
+    suggestChannels: function(searchString, cb) {
+      const searchForChannel = searchString.substring(1, searchString.length)
+      const allChannels = SSB.db.getIndex("channels").getChannels()
+      const sortFunc = (new Intl.Collator()).compare
+      const filteredChannels = allChannels.filter((x) => { return x.toLowerCase().startsWith(searchForChannel.toLowerCase()) })
+        .sort(sortFunc)
+        .slice(0, 5)
+      var suggestions = []
+      for (c in filteredChannels)
+        suggestions.push({ text: "#" + filteredChannels[c], value: filteredChannels[c] })
+      cb(null, suggestions)
+    },
+
+    clickChannel: function(channel) {
+      return "#" + channel
     },
 
     suggestPeople: function(searchString, cb) {
@@ -184,6 +202,7 @@ Vue.component('markdown-editor', {
       }
       const token = cursorLine.substring(tokenStart + 1, tokenEnd)
       const suggestionChars = {
+        '#': { list: this.suggestChannels, click: this.clickChannel },
         '@': { list: this.suggestPeople, click: this.clickPeople }
       }
       if (token && (suggest = suggestionChars[token.charAt(0)])) {

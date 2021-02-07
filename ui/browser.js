@@ -120,6 +120,17 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             // For consistency with the Markdown editor.
             const newSuggestions = profiles.map((x) => { return { type: "profile", id: x.id, text: "@" + x.name, icon: x.imageURL || helpers.getMissingProfileImage() }})
             this.suggestions = newSuggestions
+          } else if (this.goToTargetText.startsWith('#')) {
+            const searchForChannel = this.goToTargetText.substring(1)
+            const allChannels = SSB.db.getIndex("channels").getChannels()
+            const sortFunc = (new Intl.Collator()).compare
+            const filteredChannels = allChannels.filter((x) => { return x.toLowerCase().startsWith(searchForChannel.toLowerCase()) })
+              .sort(sortFunc)
+              .slice(0, 5)
+            var newSuggestions = []
+            for (c in filteredChannels)
+              newSuggestions.push({ type: "channel", text: "#" + filteredChannels[c], value: filteredChannels[c] })
+            this.suggestions = newSuggestions
           } else {
             this.suggestions = []
           }
@@ -134,6 +145,15 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
           if (this.goToTargetText != '' && this.goToTargetText.startsWith('%')) {
             router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
             this.goToTargetText = ""
+            this.suggestions = []
+          } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('#')) {
+            const searchForChannel = this.goToTargetText.substring(1)
+            const allChannels = SSB.db.getIndex("channels").getChannels()
+            if (allChannels.indexOf(this.goToTargetText.substring(1)) < 0 && this.suggestions.length > 0)
+              this.goToTargetText = this.suggestions[0].text
+            router.push({ name: 'channel', params: { channel: this.goToTargetText.substring(1) } })
+            this.goToTargetText = ""
+            this.suggestions = []
           } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('@')) {
             // If it's not a valid profile ID, try doing a text search.
             const profiles = SSB.db.getIndex("profiles")

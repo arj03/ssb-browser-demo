@@ -189,39 +189,13 @@ module.exports = function (componentsState) {
         this.showPreview = false
       },
 
-      channelResultCallback: function(err, answer) {
-        if (!err) {
-          var newChannels = []
-
-          var posts = answer.results
-
-          for (r in posts) {
-            var channel = posts[r].value.content.channel
-
-            if(channel && channel.charAt(0) == '#')
-              channel = channel.substring(1, channel.length)
-
-            if (channel && channel != '' && channel != '"')
-              if (newChannels.indexOf(channel) < 0)
-                newChannels.push(channel)
-          }
-
-          // Sort and add a # at the start so it displays like it would normally for a user.
-          var sortFunc = Intl.Collator().compare
-          this.channels = newChannels.map((x) => '#' + x).sort(sortFunc)
-        }
-      },
-
       loadChannels: function() {
-        if (this.channels.length == 0) {
-          var self = this
-          SSB.connectedWithData((rpc) => {
-            SSB.db.query(
-              and(type('post'), isPublic(), paginate(500)),
-              toCallback(self.channelResultCallback)
-            )
-          })
-        }
+        const allChannels = SSB.db.getIndex("channels").getChannels()
+        const sortFunc = (new Intl.Collator()).compare
+        const filteredChannels = allChannels.map((x) => { return (x.charAt(0) == "#" ? x.substring(1) : x) })
+          .filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+          .sort(sortFunc)
+        this.channels = filteredChannels.map((x) => "#" + x)
       },
 
       onPost: function() {

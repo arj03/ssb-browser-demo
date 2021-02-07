@@ -23,7 +23,7 @@ module.exports = function (componentsState) {
       </select>
       <ol>
         <li v-for="(count, channel) in channels">
-          <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}<sup>[&nbsp;{{ count }}&nbsp;]</sup></router-link>
+          <router-link :to="{name: 'channel', params: { channel: channel }}">#{{ channel }}<sup v-if="count > 0">[&nbsp;{{ count }}&nbsp;]</sup></router-link>
         </li>
       </ol>
       <p v-if="channels.length == 0">{{ $t('channels.loading') }}</p>
@@ -45,6 +45,7 @@ module.exports = function (componentsState) {
         this.favoriteChannels = localPrefs.getFavoriteChannels().map(x => x.replace(/^#+/, '')).sort(Intl.Collator().compare)
 
         console.time("channel list")
+
         
         const resultCallback = toCallback((err, answer) => {
           if (!err) {
@@ -100,11 +101,34 @@ module.exports = function (componentsState) {
             resultCallback
           )
         } else {
-          // Look at all posts.
-          SSB.db.query(
-            and(not(channel('')), type('post'), isPublic()),
-            resultCallback
-          )
+          // Just pull channels.
+          const channelIndex = SSB.db.getIndex("channels")
+          const allChannels = channelIndex.getChannels()
+          const sortFunc = (new Intl.Collator()).compare
+          var transformedChannels = {}
+          if (this.sortMode == "popular") {
+            for (c in allChannels)
+              transformedChannels[allChannels[c]] = (channelIndex.getChannelUsage(allChannels[c]) || 0)
+            var newChannels = {}
+            const sortByPopularity = (a, b) => {
+              if(transformedChannels[a] < transformedChannels[b])
+                return 1
+              if(transformedChannels[a] > transformedChannels[b])
+                return -1
+              return 0
+            }
+            Object.keys(transformedChannels).sort(sortByPopularity).forEach((item, index, array) => {
+              newChannels[item] = transformedChannels[item]
+            });
+            this.channels = newChannels
+          } else {
+            const filteredChannels = allChannels.sort(sortFunc)
+            for (c in filteredChannels)
+              transformedChannels[filteredChannels[c]] = 0
+            this.channels = transformedChannels
+          }
+          document.body.classList.remove('refreshing')
+          console.timeEnd("channel list")
         }
       },
     },
