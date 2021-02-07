@@ -16,8 +16,14 @@ module.exports = function () {
       messages: [],
       canDownloadMessages: true,
       canDownloadProfile: true,
+      showFriends: true,
+      showBlocked: false,
+      showFollowers: false,
+      showBlockingUs: false,
       friends: [],
+      followers: [],
       blocked: [],
+      blockingUs: [],
       waitingForBlobURLs: 0,
 
       showExportKey: false,
@@ -74,20 +80,34 @@ module.exports = function () {
            </span>
            <br><br>
          </div>
-         <h2 v-if="friends">{{ $t('profile.following') }}</h2>
-         <div id="follows">
+         <h2 v-if="friends"><a href="javascript:void(0)" @click="showFriends=!showFriends"><span v-if="showFriends">▼</span><span v-if="!showFriends">►</span>&nbsp;{{ $t('profile.following') }} ({{ friends.length }})</a></h2>
+         <div v-if="showFriends" id="follows">
            <div v-for="friend in friends">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
-         <h2 v-if="blocked">{{ $t('profile.blocking') }}</h2>
-         <div id="blocked">
+         <h2 v-if="blocked"><a href="javascript:void(0)" @click="showBlocked=!showBlocked"><span v-if="showBlocked">▼</span><span v-if="!showBlocked">►</span>&nbsp;{{ $t('profile.blocking') }} ({{ blocked.length }})</a></h2>
+         <div v-if="showBlocked" id="blocked">
            <div v-for="block in blocked">
              <ssb-profile-link v-bind:key="block" v-bind:feedId="block"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
+         <h2 v-if="followers && followers.length > 0"><a href="javascript:void(0)" @click="showFollowers=!showFollowers"><span v-if="showFollowers">▼</span><span v-if="!showFollowers">►</span>&nbsp;{{ $t('profile.followers', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ followers.length }})</a></h2>
+         <div v-if="followers && followers.length > 0 && showFollowers" id="followers">
+           <div v-for="friend in followers">
+             <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
+         <div v-if="followers && followers.length > 0" style="clear: both;"></div>
+         <h2 v-if="blockingUs && blockingUs.length > 0"><a href="javascript:void(0)" @click="showBlockingUs=!showBlockingUs"><span v-if="showBlockingUs">▼</span><span v-if="!showBlockingUs">►</span>&nbsp;{{ $t('profile.blockingUs', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ blockingUs.length }})</a></h2>
+         <div v-if="blockingUs && blockingUs.length > 0 && showBlockingUs" id="blockingUs">
+           <div v-for="friend in blockingUs">
+             <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
+         <div v-if="blockingUs && blockingUs.length > 0" style="clear: both;"></div>
          <h2>{{ $t('profile.lastXMessagesFor', { count: 25 }) }} {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">{{ $t('profile.downloadFollowing') }}</button>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">{{ $t('profile.downloadProfile') }}</button>
@@ -290,8 +310,8 @@ module.exports = function () {
 
           // Re-render the lower nav menu.
           if (this.imageBlobId != '') {
-            this.$root.$refs["upperNavProfileLink"].renderProfile({ name: "You", imageURL: this.image })
-            this.$root.$refs["lowerNavProfileLink"].renderProfile({ name: "You", imageURL: this.image })
+            this.$root.$refs["upperNavProfileLink"].renderProfile({ name: this.$root.$t('common.selfPronoun'), imageURL: this.image })
+            this.$root.$refs["lowerNavProfileLink"].renderProfile({ name: this.$root.$t('common.selfPronoun'), imageURL: this.image })
           }
 
           alert("Saved!")
@@ -433,6 +453,40 @@ module.exports = function () {
         })
       },
 
+      updateFollowers: function() {
+        var self = this
+        var opts = {
+          start: this.feedId,
+          max: 1,
+          reverse: true
+        }
+        SSB.net.friends.hops(opts, (err, feeds) => {
+          var newFollowers = []
+          for(f in feeds) {
+            if (feeds[f] > 0)
+              newFollowers.push(f)
+          }
+          self.followers = newFollowers
+        })
+      },
+
+      updateBlockingUs: function() {
+        var self = this
+        var opts = {
+          start: this.feedId,
+          max: 0,
+          reverse: true
+        }
+        SSB.net.friends.hops(opts, (err, feeds) => {
+          var newBlocks = []
+          for(f in feeds) {
+            if (Math.round(feeds[f]) == -1)
+              newBlocks.push(f)
+          }
+          self.blockingUs = newBlocks
+        })
+      },
+
       loadMore: function() {
         SSB.db.query(
           and(author(this.feedId), type('post'), isPublic()),
@@ -492,6 +546,9 @@ module.exports = function () {
             document.body.classList.remove('refreshing')
           })
         )
+
+        this.updateFollowers()
+        this.updateBlockingUs()
 
         const profile = SSB.getProfile(this.feedId)
 

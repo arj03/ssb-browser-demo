@@ -66,22 +66,18 @@
   clear: both;
 }
 
-#profile > div#follows > div > a > img {
+#profile > div#follows > div > a > img,
+#profile > div#blocked > div > a > img,
+#profile > div#blockingUs > div > a > img,
+#profile > div#followers > div > a > img {
   width: 50px;
   height: 50px;
 }
 
-#profile > div#follows > div {
-  float: left;
-  padding-right: 0.5rem;
-}
-
-#profile > div#blocked > div > a > img {
-  width: 50px;
-  height: 50px;
-}
-
-#profile > div#blocked > div {
+#profile > div#follows > div,
+#profile > div#blocked > div,
+#profile > div#blockingUs > div,
+#profile > div#followers > div {
   float: left;
   padding-right: 0.5rem;
 }
