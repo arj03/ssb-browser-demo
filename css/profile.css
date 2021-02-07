@@ -50,6 +50,10 @@
   clear: both;
 }
 
+#profile > h2 a {
+  text-decoration: none;
+}
+
 #profile .profileButtons {
   clear: both;
   margin: 16px 0px 0px 0px;
