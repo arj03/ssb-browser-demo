@@ -279,20 +279,10 @@ body, html {
   top: -3px;
 }
 
-@media (min-resolution: 2dppx) and (max-width: 40em)
+@media (max-width: 40em)
 {
   body {
     padding: 0.5em;
-  }
-
-  #navigation {
-    display: none;
-  }
-
-  #footer {
-    display: flex;
-    width: 100%;
-    margin-left: -0.5em;
   }
 
   #app > h1 {
@@ -305,6 +295,20 @@ body, html {
 
   .message {
     padding: 1rem 1rem 0.25rem 1rem;
+  }
+}
+
+/* Only switch to footer-based navigation when we're clearly on a mobile device and the screen's wide enough to support it. */
+@media (min-resolution: 2dppx) and (max-width: 40em) and (min-width: 22em)
+{
+  #navigation {
+    display: none;
+  }
+
+  #footer {
+    display: flex;
+    width: 100%;
+    margin-left: -0.5em;
   }
 }
 
