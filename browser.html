@@ -62,7 +62,7 @@
         <router-link to="/private" class="navButton">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages>
         <router-link to="/channels" class="navButton">{{ $t('pages.channels') }}</router-link>
         <router-link to="/groups" class="navButton">{{ $t('pages.groups') }}</router-link>
-        <ssb-profile-link class="navButton" :feed-id="SSB.net.id"></ssb-profile-link>
+        <ssb-profile-link ref="lowerNavProfileLink" class="navButton" :feed-id="SSB.net.id"></ssb-profile-link>
         <router-link to="/connections" class="navButton" :title="$t('pages.connections')">&#127760;</router-link>
         <connected ref="connected2"></connected>
         <router-link to="/notifications" class="navButton" :title="$t('pages.notifications')">&#128276;</router-link>
