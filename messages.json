@@ -150,6 +150,9 @@
       "blocked": "Blocked and messages deleted!",
       "failedToRemoveFeed": "Failed to remove feed"
     },
+    "search": {
+      "title": "Search results for \"{search}\""
+    },
     "settings": {
       "title": "Settings",
       "appTitle": "App/browser tab title:",
@@ -417,6 +420,9 @@
       "blockedButNotDeleted": "メッセージの削除に失敗しましたが、ユーザーはブロックされています。",
       "blocked": "ブロックされ、メッセージが削除されました！",
       "failedToRemoveFeed": "フィードの削除に失敗しました"
+    },
+    "search": {
+      "title": "「{search}」の検索結果"
     },
     "settings": {
       "title": "設定",
