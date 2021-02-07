@@ -47,7 +47,26 @@ exports.addGroup = function(groupInfo, cb) {
 }
 
 exports.updateGroup = function(groupId, groupInfo, cb) {
-  cb("Not supported yet")
+  var groups = getFullLocalGroupInfo()
+  var updated = false
+  for (g in groups) {
+    if (groups[g].id == groupId) {
+      if (groupInfo.name && groupInfo.name.trim() != '') {
+        groups[g].name = groupInfo.name
+        updated = true
+      }
+      if (groupInfo.description) {
+        groups[g].description = groupInfo.description
+        updated = true
+      }
+    }
+  }
+  if (!updated)
+    cb("Group not found")
+  else {
+    setFullLocalGroupInfo(groups)
+    cb(null, true)
+  }
 }
 
 exports.deleteGroup = function(groupId, cb) {
