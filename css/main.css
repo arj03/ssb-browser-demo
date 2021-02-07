@@ -265,14 +265,46 @@ body, html {
   vertical-align: middle;
 }
 
+.navButton .avatar {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: middle;
+}
+
+#footer .newPublic,
+#footer .newPrivate,
+#footer .connected-indicator {
+  margin-left: -1em;
+  position: relative;
+  top: -3px;
+}
+
 @media (min-resolution: 2dppx) and (max-width: 40em)
 {
+  body {
+    padding: 0.5em;
+  }
+
   #navigation {
     display: none;
   }
 
   #footer {
     display: flex;
+    width: 100%;
+    margin-left: -0.5em;
+  }
+
+  #app > h1 {
+    margin-bottom: 0;
+  }
+
+  #searchBox {
+    margin: 0.5em 0 0 0;
+  }
+
+  .message {
+    padding: 1rem 1rem 0.25rem 1rem;
   }
 }
 
