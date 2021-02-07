@@ -17,7 +17,8 @@ module.exports = function () {
          </h2>
 
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-         <p v-if="messages.length == 0">{{ $t('common.noMessages') }}</p>
+         <p v-if="messages.length == 0 && !triedToLoadMessages">{{ $t('common.searchingForMessages') }}</p>
+         <p v-if="messages.length == 0 && triedToLoadMessages">{{ $t('common.noMessages') }}</p>
          <p>{{ $t('common.showingMessagesFrom') }} 1-{{ displayPageEnd }}<br />
          <button class="clickButton" v-on:click="loadMore">{{ $t('common.loadXMore', { count: pageSize }) }}</button>
          </p>
@@ -37,23 +38,30 @@ module.exports = function () {
         displayPageEnd: 50,
         autorefreshTimer: 0,
         showPreview: false,
+        triedToLoadMessages: false,
         messages: []
       }
     },
 
     methods: {
       loadMore: function() {
-        SSB.db.query(
-          and(or(...this.groupMembers.map(x => author(x))), isPublic(), type('post')),
-          descending(),
-          startFrom(this.offset),
-          paginate(this.pageSize),
-          toCallback((err, answer) => {
-            this.messages = this.messages.concat(answer.results)
-            this.displayPageEnd = this.offset + this.pageSize
-            this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
-          })
-        )
+        try {
+          SSB.db.query(
+            and(or(...this.groupMembers.map(x => author(x))), isPublic(), type('post')),
+            descending(),
+            startFrom(this.offset),
+            paginate(this.pageSize),
+            toCallback((err, answer) => {
+              this.triedToLoadMessages = true
+              this.messages = this.messages.concat(answer.results)
+              this.displayPageEnd = this.offset + this.pageSize
+              this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+            })
+          )
+        } catch(e) {
+          // Probably no messages and crashed the query with "TypeError: Cannot set property 'meta' of undefined"
+          this.triedToLoadMessages = true
+        }
       },
 
       render: function () {
