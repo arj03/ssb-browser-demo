@@ -9,6 +9,7 @@ module.exports = function (componentsState) {
     <div id="groups">
       <h2>{{ $t('groups.yourGroups') }}</h2>
       <div>
+        <input type="text" v-model="groupName" :placeholder="$t('groups.newGroupName')" />&nbsp;<button class="clickButton" v-on:click="addGroup">{{ $t('groups.addGroup') }}</button>
         <div v-for="group in groups">
           <h4><router-link :to="{name: 'group', params: { group: group.id }}">{{ group.name }}</router-link> <a href="javascript:void(0)" v-on:click="deleteGroup(group)" :title="$t('groups.deleteGroup')" style="color: #900;">X</a></h4>
           <ul class="groupMembers">
@@ -18,7 +19,6 @@ module.exports = function (componentsState) {
           </ul>
           <div class="clearingDiv"></div>
         </div>
-        <input type="text" v-model="groupName" :placeholder="$t('groups.newGroupName')" />&nbsp;<button class="clickButton" v-on:click="addGroup">{{ $t('groups.addGroup') }}</button>
       </div>
     </div>`,
 
