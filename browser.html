@@ -34,10 +34,10 @@
         <router-link to="/private">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages> |
         <router-link to="/channels">{{ $t('pages.channels') }}</router-link> |
         <router-link to="/groups">{{ $t('pages.groups') }}</router-link> |
-        <router-link :to="{ name: 'profile', params: { feedId: SSB.net.id }}">{{ $t('pages.profile') }}</router-link> |
-        <router-link to="/connections">{{ $t('pages.connections') }}</router-link><connected ref="connected"></connected> |
-        <router-link to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
-        <router-link to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
+        <ssb-profile-link class="iconButton" ref="upperNavProfileLink" :feed-id="SSB.net.id"></ssb-profile-link> |
+        <router-link class="iconButton" to="/connections" :title="$t('pages.connections')">&#127760;</router-link><connected ref="connected"></connected> |
+        <router-link class="iconButton" to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
+        <router-link class="iconButton" to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
       </p>
       <div id="searchBox">
         <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur" />
