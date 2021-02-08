@@ -393,6 +393,7 @@
       "profileDescriptionPlaceholder": "あなたについての短い経歴。「Markdown」フォーマットがサポートされています。",
       "exportKey": "フィードキーをニーモニックコードにエクスポートする",
       "loadKey": "ニーモニックコードからフィードキーをロードする",
+      "reloadAfterImport": "復元されたフィードの使用を開始するには、ウィンドウをリロードしてください",
       "saveProfile": "プロファイルを保存",
       "sendMessage": "メッセージを送る",
       "removeFeed": "フィードを削除する",
