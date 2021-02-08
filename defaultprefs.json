@@ -1,6 +1,6 @@
 {
   "appTitle": "SSB Browser Demo",
-  "replicationHops": 1,
+  "replicationHops": 2,
   "publicFilters": "",
   "favoriteChannels": [],
   "hiddenChannels": [],
