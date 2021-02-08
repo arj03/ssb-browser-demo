@@ -150,8 +150,8 @@ module.exports = function () {
         SSB.connectedWithData(this.onConnectedWithData)
       }
 
-      var lastStatus = null
-      var lastEbtStatus = null
+      let lastStatus = null
+      let lastEbtStatus = null
 
       pull(
         SSB.net.conn.stagedPeers(),
@@ -195,8 +195,8 @@ module.exports = function () {
             return
           }
 
-          lastStatus = status
-          lastEbtStatus = ebtStatus
+          lastStatus = Object.assign({}, status)
+          lastEbtStatus = Object.assign({}, ebtStatus)
 
           var html = "<h3>" + self.$root.$t('connections.dbStatus') + "</h3>"
           html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
