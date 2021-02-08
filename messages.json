@@ -120,6 +120,7 @@
       "profileDescriptionPlaceholder": "Description (markdown is supported)",
       "exportKey": "Export feed key to mnemonic code",
       "loadKey": "Load feed key from mnemonic code",
+      "reloadAfterImport": "Please reload the window to start using the restored feed",
       "saveProfile": "Save profile",
       "sendMessage": "Send message",
       "removeFeed": "Remove feed",

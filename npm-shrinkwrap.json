@@ -1,11 +1,11 @@
 {
   "name": "ssb-browser-demo",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "version": "5.0.0",
+      "version": "5.1.0",
       "license": "Beerware",
       "dependencies": {
         "@toast-ui/vue-editor": "^2.5.1",
@@ -17,7 +17,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^8.1.1",
+        "ssb-browser-core": "^8.2.0",
         "ssb-contact-msg": "^1.1.0",
         "ssb-keys-mnemonic": "^0.3.0",
         "ssb-markdown": "^6.0.7",
@@ -5853,9 +5853,9 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "8.1.1",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.1.1.tgz",
-      "integrity": "sha512-/rpnlOtlYci35CvsTXKE24JGI1kKJpFUdoXSXA3+El1TQUdkf4jtSsgfMZKLbSZtn5Fg0MyQ3KGwbEt0jUfK6w==",
+      "version": "8.2.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.2.0.tgz",
+      "integrity": "sha512-OjJoa0tDA2Qz0GHX5byrV7RnHhS0l1rCgncpslevLjpOuA3FsHtiQP1Muoa2HOgrufvoDmSzEKKj2kLgWAthsA==",
       "dependencies": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",
@@ -12772,9 +12772,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "8.1.1",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.1.1.tgz",
-      "integrity": "sha512-/rpnlOtlYci35CvsTXKE24JGI1kKJpFUdoXSXA3+El1TQUdkf4jtSsgfMZKLbSZtn5Fg0MyQ3KGwbEt0jUfK6w==",
+      "version": "8.2.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.2.0.tgz",
+      "integrity": "sha512-OjJoa0tDA2Qz0GHX5byrV7RnHhS0l1rCgncpslevLjpOuA3FsHtiQP1Muoa2HOgrufvoDmSzEKKj2kLgWAthsA==",
       "requires": {
         "atomic-file": "^2.1.1",
         "atomically-universal": "^0.1.1",

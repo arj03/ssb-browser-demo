@@ -277,12 +277,9 @@ module.exports = function () {
         localStorage["/.ssb-lite/secret"] = JSON.stringify(key)
         this.showImportKey = false
 
-        SSB.net.id = this.feedId = key.id
-        SSB.net.config.keys = key
-        Object.assign(this.$data, initialState(this))
+        localStorage["/.ssb-lite/restoreFeed"] = "true"
 
-        // FIXME: this won't work
-        SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
+        alert(this.$root.$t('profile.reloadAfterImport'))
       },
 
       saveProfile: function() {
