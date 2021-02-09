@@ -125,6 +125,26 @@ module.exports = function () {
       connect: function(stagedPeer) {
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
         this.updateSuggestedPeers()
+
+        // Ask about following.
+        if (stagedPeer.data.type == "room-endpoint") {
+          var s = stagedPeer.address.split(":")
+          var peerId = '@' + s[s.length-1] + '.ed25519'
+          var follow = confirm(this.$root.$t('connections.followNewConnection'))
+          if (follow) {
+            SSB.db.publish({
+              type: 'contact',
+              contact: peerId,
+              following: true
+            }, () => {
+              SSB.connectedWithData(() => {
+                SSB.net.db.onDrain('contacts', () => {
+                  SSB.net.sync(SSB.getPeer())
+                })
+              })
+            })
+          }
+        }
       },
       disconnect: function(peer) {
         SSB.net.conn.forget(peer.address)
