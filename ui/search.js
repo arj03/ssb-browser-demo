@@ -25,19 +25,20 @@ module.exports = function () {
     methods: {
       loadMore: function() {
         try {
-          const results = SSB.fullTextSearch(this.search)
-          if (results && results.length > 0) {
-            SSB.db.query(
-              and(or(...results.slice(0, 100).map(x => key(x.id))), isPublic(), type('post')),
-              toCallback((err, answer) => {
-                this.triedToLoadMessages = true
-                this.messages = this.messages.concat(answer || answer.results)
-              })
-            )
-          } else {
-            // No search results.
-            this.triedToLoadMessages = true
-          }
+          SSB.fullTextSearch(this.search, (err, results) => {
+            if (results && results.length > 0) {
+              SSB.db.query(
+                and(or(...results.slice(0, 100).map(x => key(x.id))), isPublic(), type('post')),
+                toCallback((err, answer) => {
+                  this.triedToLoadMessages = true
+                  this.messages = this.messages.concat(answer || answer.results)
+                })
+              )
+            } else {
+              // No search results.
+              this.triedToLoadMessages = true
+            }
+          })
         } catch(e) {
           // Probably no messages and crashed the query with "TypeError: Cannot set property 'meta' of undefined"
           this.triedToLoadMessages = true
