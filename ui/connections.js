@@ -125,6 +125,26 @@ module.exports = function () {
       connect: function(stagedPeer) {
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
         this.updateSuggestedPeers()
+
+        // Ask about following.
+        if (stagedPeer.data.type == "room-endpoint") {
+          var s = stagedPeer.address.split(":")
+          var peerId = '@' + s[s.length-1] + '.ed25519'
+          var follow = confirm(this.$root.$t('connections.followNewConnection'))
+          if (follow) {
+            SSB.db.publish({
+              type: 'contact',
+              contact: peerId,
+              following: true
+            }, () => {
+              SSB.connectedWithData(() => {
+                SSB.net.db.onDrain('contacts', () => {
+                  SSB.net.sync(SSB.getPeer())
+                })
+              })
+            })
+          }
+        }
       },
       disconnect: function(peer) {
         SSB.net.conn.forget(peer.address)
@@ -150,8 +170,8 @@ module.exports = function () {
         SSB.connectedWithData(this.onConnectedWithData)
       }
 
-      var lastStatus = null
-      var lastEbtStatus = null
+      let lastStatus = null
+      let lastEbtStatus = null
 
       pull(
         SSB.net.conn.stagedPeers(),
@@ -195,8 +215,8 @@ module.exports = function () {
             return
           }
 
-          lastStatus = status
-          lastEbtStatus = ebtStatus
+          lastStatus = Object.assign({}, status)
+          lastEbtStatus = Object.assign({}, ebtStatus)
 
           var html = "<h3>" + self.$root.$t('connections.dbStatus') + "</h3>"
           html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
