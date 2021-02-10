@@ -10,16 +10,16 @@ module.exports = function () {
       </div>
       <div>
         <h3>Connection Status</h3>
-        <span v-if="online">☒</span><span v-if="!online">☐</span>&nbsp;Running in online mode<br />
-        <span v-if="connected">☒</span><span v-if="!connected">☐</span>&nbsp;Connected to a peer<br />
-        <span v-if="connectedWithData">☒</span><span v-if="!connectedWithData">☐</span>&nbsp;At least one peer has data (not just a room)<br />
-        <span v-if="followProgress == 100">☒</span><span v-if="followProgress != 100">☐</span>&nbsp;Followed sync (hops == 1) complete <span v-if="!hasFollowProgress">(Waiting for connection)</span></br >
+        <span v-if="online">☒</span><span v-if="!online">☐</span>&nbsp;{{ $t('connections.statusOnline') }}<br />
+        <span v-if="connected">☒</span><span v-if="!connected">☐</span>&nbsp;{{ $t('connections.statusConnected') }}<br />
+        <span v-if="connectedWithData">☒</span><span v-if="!connectedWithData">☐</span>&nbsp;{{ $t('connections.statusConnectedWithData') }}<br />
+        <span v-if="followProgress == 100">☒</span><span v-if="followProgress != 100">☐</span>&nbsp;{{ $t('connections.statusFollowedSyncComplete') }} <span v-if="!hasFollowProgress">{{ $t('connections.statusWaitingForConnection') }}</span></br >
         <div><div class="progressOuter"><div><div class="progressInner" id="syncProgressFollow"></div></div></div>&nbsp;{{ followProgress }}%</div>
-        <span v-if="extendedProgress == 100">☒</span><span v-if="extendedProgress != 100">☐</span>&nbsp;Extended sync (hops &gt; 1) complete <span v-if="!hasFollowProgress">(Waiting for connection)</span></br >
+        <span v-if="extendedProgress == 100">☒</span><span v-if="extendedProgress != 100">☐</span>&nbsp;{{ $t('connections.statusExtendedSyncComplete') }} <span v-if="!hasFollowProgress">{{ $t('connections.statusWaitingForConnection') }}</span></br >
         <div><div class="progressOuter"><div><div class="progressInner" id="syncProgressExtended"></div></div></div>&nbsp;{{ extendedProgress }}%</div>
-        <span v-if="synced">☒</span><span v-if="!synced">☐</span>&nbsp;Synchronizing is complete<br />
-        <button v-if="online" class="clickButton" v-on:click="goOffline">Use offline</button>
-        <button v-if="!online" class="clickButton" v-on:click="goOnline">Connect online</button>
+        <span v-if="synced">☒</span><span v-if="!synced">☐</span>&nbsp;{{ $t('connections.statusSyncComplete') }}<br />
+        <button v-if="online" class="clickButton" v-on:click="goOffline">{{ $t('connections.goOffline') }}</button>
+        <button v-if="!online" class="clickButton" v-on:click="goOnline">{{ $t('connections.goOnline') }}</button>
       </div>
       <div v-if="online">
         <div>
