@@ -32,6 +32,7 @@
       "postNewThread": "Post new thread",
       "channelOptional": "Channel (optional)",
       "channelsOptional": "Channels (optional)",
+      "groupsOptional": "Groups (optional)",
       "showFilters": "Show filters",
       "hideFilters": "Hide filters",
       "filters": "Filters",
@@ -39,6 +40,7 @@
       "filterOnlyThreads": "Hide replies (only show the first message of a thread)",
       "filterOnlyChannels": "Show only these channels:",
       "filterHideChannels": "Do not show these channels:",
+      "filterOnlyGroups": "Show only these groups:",
       "blankFieldError": "Please provide a message to publish.",
       "channelsCannotContainSpaces": "Channels cannot contain spaces."
     },
@@ -316,6 +318,7 @@
       "postNewThread": "掲示します",
       "channelOptional": "チャンネル（オプション）",
       "channelsOptional": "チャンネル（オプション）",
+      "groupsOptional": "グループ（オプション）",
       "showFilters": "フィルターを表示",
       "hideFilters": "フィルターを非表示にする",
       "filters": "フィルター",
@@ -323,6 +326,7 @@
       "filterOnlyThreads": "返信を非表示にします（スレッドの最初のメッセージのみを表示します）",
       "filterOnlyChannels": "これらのチャネルのみを表示する：",
       "filterHideChannels": "これらのチャネルを表示しないでください：",
+      "filterOnlyGroups": "これらのグループのみを表示します：",
       "blankFieldError": "公開するメッセージを入力してください。",
       "channelsCannotContainSpaces": "チャネルにスペースを含めることはできません。"
     },
