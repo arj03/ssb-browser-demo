@@ -13,6 +13,10 @@ module.exports = function () {
         <span v-if="online">☒</span><span v-if="!online">☐</span>&nbsp;Running in online mode<br />
         <span v-if="connected">☒</span><span v-if="!connected">☐</span>&nbsp;Connected to a peer<br />
         <span v-if="connectedWithData">☒</span><span v-if="!connectedWithData">☐</span>&nbsp;At least one peer has data (not just a room)<br />
+        <span v-if="followProgress == 100">☒</span><span v-if="followProgress != 100">☐</span>&nbsp;Followed sync (hops == 1) complete <span v-if="!hasFollowProgress">(Waiting for connection)</span></br >
+        <div><div class="progressOuter"><div><div class="progressInner" id="syncProgressFollow"></div></div></div>&nbsp;{{ followProgress }}%</div>
+        <span v-if="extendedProgress == 100">☒</span><span v-if="extendedProgress != 100">☐</span>&nbsp;Extended sync (hops &gt; 1) complete <span v-if="!hasFollowProgress">(Waiting for connection)</span></br >
+        <div><div class="progressOuter"><div><div class="progressInner" id="syncProgressExtended"></div></div></div>&nbsp;{{ extendedProgress }}%</div>
         <span v-if="synced">☒</span><span v-if="!synced">☐</span>&nbsp;Synchronizing is complete<br />
         <button v-if="online" class="clickButton" v-on:click="goOffline">Use offline</button>
         <button v-if="!online" class="clickButton" v-on:click="goOnline">Connect online</button>
@@ -53,6 +57,10 @@ module.exports = function () {
         connectedWithData: false,
         synced: false,
         online: false,
+        hasFollowProgress: false,
+        followProgress: 0,
+        hasExtendedProgress: false,
+        extendedProgress: 0,
         suggestedPeers: [],
         stagedPeers: [],
         peers: []
@@ -223,6 +231,23 @@ module.exports = function () {
           html += "<h3>" + self.$root.$t('connections.ebtStatus') + "</h3>"
           html += "<pre>" + JSON.stringify(ebtStatus, null, 2) + "</pre>"
           self.statusHTML = html
+
+          self.hasFollowProgress = status.totalFull
+          if (status.totalFull) {
+            self.followProgress = Math.round((status.fullSynced) * 100 / (status.totalFull))
+            var progressBar = document.getElementById("syncProgressFollow")
+            // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasFollowProgress.
+            if (progressBar)
+              progressBar.style.width = (self.followProgress * 0.99 + 1) + "%"
+          }
+          self.hasExtendedProgress = status.totalPartial
+          if (status.totalPartial) {
+            self.extendedProgress = Math.round((status.profilesSynced + status.contactsSynced + status.messagesSynced) * 100 / (status.totalPartial * 3))
+            var progressBar = document.getElementById("syncProgressExtended")
+            // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasExtendedProgress.
+            if (progressBar)
+              progressBar.style.width = (self.extendedProgress * 0.99 + 1) + "%"
+          }
 
           updateDBStatus()
         }, 1000)

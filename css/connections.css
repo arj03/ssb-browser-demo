@@ -2,3 +2,26 @@
   width: 100%;
   padding: 5px;
 }
+
+#connections .progressOuter {
+  display: inline-block;
+  width: 30%;
+  margin-left: 1.2em;
+  border: 1px solid #000;
+  border-radius: 2px;
+  vertical-align: middle;
+  background: #fff;
+}
+
+#connections .progressOuter > div {
+  margin: 2px;
+}
+
+#connections .progressInner {
+  background: #999;
+  background-image: linear-gradient(#777, #555);
+  height: 1.5em;
+
+  /* Default to 1% filled so there's a little sliver there */
+  width: 1%;
+}
