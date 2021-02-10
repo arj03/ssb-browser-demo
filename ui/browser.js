@@ -55,10 +55,12 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
     const Settings = require('./settings')()
+    const Search = require('./search')()
 
     // add helper methods
     require('../net')
     require('../profile')
+    require('../search')
 
     const routes = [
       { name: 'public', path: '/public', component: Public },
@@ -68,6 +70,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       { name: 'group', path: '/group/:group', component: Group, props: true },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
+      { name: 'search', path: '/search/:search', component: Search, props: true },
       { name: 'notifications', path: '/notifications', component: Notifications },
       { path: '/private', component: Private },
       { name: 'private-feed', path: '/private/:feedId', component: Private, props: true },
@@ -185,6 +188,10 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             }
 
             router.push({ name: 'profile', params: { feedId: this.goToTargetText } })
+            this.goToTargetText = ""
+            this.suggestions = []
+          } else {
+            router.push({ name: 'search', params: { search: this.goToTargetText } })
             this.goToTargetText = ""
             this.suggestions = []
           }

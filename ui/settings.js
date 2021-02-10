@@ -49,6 +49,11 @@ module.exports = function () {
          </p>
 
          <p>
+         <label for="searchDepth">{{ $t('settings.searchDepth') }}</label><br />
+         <input type="number" id="searchDepth" v-model="searchDepth" min="1000" max="1000000" step="1000" />
+         </p>
+
+         <p>
          <label for="caps"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.capsKey') }}</label><br />
          <input type="text" id="caps" v-model="caps" :placeholder="$t('settings.capsKeyPlaceholder')" /><br />
          <small>{{ $t('settings.capsKeyWarning') }}</small>
@@ -67,6 +72,7 @@ module.exports = function () {
         locale: 'en',
         localeOptions: [],
         autorefresh: false,
+        searchDepth: 10000,
         hops: 2
       }
     },
@@ -82,6 +88,7 @@ module.exports = function () {
         for (var l in i18nMessages)
           this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
         this.autorefresh = localPrefs.getAutorefresh()
+        this.searchDepth = localPrefs.getSearchDepth()
       },
 
       save: function () {
@@ -99,6 +106,12 @@ module.exports = function () {
           this.$i18n.locale = 'en'
 
         localPrefs.setAutorefresh(this.autorefresh)
+
+        localPrefs.setSearchDepth(this.searchDepth)
+        if (SSB.search.depth != this.searchDepth) {
+          SSB.search.depth = this.searchDepth
+          SSB.search.resetIndex()
+        }
 
         localPrefs.updateStateFromSettings()
 
