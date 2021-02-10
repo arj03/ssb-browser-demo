@@ -156,7 +156,8 @@
       "failedToRemoveFeed": "Failed to remove feed"
     },
     "search": {
-      "title": "Search results for \"{search}\""
+      "title": "Search results for \"{search}\"",
+      "searchLimitNote": "Searching most recent {depth} posts, sorted by most recent, up to {results} results"
     },
     "settings": {
       "title": "Settings",
@@ -165,6 +166,7 @@
       "language": "Language:",
       "useSystemDefault": "(Use system default)",
       "colorTheme": "Color theme:",
+      "searchDepth": "How many messages to index when searching:",
       "replicateHops": "Number of hops to replicate:",
       "highHopCountWarning": "WARNING: Hops counts over 2 will very likely slow this app down to the point it is unusable.  Use at your own risk.",
       "directFollows": "(only people you follow)",
@@ -433,7 +435,8 @@
       "failedToRemoveFeed": "フィードの削除に失敗しました"
     },
     "search": {
-      "title": "「{search}」の検索結果"
+      "title": "「{search}」の検索結果",
+      "searchLimitNote": "最新の{depth}件の投稿を、最新の{results}件までの結果で並べ替えて検索"
     },
     "settings": {
       "title": "設定",
@@ -442,6 +445,7 @@
       "language": "言葉：",
       "useSystemDefault": "（システムデフォルトを使用）",
       "colorTheme": "カラーテーマ：",
+      "searchDepth": "検索時にインデックスを作成するメッセージの数：",
       "replicateHops": "複製するホップ数：",
       "highHopCountWarning": "警告：ホップ数が2を超えると、このアプリが使用できなくなるまで遅くなる可能性があります。 自己責任。",
       "directFollows": "（あなたがフォローしている人だけ）",

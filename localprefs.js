@@ -51,6 +51,10 @@ exports.getAutorefresh = function() { return (getPref('autorefresh', (typeof def
 
 exports.setAutorefresh = function(isOn) { setPref('autorefresh', (isOn ? 'true' : 'false')) }
 
+exports.getSearchDepth = function() { return getPref('searchDepth', (defaultPrefs.searchDepth || 10000)) }
+
+exports.setSearchDepth = function(numMessages) { setPref('searchDepth', numMessages) }
+
 exports.getOfflineMode = function() { return (getPref('offlineMode', (typeof defaultPrefs.offlineMode != 'undefined' ? (defaultPrefs.offlineMode ? 'true' : 'false') : 'true')) == 'true') }
 
 exports.setOfflineMode = function(isOn) { setPref('offlineMode', (isOn ? 'true' : 'false')) }

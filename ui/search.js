@@ -1,12 +1,13 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, or, author, isPublic, type, key, toCallback } = SSB.dbOperators
+  const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
 
   return {
     template: `
        <div id="search">
          <h2>{{ $t('search.title', { search: search }) }}</h2>
+         <p>{{ $t('search.searchLimitNote', { results: pageSize, depth: searchDepth }) }}</p>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
          <p v-if="messages.length == 0 && !triedToLoadMessages">{{ $t('common.searchingForMessages') }}</p>
          <p v-if="messages.length == 0 && triedToLoadMessages">{{ $t('common.noMessages') }}</p>
@@ -18,6 +19,8 @@ module.exports = function () {
     data: function() {
       return {
         triedToLoadMessages: false,
+        searchDepth: 10000,
+        pageSize: 150,
         messages: []
       }
     },
@@ -25,13 +28,15 @@ module.exports = function () {
     methods: {
       loadMore: function() {
         try {
-          SSB.fullTextSearch(this.search, (err, results) => {
+          SSB.search.fullTextSearch(this.search, (err, results) => {
             if (results && results.length > 0) {
               SSB.db.query(
                 and(or(...results.slice(0, 100).map(x => key(x.id))), isPublic(), type('post')),
+                descending(),
+                paginate(this.pageSize),
                 toCallback((err, answer) => {
                   this.triedToLoadMessages = true
-                  this.messages = this.messages.concat(answer || answer.results)
+                  this.messages = this.messages.concat(answer.results || answer)
                 })
               )
             } else {
@@ -53,6 +58,7 @@ module.exports = function () {
     },
 
     created: function () {
+      this.searchDepth = SSB.search.depth
       this.render()
     },
 
