@@ -1,5 +1,5 @@
 const MiniSearch = require('minisearch').default
-const { and, descending, paginate, type, toPullStream } = SSB.dbOperators
+const { and, descending, paginate, type, isPublic, toPullStream } = SSB.dbOperators
 const pull = require('pull-stream')
 const localPrefs = require('./localprefs')
 
@@ -8,11 +8,12 @@ var mostRecentMessage = null
 function indexNewPosts(cb) {
   pull(
     SSB.db.query(
-      and(type('post')),
+      and(type('post'), isPublic()),
       descending(),
       paginate(SSB.search.depth),
       toPullStream()
     ),
+    pull.take(1),
     pull.drain((msgs) => {
       for (m in msgs) {
         if (msgs[m].key == mostRecentMessage)
