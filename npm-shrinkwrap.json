@@ -10,10 +10,8 @@
       "dependencies": {
         "@toast-ui/vue-editor": "^2.5.1",
         "human-time": "0.0.2",
-        "lodash.throttle": "^4.1.1",
         "minisearch": "^3.0.2",
         "node-emoji": "^1.10.0",
-        "pull-abortable": "^4.1.1",
         "pull-async-filter": "^1.0.0",
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
@@ -38,6 +36,7 @@
         "esmify": "^2.1.1",
         "inline-source-cli": "^2.0.0",
         "ssb-client": "^4.7.9",
+        "terser": "^5.6.0-beta",
         "uglifyify": "^5.0.2"
       }
     },
@@ -494,20 +493,6 @@
       "version": "5.7.1",
       "resolved": "https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz",
       "integrity": "sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==",
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/feross"
-        },
-        {
-          "type": "patreon",
-          "url": "https://www.patreon.com/feross"
-        },
-        {
-          "type": "consulting",
-          "url": "https://feross.org/support"
-        }
-      ],
       "dependencies": {
         "base64-js": "^1.3.1",
         "ieee754": "^1.1.13"
@@ -706,11 +691,6 @@
       },
       "engines": {
         "node": ">=6.0"
-      },
-      "peerDependenciesMeta": {
-        "supports-color": {
-          "optional": true
-        }
       }
     },
     "node_modules/async-single": {
@@ -1838,9 +1818,6 @@
         "object-is": "^1.0.1",
         "object-keys": "^1.1.1",
         "regexp.prototype.flags": "^1.2.0"
-      },
-      "funding": {
-        "url": "https://github.com/sponsors/ljharb"
       }
     },
     "node_modules/deep-extend": {
@@ -2180,20 +2157,6 @@
       "version": "5.7.1",
       "resolved": "https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz",
       "integrity": "sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==",
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/feross"
-        },
-        {
-          "type": "patreon",
-          "url": "https://www.patreon.com/feross"
-        },
-        {
-          "type": "consulting",
-          "url": "https://feross.org/support"
-        }
-      ],
       "dependencies": {
         "base64-js": "^1.3.1",
         "ieee754": "^1.1.13"
@@ -2499,9 +2462,6 @@
       },
       "engines": {
         "node": ">=10"
-      },
-      "funding": {
-        "url": "https://github.com/sindresorhus/execa?sponsor=1"
       }
     },
     "node_modules/execa/node_modules/onetime": {
@@ -2513,9 +2473,6 @@
       },
       "engines": {
         "node": ">=6"
-      },
-      "funding": {
-        "url": "https://github.com/sponsors/sindresorhus"
       }
     },
     "node_modules/explain-error": {
@@ -2819,9 +2776,6 @@
       },
       "engines": {
         "node": ">=8"
-      },
-      "funding": {
-        "url": "https://github.com/sponsors/sindresorhus"
       }
     },
     "node_modules/glob": {
@@ -3430,11 +3384,6 @@
       },
       "engines": {
         "node": ">=6.0"
-      },
-      "peerDependenciesMeta": {
-        "supports-color": {
-          "optional": true
-        }
       }
     },
     "node_modules/jitdb/node_modules/jsesc": {
@@ -3589,10 +3538,6 @@
       },
       "engines": {
         "node": ">=8.6.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/level"
       }
     },
     "node_modules/level-codec": {
@@ -3660,20 +3605,6 @@
       "version": "5.7.1",
       "resolved": "https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz",
       "integrity": "sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==",
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/feross"
-        },
-        {
-          "type": "patreon",
-          "url": "https://www.patreon.com/feross"
-        },
-        {
-          "type": "consulting",
-          "url": "https://feross.org/support"
-        }
-      ],
       "dependencies": {
         "base64-js": "^1.3.1",
         "ieee754": "^1.1.13"
@@ -3714,7 +3645,6 @@
       "version": "5.6.0",
       "resolved": "https://registry.npmjs.org/leveldown/-/leveldown-5.6.0.tgz",
       "integrity": "sha512-iB8O/7Db9lPaITU1aA2txU/cBEXAt4vWwKQRrrWuS6XDgbP4QZGj9BL2aNbwb002atoQ/lIotJkfyzz+ygQnUQ==",
-      "hasInstallScript": true,
       "dependencies": {
         "abstract-leveldown": "~6.2.1",
         "napi-macros": "~2.0.0",
@@ -3841,11 +3771,6 @@
       "dependencies": {
         "lodash._reinterpolate": "^3.0.0"
       }
-    },
-    "node_modules/lodash.throttle": {
-      "version": "4.1.1",
-      "resolved": "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz",
-      "integrity": "sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ="
     },
     "node_modules/lodash.toarray": {
       "version": "4.4.0",
@@ -4342,9 +4267,6 @@
       },
       "engines": {
         "node": ">= 0.4"
-      },
-      "funding": {
-        "url": "https://github.com/sponsors/ljharb"
       }
     },
     "node_modules/object-keys": {
@@ -4707,9 +4629,6 @@
       },
       "engines": {
         "node": ">=10.13"
-      },
-      "peerDependencies": {
-        "prettier": ">=2.0.0"
       }
     },
     "node_modules/pretty-quick/node_modules/ansi-styles": {
@@ -4721,9 +4640,6 @@
       },
       "engines": {
         "node": ">=8"
-      },
-      "funding": {
-        "url": "https://github.com/chalk/ansi-styles?sponsor=1"
       }
     },
     "node_modules/pretty-quick/node_modules/chalk": {
@@ -4852,11 +4768,6 @@
       "resolved": "https://registry.npmjs.org/bn.js/-/bn.js-4.11.9.tgz",
       "integrity": "sha512-E6QoYqCKZfgatHTdHzs1RRKP7ip4vvm+EyRUeE2RF0NblwVvb0p6jSVeNTOFxPn26QXN2o6SMfNxKp6kU8zQaw==",
       "dev": true
-    },
-    "node_modules/pull-abortable": {
-      "version": "4.1.1",
-      "resolved": "https://registry.npmjs.org/pull-abortable/-/pull-abortable-4.1.1.tgz",
-      "integrity": "sha1-s61a77QRayWRbSbbiTk6yY0NzqE="
     },
     "node_modules/pull-async": {
       "version": "1.0.0",
@@ -5404,9 +5315,6 @@
       },
       "engines": {
         "node": ">= 0.4"
-      },
-      "funding": {
-        "url": "https://github.com/sponsors/ljharb"
       }
     },
     "node_modules/relative-url": {
@@ -5879,7 +5787,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
+        "ssb-blob-files": "ssb-blob-files@git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^1.0.0",
         "ssb-db2": "^1.9.1",
@@ -6144,11 +6052,6 @@
       },
       "engines": {
         "node": ">=6.0"
-      },
-      "peerDependenciesMeta": {
-        "supports-color": {
-          "optional": true
-        }
       }
     },
     "node_modules/ssb-db2/node_modules/minimist": {
@@ -6897,20 +6800,54 @@
       }
     },
     "node_modules/terser": {
-      "version": "3.17.0",
-      "resolved": "https://registry.npmjs.org/terser/-/terser-3.17.0.tgz",
-      "integrity": "sha512-/FQzzPJmCpjAH9Xvk2paiWrFq+5M6aVOf+2KRbwhByISDX/EujxsK+BAvrhb6H+2rtrLCHK9N01wO014vrIwVQ==",
+      "version": "5.6.0-beta",
+      "resolved": "https://registry.npmjs.org/terser/-/terser-5.6.0-beta.tgz",
+      "integrity": "sha512-XqPZwi17FkFr42a6eGITU4ZHPixz1ZmuM9URQ/waMwxHenKjrxPndHtnuhNJ399P8tWFQuzZTTdN4ce3e2s28Q==",
       "dev": true,
       "dependencies": {
-        "commander": "^2.19.0",
-        "source-map": "~0.6.1",
-        "source-map-support": "~0.5.10"
+        "commander": "^2.20.0",
+        "source-map": "~0.7.2",
+        "source-map-support": "~0.5.19"
       },
       "bin": {
-        "terser": "bin/uglifyjs"
+        "terser": "bin/terser"
       },
       "engines": {
-        "node": ">=6.0.0"
+        "node": ">=10"
+      }
+    },
+    "node_modules/terser/node_modules/buffer-from": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.1.tgz",
+      "integrity": "sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==",
+      "dev": true
+    },
+    "node_modules/terser/node_modules/source-map": {
+      "version": "0.7.3",
+      "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.7.3.tgz",
+      "integrity": "sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==",
+      "dev": true,
+      "engines": {
+        "node": ">= 8"
+      }
+    },
+    "node_modules/terser/node_modules/source-map-support": {
+      "version": "0.5.19",
+      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.19.tgz",
+      "integrity": "sha512-Wonm7zOCIJzBGQdB+thsPar0kYuCIzYvxZwlBa87yi/Mdjv7Tip2cyVbLj5o0cFPN4EVkuTwb3GDDyUx2DGnGw==",
+      "dev": true,
+      "dependencies": {
+        "buffer-from": "^1.0.0",
+        "source-map": "^0.6.0"
+      }
+    },
+    "node_modules/terser/node_modules/source-map-support/node_modules/source-map": {
+      "version": "0.6.1",
+      "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz",
+      "integrity": "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==",
+      "dev": true,
+      "engines": {
+        "node": ">=0.10.0"
       }
     },
     "node_modules/through": {
@@ -7054,21 +6991,7 @@
     "node_modules/typedarray-to-buffer": {
       "version": "4.0.0",
       "resolved": "https://registry.npmjs.org/typedarray-to-buffer/-/typedarray-to-buffer-4.0.0.tgz",
-      "integrity": "sha512-6dOYeZfS3O9RtRD1caom0sMxgK59b27+IwoNy8RDPsmslSGOyU+mpTamlaIW7aNKi90ZQZ9DFaZL3YRoiSCULQ==",
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/feross"
-        },
-        {
-          "type": "patreon",
-          "url": "https://www.patreon.com/feross"
-        },
-        {
-          "type": "consulting",
-          "url": "https://feross.org/support"
-        }
-      ]
+      "integrity": "sha512-6dOYeZfS3O9RtRD1caom0sMxgK59b27+IwoNy8RDPsmslSGOyU+mpTamlaIW7aNKi90ZQZ9DFaZL3YRoiSCULQ=="
     },
     "node_modules/typedfastbitset": {
       "version": "0.2.1",
@@ -7098,6 +7021,23 @@
       "resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.1.3.tgz",
       "integrity": "sha1-SCnId+n+SbMWHzvzZziI4gRpmGA=",
       "dev": true
+    },
+    "node_modules/uglifyify/node_modules/terser": {
+      "version": "3.17.0",
+      "resolved": "https://registry.npmjs.org/terser/-/terser-3.17.0.tgz",
+      "integrity": "sha512-/FQzzPJmCpjAH9Xvk2paiWrFq+5M6aVOf+2KRbwhByISDX/EujxsK+BAvrhb6H+2rtrLCHK9N01wO014vrIwVQ==",
+      "dev": true,
+      "dependencies": {
+        "commander": "^2.19.0",
+        "source-map": "~0.6.1",
+        "source-map-support": "~0.5.10"
+      },
+      "bin": {
+        "terser": "bin/uglifyjs"
+      },
+      "engines": {
+        "node": ">=6.0.0"
+      }
     },
     "node_modules/uint48be": {
       "version": "2.0.1",
@@ -11007,11 +10947,6 @@
         "lodash._reinterpolate": "^3.0.0"
       }
     },
-    "lodash.throttle": {
-      "version": "4.1.1",
-      "resolved": "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz",
-      "integrity": "sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ="
-    },
     "lodash.toarray": {
       "version": "4.4.0",
       "resolved": "https://registry.npmjs.org/lodash.toarray/-/lodash.toarray-4.4.0.tgz",
@@ -11833,11 +11768,6 @@
           "dev": true
         }
       }
-    },
-    "pull-abortable": {
-      "version": "4.1.1",
-      "resolved": "https://registry.npmjs.org/pull-abortable/-/pull-abortable-4.1.1.tgz",
-      "integrity": "sha1-s61a77QRayWRbSbbiTk6yY0NzqE="
     },
     "pull-async": {
       "version": "1.0.0",
@@ -12771,7 +12701,7 @@
     },
     "ssb-blob-files": {
       "version": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#a9d8b02fa64eee4209266446bf0d0c879d141966",
-      "from": "ssb-blob-files@git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
+      "from": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#a9d8b02fa64eee4209266446bf0d0c879d141966",
       "requires": {
         "piexifjs": "^1.0.6",
         "pull-box-stream": "^1.0.13",
@@ -12803,7 +12733,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
+        "ssb-blob-files": "ssb-blob-files@git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^1.0.0",
         "ssb-db2": "^1.9.1",
@@ -13738,14 +13668,46 @@
       }
     },
     "terser": {
-      "version": "3.17.0",
-      "resolved": "https://registry.npmjs.org/terser/-/terser-3.17.0.tgz",
-      "integrity": "sha512-/FQzzPJmCpjAH9Xvk2paiWrFq+5M6aVOf+2KRbwhByISDX/EujxsK+BAvrhb6H+2rtrLCHK9N01wO014vrIwVQ==",
+      "version": "5.6.0-beta",
+      "resolved": "https://registry.npmjs.org/terser/-/terser-5.6.0-beta.tgz",
+      "integrity": "sha512-XqPZwi17FkFr42a6eGITU4ZHPixz1ZmuM9URQ/waMwxHenKjrxPndHtnuhNJ399P8tWFQuzZTTdN4ce3e2s28Q==",
       "dev": true,
       "requires": {
-        "commander": "^2.19.0",
-        "source-map": "~0.6.1",
-        "source-map-support": "~0.5.10"
+        "commander": "^2.20.0",
+        "source-map": "~0.7.2",
+        "source-map-support": "~0.5.19"
+      },
+      "dependencies": {
+        "buffer-from": {
+          "version": "1.1.1",
+          "resolved": "https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.1.tgz",
+          "integrity": "sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==",
+          "dev": true
+        },
+        "source-map": {
+          "version": "0.7.3",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.7.3.tgz",
+          "integrity": "sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==",
+          "dev": true
+        },
+        "source-map-support": {
+          "version": "0.5.19",
+          "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.19.tgz",
+          "integrity": "sha512-Wonm7zOCIJzBGQdB+thsPar0kYuCIzYvxZwlBa87yi/Mdjv7Tip2cyVbLj5o0cFPN4EVkuTwb3GDDyUx2DGnGw==",
+          "dev": true,
+          "requires": {
+            "buffer-from": "^1.0.0",
+            "source-map": "^0.6.0"
+          },
+          "dependencies": {
+            "source-map": {
+              "version": "0.6.1",
+              "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz",
+              "integrity": "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==",
+              "dev": true
+            }
+          }
+        }
       }
     },
     "through": {
@@ -13904,6 +13866,17 @@
           "resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.1.3.tgz",
           "integrity": "sha1-SCnId+n+SbMWHzvzZziI4gRpmGA=",
           "dev": true
+        },
+        "terser": {
+          "version": "3.17.0",
+          "resolved": "https://registry.npmjs.org/terser/-/terser-3.17.0.tgz",
+          "integrity": "sha512-/FQzzPJmCpjAH9Xvk2paiWrFq+5M6aVOf+2KRbwhByISDX/EujxsK+BAvrhb6H+2rtrLCHK9N01wO014vrIwVQ==",
+          "dev": true,
+          "requires": {
+            "commander": "^2.19.0",
+            "source-map": "~0.6.1",
+            "source-map-support": "~0.5.10"
+          }
         }
       }
     },

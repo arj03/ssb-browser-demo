@@ -20,7 +20,7 @@ module.exports = function () {
       return {
         triedToLoadMessages: false,
         searchDepth: 10000,
-        pageSize: 150,
+        pageSize: 50,
         messages: []
       }
     },
@@ -31,7 +31,7 @@ module.exports = function () {
           SSB.search.fullTextSearch(this.search, (err, results) => {
             if (results && results.length > 0) {
               SSB.db.query(
-                and(or(...results.slice(0, 100).map(x => key(x.id))), isPublic(), type('post')),
+                and(or(...results.slice(0, 50).map(x => key(x.id)))),
                 descending(),
                 paginate(this.pageSize),
                 toCallback((err, answer) => {
