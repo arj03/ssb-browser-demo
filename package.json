@@ -10,7 +10,6 @@
   "dependencies": {
     "@toast-ui/vue-editor": "^2.5.1",
     "human-time": "0.0.2",
-    "lodash.throttle": "^4.1.1",
     "minisearch": "^3.0.2",
     "node-emoji": "^1.10.0",
     "pull-abortable": "^4.1.1",
