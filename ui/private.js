@@ -44,44 +44,34 @@ module.exports = function (componentsState) {
       suggest: function(searchString, loading) {
         var self = this
         loading(true)
-        let searchOpts = {}
-        if (searchString !== "")
-          searchOpts['text'] = searchString 
 
-        SSB.net.suggest.profile(searchOpts, (err, matches) => {
-          if (matches) {
-            var unsortedPeople = []
-            matches.forEach(match => {
-              const p = SSB.getProfile(match.id)
-              if (p && p.imageURL)
-                unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
-              else
-                unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
-            })
-            const sortFunc = new Intl.Collator().compare
-            self.people = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
-          }
+        const matches = SSB.searchProfiles(searchString)
 
-          loading(false)
+        var unsortedPeople = []
+        matches.forEach(match => {
+          const p = SSB.getProfile(match.id)
+          if (p && p.imageURL)
+            unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
+          else
+            unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
         })
+        const sortFunc = new Intl.Collator().compare
+        self.people = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
+        loading(false)
       },
 
       recipientsOpen: function() {
-        var self = this
-        SSB.net.suggest.profile({}, (err, matches) => {
-          if (matches) {
-            var unsortedPeople = []
-            matches.forEach(match => {
-              const p = SSB.getProfile(match.id)
-              if (p && p.imageURL)
-                unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
-              else
-                unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
-            })
-            const sortFunc = new Intl.Collator().compare
-            self.people = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
-          }
+        const matches = SSB.searchProfiles("")
+        var unsortedPeople = []
+        matches.forEach(match => {
+          const p = SSB.getProfile(match.id)
+          if (p && p.imageURL)
+            unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
+          else
+            unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
         })
+        const sortFunc = new Intl.Collator().compare
+        this.people = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
       },
 
       renderPrivate: function() {

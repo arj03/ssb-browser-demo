@@ -4,14 +4,15 @@ module.exports = function (componentsState) {
   const throttle = require('lodash.throttle')
   const ssbMentions = require('ssb-mentions')
   const localPrefs = require('../localprefs')
+  const userGroups = require('../usergroups')
   const { and, or, not, channel, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   function getQuery(onlyDirectFollow, onlyThreads, onlyChannels,
-                    channelList, hideChannels, hideChannelsList) {
+                    channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb) {
 
     let feedFilter = null
     if (onlyDirectFollow) {
-      const graph = SSB.db.getIndex('contacts').getGraphForFeedSync(SSB.net.id)
+      const graph = SSB.getGraphSync()
       if (graph.following.length > 0)
         feedFilter = or(...graph.following.map(x => author(x)))
     }
@@ -24,10 +25,33 @@ module.exports = function (componentsState) {
     if (hideChannels && hideChannelsList.length > 0)
       hideChannelFilter = and(...hideChannelsList.map(x => not(channel(x.replace(/^#+/, '')))))
 
-    if (onlyThreads)
-      return and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter)
-    else
-      return and(type('post'), isPublic(), feedFilter, channelFilter, hideChannelFilter)
+    let groupFilter = null
+    if (onlyGroups && onlyGroupsList.length > 0) {
+      // Groups are asynchronous, so we've got as many async calls to make as we have groups to look for, so this is going to take some work.
+      let needGroupMembersFor = onlyGroupsList.length
+      let allMembers = []
+      for (g in onlyGroupsList) {
+        userGroups.getMembers(onlyGroupsList[g].id, (err, groupId, members) => {
+          allMembers = allMembers.concat(members)
+          --needGroupMembersFor
+          if (needGroupMembersFor == 0) {
+            // We finally have all the group members we need, so we can put together the query.
+            var uniqueMembers = allMembers.filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
+            var groupFilter = or(...uniqueMembers.map(x => author(x)))
+            if (onlyThreads)
+              cb(null, and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter, groupFilter))
+            else
+              cb(null, and(type('post'), isPublic(), feedFilter, channelFilter, hideChannelFilter, groupFilter))
+          }
+        })
+      }
+    } else {
+      // No groups, so nothing asynchronous - return immediately.
+      if (onlyThreads)
+        cb(null, and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter))
+      else
+        cb(null, and(type('post'), isPublic(), feedFilter, channelFilter, hideChannelFilter))
+    }
   }
 
   return {
@@ -44,7 +68,9 @@ module.exports = function (componentsState) {
       <h2>{{ $t('common.lastXMessages', { count: pageSize }) }}
       <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
       </h2>
-      <fieldset><legend>{{ $t('public.filters') }}</legend>
+      <button v-if="!showFilters" class="clickButton" v-on:click="clickShowFilters">{{ $t('public.showFilters') }}</button>
+      <button v-if="showFilters" class="clickButton" v-on:click="clickHideFilters">{{ $t('public.hideFilters') }}</button>
+      <fieldset v-if="showFilters"><legend>{{ $t('public.filters') }}</legend>
       <input id='onlyDirectFollow' type='checkbox' v-model="onlyDirectFollow"> <label for='onlyDirectFollow'>{{ $t('public.filterOnlyDirectFollow') }}</label><br />
       <input id='onlyThreads' type='checkbox' v-model="onlyThreads"> <label for='onlyThreads'>{{ $t('public.filterOnlyThreads') }}</label><br />
       <div class='filter-line'>
@@ -55,6 +81,11 @@ module.exports = function (componentsState) {
       <div class='filter-line'>
         <input id='hideChannels' type='checkbox' v-model="hideChannels"> <label for='hideChannels'>{{ $t('public.filterHideChannels') }}</label>
         <div class="channel-selector"><v-select :placeholder="$t('public.channelsOptional')" v-model="hideChannelsList" :options="channels" taggable multiple push-tags>
+        </v-select></div>
+      </div>
+      <div class='filter-line'>
+        <input id='onlyGroups' type='checkbox' v-model="onlyGroups"> <label for='onlyGroups'>{{ $t('public.filterOnlyGroups') }}</label>
+        <div class="channel-selector"><v-select :placeholder="$t('public.groupsOptional')" v-model="onlyGroupsList" :options="groups" multiple>
         </v-select></div>
       </div>
       </fieldset>
@@ -76,12 +107,16 @@ module.exports = function (componentsState) {
         postText: "",
         postChannel: "",
         channels: [],
+        groups: [],
+        showFilters: false,
         onlyDirectFollow: false,
         onlyThreads: false,
         onlyChannels: false,
         onlyChannelsList: [],
         hideChannels: false,
         hideChannelsList: [],
+        onlyGroups: false,
+        onlyGroupsList: [],
         messages: [],
         offset: 0,
         pageSize: 50,
@@ -95,18 +130,34 @@ module.exports = function (componentsState) {
     },
 
     methods: {
+      clickShowFilters: function() {
+        this.showFilters = true
+      },
+
+      clickHideFilters: function() {
+        this.showFilters = false
+      },
+
       loadMore: function() {
-        SSB.db.query(
-          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList, this.hideChannels, this.hideChannelsList),
-          startFrom(this.offset),
-          paginate(this.pageSize),
-          descending(),
-          toCallback((err, answer) => {
-            this.messages = this.messages.concat(answer.results)
-            this.displayPageEnd = this.offset + this.pageSize
-            this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
-          })
-        )
+        var self = this
+
+        getQuery(this.onlyDirectFollow, this.onlyThreads,
+          this.onlyChannels, this.onlyChannelsList,
+          this.hideChannels, this.hideChannelsList,
+          this.onlyGroups, this.onlyGroupsList,
+          (err, query) => {
+          SSB.db.query(
+            query,
+            startFrom(self.offset),
+            paginate(self.pageSize),
+            descending(),
+            toCallback((err, answer) => {
+              self.messages = self.messages.concat(answer.results)
+              self.displayPageEnd = self.offset + self.pageSize
+              self.offset += self.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+            })
+          )
+        })
       },
 
       closeOnboarding: function() {
@@ -116,37 +167,43 @@ module.exports = function (componentsState) {
         window.firstTimeLoading = false
       },
 
-      renderPublic: function (cb) {
+      renderPublic: function () {
+        var self = this
+
         componentsState.newPublicMessages = false
 
+        this.isRefreshing = true
         document.body.classList.add('refreshing')
 
         console.time("latest messages")
 
-        SSB.db.query(
-          getQuery(this.onlyDirectFollow, this.onlyThreads, this.onlyChannels, this.onlyChannelsList, this.hideChannels, this.hideChannelsList),
-          startFrom(this.offset),
-          paginate(this.pageSize),
-          descending(),
-          toCallback((err, answer) => {
-            document.body.classList.remove('refreshing')
-            console.timeEnd("latest messages")
-
-            if (err) {
-              this.messages = []
-              alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
-              if (cb)
-                cb(err)
-              throw err
-            } else {
-              this.messages = this.messages.concat(answer.results)
-              this.displayPageEnd = this.offset + this.pageSize
-              this.offset += this.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
-              if (cb)
-                cb(null, true)
-            }
-          })
-        )
+        getQuery(this.onlyDirectFollow, this.onlyThreads,
+          this.onlyChannels, this.onlyChannelsList,
+          this.hideChannels, this.hideChannelsList,
+          this.onlyGroups, this.onlyGroupsList,
+          (err, query) => {
+          SSB.db.query(
+            query,
+            startFrom(self.offset),
+            paginate(self.pageSize),
+            descending(),
+            toCallback((err, answer) => {
+              self.isRefreshing = false
+              document.body.classList.remove('refreshing')
+              console.timeEnd("latest messages")
+  
+              if (err) {
+                self.messages = []
+                alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
+                throw err
+              } else {
+                self.messages = self.messages.concat(answer.results)
+                self.displayPageEnd = self.offset + self.pageSize
+                self.offset += self.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+              }
+            })
+          )
+        })
       },
 
       saveFilters: function() {
@@ -163,10 +220,14 @@ module.exports = function (componentsState) {
         if(this.hideChannels)
           filterNames.push('hidechannels')
 
+        if(this.onlyGroups)
+          filterNames.push('onlygroups')
+
         // If we have no filters, set it to 'none' since we don't have a filter named that and it will keep it from dropping down to default.
         localPrefs.setPublicFilters(filterNames.length > 0 ? filterNames.join('|') : 'none')
         localPrefs.setFavoriteChannels(this.onlyChannelsList)
         localPrefs.setHiddenChannels(this.hideChannelsList)
+        localPrefs.setFavoriteGroups(this.onlyGroupsList.map((x) => x.id))
       },
 
       onFileSelect: function(ev) {
@@ -180,39 +241,19 @@ module.exports = function (componentsState) {
         this.showPreview = false
       },
 
-      channelResultCallback: function(err, answer) {
-        if (!err) {
-          var newChannels = []
-
-          var posts = answer.results
-
-          for (r in posts) {
-            var channel = posts[r].value.content.channel
-
-            if(channel && channel.charAt(0) == '#')
-              channel = channel.substring(1, channel.length)
-
-            if (channel && channel != '' && channel != '"')
-              if (newChannels.indexOf(channel) < 0)
-                newChannels.push(channel)
-          }
-
-          // Sort and add a # at the start so it displays like it would normally for a user.
-          var sortFunc = Intl.Collator().compare
-          this.channels = newChannels.map((x) => '#' + x).sort(sortFunc)
-        }
+      loadChannels: function() {
+        const allChannels = SSB.db.getIndex("channels").getChannels()
+        const sortFunc = (new Intl.Collator()).compare
+        const filteredChannels = allChannels.sort(sortFunc)
+        this.channels = filteredChannels.map((x) => "#" + x)
       },
 
-      loadChannels: function() {
-        if (this.channels.length == 0) {
-          var self = this
-          SSB.connectedWithData((rpc) => {
-            SSB.db.query(
-              and(type('post'), isPublic(), paginate(500)),
-              toCallback(self.channelResultCallback)
-            )
-          })
-        }
+      loadGroups: function() {
+        userGroups.getGroups((err, groups) => {
+          const sortFunc = (new Intl.Collator()).compare
+          this.groups = groups.sort((a, b) => { return sortFunc(a.name, b.name) })
+            .map((x) => { return { label: x.name, id: x.id } })
+        })
       },
 
       onPost: function() {
@@ -283,21 +324,19 @@ module.exports = function (componentsState) {
 
       refresh: function() {
         // Don't allow concurrent refreshing.
-        if(this.isRefreshing)
+        if (this.isRefreshing)
           return
-
-        this.isRefreshing = true
 
         console.log("Refreshing")
         this.messages = []
         this.offset = 0
-        this.renderPublic((err, success) => {
-          this.isRefreshing = false
-        })
+        this.renderPublic()
       }
     },
 
     created: function () {
+      var self = this
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
 
       // Pull preferences for filters.
@@ -308,6 +347,19 @@ module.exports = function (componentsState) {
       this.onlyChannelsList = localPrefs.getFavoriteChannels()
       this.hideChannels = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('hidechannels') >= 0)
       this.hideChannelsList = localPrefs.getHiddenChannels()
+      this.onlyGroups = (filterNamesSeparatedByPipes && filterNamesSeparatedByPipes.indexOf('onlygroups') >= 0)
+      userGroups.getGroups((err, groups) => {
+        // Need to transform this by which groups still exist as well as generate their current names.
+        var rawOnlyGroupsList = localPrefs.getFavoriteGroups()
+        var transformedGroupsList = []
+        for (r in rawOnlyGroupsList) {
+          for (g in groups) {
+            if (groups[g].id == rawOnlyGroupsList[r])
+              transformedGroupsList.push({ label: groups[g].name, id: groups[g].id })
+          }
+        }
+        self.onlyGroupsList = transformedGroupsList
+      })
 
       this.renderPublic()
 
@@ -315,6 +367,7 @@ module.exports = function (componentsState) {
       setTimeout(() => {
         // Start this loading to make it easier for the user to filter by channels.
         this.loadChannels()
+        this.loadGroups()
       }, 3000)
     },
 
@@ -337,6 +390,11 @@ module.exports = function (componentsState) {
         this.refresh()
       },
 
+      onlyGroups: function (newValue, oldValue) {
+        this.saveFilters()
+        this.refresh()
+      },
+
       onlyChannelsList: function (newValue, oldValue) {
         this.saveFilters()
 
@@ -350,6 +408,14 @@ module.exports = function (componentsState) {
 
         // Only refresh if it changed while the checkbox is checked.
         if (this.hideChannels)
+          this.refresh()
+      },
+
+      onlyGroupsList: function (newValue, oldValue) {
+        this.saveFilters()
+
+        // Only refresh if it changed while the checkbox is checked.
+        if (this.onlyGroups)
           this.refresh()
       },
 

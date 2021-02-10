@@ -1,0 +1,45 @@
+#groups > div > input {
+  padding: 5px;
+  margin: 0 0px 10px 0px;
+  width: 13rem;
+}
+
+#groups ul.groupMembers
+{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#groups ul.groupMembers li > a > img
+{
+  width: 50px;
+  height: 50px;
+}
+
+#groups ul.groupMembers li
+{
+  float: left;
+  padding-right: 0.5rem;
+}
+
+#groups .clearingDiv
+{
+  clear: both;
+}
+
+#groups .group
+{
+  margin-bottom: 4em;
+}
+
+#groups .group > h4
+{
+  margin-top: 0;
+  float: left;
+}
+
+#groups .group > .groupActions
+{
+  float: right;
+}

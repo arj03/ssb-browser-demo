@@ -77,3 +77,13 @@
   border: 1px solid #000;
 }
 
+@media (min-resolution: 2dppx) and (max-width: 40em)
+{
+  .theme-floralgardenbird #app
+  {
+    /* This messes up the positioning of the footer if not removed, so in the interest of readability, we're going to use a solid color instead. */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #fbebf4ff;
+  }
+}

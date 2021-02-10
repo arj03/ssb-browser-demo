@@ -29,6 +29,8 @@ a {
 
 #navigation {
   font-weight: 600;
+  float: left;
+  margin: 1em 0;
 }
 
 #navigation > a {
@@ -41,10 +43,63 @@ a {
   font-family: system-ui, sans-serif
 }
 
-#goTo {
-  width: 170px;
-  padding: 5px;
+#searchBox {
+  display: inline-block;
   float: right;
+  width: 150px;
+  margin: 1em 0;
+}
+
+#goTo {
+  float: right;
+  width: 150px;
+  padding: 5px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: width 0.5s, box-shadow 0.5s;
+}
+
+#goTo::placeholder {
+  text-align: right;
+}
+
+#searchBox.expanded #goTo {
+  width: 200px;
+  box-shadow: 0 1px 1em rgba(0, 0, 0, 0.5);
+}
+
+#suggestionPositioning {
+  position: relative;
+  clear: right;
+}
+
+#searchBox .suggestion-box {
+  width: 200px;
+  position: absolute;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+#searchBox.expanded .suggestion-box {
+  opacity: 1;
+  visibility: visible;
+}
+
+#searchBox .tui-popup-body {
+  font-size: medium;
+}
+
+#searchBox .suggestion-box img {
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 2px;
+  margin-left: -8px;
+  vertical-align: middle;
+}
+
+#navClear {
+  clear: both;
 }
 
 .message > span img {
@@ -210,7 +265,59 @@ body, html {
   vertical-align: middle;
 }
 
-@media (min-resolution: 2dppx) and (max-width: 40em)
+#navigation .avatar {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: middle;
+}
+
+#navigation .iconButton {
+  text-decoration: none;
+}
+
+.navButton .avatar {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: middle;
+}
+
+#navigation .connected-indicator {
+  width: 0.5em;
+  display: inline-block;
+  margin-left: -0.5em;
+  position: relative;
+  top: -0.5em;
+}
+
+#footer .newPublic,
+#footer .newPrivate,
+#footer .connected-indicator {
+  margin-left: -1em;
+  position: relative;
+  top: -3px;
+}
+
+@media (max-width: 40em)
+{
+  body {
+    padding: 0.5em;
+  }
+
+  #app > h1 {
+    margin-bottom: 0;
+  }
+
+  #searchBox {
+    margin: 0.5em 0 0 0;
+  }
+
+  .message {
+    padding: 1rem 1rem 0.25rem 1rem;
+  }
+}
+
+/* Only switch to footer-based navigation when we're clearly on a mobile device and the screen's wide enough to support it. */
+@media (min-resolution: 2dppx) and (max-width: 40em) and (min-width: 22em)
 {
   #navigation {
     display: none;
@@ -218,6 +325,8 @@ body, html {
 
   #footer {
     display: flex;
+    width: 100%;
+    margin-left: -0.5em;
   }
 }
 
@@ -246,6 +355,13 @@ body, html {
 .reactions .reactions-new a
 {
   text-decoration: none;
+}
+
+.reactions .reactions-existing > span,
+.reactions .reactions-mine > span,
+.reactions .reactions-new > span
+{
+  padding: 3px;
 }
 
 #channels ol
@@ -278,4 +394,46 @@ body, html {
 .get-started-button:hover
 {
   background-color: #6c6;
+}
+
+a.blockedAvatar
+{
+  display: inline-block;
+  position: relative;
+}
+
+a.blockedAvatar img
+{
+  filter: blur(4px);
+  -moz-filter: blur(4px);
+}
+
+a.blockedAvatar span.blockedSymbol
+{
+  display: block;
+  font-size: 35px;
+  line-height: 50px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  text-align: center;
+}
+
+/* Emoji menu */
+.message
+{
+  position: relative;
+}
+
+.message .vue-simple-context-menu
+{
+  max-width: 40%;
+  font-family: inherit;
+}
+
+.message .vue-simple-context-menu li.vue-simple-context-menu__item
+{
+  display: inline-block;
+  padding: 5px;
 }

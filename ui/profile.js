@@ -2,6 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
   const md = require('./markdown')
+  const userGroups = require('../usergroups')
   const { and, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
   let initialState = function(self) {
@@ -15,13 +16,23 @@ module.exports = function () {
       messages: [],
       canDownloadMessages: true,
       canDownloadProfile: true,
+      showFriends: true,
+      showBlocked: false,
+      showFollowers: false,
+      showBlockingUs: false,
       friends: [],
+      followers: [],
       blocked: [],
+      blockingUs: [],
       waitingForBlobURLs: 0,
 
       showExportKey: false,
       showImportKey: false,
       mnemonic: '',
+
+      group: '',
+      alreadyInGroup: false,
+      groups: [],
 
       offset: 0
     }
@@ -42,8 +53,9 @@ module.exports = function () {
            </div>
          </span>
          <span v-else>
-           <div class="avatar">
+           <div v-bind:class="{ avatar: true, blockedAvatar: blocking }">
              <img :src='image'><br>
+             <span v-if="blocking" class="blockedSymbol">🚫</span>
            </div>
            <div class="description">
              <h2 class="profileName">{{ name }}</h2>
@@ -60,23 +72,42 @@ module.exports = function () {
            <router-link class="clickButton" tag="button" :to="{name: 'private-feed', params: { feedId: feedId }}">{{ $t('profile.sendMessage') }}</router-link>
            <button class="clickButton" v-on:click="changeFollowStatus">{{ followText }}</button>
            <button class="clickButton" v-on:click="changeBlockStatus">{{ blockText }}</button>
-           <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button>
+           <button class="clickButton" v-on:click="deleteFeed">{{ $t('profile.removeFeed') }} &#x2622</button><br>
+           <span class="addToGroup">
+             <v-select :placeholder="$t('profile.groupDropdownPlaceholder')" v-model="group" :options="groups" label="name" @input="groupChange"></v-select>
+             <button v-if="!alreadyInGroup" class="clickButton" v-on:click="addToGroup">{{ $t('profile.addToGroup') }}</button>
+             <button v-if="alreadyInGroup" class="clickButton" v-on:click="removeFromGroup">{{ $t('profile.removeFromGroup') }}</button>
+           </span>
            <br><br>
          </div>
-         <h2 v-if="friends">{{ $t('profile.following') }}</h2>
-         <div id="follows">
+         <h2 v-if="friends"><a href="javascript:void(0)" @click="showFriends=!showFriends"><span v-if="showFriends">▼</span><span v-if="!showFriends">►</span>&nbsp;{{ $t('profile.following') }} ({{ friends.length }})</a></h2>
+         <div v-if="showFriends" id="follows">
            <div v-for="friend in friends">
              <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
-         <h2 v-if="blocked">{{ $t('profile.blocking') }}</h2>
-         <div id="blocked">
+         <h2 v-if="blocked"><a href="javascript:void(0)" @click="showBlocked=!showBlocked"><span v-if="showBlocked">▼</span><span v-if="!showBlocked">►</span>&nbsp;{{ $t('profile.blocking') }} ({{ blocked.length }})</a></h2>
+         <div v-if="showBlocked" id="blocked">
            <div v-for="block in blocked">
              <ssb-profile-link v-bind:key="block" v-bind:feedId="block"></ssb-profile-link>
            </div>
          </div>
          <div style="clear: both;"></div>
+         <h2 v-if="followers && followers.length > 0"><a href="javascript:void(0)" @click="showFollowers=!showFollowers"><span v-if="showFollowers">▼</span><span v-if="!showFollowers">►</span>&nbsp;{{ $t('profile.followers', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ followers.length }})</a></h2>
+         <div v-if="followers && followers.length > 0 && showFollowers" id="followers">
+           <div v-for="friend in followers">
+             <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
+         <div v-if="followers && followers.length > 0" style="clear: both;"></div>
+         <h2 v-if="blockingUs && blockingUs.length > 0"><a href="javascript:void(0)" @click="showBlockingUs=!showBlockingUs"><span v-if="showBlockingUs">▼</span><span v-if="!showBlockingUs">►</span>&nbsp;{{ $t('profile.blockingUs', { name: (isSelf ? $t('common.selfPronoun') : name) }) }} ({{ blockingUs.length }})</a></h2>
+         <div v-if="blockingUs && blockingUs.length > 0 && showBlockingUs" id="blockingUs">
+           <div v-for="friend in blockingUs">
+             <ssb-profile-link v-bind:key="friend" v-bind:feedId="friend"></ssb-profile-link>
+           </div>
+         </div>
+         <div v-if="blockingUs && blockingUs.length > 0" style="clear: both;"></div>
          <h2>{{ $t('profile.lastXMessagesFor', { count: 25 }) }} {{ name }} <div style='font-size: 15px'>({{ feedId }})</div></h2>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadFollowing">{{ $t('profile.downloadFollowing') }}</button>
          <button v-if="canDownloadProfile" class="clickButton" v-on:click="downloadProfile">{{ $t('profile.downloadProfile') }}</button>
@@ -152,6 +183,47 @@ module.exports = function () {
     },
     
     methods: {
+      groupChange: function() {
+        var self = this
+        if (this.group && this.group.id && this.group.id != '') {
+          userGroups.getMembers(this.group.id, (err, groupId, members) => {
+            self.alreadyInGroup = (members.indexOf(this.feedId) >= 0)
+          })
+        }
+      },
+
+      addToGroup: function() {
+        var self = this
+        if (!this.group || !this.group.id || this.group.id == '') {
+          alert(this.$root.$t('profile.chooseGroupFirst'))
+          return
+        }
+        userGroups.addMember(this.group.id, this.feedId, (err, success) => {
+          if (err) {
+            alert(err)
+            return
+          }
+
+          self.alreadyInGroup = true
+        })
+      },
+
+      removeFromGroup: function() {
+        var self = this
+        if (!this.group || !this.group.id || this.group.id == '') {
+          alert(this.$root.$t('profile.chooseGroupFirst'))
+          return
+        }
+        userGroups.removeMember(this.group.id, this.feedId, (err, success) => {
+          if (err) {
+            alert(err)
+            return
+          }
+
+          self.alreadyInGroup = false
+        })
+      },
+
       cacheImageURLForPreview: function(blobId, cb) {
         var self = this
         ++this.waitingForBlobURLs
@@ -205,12 +277,9 @@ module.exports = function () {
         localStorage["/.ssb-lite/secret"] = JSON.stringify(key)
         this.showImportKey = false
 
-        SSB.net.id = this.feedId = key.id
-        SSB.net.config.keys = key
-        Object.assign(this.$data, initialState(this))
+        localStorage["/.ssb-lite/restoreFeed"] = "true"
 
-        // FIXME: this won't work
-        SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
+        alert(this.$root.$t('profile.reloadAfterImport'))
       },
 
       saveProfile: function() {
@@ -236,6 +305,12 @@ module.exports = function () {
         SSB.db.publish(msg, (err) => {
           if (err) return alert(err)
 
+          // Re-render the lower nav menu.
+          if (this.imageBlobId != '') {
+            this.$root.$refs["upperNavProfileLink"].renderProfile({ name: this.$root.$t('common.selfPronoun'), imageURL: this.image })
+            this.$root.$refs["lowerNavProfileLink"].renderProfile({ name: this.$root.$t('common.selfPronoun'), imageURL: this.image })
+          }
+
           alert("Saved!")
         })
       },
@@ -257,9 +332,10 @@ module.exports = function () {
             following: true
           }, () => {
             alert(self.$root.$t('profile.followed')) // FIXME: proper UI
-            // wait for db sync
             SSB.connectedWithData(() => {
-              SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+              SSB.net.db.onDrain('contacts', () => {
+                SSB.net.sync(SSB.getPeer())
+              })
             })
           })
         }
@@ -273,6 +349,7 @@ module.exports = function () {
             contact: this.feedId,
             blocking: false
           }, () => {
+            self.blocking = false
             alert(self.$root.$t('profile.unblocked')) // FIXME: proper UI
           })
         } else {
@@ -283,6 +360,7 @@ module.exports = function () {
           }, () => {
             SSB.db.deleteFeed(this.feedId, (err) => {
               if (err) {
+                self.blocking = true
                 alert(self.$root.$t('profile.blockedButNotDeleted'))
               } else {
                 alert(self.$root.$t('profile.blocked')) // FIXME: proper UI
@@ -372,6 +450,40 @@ module.exports = function () {
         })
       },
 
+      updateFollowers: function() {
+        var self = this
+        var opts = {
+          start: this.feedId,
+          max: 1,
+          reverse: true
+        }
+        SSB.net.friends.hops(opts, (err, feeds) => {
+          var newFollowers = []
+          for(f in feeds) {
+            if (feeds[f] > 0)
+              newFollowers.push(f)
+          }
+          self.followers = newFollowers
+        })
+      },
+
+      updateBlockingUs: function() {
+        var self = this
+        var opts = {
+          start: this.feedId,
+          max: 0,
+          reverse: true
+        }
+        SSB.net.friends.hops(opts, (err, feeds) => {
+          var newBlocks = []
+          for(f in feeds) {
+            if (Math.round(feeds[f]) == -1)
+              newBlocks.push(f)
+          }
+          self.blockingUs = newBlocks
+        })
+      },
+
       loadMore: function() {
         SSB.db.query(
           and(author(this.feedId), type('post'), isPublic()),
@@ -387,13 +499,25 @@ module.exports = function () {
 
       renderProfile: function () {
         var self = this
-        const contacts = SSB.db.getIndex('contacts')
-        contacts.getGraphForFeedHops1(self.feedId, (err, graph) => {
+
+        SSB.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
-          self.following = self.feedId != SSB.net.id && contacts.isFollowing(SSB.net.id, self.feedId)
-          self.blocking = self.feedId != SSB.net.id && contacts.isBlocking(SSB.net.id, self.feedId)
+          SSB.net.friends.isFollowing({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+            self.following = result
+          })
+
+          SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+            self.blocking = result
+          })
+        })
+
+        userGroups.getGroups((err, groups) => {
+          if (groups) {
+            const sortFunc = (new Intl.Collator()).compare
+            self.groups = groups.sort((a, b) => { return sortFunc(a.name, b.name) })
+          }
         })
 
         document.body.classList.add('refreshing')
@@ -420,50 +544,54 @@ module.exports = function () {
           })
         )
 
-        SSB.getFullProfileAsync(this.feedId, (err, profile) => {
-          if (err) return console.error("Error getting profile", err)
+        this.updateFollowers()
+        this.updateBlockingUs()
 
-          if (profile.name)
-            this.name = profile.name
-  
-          if (profile.description) {
-            this.descriptionText = profile.description
-  
-            if (self.feedId == SSB.net.id) {
-              // Editing self.
-              // Check for images.  If there are any, cache them.
-              var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
-              var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
-              for (b in blobMatches)
-                this.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
-                  // Reload the editor with the new image.
-                  // This is only triggered when the last image is loaded.
-                  // Set it to something different and back again to get it to refresh the preview.
-                  if (self.$refs.markdownEditor) {
-                    self.$refs.markdownEditor.setMarkdown(this.descriptionText + " ")
-                    self.$refs.markdownEditor.setMarkdown(this.descriptionText)
-                  }
-                })
-  
-              // Load the editor.
-              if (self.$refs.markdownEditor) {
-                if (blobMatches.length == 0) {
-                  // If we're not waiting for any images to load, load the editor right away.
+        const profile = SSB.getProfile(this.feedId)
+
+        if (profile.name)
+          this.name = profile.name
+        
+        if (profile.description) {
+          this.descriptionText = profile.description
+          
+          if (self.feedId == SSB.net.id) {
+            // Editing self.
+            // Check for images.  If there are any, cache them.
+            var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
+            var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
+            for (b in blobMatches)
+              this.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
+                // Reload the editor with the new image.
+                // This is only triggered when the last image is loaded.
+                // Set it to something different and back again to get it to refresh the preview.
+                if (self.$refs.markdownEditor) {
+                  self.$refs.markdownEditor.setMarkdown(this.descriptionText + " ")
                   self.$refs.markdownEditor.setMarkdown(this.descriptionText)
                 }
+              })
+            
+            // Load the editor.
+            if (self.$refs.markdownEditor) {
+              if (blobMatches.length == 0) {
+                // If we're not waiting for any images to load, load the editor right away.
+                self.$refs.markdownEditor.setMarkdown(this.descriptionText)
               }
             }
           }
-  
-          if (profile.image) {
-            SSB.net.blobs.localGet(profile.image, (err, url) => {
-              if (!err) {
-                self.image = url
-                self.imageBlobId = profile.image
-              }
-            })
-          }
-        })
+        }
+
+        if (profile.imageURL) {
+          self.image = profile.imageURL
+          self.imageBlobId = profile.image
+        } else if (profile.image) {
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            if (!err) {
+              self.image = url
+              self.imageBlobId = profile.image
+            }
+          })
+        }
       }
     },
 

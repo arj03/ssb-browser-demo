@@ -39,6 +39,10 @@ exports.getFavoriteChannels = function() { return JSON.parse(getPref('favoriteCh
 
 exports.setFavoriteChannels = function(favoriteChannelsArray) { setPref('favoriteChannels', JSON.stringify(favoriteChannelsArray)) }
 
+exports.getFavoriteGroups = function() { return JSON.parse(getPref('favoriteGroups', JSON.stringify(defaultPrefs.favoriteGroups || []))) }
+
+exports.setFavoriteGroups = function(favoriteGroupsArray) { setPref('favoriteGroups', JSON.stringify(favoriteGroupsArray)) }
+
 exports.getHiddenChannels = function() { return JSON.parse(getPref('hiddenChannels', JSON.stringify(defaultPrefs.hiddenChannels || []))) }
 
 exports.setHiddenChannels = function(hiddenChannelsArray) { setPref('hiddenChannels', JSON.stringify(hiddenChannelsArray)) }
@@ -50,6 +54,18 @@ exports.setLocale = function(locale) { setPref('locale', locale) }
 exports.getAutorefresh = function() { return (getPref('autorefresh', (typeof defaultPrefs.autorefresh != 'undefined' ? (defaultPrefs.autorefresh ? 'true' : 'false') : 'true')) != 'false') }
 
 exports.setAutorefresh = function(isOn) { setPref('autorefresh', (isOn ? 'true' : 'false')) }
+
+exports.getSearchDepth = function() { return getPref('searchDepth', (defaultPrefs.searchDepth || 10000)) }
+
+exports.setSearchDepth = function(numMessages) { setPref('searchDepth', numMessages) }
+
+exports.getOfflineMode = function() { return (getPref('offlineMode', (typeof defaultPrefs.offlineMode != 'undefined' ? (defaultPrefs.offlineMode ? 'true' : 'false') : 'true')) == 'true') }
+
+exports.setOfflineMode = function(isOn) { setPref('offlineMode', (isOn ? 'true' : 'false')) }
+
+exports.getUserGroups = function() { return JSON.parse(getPref('userGroups', JSON.stringify(defaultPrefs.userGroups || []))) }
+
+exports.setUserGroups = function(userGroupArray) { setPref('userGroups', JSON.stringify(userGroupArray)) }
 
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.

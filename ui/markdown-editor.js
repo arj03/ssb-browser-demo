@@ -1,9 +1,10 @@
 const helpers = require('./helpers')
 const ref = require('ssb-ref')
+const { and, not, isPublic, type, channel, toCallback } = SSB.dbOperators
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">
-               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" @stateChange="hideSuggestions" />
+               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" />
              </div>`,
 
   props: ['initialValue', 'privateBlobs'],
@@ -112,29 +113,35 @@ Vue.component('markdown-editor', {
       return "![" + meme.name + "](" + meme.id + ")"
     },
 
+    suggestChannels: function(searchString, cb) {
+      const searchForChannel = searchString.substring(1, searchString.length)
+      const allChannels = SSB.db.getIndex("channels").getChannels()
+      const sortFunc = (new Intl.Collator()).compare
+      const filteredChannels = allChannels.filter((x) => { return x.toLowerCase().startsWith(searchForChannel.toLowerCase()) })
+        .sort(sortFunc)
+        .slice(0, 5)
+      var suggestions = []
+      for (c in filteredChannels)
+        suggestions.push({ text: "#" + filteredChannels[c], value: filteredChannels[c] })
+      cb(null, suggestions)
+    },
+
+    clickChannel: function(channel) {
+      return "#" + channel
+    },
+
     suggestPeople: function(searchString, cb) {
-      // Suggest a list of people.
-      let searchOpts = {}
-      if (searchString !== "")
-        searchOpts['text'] = searchString.substring(1, searchString.length)
-      SSB.net.suggest.profile(searchOpts, (err, matches) => {
-        if (matches) {
-          var unsortedPeople = []
-          matches.forEach(match => {
-            const p = SSB.getProfile(match.id)
-            if (p && p.imageURL)
-              unsortedPeople.push({ id: match.id, name: match.name, image: p.imageURL })
-            else
-              unsortedPeople.push({ id: match.id, name: match.name, image: helpers.getMissingProfileImage() })
-          })
-          const sortFunc = new Intl.Collator().compare
-          const sortedPeople = unsortedPeople.sort((a, b) => { return sortFunc(a.name, b.name) })
-          const suggestions = sortedPeople.slice(0, 5).map((x) => { return { icon: x.image, text: "@" + x.name, value: x } })
-          cb(null, suggestions)
-        } else {
-          cb(err)
-        }
+      const matches = SSB.searchProfiles(searchString.substring(1))
+      matches.forEach(p => {
+        if (p && p.imageURL)
+          p.image = p.imageURL
+        else
+          p.image = helpers.getMissingProfileImage()
       })
+      const sortFunc = new Intl.Collator().compare
+      const sortedPeople = matches.sort((a, b) => { return sortFunc(a.name, b.name) })
+      const suggestions = sortedPeople.slice(0, 5).map((x) => { return { icon: x.image, text: x.name, value: x } })
+      cb(null, suggestions)
     },
 
     clickPeople: function(person) {
@@ -184,6 +191,8 @@ Vue.component('markdown-editor', {
         liEl.appendChild(document.createTextNode(optionList[o].text))
         liEl.addEventListener("click", function (value) { return function(e) {
           self.useSuggestion(replaceStart, replaceEnd, suggest.click(value))
+          e.stopPropagation()
+          return false
         } }(optionList[o].value))
       }
     },
@@ -198,10 +207,14 @@ Vue.component('markdown-editor', {
     },
 
     hideSuggestions: function() {
-      const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
-      var popupEl = editorContainerEl.getElementsByClassName("suggestion-box")[0]
-      if (popupEl) {
-        popupEl.parentNode.removeChild(popupEl)
+      if (this.$refs.tuiEditor && this.$refs.tuiEditor.editor && this.$refs.tuiEditor.editor.mdEditor) {
+        const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
+        if (editorContainerEl) {
+          var popupEl = editorContainerEl.getElementsByClassName("suggestion-box")[0]
+          if (popupEl) {
+            popupEl.parentNode.removeChild(popupEl)
+          }
+        }
       }
     },
 
@@ -226,6 +239,7 @@ Vue.component('markdown-editor', {
       }
       const token = cursorLine.substring(tokenStart + 1, tokenEnd)
       const suggestionChars = {
+        '#': { list: this.suggestChannels, click: this.clickChannel },
         '@': { list: this.suggestPeople, click: this.clickPeople }
       }
       if (SSB.net.meme)

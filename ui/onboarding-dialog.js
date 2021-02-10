@@ -117,7 +117,7 @@ Vue.component('onboarding-dialog', {
           }, () => {
             // wait for db sync
             SSB.connectedWithData(() => {
-              SSB.db.getIndex('contacts').getGraphForFeed(SSB.net.id, () => SSB.net.sync(SSB.getPeer()))
+              SSB.net.sync(SSB.getPeer())
             })
           })
         })(this.useFollows[f].key)

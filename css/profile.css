@@ -14,6 +14,30 @@
   height: 13rem;
 }
 
+#profile .avatar.blockedAvatar
+{
+  display: inline-block;
+  position: relative;
+}
+
+#profile .avatar.blockedAvatar img
+{
+  filter: blur(20px);
+  -moz-filter: blur(20px);
+}
+
+#profile .avatar.blockedAvatar span.blockedSymbol
+{
+  display: block;
+  font-size: 9rem;
+  line-height: 13rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13rem;
+  text-align: center;
+}
+
 #profile > span > .description {
   flex-grow: 4;
 }
@@ -26,11 +50,16 @@
   clear: both;
 }
 
+#profile > h2 a {
+  text-decoration: none;
+}
+
 #profile .profileButtons {
   clear: both;
   margin: 16px 0px 0px 0px;
 }
 
+#profile .profileButtons span.addToGroup div.v-select,
 #profile .profileButtons button.clickButton {
   margin-left: 1rem;
   margin-top: 16px;
@@ -41,22 +70,18 @@
   clear: both;
 }
 
-#profile > div#follows > div > a > img {
+#profile > div#follows > div > a > img,
+#profile > div#blocked > div > a > img,
+#profile > div#blockingUs > div > a > img,
+#profile > div#followers > div > a > img {
   width: 50px;
   height: 50px;
 }
 
-#profile > div#follows > div {
-  float: left;
-  padding-right: 0.5rem;
-}
-
-#profile > div#blocked > div > a > img {
-  width: 50px;
-  height: 50px;
-}
-
-#profile > div#blocked > div {
+#profile > div#follows > div,
+#profile > div#blocked > div,
+#profile > div#blockingUs > div,
+#profile > div#followers > div {
   float: left;
   padding-right: 0.5rem;
 }
@@ -88,3 +113,38 @@
   width: 100%;
   height: 10rem;
 }
+
+#profile span.addToGroup {
+  display: inline-block;
+  float: right;
+}
+
+#profile span.addToGroup div.v-select {
+  display: inline-block;
+  width: 20em;
+}
+
+@media (max-width: 40em)
+{
+  #profile > span > .avatar {
+    width: 7rem;
+  }
+
+  #profile > span > .avatar > img {
+    width: 7rem;
+    height: 7rem;
+  }
+}
+
+@media (max-width: 22em)
+{
+  #profile > span > .avatar {
+    width: 3rem;
+  }
+
+  #profile > span > .avatar > img {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+

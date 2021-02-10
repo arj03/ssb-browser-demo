@@ -34,18 +34,23 @@ module.exports = function () {
          <p>
          <label for="replicationHops">{{ $t('settings.replicateHops') }}</label><br />
          <select id="replicationHops" v-model="hops">
-         <option value="0">0 {{ $t('settings.directFollows') }}</option>
-         <option value="1">1</option>
+         <option value="1">1 {{ $t('settings.directFollows') }}</option>
          <option value="2">2</option>
          <option value="3">3</option>
          <option value="4">4</option>
          <option value="5">5</option>
          </select>
+         <span v-if="hops > 2"><br /><strong>{{ $t('settings.highHopCountWarning') }}</strong></span>
          </p>
 
          <p>
          <input type="checkbox" id="autorefresh" v-model="autorefresh" />
          <label for="autorefresh">{{ $t('settings.autorefresh') }}</label>
+         </p>
+
+         <p>
+         <label for="searchDepth">{{ $t('settings.searchDepth') }}</label><br />
+         <input type="number" id="searchDepth" v-model="searchDepth" min="1000" max="1000000" step="1000" />
          </p>
 
          <p>
@@ -67,7 +72,8 @@ module.exports = function () {
         locale: 'en',
         localeOptions: [],
         autorefresh: false,
-        hops: 1
+        searchDepth: 10000,
+        hops: 2
       }
     },
 
@@ -82,6 +88,7 @@ module.exports = function () {
         for (var l in i18nMessages)
           this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
         this.autorefresh = localPrefs.getAutorefresh()
+        this.searchDepth = localPrefs.getSearchDepth()
       },
 
       save: function () {
@@ -99,6 +106,12 @@ module.exports = function () {
           this.$i18n.locale = 'en'
 
         localPrefs.setAutorefresh(this.autorefresh)
+
+        localPrefs.setSearchDepth(this.searchDepth)
+        if (SSB.search.depth != this.searchDepth) {
+          SSB.search.depth = this.searchDepth
+          SSB.search.resetIndex()
+        }
 
         localPrefs.updateStateFromSettings()
 
