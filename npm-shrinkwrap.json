@@ -1,16 +1,17 @@
 {
   "name": "ssb-browser-demo",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "version": "5.1.0",
+      "version": "5.1.1",
       "license": "Beerware",
       "dependencies": {
         "@toast-ui/vue-editor": "^2.5.1",
         "human-time": "0.0.2",
         "lodash.throttle": "^4.1.1",
+        "minisearch": "^3.0.2",
         "node-emoji": "^1.10.0",
         "pull-abortable": "^4.1.1",
         "pull-async-filter": "^1.0.0",
@@ -4070,6 +4071,11 @@
       "version": "0.0.8",
       "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz",
       "integrity": "sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0="
+    },
+    "node_modules/minisearch": {
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/minisearch/-/minisearch-3.0.2.tgz",
+      "integrity": "sha512-7rTrJEzovKNi5LSwiIr5aCfJNNo6Lk4O9HTVzjFTMdp+dSr6UisUnEqdwj4rBgNcAcaWW5ClpXnpgTurv8PGqA=="
     },
     "node_modules/mkdirp": {
       "version": "0.5.1",
