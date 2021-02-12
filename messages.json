@@ -196,6 +196,7 @@
       "title": "Thread \"{title}\"",
       "postReply": "Post reply",
       "blankFieldError": "Please provide a message to publish.",
+      "blockingReplies": "These people are blocking you and will not see your reply:",
       "messageOutsideGraph": "Message outside follow graph",
       "unknownMessage": "Unknown message type or message outside follow graph"
     }
@@ -487,6 +488,7 @@
       "title": "スレッド 「{title}」",
       "postReply": "掲示します",
       "blankFieldError": "公開するメッセージを入力してください。",
+      "blockingReplies": "これらの人々はあなたをブロックしていて、あなたの返事を見ることはありません：",
       "messageOutsideGraph": "メッセージがフォローグラフの外にあります",
       "unknownMessage": "不明なメッセージタイプまたはメッセージがフォローグラフの範囲外です"
     }

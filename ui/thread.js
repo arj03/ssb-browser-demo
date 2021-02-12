@@ -14,6 +14,7 @@ module.exports = function () {
       recipients: undefined, // for private messages only
       postText: '',
       messages: [],
+      participantsBlocking: [],
       rootMsg: { key: '', value: { content: {} } },
 
       showPreview: false
@@ -26,6 +27,10 @@ module.exports = function () {
          <h2>{{ $t('thread.title', { title: title }) }}</h2>
          <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg" v-bind:thread="fixedRootId"></ssb-msg>
          <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+         <div id="blockingReplies" v-if="participantsBlocking.length > 0">{{ $t('thread.blockingReplies') }}<br />
+           <ssb-profile-link v-for="participant in participantsBlocking" v-bind:feedId="participant"></ssb-profile-link>
+           <div class="clearingDiv"></div>
+         </div>
          <markdown-editor :initialValue="postText" ref="markdownEditor" /><br>
          <button class="clickButton" v-on:click="postReply">{{ $t('thread.postReply') }}</button>
          <input type="file" class="fileInput" v-on:change="onFileSelect">
@@ -155,8 +160,25 @@ module.exports = function () {
             }
 
             this.messages = sort(allMessages)
+
+            this.updateBlockingStatus()
           })
         )
+      },
+
+      updateBlockingStatus: function() {
+        var self = this
+        var allAuthors = (this.messages.concat(this.rootMsg)).map((x) => { return x.value.author })
+          .filter((x, index, self) => { return self.indexOf(x) == index })
+        this.participantsBlocking = []
+        for (a in allAuthors) {
+          (function(author) {
+            SSB.net.friends.isBlocking({ source: author, dest: SSB.net.id}, (err, blocking) => {
+              if (blocking)
+                self.participantsBlocking.push(author)
+            })
+          })(allAuthors[a])
+        }
       },
 
       renderThread: function() {
