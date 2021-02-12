@@ -15,7 +15,6 @@ function copyToDist(line, type, match) {
 
 function generateOfflineCache() {
   workboxBuild.generateSW({
-    importWorkboxFrom: 'local',
     skipWaiting: true,
     maximumFileSizeToCacheInBytes: 10000000,
     swDest: './dist/sw.js',
