@@ -159,7 +159,7 @@ Vue.component('ssb-msg', {
   created: function () {
     if (!this.msg.key) return
 
-    const { and, votesFor, hasRoot, mentions, toCallback } = SSB.dbOperators
+    const { and, author, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
 
     this.emojiOptionsFavorite = this.emojiOptions.slice(0, 3)
     this.emojiOptionsMore = this.emojiOptions.slice(3, this.emojiOptions.length).map((x) => { return { name: x } })
@@ -173,7 +173,89 @@ Vue.component('ssb-msg', {
 
     switch(this.msg.value.content.type) {
       case "about": {
-        self.body = "<p>" + this.$root.$t('common.profileUpdate', { user: (self.name || this.$root.$t('common.genericUsername')) }) + "</p>"
+        var newInfo = "<p>" + this.$root.$t('common.profileUpdate', { user: (self.name || this.$root.$t('common.genericUsername')) }) + "</p>"
+        self.body = newInfo
+
+        // Try to find the next-to-latest profile update so we can show what changed.
+        SSB.db.query(
+          and(author(this.msg.value.author), type('about')),
+          descending(),
+          toCallback((err, msgs) => {
+            var foundOurMsg = false
+            for (m in msgs) {
+              if (msgs[m].key == self.msg.key) {
+                // We found our message.  Now look back in history to find the most recent updates to each component.
+                var oldName = null
+                var oldImage = null
+                var oldDescription = null
+                for (n = (m * 1) + 1; n < msgs.length; ++n) {
+                  if (msgs[n].value.content.about == self.msg.value.author && msgs[n].key != self.msg.key) {
+                    // Found a profile update from our message's author and about our message's author, and it's not a duplicate message that db2 sometimes returns.
+                    if (!oldName && msgs[n].value.content.name)
+                      oldName = msgs[n].value.content.name
+                    if (!oldImage && msgs[n].value.content.image)
+                      oldImage = msgs[n].value.content.image
+                    if (!oldDescription && msgs[n].value.content.description)
+                      oldDescription = msgs[n].value.content.description
+                  }
+                  if (oldName && oldImage && oldDescription)
+                    break
+                }
+
+                // We should have a copy of the next-most-recent info now, which means we have enough data to show what's changed.
+                var changes = ""
+                if (self.msg.value.content.image && self.msg.value.content.image != oldImage) {
+                  changes += "<li>Changed image</li>"
+                  if (oldImage) {
+                    SSB.net.blobs.localProfileGet(oldImage, (err, oldImageURL) => {
+                      if (err) return console.error("failed to get img", err)
+                      newProfile = SSB.getProfile(self.msg.value.author)
+                      if (newProfile.image) {
+                        // Fetch their current image.
+                        SSB.net.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
+                          if (err) return console.error("failed to get img", err)
+                          var newImageHTML = "<img class='avatar' src='" + oldImageURL + "' /> ⇉ <img class='avatar' src='" + newImageURL + "'/>"
+                          newInfo = newInfo.replace("Changed image", newImageHTML)
+                          self.body = newInfo
+                          changes = changes.replace("Changed image", newImageHTML) // In case this finishes before the parent.
+                        })
+                      } else {
+                        // Evidently they erased their image.
+                        var newImageHTML = "<img class='avatar' src='" + oldImageURL + "' /> ⇉ <img class='avatar' src='" + helpers.getMissingProfileImage() + "'/>"
+                        newInfo = newInfo.replace("Changed image", newImageHTML)
+                        self.body = newInfo
+                        changes = changes.replace("Changed image", newImageHTML) // In case this finishes before the parent.
+                      }
+                    })
+                  } else {
+                    // They didn't have an image before, and they do now.
+                    SSB.net.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
+                      if (err) return console.error("failed to get img", err)
+                      var newImageHTML = "<img class='avatar' src='" + helpers.getMissingProfileImage() + "' /> ⇉ <img class='avatar' src='" + newImageURL + "'/>"
+                      newInfo = newInfo.replace("Changed image", newImageHTML)
+                      self.body = newInfo
+                      changes = changes.replace("Changed image", newImageHTML) // In case this finishes before the parent.
+                    })
+                  }
+                }
+                if (self.msg.value.content.name && self.msg.value.content.name != oldName)
+                  changes += "<li>" + (oldName || "(No name)") + " ⇉ " + self.msg.value.content.name + "</li>"
+                if (self.msg.value.content.description && self.msg.value.content.description != oldDescription) {
+                  var oldDescriptionSnippet = (oldDescription ? (oldDescription.length > 25 ? oldDescription.substring(0, 22) + "..." : oldDescription) : "(No description)")
+                  var newDescriptionSnippet = (self.msg.value.content.description.length > 25 ? self.msg.value.content.description.substring(0, 22) + "..." : self.msg.value.content.description)
+                  changes += "<li>&quot;" + oldDescriptionSnippet + "&quot; ⇉ &quot;" + newDescriptionSnippet + "&quot;</li>"
+                }
+                if (changes == "") {
+                  newInfo += "<p>(No changes found)</p>"
+                } else {
+                  newInfo += "<ul class='profileUpdate'>" + changes + "</ul>"
+                }
+                self.body = newInfo
+                break
+              }
+            }
+          })
+        )
       } break;
       default: {
         self.body = md.markdown(this.msg.value.content.text)
