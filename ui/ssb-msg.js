@@ -8,7 +8,7 @@ Vue.component('ssb-msg', {
         <div class='header'>
           <span class="profile">
             <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
-           </span>
+          </span>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
             <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
@@ -93,7 +93,7 @@ Vue.component('ssb-msg', {
       return human(new Date(this.msg.value.timestamp))
     },
     isOOO: function() {
-      return this.msg.value.content.text == "Message outside follow graph" && !this.msg.value.author
+      return (this.msg.value.content.text == this.$root.$t('common.messageOutsideGraph') || this.msg.value.content.text == this.$root.$t('common.unknownMessage')) && !this.msg.value.author
     }
   },
 
@@ -171,7 +171,14 @@ Vue.component('ssb-msg', {
     else
       self.name = SSB.getProfileName(this.msg.value.author)
 
-    self.body = md.markdown(this.msg.value.content.text)
+    switch(this.msg.value.content.type) {
+      case "about": {
+        self.body = "<p>" + (self.name || "User") + " posted a profile update</p>"
+      } break;
+      default: {
+        self.body = md.markdown(this.msg.value.content.text)
+      }
+    }
 
     SSB.db.query(
       and(votesFor(this.msg.key)),
