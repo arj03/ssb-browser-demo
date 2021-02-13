@@ -173,7 +173,7 @@ Vue.component('ssb-msg', {
 
     switch(this.msg.value.content.type) {
       case "about": {
-        self.body = "<p>" + (self.name || "User") + " posted a profile update</p>"
+        self.body = "<p>" + this.$root.$t('common.profileUpdate', { user: (self.name || this.$root.$t('common.genericUsername')) }) + "</p>"
       } break;
       default: {
         self.body = md.markdown(this.msg.value.content.text)

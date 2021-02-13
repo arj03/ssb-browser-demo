@@ -128,7 +128,7 @@ module.exports = function () {
                       key: msg.value.content.branch,
                       value: {
                         content: {
-                          text: self.$root.$t('thread.messageOutsideGraph')
+                          text: self.$root.$t('common.messageOutsideGraph')
                         }
                       }
                     })
@@ -142,7 +142,7 @@ module.exports = function () {
                         key: branch,
                         value: {
                           content: {
-                            text: self.$root.$t('thread.messageOutsideGraph')
+                            text: self.$root.$t('common.messageOutsideGraph')
                           }
                         }
                       })
@@ -191,7 +191,7 @@ module.exports = function () {
               SSB.db.get(self.fixedRootId, (err, rootMsg) => {
                 if (err || rootMsg === undefined) {
                   console.error(err)
-                  self.render({ content: { text: self.$root.$t('thread.unknownMessage') }})
+                  self.render({ content: { text: self.$root.$t('common.unknownMessage') }})
                 } else
                   self.render(rootMsg)
               })
