@@ -27,6 +27,8 @@
       "unknownMessage": "Unknown message type or message outside follow graph",
       "genericUsername": "User",
       "profileUpdate": "{user} posted a profile update",
+      "startedFollowing": "Started following",
+      "stoppedFollowing": "Stopped following",
       "close": "Close",
       "save": "Save"
     },
@@ -321,6 +323,8 @@
       "unknownMessage": "不明なメッセージタイプまたはメッセージがフォローグラフの範囲外です",
       "genericUsername": "ユーザー",
       "profileUpdate": "{user}プロファイルの更新を投稿しました",
+      "startedFollowing": "フォローを開始",
+      "stoppedFollowing": "フォローをやめた",
       "close": "閉じて",
       "save": "変更を保存"
     },

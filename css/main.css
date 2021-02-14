@@ -140,11 +140,13 @@ code {
   overflow: hidden;
 }
 
+.message .contactMessage .contactLink,
 .message > .header {
   display: table;
   width: 100%;
 }
 
+.message .contactMessage .contactLink .profile .avatar,
 .message > .header > span > a > .avatar {
   width: 50px;
   height: 50px;
@@ -152,9 +154,15 @@ code {
   display: table-cell;
 }
 
+.message .contactMessage .contactLink .profile,
 .message > .header > .profile {
   display: table-cell;
   width: 50px;
+}
+
+.message .contactMessage .contactLink .text {
+  vertical-align: middle;
+  display: table-cell;
 }
 
 .message > .header > .text {

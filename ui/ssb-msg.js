@@ -29,6 +29,22 @@ Vue.component('ssb-msg', {
         </h2>
 
         <span v-html="body"></span>
+
+        <div class="contactMessage" v-if="msg.value.content.type == 'contact' && body == ''">
+          <p>
+            <span v-if="msg.value.content.following">{{ $t('common.startedFollowing') }}</span>
+            <span v-if="!msg.value.content.following">{{ $t('common.stoppedFollowing') }}</span>
+          </p>
+          <p class="contactLink">
+            <span class="profile">
+              <ssb-profile-link v-bind:key="msg.value.content.contact" v-bind:feedId="msg.value.content.contact"></ssb-profile-link>
+            </span>
+            <span class="text">
+              <router-link :to="{name: 'profile', params: { feedId: msg.value.content.contact }}">{{ contactName }}</router-link>
+            </span>
+          </p>
+        </div>
+
         <span v-if="forks.length > 0"><b>Forks:</b>
           <li v-for="msg in forks">
             <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
@@ -72,6 +88,7 @@ Vue.component('ssb-msg', {
       reactions: [],
       myReactions: [],
       body: '',
+      contactName: '',
       parentThreadTitle: this.$root.$t('ssb-msg.threadTitlePlaceholder'),
       emojiOptions: ['👍', '🖖', '❤', '😄', '😃', '😁', '😆', '😅', '😂', '😉', '😋', '😝', '😐', '😒', '😎', '😧', '😖', '😣', '😞', '🚀', '🍕'],
       emojiOptionsFavorite: [],
@@ -256,6 +273,21 @@ Vue.component('ssb-msg', {
             }
           })
         )
+      } break;
+      case "contact": {
+        if (this.msg.value.content.contact) {
+          var otherProfileName = SSB.getProfileName(self.msg.value.content.contact)
+          self.contactName = otherProfileName || self.$root.$t('common.genericUsername')
+          if (!otherProfileName) {
+            // Give the profile index a little time to load and then try again.
+            setTimeout(() => {
+              var otherProfileName = SSB.getProfileName(self.msg.value.content.contact)
+              self.contactName = otherProfileName || self.$root.$t('common.genericUsername')
+            }, 3000)
+          }
+        } else {
+          self.body = "<p>" + this.$root.$t('common.unknownMessage') + "</p>"
+        }
       } break;
       default: {
         self.body = md.markdown(this.msg.value.content.text)
