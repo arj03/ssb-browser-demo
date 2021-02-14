@@ -3,7 +3,7 @@ module.exports = function () {
   const asyncFilter = require('pull-async-filter')
   const cat = require('pull-cat')
 
-  const { and, mentions, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
+  const { and, mentions, contact, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
   
   return {
     template: `
@@ -69,6 +69,16 @@ module.exports = function () {
             pull(
               SSB.db.query(
                 and(author(SSB.net.id), type('post')),
+                descending(),
+                paginate(25),
+                toPullStream()
+              ),
+              pull.take(1),
+              pull.flatten()
+            ),
+            pull(
+              SSB.db.query(
+                contact(SSB.net.id),
                 descending(),
                 paginate(25),
                 toPullStream()
