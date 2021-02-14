@@ -26,7 +26,8 @@
       "messageOutsideGraph": "Message outside follow graph",
       "unknownMessage": "Unknown message type or message outside follow graph",
       "genericUsername": "User",
-      "profileUpdate": "{user} posted a profile update",
+      "profileUpdateSelf": "{user} updated their profile",
+      "profileUpdateOther": "{user} posted a profile update for someone else's profile",
       "close": "Close",
       "save": "Save"
     },
@@ -321,6 +322,8 @@
       "unknownMessage": "不明なメッセージタイプまたはメッセージがフォローグラフの範囲外です",
       "genericUsername": "ユーザー",
       "profileUpdate": "{user}プロファイルの更新を投稿しました",
+      "profileUpdateSelf": "{user}がプロファイルを更新しました",
+      "profileUpdateOther": "{user}が他の誰かのプロファイルのプロファイル更新を投稿しました",
       "close": "閉じて",
       "save": "変更を保存"
     },

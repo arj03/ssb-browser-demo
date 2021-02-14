@@ -173,12 +173,12 @@ Vue.component('ssb-msg', {
 
     switch(this.msg.value.content.type) {
       case "about": {
-        var newInfo = "<p>" + this.$root.$t('common.profileUpdate', { user: (self.name || this.$root.$t('common.genericUsername')) }) + "</p>"
+        var newInfo = "<p>" + this.$root.$t((this.msg.value.author != this.msg.value.content.about ? 'common.profileUpdateOther' : 'common.profileUpdateSelf'), { user: (self.name || this.$root.$t('common.genericUsername')) }) + "</p>"
         self.body = newInfo
 
         // Try to find the next-to-latest profile update so we can show what changed.
         SSB.db.query(
-          and(author(this.msg.value.author), type('about')),
+          and(author(this.msg.value.content.about), type('about')),
           descending(),
           toCallback((err, msgs) => {
             var foundOurMsg = false
