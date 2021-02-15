@@ -486,7 +486,7 @@ module.exports = function () {
 
       loadMore: function() {
         SSB.db.query(
-          and(author(this.feedId), or(type('post'), type('about')), isPublic()),
+          and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
           startFrom(this.offset),
           paginate(25),
           descending(),
@@ -524,7 +524,7 @@ module.exports = function () {
 
         console.time("latest 25 profile messages")
         SSB.db.query(
-          and(author(this.feedId), or(type('post'), type('about')), isPublic()),
+          and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
           startFrom(this.offset),
           paginate(25),
           descending(),
