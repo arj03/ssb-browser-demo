@@ -40,7 +40,7 @@
     "workbox-build": "^6.1.0"
   },
   "scripts": {
-    "postinstall": "pushd node_modules/pull-async-filter; sed -i 's/2.26.0/3.6.14/' package.json; rm -rf node_modules/pull-stream; popd; pushd node_modules/pull-goodbye; sed -i 's/3.5.0/3.6.14/' package.json; rm -rf node_modules/pull-stream; popd; pushd node_modules/ssb-markdown; sed -i -e '/highlight: function/,+8 d' -e '/highlight/d' lib/block.js; sed -i '/highlight.js/d' package.json; popd; rm -rf node_modules/highlight.js",
+    "postinstall": "sed -i 's/2.26.0/3.6.14/' node_modules/pull-async-filter/package.json; rm -rf node_modules/pull-async-filter/node_modules/pull-stream; sed -i 's/3.5.0/3.6.14/' node_modules/pull-goodbye/package.json; rm -rf node_modules/pull-goodbye/node_modules/pull-stream; sed -i -e '/highlight: function/,+8 d' -e '/highlight/d' node_modules/ssb-markdown/lib/block.js; sed -i '/highlight.js/d' node_modules/ssb-markdown/package.json; rm -rf node_modules/highlight.js",
     "build": "mkdir -p build && browserify -p esmify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js",
     "release": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --ie8 --safari10 -o build/bundle-ui.js && node write-dist.js",
     "inline": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --ie8 --safari10 -o build/bundle-ui.js && node write-dist.js && ./convert-to-inline.sh"
