@@ -94,9 +94,8 @@ module.exports = function () {
             else SSB.net.friends.isBlocking({source: SSB.net.id, dest: msg.value.author }, cb)
           }),
           pull.collect((err, msgs) => {
-            // Only show the most recent 50.
             console.timeEnd("notifications")
-            this.messages = msgs.sort((a, b) => { if (a.timestamp < b.timestamp) { return 1 } else if (a.timestamp > b.timestamp) { return -1 } else { return 0 } }).slice(0, 50)
+            this.messages = msgs.sort((a, b) => b.value.timestamp - a.value.timestamp).slice(0, 50)
           })
         )
       }
