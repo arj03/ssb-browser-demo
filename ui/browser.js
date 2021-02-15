@@ -30,6 +30,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
   const VueI18n = require('vue-i18n').default
   const i18nMessages = require('../messages.json')
   const helpers = require('./helpers')
+  const pull = require('pull-stream')
 
   // Load local preferences.
   localPrefs.updateStateFromSettings();
@@ -61,6 +62,11 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     require('../net')
     require('../profile')
     require('../search')
+
+    pull(SSB.net.conn.hub().listen(), pull.drain((ev) => {
+      if (ev.type.indexOf("failed") >= 0)
+        console.warn("Connection error: ", ev)
+    }))
 
     const routes = [
       { name: 'public', path: '/public', component: Public },

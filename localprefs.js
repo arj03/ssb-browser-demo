@@ -69,10 +69,6 @@ exports.setUserGroups = function(userGroupArray) { setPref('userGroups', JSON.st
 
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
-  SSB.hops = this.getHops()
-  if(SSB.net)
-    SSB.net.config.conn.hops = this.getHops()
-
   document.body.classList.add('theme-' + this.getTheme())
   for(var i = 0; i < document.body.classList.length; ++i) {
     const cur = document.body.classList.item(i)
