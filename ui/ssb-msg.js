@@ -159,7 +159,7 @@ Vue.component('ssb-msg', {
   created: function () {
     if (!this.msg.key) return
 
-    const { and, author, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
+    const { and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
 
     this.emojiOptionsFavorite = this.emojiOptions.slice(0, 3)
     this.emojiOptionsMore = this.emojiOptions.slice(3, this.emojiOptions.length).map((x) => { return { name: x } })
@@ -178,7 +178,7 @@ Vue.component('ssb-msg', {
 
         // Try to find the next-to-latest profile update so we can show what changed.
         SSB.db.query(
-          and(author(this.msg.value.content.about), type('about')),
+          and(author(this.msg.value.content.about), about(this.msg.value.content.about)),
           descending(),
           toCallback((err, msgs) => {
             var foundOurMsg = false
