@@ -38,18 +38,18 @@ module.exports = function (componentsState) {
             var uniqueMembers = allMembers.filter((x, index, self) => { return self.indexOf(x) === index }) // See https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
             var groupFilter = or(...uniqueMembers.map(x => author(x)))
             if (onlyThreads)
-              cb(null, and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter, groupFilter))
+              cb(null, and(or(type('post'), type('about')), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter, groupFilter))
             else
-              cb(null, and(type('post'), isPublic(), feedFilter, channelFilter, hideChannelFilter, groupFilter))
+              cb(null, and(or(type('post'), type('about')), isPublic(), feedFilter, channelFilter, hideChannelFilter, groupFilter))
           }
         })
       }
     } else {
       // No groups, so nothing asynchronous - return immediately.
       if (onlyThreads)
-        cb(null, and(type('post'), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter))
+        cb(null, and(or(type('post'), type('about')), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter))
       else
-        cb(null, and(type('post'), isPublic(), feedFilter, channelFilter, hideChannelFilter))
+        cb(null, and(or(type('post'), type('about')), isPublic(), feedFilter, channelFilter, hideChannelFilter))
     }
   }
 

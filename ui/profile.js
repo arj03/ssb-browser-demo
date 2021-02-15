@@ -3,7 +3,7 @@ module.exports = function () {
   const helpers = require('./helpers')
   const md = require('./markdown')
   const userGroups = require('../usergroups')
-  const { and, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
   
   let initialState = function(self) {
     return {
@@ -486,7 +486,7 @@ module.exports = function () {
 
       loadMore: function() {
         SSB.db.query(
-          and(author(this.feedId), type('post'), isPublic()),
+          and(author(this.feedId), or(type('post'), type('about')), isPublic()),
           startFrom(this.offset),
           paginate(25),
           descending(),
@@ -524,7 +524,7 @@ module.exports = function () {
 
         console.time("latest 25 profile messages")
         SSB.db.query(
-          and(author(this.feedId), type('post'), isPublic()),
+          and(author(this.feedId), or(type('post'), type('about')), isPublic()),
           startFrom(this.offset),
           paginate(25),
           descending(),
