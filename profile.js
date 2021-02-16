@@ -1,15 +1,15 @@
 SSB.getProfileName = function(profileId) {
-  const profile = SSB.db.getIndex("profiles").getProfile(profileId)
+  const profile = SSB.db.getIndex("aboutSelf").getProfile(profileId)
   if (profile) return profile.name
   else return ''
 }
 
 SSB.getProfile = function(profileId) {
-  return SSB.db.getIndex("profiles").getProfile(profileId)
+  return SSB.db.getIndex("aboutSelf").getProfile(profileId)
 }
 
 SSB.searchProfiles = function(search, results = 10) {
-  const profilesDict = SSB.db.getIndex("profiles").getProfiles()
+  const profilesDict = SSB.db.getIndex("aboutSelf").getProfiles()
   const profiles = []
   for (let p in profilesDict) {
     const pValue = profilesDict[p]
