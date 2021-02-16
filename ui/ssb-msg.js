@@ -223,10 +223,10 @@ Vue.component('ssb-msg', {
                 var changes = ""
                 if (self.msg.value.content.image && self.msg.value.content.image != oldImage) {
                   changes += "<li>Changed image</li>"
+                  const newProfile = SSB.getProfile(self.msg.value.author)
                   if (oldImage) {
                     SSB.net.blobs.localProfileGet(oldImage, (err, oldImageURL) => {
                       if (err) return console.error("failed to get img", err)
-                      newProfile = SSB.getProfile(self.msg.value.author)
                       if (newProfile.image) {
                         // Fetch their current image.
                         SSB.net.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
@@ -244,7 +244,7 @@ Vue.component('ssb-msg', {
                         changes = changes.replace("Changed image", newImageHTML) // In case this finishes before the parent.
                       }
                     })
-                  } else {
+                  } else if (newProfile.image) {
                     // They didn't have an image before, and they do now.
                     SSB.net.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
                       if (err) return console.error("failed to get img", err)
