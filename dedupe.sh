@@ -10,11 +10,6 @@ sed -i -e '/highlight: function/,+8 d' -e '/highlight/d' node_modules/ssb-markdo
 sed -i '/highlight.js/d' node_modules/ssb-markdown/package.json
 rm -rf node_modules/highlight.js
 
-# Dedupe chloride.
-sed -i 's/2.2.14/3.2.1/' node_modules/ssb-keys-mnemonic/package.json
-rm -rf node_modules/ssb-keys-mnemonic/node_modules/chloride
-rm -rf node_modules/ssb-keys-mnemonic/node_modules/sodium-native
-
 # Dedupe tweetnacl.
 sed -i 's/0.14.1/1.0.3/' node_modules/sodium-browserify/package.json
 rm -rf node_modules/sodium-browserify/node_modules/tweetnacl

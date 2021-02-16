@@ -19,7 +19,7 @@
     "ssb-browser-core": "^8.3.0",
     "ssb-contact-msg": "^1.1.0",
     "ssb-keys": "^8.0.2",
-    "ssb-keys-mnemonic": "^1.0.0",
+    "ssb-keys-mnemonic": "^1.0.1",
     "ssb-markdown": "^6.0.7",
     "ssb-mentions": "^0.5.2",
     "ssb-ref": "^2.14.3",
