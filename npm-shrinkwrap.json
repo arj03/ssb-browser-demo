@@ -2398,8 +2398,7 @@
       "dependencies": {
         "sodium-browserify": "^1.2.7",
         "sodium-browserify-tweetnacl": "^0.2.5",
-        "sodium-chloride": "^1.1.2",
-        "sodium-native": "^3.0.0"
+        "sodium-chloride": "^1.1.2"
       },
       "optionalDependencies": {
         "sodium-native": "^3.0.0"
@@ -3453,8 +3452,7 @@
         "esprima": "^4.0.1",
         "estraverse": "^4.2.0",
         "esutils": "^2.0.2",
-        "optionator": "^0.8.1",
-        "source-map": "~0.6.1"
+        "optionator": "^0.8.1"
       },
       "bin": {
         "escodegen": "bin/escodegen.js",
@@ -4722,7 +4720,6 @@
       "integrity": "sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==",
       "dev": true,
       "dependencies": {
-        "graceful-fs": "^4.1.6",
         "universalify": "^2.0.0"
       },
       "optionalDependencies": {
@@ -6756,9 +6753,6 @@
       "resolved": "https://registry.npmjs.org/rollup/-/rollup-2.39.0.tgz",
       "integrity": "sha512-+WR3bttcq7zE+BntH09UxaW3bQo3vItuYeLsyk4dL2tuwbeSKJuvwiawyhEnvRdRgrII0Uzk00FpctHO/zB1kw==",
       "dev": true,
-      "dependencies": {
-        "fsevents": "~2.3.1"
-      },
       "bin": {
         "rollup": "dist/bin/rollup"
       },
@@ -7198,9 +7192,9 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "8.3.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.0.tgz",
-      "integrity": "sha512-BwUyMa1OJgByFhPS6unribY8D9iGY1chTN1DOSLZcnDp05ZJA/6++Cb3f19DqUbcIqcSOQAisI6+t7SBuD3byg==",
+      "version": "8.3.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.1.tgz",
+      "integrity": "sha512-BrOuzRpQQNpEiu86JEvjKNPPvFt2rW/5OV94uFpIdaBZcrTsb4Hic0yEZvYaVZFe95MPsL/OsUYY0rzKcwGmEQ==",
       "dependencies": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
@@ -15207,9 +15201,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "8.3.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.0.tgz",
-      "integrity": "sha512-BwUyMa1OJgByFhPS6unribY8D9iGY1chTN1DOSLZcnDp05ZJA/6++Cb3f19DqUbcIqcSOQAisI6+t7SBuD3byg==",
+      "version": "8.3.1",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.1.tgz",
+      "integrity": "sha512-BrOuzRpQQNpEiu86JEvjKNPPvFt2rW/5OV94uFpIdaBZcrTsb4Hic0yEZvYaVZFe95MPsL/OsUYY0rzKcwGmEQ==",
       "requires": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
