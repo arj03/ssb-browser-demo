@@ -41,6 +41,7 @@ module.exports = function () {
         <h3>{{ $t('connections.existingConnections') }}</h3>
         <div v-for="peer in peers">
           <button class="clickButton" v-on:click="disconnect(peer)">Disconnect</button> from <router-link :to="{name: 'profile', params: { feedId: peer.data.key }}">{{ peer.name || peer.data.name || peer.data.key }}</router-link>&nbsp;({{ peer.data.type }})<br />
+          <span v-if="peer.lastUpdate"><small>{{ $t('connections.lastUpdateReceived', { datetime: peer.lastUpdate }) }}</small><br /></span>
         </div>
       </div>
       <div id="status" v-html="statusHTML"></div>
@@ -181,6 +182,20 @@ module.exports = function () {
       let lastStatus = null
       let lastEbtStatus = null
 
+      function updatePeerTS() {
+        // Last updated timestamp needs to be the maximum value from several sources.
+        SSB.net.ebt.peerStatus((err, ebtPeers) => {
+          for (p in self.peers) {
+            var ts = (self.peers[p].data.hubUpdated || 0)
+            ts = Math.max(ts, (self.peers[p].data.stateChange || 0))
+            if (ebtPeers[self.peers[p].data.key] && ebtPeers[self.peers[p].data.key].ts)
+              ts = Math.max(ts, ebtPeers[self.peers[p].data.key].ts)
+            self.peers[p].ts = ts
+            self.peers[p].lastUpdate = (new Date(ts)).toLocaleString()
+          }
+        })
+      }
+
       pull(
         SSB.net.conn.stagedPeers(),
         pull.drain((entries) => {
@@ -193,6 +208,7 @@ module.exports = function () {
         SSB.net.conn.peers(),
         pull.drain((entries) => {
           self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
+          updatePeerTS()
           self.updateSuggestedPeers()
         })
       )
@@ -215,6 +231,8 @@ module.exports = function () {
         setTimeout(() => {
           const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
           const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
+
+          updatePeerTS()
 
           if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
               JSON.stringify(ebtStatus) == JSON.stringify(lastEbtStatus)) {

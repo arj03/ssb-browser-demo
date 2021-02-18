@@ -89,6 +89,7 @@
       "existingConnections": "Connections",
       "unsupportedConnectionTypeX": "This SSB client does not support connections of type '{connType}'.\n\nUnfortunately, browsers place a lot of restrictions on how we can connect.  Most communications have to be done over WebSockets, and the invite code you're using doesn't appear to support them.  Sorry!",
       "followNewConnection": "Do you want to also follow this person so they autoconnect and sync in the future?",
+      "lastUpdateReceived": "(Last update received {datetime})",
       "dbStatus": "DB status",
       "ebtStatus": "EBT status"
     },
@@ -386,6 +387,7 @@
       "existingConnections": "接続",
       "unsupportedConnectionTypeX": "このSSBクライアントは、タイプ「{connType」の接続をサポートしていません。\n\n残念ながら、ブラウザーでは、接続方法に多くの制限があります。ほとんどの通信はWebSocketを介して行われる必要があり、使用している招待コードはWebSocketをサポートしていないようです。ごめんなさい！",
       "followNewConnection": "将来、自動接続して同期できるように、この人もフォローしますか？",
+      "lastUpdateReceived": "（最終更新は{datetime}に受信されました）",
       "dbStatus": "データベースのステータス",
       "ebtStatus": "EBTのステータス"
     },
