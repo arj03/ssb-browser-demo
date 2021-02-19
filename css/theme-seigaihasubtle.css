@@ -13,6 +13,7 @@
 }
 
 .theme-seigaihasubtle .message,
+.theme-seigaihasubtle #threads > div,
 .theme-seigaihasubtle #channels ol
 {
   background-color: #fcf9f9;

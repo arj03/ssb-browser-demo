@@ -12,12 +12,16 @@
 }
 
 .theme-dark .message,
+.theme-dark #threads > div,
 .theme-dark #channels ol
 {
   background-color: #999;
   color: #000;
 }
 
+.theme-dark #threads > div,
+.theme-dark #threads > div th,
+.theme-dark #threads > div td,
 .theme-dark .message a
 {
   color: #333;
