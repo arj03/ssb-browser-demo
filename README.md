@@ -154,6 +154,5 @@ window.webkitRequestFileSystem(window.PERSISTENT, 0, function (fs) {
 [ssb-partial-replication]: https://github.com/arj03/ssb-partial-replication
 [ssb-peer-invites]: https://github.com/ssbc/ssb-peer-invites
 [test-server]: https://between-two-worlds.dk/browser.html
-[ssb-contact-msg]: https://github.com/ssbc/ssb-contact-msg
 [pub-setup]: https://people.iola.dk/arj/2020/03/04/how-to-setup-a-pub-for-ssb-browser/
 [rooms]: https://github.com/staltz/ssb-room
