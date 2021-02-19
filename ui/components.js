@@ -1,5 +1,6 @@
 module.exports = function () {
   require('./ssb-profile-link')
+  require('./ssb-profile-name-link')
   require('./ssb-msg')
   require('./ssb-msg-preview')
   require('./onboarding-dialog')

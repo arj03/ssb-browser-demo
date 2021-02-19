@@ -53,6 +53,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     const Channels = require('./channels')()
     const Groups = require('./groups')()
     const Thread = require('./thread')()
+    const Threads = require('./threads')()
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
     const Settings = require('./settings')()
@@ -74,6 +75,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       { name: 'groups', path: '/groups', component: Groups },
       { name: 'channel', path: '/channel/:channel', component: Channel, props: true },
       { name: 'group', path: '/group/:group', component: Group, props: true },
+      { name: 'threads', path: '/threads', component: Threads },
       { name: 'thread', path: '/thread/:rootId', component: Thread, props: true },
       { name: 'profile', path: '/profile/:feedId', component: Profile, props: true },
       { name: 'search', path: '/search/:search', component: Search, props: true },
