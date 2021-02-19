@@ -24,7 +24,6 @@
         "ssb-mentions": "^0.5.2",
         "ssb-ref": "^2.14.3",
         "ssb-sort": "^1.1.3",
-        "tweetnacl": "^1.0.3",
         "vue": "^2.6.12",
         "vue-i18n": "^8.22.4",
         "vue-router": "^3.5.1",
@@ -33,7 +32,6 @@
       },
       "devDependencies": {
         "browserify": "^17.0.0",
-        "deep-object-diff": "^1.1.0",
         "esmify": "^2.1.1",
         "inline-source-cli": "^2.0.0",
         "ssb-client": "^4.9.0",
@@ -2889,12 +2887,6 @@
       "version": "0.1.3",
       "resolved": "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz",
       "integrity": "sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ="
-    },
-    "node_modules/deep-object-diff": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/deep-object-diff/-/deep-object-diff-1.1.0.tgz",
-      "integrity": "sha512-b+QLs5vHgS+IoSNcUE4n9HP2NwcHj7aqnJWsjPtuG75Rh5TOaGt0OjAYInh77d5T16V5cRDC+Pw/6ZZZiETBGw==",
-      "dev": true
     },
     "node_modules/deepmerge": {
       "version": "4.2.2",
@@ -11558,12 +11550,6 @@
       "version": "0.1.3",
       "resolved": "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz",
       "integrity": "sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ="
-    },
-    "deep-object-diff": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/deep-object-diff/-/deep-object-diff-1.1.0.tgz",
-      "integrity": "sha512-b+QLs5vHgS+IoSNcUE4n9HP2NwcHj7aqnJWsjPtuG75Rh5TOaGt0OjAYInh77d5T16V5cRDC+Pw/6ZZZiETBGw==",
-      "dev": true
     },
     "deepmerge": {
       "version": "4.2.2",
