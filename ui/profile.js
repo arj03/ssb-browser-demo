@@ -547,50 +547,67 @@ module.exports = function () {
         this.updateFollowers()
         this.updateBlockingUs()
 
-        const profile = SSB.getProfile(this.feedId)
-
-        if (profile.name)
-          this.name = profile.name
-        
-        if (profile.description) {
-          this.descriptionText = profile.description
+        function showProfile(profile) {
+          if (profile.name)
+            self.name = profile.name
           
-          if (self.feedId == SSB.net.id) {
-            // Editing self.
-            // Check for images.  If there are any, cache them.
-            var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
-            var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
-            for (b in blobMatches)
-              this.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
-                // Reload the editor with the new image.
-                // This is only triggered when the last image is loaded.
-                // Set it to something different and back again to get it to refresh the preview.
-                if (self.$refs.markdownEditor) {
-                  self.$refs.markdownEditor.setMarkdown(this.descriptionText + " ")
-                  self.$refs.markdownEditor.setMarkdown(this.descriptionText)
-                }
-              })
+          if (profile.description) {
+            self.descriptionText = profile.description
             
-            // Load the editor.
-            if (self.$refs.markdownEditor) {
-              if (blobMatches.length == 0) {
-                // If we're not waiting for any images to load, load the editor right away.
-                self.$refs.markdownEditor.setMarkdown(this.descriptionText)
+            if (self.feedId == SSB.net.id) {
+              // Editing self.
+              // Check for images.  If there are any, cache them.
+              var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
+              var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
+              for (b in blobMatches)
+                self.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
+                  // Reload the editor with the new image.
+                  // This is only triggered when the last image is loaded.
+                  // Set it to something different and back again to get it to refresh the preview.
+                  if (self.$refs.markdownEditor) {
+                    self.$refs.markdownEditor.setMarkdown(self.descriptionText + " ")
+                    self.$refs.markdownEditor.setMarkdown(self.descriptionText)
+                  }
+                })
+              
+              // Load the editor.
+              if (self.$refs.markdownEditor) {
+                if (blobMatches.length == 0) {
+                  // If we're not waiting for any images to load, load the editor right away.
+                  self.$refs.markdownEditor.setMarkdown(self.descriptionText)
+                }
               }
             }
           }
+  
+          if (profile.imageURL) {
+            self.image = profile.imageURL
+            self.imageBlobId = profile.image
+          } else if (profile.image) {
+            SSB.net.blobs.localGet(profile.image, (err, url) => {
+              if (!err) {
+                self.image = url
+                self.imageBlobId = profile.image
+              }
+            })
+          }
         }
 
-        if (profile.imageURL) {
-          self.image = profile.imageURL
-          self.imageBlobId = profile.image
-        } else if (profile.image) {
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
-            if (!err) {
-              self.image = url
-              self.imageBlobId = profile.image
-            }
-          })
+        function tryToLoadProfile() {
+          const profile = SSB.getProfile(self.feedId)
+          if (Object.keys(profile).length > 0) {
+            showProfile(profile)
+            return true
+          }
+          return false
+        }
+
+        if (!tryToLoadProfile()) {
+          // No profile - we might have just been refreshed.  Try again after the profile index has had a few seconds to load.
+          setTimeout(() => {
+            if (!tryToLoadProfile())
+              SSB.connectedWithData(tryToLoadProfile)
+          }, 3000)
         }
       }
     },
