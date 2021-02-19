@@ -1,6 +1,7 @@
 const human = require('human-time')
 const md = require('./markdown')
 const helpers = require('./helpers')
+const pull = require('pull-stream')
 
 Vue.component('ssb-msg', {
   template: `
@@ -24,8 +25,8 @@ Vue.component('ssb-msg', {
           </span>
         </div>
 
-        <h2 v-if="msg.value.content.subject">
-          <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.subject }}</router-link>
+        <h2 v-if="msg.value.content.subject || msg.value.content.title">
+          <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.subject || msg.value.content.title }}</router-link>
         </h2>
 
         <span v-html="body"></span>
@@ -288,6 +289,38 @@ Vue.component('ssb-msg', {
         } else {
           self.body = "<p>" + this.$root.$t('common.unknownMessage') + "</p>"
         }
+      } break;
+      case "blog": {
+        function fetchBlogContent() {
+          pull(
+            SSB.net.blobs.get({ key: self.msg.value.content.blog }),
+            pull.take(1),
+            pull.collect((err, blobContent) => {
+              self.body = md.markdown((new TextDecoder("utf-8")).decode(blobContent[0]))
+            })
+          )
+        }
+
+        SSB.net.blobs.localGet(this.msg.value.content.blog, (err, url) => {
+          if (err) {
+            if (!SSB.isConnectedWithData()) {
+              // Likely don't have it locally and not connected.  So wait until we are connected, then try to fetch it, then parse it.
+              SSB.connectedWithData(() => {
+                SSB.net.blobs.localGet(self.msg.value.content.blog, (err, url) => {
+                  if (err)
+                    self.body = err
+                  else
+                    fetchBlogContent()
+                })
+              })
+            } else {
+              self.body = err
+            }
+          } else {
+            // It's already local.
+            fetchBlogContent()
+          }
+        })
       } break;
       default: {
         self.body = md.markdown(this.msg.value.content.text)
