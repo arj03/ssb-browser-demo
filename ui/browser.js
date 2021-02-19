@@ -169,11 +169,11 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
             this.suggestions = []
           } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('@')) {
             // If it's not a valid profile ID, try doing a text search.
-            const profiles = SSB.db.getIndex("profiles")
+            const profiles = SSB.db.getIndex("aboutSelf")
             const profile = profiles.getProfile(this.goToTargetText)
             if (!profile || Object.keys(profile).length == 0) {
               // We could use searchProfiles here, but this gives us a little more exact results in case the user skipped the suggestions.
-              const profilesDict = profiles.getProfiles()
+              const profilesDict = profiles.profiles
               const searchText = this.goToTargetText.substring(1)
               var exactMatch = null
               var caselessMatch = null
