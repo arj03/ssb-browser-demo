@@ -29,6 +29,15 @@
   background: rgba(0, 0, 0, 0.05)
 }
 
+#threads table tr th:last-of-type,
+#threads table tr td:last-of-type
+{
+  max-width: 10em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #threads img.avatar
 {
   width: 1em;
