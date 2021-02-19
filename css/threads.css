@@ -28,3 +28,10 @@
 {
   background: rgba(0, 0, 0, 0.05)
 }
+
+#threads img.avatar
+{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}

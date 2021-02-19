@@ -14,12 +14,18 @@ module.exports = function (componentsState) {
             <tr v-for="thread in category.threads">
               <td>
                 <router-link :to="{name: 'thread', params: { rootId: thread.msgs[0].key.substring(1) }}">{{ thread.title }}</router-link><br />
-                <small>Started by <ssb-profile-name-link v-bind:feedId="thread.msgs[0].value.author"></ssb-profile-name-link>, {{ (new Date(thread.msgs[0].value.timestamp)).toLocaleString() }}</small>
+                <small>
+                  Started by
+                  <ssb-profile-link v-bind:feedId="thread.msgs[0].value.author"></ssb-profile-link>
+                  <ssb-profile-name-link v-bind:feedId="thread.msgs[0].value.author"></ssb-profile-name-link>
+                  , {{ (new Date(thread.msgs[0].value.timestamp)).toLocaleString() }}
+                </small>
               </td>
               <td>
                 Replies: {{ thread.msgs.length - 1 }}
               </td>
               <td>
+                <ssb-profile-link v-bind:feedId="thread.msgs[thread.msgs.length - 1].value.author"></ssb-profile-link>
                 <ssb-profile-name-link v-bind:feedId="thread.msgs[thread.msgs.length - 1].value.author"></ssb-profile-name-link><br />
                 <small>{{ (new Date(thread.msgs[thread.msgs.length - 1].value.timestamp)).toLocaleString() }}</small>
               </td>
