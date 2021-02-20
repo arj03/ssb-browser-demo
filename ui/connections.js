@@ -45,6 +45,7 @@ module.exports = function () {
         </div>
       </div>
       <div id="status" v-html="statusHTML"></div>
+      <button class="clickButton" v-on:click="resetDB">{{ $t('connections.resetDB') }}</button>
     </div>`,
 
     data: function() {
@@ -82,6 +83,23 @@ module.exports = function () {
         localPrefs.setOfflineMode(false)
         this.online = true
         SSB.net.conn.start()
+      },
+
+      resetDB: function() {
+        if (confirm(this.$root.$t('connections.resetDBWarning'))) {
+          var wasConnected = SSB.isConnected()
+
+          if (wasConnected)
+            this.goOffline()
+
+          SSB.removeDB()
+          SSB.removeIndexes()
+          SSB.removeBlobs()
+          SSB.net.ebt.updateClock()
+
+          if (wasConnected)
+            this.goOnline()
+        }
       },
 
       onConnected: function() {
