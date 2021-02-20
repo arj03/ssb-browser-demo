@@ -27,10 +27,6 @@ sed -i 's/~3.3.2/^3.4.5/' node_modules/ssb-room/package.json
 rm -rf node_modules/ssb-room/node_modules/ssb-config
 
 # Dedupe ssb-keys.
-sed -i 's/7.2.1/8.0.2/' node_modules/ssb-client/package.json
-rm -rf node_modules/ssb-client/node_modules/ssb-keys
-sed -i 's/7.1.4/8.0.2/' node_modules/ssb-config/package.json
-rm -rf node_modules/ssb-config/node_modules/ssb-keys
 sed -i 's/7.0.7/8.0.2/' node_modules/ssb-validate/package.json
 rm -rf node_modules/ssb-validate/node_modules/ssb-keys
 rm -rf node_modules/ssb-room/node_modules/ssb-keys

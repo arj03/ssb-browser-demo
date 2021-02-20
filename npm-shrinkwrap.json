@@ -34,7 +34,6 @@
         "browserify": "^17.0.0",
         "esmify": "^2.1.1",
         "inline-source-cli": "^2.0.0",
-        "ssb-client": "^4.9.0",
         "terser": "^5.6.0",
         "uglifyify": "^5.0.2",
         "workbox-build": "^6.1.0"
@@ -7174,83 +7173,6 @@
       "version": "1.1.0",
       "resolved": "https://registry.npmjs.org/ssb-caps/-/ssb-caps-1.1.0.tgz",
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
-    },
-    "node_modules/ssb-client": {
-      "version": "4.9.0",
-      "resolved": "https://registry.npmjs.org/ssb-client/-/ssb-client-4.9.0.tgz",
-      "integrity": "sha512-5wPrVA82Uk3deV2oiCZEbm1kMp9r/5xTT2VvwwMLZS3fDD9FnLOi0kjUUh3OTP+jGBK7bVHRmnvXIVy6ETnSpA==",
-      "dev": true,
-      "dependencies": {
-        "explain-error": "^1.0.1",
-        "multicb": "^1.2.1",
-        "multiserver": "^3.1.2",
-        "muxrpc": "^6.5.0",
-        "pull-hash": "^1.0.0",
-        "pull-stream": "^3.6.0",
-        "ssb-config": "^3.4.4",
-        "ssb-keys": "^7.2.1"
-      }
-    },
-    "node_modules/ssb-client/node_modules/mkdirp": {
-      "version": "0.5.5",
-      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz",
-      "integrity": "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==",
-      "dev": true,
-      "dependencies": {
-        "minimist": "^1.2.5"
-      },
-      "bin": {
-        "mkdirp": "bin/cmd.js"
-      }
-    },
-    "node_modules/ssb-client/node_modules/ssb-keys": {
-      "version": "7.2.2",
-      "resolved": "https://registry.npmjs.org/ssb-keys/-/ssb-keys-7.2.2.tgz",
-      "integrity": "sha512-FPeyYU/3LpxcagnbmVWE+Q/qzg6keqeOBPbD7sEH9UKixUASeufPKiORDgh8nVX7J9Z+0vUaHt/WG999kGjvVQ==",
-      "dev": true,
-      "dependencies": {
-        "chloride": "^2.2.8",
-        "mkdirp": "~0.5.0",
-        "private-box": "^0.3.0"
-      }
-    },
-    "node_modules/ssb-config": {
-      "version": "3.4.5",
-      "resolved": "https://registry.npmjs.org/ssb-config/-/ssb-config-3.4.5.tgz",
-      "integrity": "sha512-DyCrGIsl01GkdHreAkkaDUorV7SAgRSqKn/htg4ZwbvH6g0NAdOi84x/8ehzDuojPev78hbkWjZXgIqi+/Jo0g==",
-      "dev": true,
-      "dependencies": {
-        "deep-extend": "^0.6.0",
-        "ip": "^1.1.5",
-        "lodash.get": "^4.4.2",
-        "os-homedir": "^1.0.1",
-        "rc": "^1.1.6",
-        "ssb-caps": "^1.0.1",
-        "ssb-keys": "^7.1.4"
-      }
-    },
-    "node_modules/ssb-config/node_modules/mkdirp": {
-      "version": "0.5.5",
-      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz",
-      "integrity": "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==",
-      "dev": true,
-      "dependencies": {
-        "minimist": "^1.2.5"
-      },
-      "bin": {
-        "mkdirp": "bin/cmd.js"
-      }
-    },
-    "node_modules/ssb-config/node_modules/ssb-keys": {
-      "version": "7.2.2",
-      "resolved": "https://registry.npmjs.org/ssb-keys/-/ssb-keys-7.2.2.tgz",
-      "integrity": "sha512-FPeyYU/3LpxcagnbmVWE+Q/qzg6keqeOBPbD7sEH9UKixUASeufPKiORDgh8nVX7J9Z+0vUaHt/WG999kGjvVQ==",
-      "dev": true,
-      "dependencies": {
-        "chloride": "^2.2.8",
-        "mkdirp": "~0.5.0",
-        "private-box": "^0.3.0"
-      }
     },
     "node_modules/ssb-conn": {
       "version": "1.0.0",
@@ -15100,81 +15022,6 @@
       "version": "1.1.0",
       "resolved": "https://registry.npmjs.org/ssb-caps/-/ssb-caps-1.1.0.tgz",
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
-    },
-    "ssb-client": {
-      "version": "4.9.0",
-      "resolved": "https://registry.npmjs.org/ssb-client/-/ssb-client-4.9.0.tgz",
-      "integrity": "sha512-5wPrVA82Uk3deV2oiCZEbm1kMp9r/5xTT2VvwwMLZS3fDD9FnLOi0kjUUh3OTP+jGBK7bVHRmnvXIVy6ETnSpA==",
-      "dev": true,
-      "requires": {
-        "explain-error": "^1.0.1",
-        "multicb": "^1.2.1",
-        "multiserver": "^3.1.2",
-        "muxrpc": "^6.5.0",
-        "pull-hash": "^1.0.0",
-        "pull-stream": "^3.6.0",
-        "ssb-config": "^3.4.4",
-        "ssb-keys": "^7.2.1"
-      },
-      "dependencies": {
-        "mkdirp": {
-          "version": "0.5.5",
-          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz",
-          "integrity": "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==",
-          "dev": true,
-          "requires": {
-            "minimist": "^1.2.5"
-          }
-        },
-        "ssb-keys": {
-          "version": "7.2.2",
-          "resolved": "https://registry.npmjs.org/ssb-keys/-/ssb-keys-7.2.2.tgz",
-          "integrity": "sha512-FPeyYU/3LpxcagnbmVWE+Q/qzg6keqeOBPbD7sEH9UKixUASeufPKiORDgh8nVX7J9Z+0vUaHt/WG999kGjvVQ==",
-          "dev": true,
-          "requires": {
-            "chloride": "^2.2.8",
-            "mkdirp": "~0.5.0",
-            "private-box": "^0.3.0"
-          }
-        }
-      }
-    },
-    "ssb-config": {
-      "version": "3.4.5",
-      "resolved": "https://registry.npmjs.org/ssb-config/-/ssb-config-3.4.5.tgz",
-      "integrity": "sha512-DyCrGIsl01GkdHreAkkaDUorV7SAgRSqKn/htg4ZwbvH6g0NAdOi84x/8ehzDuojPev78hbkWjZXgIqi+/Jo0g==",
-      "dev": true,
-      "requires": {
-        "deep-extend": "^0.6.0",
-        "ip": "^1.1.5",
-        "lodash.get": "^4.4.2",
-        "os-homedir": "^1.0.1",
-        "rc": "^1.1.6",
-        "ssb-caps": "^1.0.1",
-        "ssb-keys": "^7.1.4"
-      },
-      "dependencies": {
-        "mkdirp": {
-          "version": "0.5.5",
-          "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz",
-          "integrity": "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==",
-          "dev": true,
-          "requires": {
-            "minimist": "^1.2.5"
-          }
-        },
-        "ssb-keys": {
-          "version": "7.2.2",
-          "resolved": "https://registry.npmjs.org/ssb-keys/-/ssb-keys-7.2.2.tgz",
-          "integrity": "sha512-FPeyYU/3LpxcagnbmVWE+Q/qzg6keqeOBPbD7sEH9UKixUASeufPKiORDgh8nVX7J9Z+0vUaHt/WG999kGjvVQ==",
-          "dev": true,
-          "requires": {
-            "chloride": "^2.2.8",
-            "mkdirp": "~0.5.0",
-            "private-box": "^0.3.0"
-          }
-        }
-      }
     },
     "ssb-conn": {
       "version": "1.0.0",
