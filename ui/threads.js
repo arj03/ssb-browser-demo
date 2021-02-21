@@ -135,8 +135,7 @@ module.exports = function (componentsState) {
 
       pullRoots: function(categoryKey, messages) {
         var self = this
-        var rootKeys = messages.map((x) => { return x.value.content.root || x.key })
-          .filter((x, index, self) => { return self.indexOf(x) == index })
+        var rootKeys = Array.from(new Set(messages.map((x) => { return x.value.content.root || x.key })))
         SSB.db.query(
           and(type('post'), isRoot(), or(...rootKeys.map((x) => key(x)))),
           toCallback((err, answer) => {
