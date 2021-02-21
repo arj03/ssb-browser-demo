@@ -3,6 +3,7 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const localPrefs = require('../localprefs')
   const { and, or, not, channel, isRoot, hasRoot, isPublic, type, author, key, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const sort = require('ssb-sort')
 
   return {
     template: `
@@ -59,6 +60,8 @@ module.exports = function (componentsState) {
       },
 
       fillInCategory: function(categoryKey, threadRoots) {
+        var self = this
+
         var threads = {}
         for (r in threadRoots) {
           threads[threadRoots[r].key] = {
@@ -74,6 +77,49 @@ module.exports = function (componentsState) {
         // Now that the thread root list is filled in (to prevent race conditions), fetch messages.
         for (t in this.categories[categoryKey].threads) {
           this.fetchMessages(t, (err, threadRootId, replies) => {
+            // determine if messages exists outside our follow graph
+            var knownIds = [threadRootId, ...replies.map(x => x.key)]
+
+            function insertMissingMessages(msg) {
+              if (typeof msg.value.content.branch === 'string')
+              {
+                if (!knownIds.includes(msg.value.content.branch)) {
+                  replies.push({
+                    key: msg.value.content.branch,
+                    value: {
+                      content: {
+                        text: self.$root.$t('common.messageOutsideGraph')
+                      }
+                    }
+                  })
+                }
+              }
+              else if (Array.isArray(msg.value.content.branch))
+              {
+                msg.value.content.branch.forEach((branch) => {
+                  if (!knownIds.includes(branch)) {
+                    replies.push({
+                      key: branch,
+                      value: {
+                        content: {
+                          text: self.$root.$t('common.messageOutsideGraph')
+                        }
+                      }
+                    })
+                  }
+                })
+              }
+            }
+
+            replies.forEach((msg) => {
+              if (msg.value.content.type != 'post') return
+
+              insertMissingMessages(msg)
+              replies.push(msg)
+            })
+
+            replies = sort(replies)
+            
             // Replies may contain duplicates, so we need to deduplicate them.
             var seenKeys = []
             for (r in replies) {
