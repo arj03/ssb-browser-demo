@@ -2,7 +2,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const helpers = require('./helpers')
   const localPrefs = require('../localprefs')
-  const { and, or, not, channel, isRoot, hasRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const { and, or, not, channel, isRoot, hasRoot, isPublic, type, author, key, startFrom, paginate, descending, toCallback } = SSB.dbOperators
 
   return {
     template: `
@@ -43,8 +43,8 @@ module.exports = function (componentsState) {
       return {
         categories: {},
         offset: 0,
-        pageSize: 50,
-        displayPageEnd: 50
+        pageSize: 30,
+        displayPageEnd: 30
       }
     },
 
@@ -87,6 +87,24 @@ module.exports = function (componentsState) {
         }
       },
 
+      pullRoots: function(categoryKey, messages) {
+        var self = this
+        var rootKeys = messages.map((x) => { return x.value.content.root || x.key })
+          .filter((x, index, self) => { return self.indexOf(x) == index })
+        SSB.db.query(
+          and(type('post'), isRoot(), or(...rootKeys.map((x) => key(x)))),
+          toCallback((err, answer) => {
+            if (answer) {
+              // Sort the resulting messages by the order in rootKeys, since that's the "last updated" order.
+              var threadRoots = answer.sort((a, b) => { return rootKeys.indexOf(a.key) - rootKeys.indexOf(b.key) })
+                .filter((x, index, self) => { return self.indexOf(x) == index })
+                .slice(0, this.pageSize)
+              self.fillInCategory(categoryKey, threadRoots)
+            }
+          })
+        )
+      },
+
       renderPublic: function () {
         var self = this
 
@@ -95,12 +113,13 @@ module.exports = function (componentsState) {
           threads: {}
         }
         SSB.db.query(
-          and(type('post'), isRoot(), isPublic()),
+          and(type('post'), isPublic()),
           startFrom(self.offset),
-          paginate(this.pageSize),
+          paginate(this.pageSize * 5), // Pull some extra messages so we get roughly the right number of thread roots.  Determined experimentally.
           descending(),
           toCallback((err, answer) => {
-            self.fillInCategory("public", answer.results)
+            if (answer)
+              self.pullRoots("public", answer.results)
           })
         )
       }
