@@ -4583,9 +4583,9 @@
       }
     },
     "node_modules/jitdb": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.3.0.tgz",
-      "integrity": "sha512-B6AtghCKm55+YbR5LMAma10NhYxMfJmWPL1c+Ic9gFJWhxEMTm+6pmsgs07aoq3oPPiXlCqeCpEZM52E0JNxsg==",
+      "version": "2.3.1",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.3.1.tgz",
+      "integrity": "sha512-ICaXDJFRvdXrA62m+ei41uH8a88PHZgp3t8C6V7EcsrFawiLHzrYqv+ianQss43TJOf9zgmnxjpZFeH0vK2ErA==",
       "dependencies": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -7151,14 +7151,15 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "8.3.2",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.2.tgz",
-      "integrity": "sha512-ersvEC7OIxWLi9A8kTqmp+EJlX906USO9e1UcqAecvy0ei8pP+5ttPbXsaFqLjDfXDo6KndtHqmPo6ypzt4yPA==",
+      "version": "8.3.3",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.3.tgz",
+      "integrity": "sha512-CQKV1dbbjiriZIdm67O7YNlr6srQxoNKsxIuy29thlHXfeSsQrRfJHSlB6XyZ5cLUufIl4xii2+DgN8kON8HCA==",
       "dependencies": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
         "epidemic-broadcast-trees": "^8.0.1",
         "gossip-query": "^2.0.2",
+        "obz": "^1.0.3",
         "polyraf": "^1.1.0",
         "promisify-4loc": "^1.0.0",
         "pull-cont": "^0.1.1",
@@ -7316,9 +7317,9 @@
       }
     },
     "node_modules/ssb-db2": {
-      "version": "1.17.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.17.0.tgz",
-      "integrity": "sha512-utF0sGZOv/n0L2+hTvWapWYaH+8O7r814s0UiUYDew82nGYTzIV40Cv5BYXJQ5yVC7ZDjvQAVQMOVvpaTjfkTg==",
+      "version": "1.17.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.17.2.tgz",
+      "integrity": "sha512-yTZPg4mPdbWWpWgN0IUfL6lOOOsz2yak9AZ20Lywou1HPvZLzwfMD4/1/KAho50ELjEZkTDhZluu7klqAKNypA==",
       "dependencies": {
         "async-append-only-log": "^3.0.7",
         "atomically-universal": "^0.1.1",
@@ -7329,7 +7330,7 @@
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
         "hoox": "0.0.1",
-        "jitdb": "^2.3.0",
+        "jitdb": "^2.3.1",
         "level": "^6.0.1",
         "level-codec": "^9.0.2",
         "lodash.debounce": "^4.0.8",
@@ -12860,9 +12861,9 @@
       }
     },
     "jitdb": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.3.0.tgz",
-      "integrity": "sha512-B6AtghCKm55+YbR5LMAma10NhYxMfJmWPL1c+Ic9gFJWhxEMTm+6pmsgs07aoq3oPPiXlCqeCpEZM52E0JNxsg==",
+      "version": "2.3.1",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-2.3.1.tgz",
+      "integrity": "sha512-ICaXDJFRvdXrA62m+ei41uH8a88PHZgp3t8C6V7EcsrFawiLHzrYqv+ianQss43TJOf9zgmnxjpZFeH0vK2ErA==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -15016,14 +15017,15 @@
       }
     },
     "ssb-browser-core": {
-      "version": "8.3.2",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.2.tgz",
-      "integrity": "sha512-ersvEC7OIxWLi9A8kTqmp+EJlX906USO9e1UcqAecvy0ei8pP+5ttPbXsaFqLjDfXDo6KndtHqmPo6ypzt4yPA==",
+      "version": "8.3.3",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.3.3.tgz",
+      "integrity": "sha512-CQKV1dbbjiriZIdm67O7YNlr6srQxoNKsxIuy29thlHXfeSsQrRfJHSlB6XyZ5cLUufIl4xii2+DgN8kON8HCA==",
       "requires": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
         "epidemic-broadcast-trees": "^8.0.1",
         "gossip-query": "^2.0.2",
+        "obz": "^1.0.3",
         "polyraf": "^1.1.0",
         "promisify-4loc": "^1.0.0",
         "pull-cont": "^0.1.1",
@@ -15174,9 +15176,9 @@
       }
     },
     "ssb-db2": {
-      "version": "1.17.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.17.0.tgz",
-      "integrity": "sha512-utF0sGZOv/n0L2+hTvWapWYaH+8O7r814s0UiUYDew82nGYTzIV40Cv5BYXJQ5yVC7ZDjvQAVQMOVvpaTjfkTg==",
+      "version": "1.17.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.17.2.tgz",
+      "integrity": "sha512-yTZPg4mPdbWWpWgN0IUfL6lOOOsz2yak9AZ20Lywou1HPvZLzwfMD4/1/KAho50ELjEZkTDhZluu7klqAKNypA==",
       "requires": {
         "async-append-only-log": "^3.0.7",
         "atomically-universal": "^0.1.1",
@@ -15187,7 +15189,7 @@
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
         "hoox": "0.0.1",
-        "jitdb": "^2.3.0",
+        "jitdb": "^2.3.1",
         "level": "^6.0.1",
         "level-codec": "^9.0.2",
         "lodash.debounce": "^4.0.8",
