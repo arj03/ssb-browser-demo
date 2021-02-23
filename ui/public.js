@@ -181,7 +181,7 @@ module.exports = function (componentsState) {
         [ err, SSB ] = ssbSingleton.getSSB()
         if (!SSB || !SSB.db) {
           // Try again later.
-          setTimeout(self.renderPublic, 3000)
+          setTimeout(this.renderPublic, 3000)
           return
         }
 

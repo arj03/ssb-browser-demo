@@ -6,6 +6,7 @@
   const pull = require('pull-stream')
   const ssbSingleton = require('../ssb-singleton')
   const localPrefs = require('../localprefs')
+  const clickCatcher = require('../click-catcher')
 
   // Load local preferences.
   localPrefs.updateStateFromSettings();
@@ -19,6 +20,9 @@
   function loadVue() {
     // Make sure settings have been applied.
     localPrefs.updateStateFromSettings();
+
+    // Start this before Vue so that it gets first dibs on events.
+    clickCatcher.start()
 
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
@@ -79,7 +83,7 @@
         return {
           appTitle: localPrefs.getAppTitle(),
           suggestions: [],
-	  feedId: "",
+          feedId: "",
           goToTargetText: ""
         }
       },
@@ -180,10 +184,10 @@
       if (app.$data.feedId == "") {
         [ err, SSB ] = ssbSingleton.getSSB()
 
-	if (SSB && SSB.net.id)
-	  app.$data.feedId = SSB.net.id
-	else
-	  setTimeout(updateFeedId, 3000)
+        if (SSB && SSB.net && SSB.net.id)
+          app.$data.feedId = SSB.net.id
+        else
+          setTimeout(updateFeedId, 3000)
       }
     }
     updateFeedId()
