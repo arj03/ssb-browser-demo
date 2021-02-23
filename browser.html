@@ -28,6 +28,12 @@
     <div class="refresher">
       <img src="hermies.png">
     </div>
+    <div class="modalError">
+      <div>
+        <div id="modalErrorMessage">
+        </div>
+      </div>
+    </div>
     <div id="app">
       <h1>{{ appTitle }}</h1>
       <p id="navigation">
@@ -35,7 +41,7 @@
         <router-link to="/private">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages> |
         <router-link to="/channels">{{ $t('pages.channels') }}</router-link> |
         <router-link to="/groups">{{ $t('pages.groups') }}</router-link> |
-        <ssb-profile-link class="iconButton" ref="upperNavProfileLink" :feed-id="SSB.net.id"></ssb-profile-link> |
+        <ssb-profile-link class="iconButton" ref="upperNavProfileLink" :feed-id="feedId"></ssb-profile-link> |
         <router-link class="iconButton" to="/connections" :title="$t('pages.connections')">&#127760;</router-link><connected ref="connected"></connected> |
         <router-link class="iconButton" to="/notifications" :title="$t('pages.notifications')">&#128276;</router-link> |
         <router-link class="iconButton" to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
@@ -63,7 +69,7 @@
         <router-link to="/private" class="navButton">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages>
         <router-link to="/channels" class="navButton">{{ $t('pages.channels') }}</router-link>
         <router-link to="/groups" class="navButton">{{ $t('pages.groups') }}</router-link>
-        <ssb-profile-link ref="lowerNavProfileLink" class="navButton" :feed-id="SSB.net.id"></ssb-profile-link>
+        <ssb-profile-link ref="lowerNavProfileLink" class="navButton" :feed-id="feedId"></ssb-profile-link>
         <router-link to="/connections" class="navButton" :title="$t('pages.connections')">&#127760;</router-link>
         <connected ref="connected2"></connected>
         <router-link to="/notifications" class="navButton" :title="$t('pages.notifications')">&#128276;</router-link>

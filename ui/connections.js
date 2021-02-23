@@ -1,6 +1,7 @@
 const pull = require('pull-stream')
 const defaultPrefs = require("../defaultprefs.json")
 const localPrefs = require("../localprefs")
+const ssbSingleton = require("../ssb-singleton")
 
 module.exports = function () {
   return {
@@ -73,12 +74,24 @@ module.exports = function () {
       },
 
       goOffline: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't go offline right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
         localPrefs.setOfflineMode(true)
         this.online = false
         SSB.net.conn.stop()
       },
 
       goOnline: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't go online right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
         localPrefs.setOfflineMode(false)
         this.online = true
         SSB.net.conn.start()
@@ -87,6 +100,7 @@ module.exports = function () {
       onConnected: function() {
         // If we're connected, we're definitely online.
         // Set the preference, too, in case ssb-browser-core is a version which doesn't support offline mode, just to make sure the preference stays in sync with reality.
+        [ err, SSB ] = ssbSingleton.getSSB()
         this.online = true
         localPrefs.setOfflineMode(false)
         this.connected = true
@@ -98,6 +112,7 @@ module.exports = function () {
       },
 
       onDisconnected: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
         this.online = false
         this.connected = false
         this.connectedWithData = false
@@ -106,6 +121,12 @@ module.exports = function () {
       },
 
       add: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't add peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
         var s = this.address.split(":")
         if (s[0] != 'ws' && s[0] != 'wss' && s[0] != 'dht' && s[0] != 'bt') {
           alert(this.$root.$t('connections.unsupportedConnectionTypeX', { connType: s[0] }))
@@ -117,6 +138,12 @@ module.exports = function () {
         })
       },
       connectSuggested: function(suggestedPeer) {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't add peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
         var s = suggestedPeer.address.split(":")
         SSB.net.connectAndRemember(suggestedPeer.address, {
           key: '@' + s[s.length-1] + '.ed25519',
@@ -132,6 +159,12 @@ module.exports = function () {
         }
       },
       connect: function(stagedPeer) {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't add peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
         SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
         this.updateSuggestedPeers()
 
@@ -156,122 +189,140 @@ module.exports = function () {
         }
       },
       disconnect: function(peer) {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't disconnect peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
         SSB.net.conn.forget(peer.address)
         SSB.net.conn.disconnect(peer.address)
         this.updateSuggestedPeers()
+      },
+      renderConnections: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          // This is async anyway - try again later.
+          setTimeout(this.renderConnections, 3000)
+          return
+        }
+
+        var self = this
+
+        document.title = this.$root.appTitle + " - " + this.$root.$t('connections.title')
+
+        self.onTypeChange()
+
+        this.online = !localPrefs.getOfflineMode()
+        this.connected = SSB.isConnected()
+        this.connectedWithData = SSB.isConnectedWithData()
+        if (this.connected) {
+          SSB.disconnected(this.onDisconnected)
+        } else {
+          SSB.connected(this.onConnected)
+          SSB.connectedWithData(this.onConnectedWithData)
+        }
+
+        let lastStatus = null
+        let lastEbtStatus = null
+
+        function updatePeerTS() {
+          // Last updated timestamp needs to be the maximum value from several sources.
+          SSB.net.ebt.peerStatus((err, ebtPeers) => {
+            for (p in self.peers) {
+              var ts = (self.peers[p].data.hubUpdated || 0)
+              ts = Math.max(ts, (self.peers[p].data.stateChange || 0))
+              if (ebtPeers[self.peers[p].data.key] && ebtPeers[self.peers[p].data.key].ts)
+                ts = Math.max(ts, ebtPeers[self.peers[p].data.key].ts)
+              self.peers[p].ts = ts
+              self.peers[p].lastUpdate = (new Date(ts)).toLocaleString()
+            }
+          })
+        }
+
+        pull(
+          SSB.net.conn.stagedPeers(),
+          pull.drain((entries) => {
+            self.stagedPeers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
+            self.updateSuggestedPeers()
+          })
+        )
+
+        pull(
+          SSB.net.conn.peers(),
+          pull.drain((entries) => {
+            self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
+            updatePeerTS()
+            self.updateSuggestedPeers()
+          })
+        )
+
+        function updateSynced() {
+          if (!self.running) return
+
+          setTimeout(() => {
+            self.synced = self.online && self.connected && self.connectedWithData && self.$root.$refs["connected"].synced
+
+            updateSynced()
+          }, 500)
+        }
+
+        updateSynced()
+
+        function updateDBStatus() {
+          // This is a long-running process, so we need to make sure we're re-acquiring SSB in case the one we've been using goes away (parent window closed, for example).
+          [ err, SSB ] = ssbSingleton.getSSB()
+          if (!self.running || !SSB || !SSB.db || !SSB.feedSyncer) return
+
+          setTimeout(() => {
+            const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
+            const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
+
+            updatePeerTS()
+
+            if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
+                JSON.stringify(ebtStatus) == JSON.stringify(lastEbtStatus)) {
+              updateDBStatus()
+
+              return
+            }
+
+            lastStatus = Object.assign({}, status)
+            lastEbtStatus = Object.assign({}, ebtStatus)
+
+            var html = "<h3>" + self.$root.$t('connections.dbStatus') + "</h3>"
+            html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
+            html += "<h3>" + self.$root.$t('connections.ebtStatus') + "</h3>"
+            html += "<pre>" + JSON.stringify(ebtStatus, null, 2) + "</pre>"
+            self.statusHTML = html
+
+            self.hasFollowProgress = status.totalFull
+            if (status.totalFull) {
+              self.followProgress = Math.round((status.fullSynced) * 100 / (status.totalFull))
+              var progressBar = document.getElementById("syncProgressFollow")
+              // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasFollowProgress.
+              if (progressBar)
+                progressBar.style.width = (self.followProgress * 0.99 + 1) + "%"
+            }
+            self.hasExtendedProgress = status.totalPartial
+            if (status.totalPartial) {
+              self.extendedProgress = Math.round((status.profilesSynced + status.contactsSynced + status.messagesSynced) * 100 / (status.totalPartial * 3))
+              var progressBar = document.getElementById("syncProgressExtended")
+              // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasExtendedProgress.
+              if (progressBar)
+                progressBar.style.width = (self.extendedProgress * 0.99 + 1) + "%"
+            }
+
+            updateDBStatus()
+          }, 1000)
+        }
+
+        updateDBStatus()
       }
     },
 
     created: function() {
-      var self = this
-
-      document.title = this.$root.appTitle + " - " + this.$root.$t('connections.title')
-
-      self.onTypeChange()
-
-      this.online = !localPrefs.getOfflineMode()
-      this.connected = SSB.isConnected()
-      this.connectedWithData = SSB.isConnectedWithData()
-      if (this.connected) {
-        SSB.disconnected(this.onDisconnected)
-      } else {
-        SSB.connected(this.onConnected)
-        SSB.connectedWithData(this.onConnectedWithData)
-      }
-
-      let lastStatus = null
-      let lastEbtStatus = null
-
-      function updatePeerTS() {
-        // Last updated timestamp needs to be the maximum value from several sources.
-        SSB.net.ebt.peerStatus((err, ebtPeers) => {
-          for (p in self.peers) {
-            var ts = (self.peers[p].data.hubUpdated || 0)
-            ts = Math.max(ts, (self.peers[p].data.stateChange || 0))
-            if (ebtPeers[self.peers[p].data.key] && ebtPeers[self.peers[p].data.key].ts)
-              ts = Math.max(ts, ebtPeers[self.peers[p].data.key].ts)
-            self.peers[p].ts = ts
-            self.peers[p].lastUpdate = (new Date(ts)).toLocaleString()
-          }
-        })
-      }
-
-      pull(
-        SSB.net.conn.stagedPeers(),
-        pull.drain((entries) => {
-          self.stagedPeers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
-          self.updateSuggestedPeers()
-        })
-      )
-
-      pull(
-        SSB.net.conn.peers(),
-        pull.drain((entries) => {
-          self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
-          updatePeerTS()
-          self.updateSuggestedPeers()
-        })
-      )
-
-      function updateSynced() {
-        if (!self.running) return
-
-        setTimeout(() => {
-          self.synced = self.online && self.connected && self.connectedWithData && self.$root.$refs["connected"].synced
-
-          updateSynced()
-        }, 500)
-      }
-
-      updateSynced()
-
-      function updateDBStatus() {
-        if (!self.running) return
-
-        setTimeout(() => {
-          const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
-          const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
-
-          updatePeerTS()
-
-          if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
-              JSON.stringify(ebtStatus) == JSON.stringify(lastEbtStatus)) {
-            updateDBStatus()
-
-            return
-          }
-
-          lastStatus = Object.assign({}, status)
-          lastEbtStatus = Object.assign({}, ebtStatus)
-
-          var html = "<h3>" + self.$root.$t('connections.dbStatus') + "</h3>"
-          html += "<pre>" + JSON.stringify(status, null, 2) + "</pre>"
-          html += "<h3>" + self.$root.$t('connections.ebtStatus') + "</h3>"
-          html += "<pre>" + JSON.stringify(ebtStatus, null, 2) + "</pre>"
-          self.statusHTML = html
-
-          self.hasFollowProgress = status.totalFull
-          if (status.totalFull) {
-            self.followProgress = Math.round((status.fullSynced) * 100 / (status.totalFull))
-            var progressBar = document.getElementById("syncProgressFollow")
-            // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasFollowProgress.
-            if (progressBar)
-              progressBar.style.width = (self.followProgress * 0.99 + 1) + "%"
-          }
-          self.hasExtendedProgress = status.totalPartial
-          if (status.totalPartial) {
-            self.extendedProgress = Math.round((status.profilesSynced + status.contactsSynced + status.messagesSynced) * 100 / (status.totalPartial * 3))
-            var progressBar = document.getElementById("syncProgressExtended")
-            // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasExtendedProgress.
-            if (progressBar)
-              progressBar.style.width = (self.extendedProgress * 0.99 + 1) + "%"
-          }
-
-          updateDBStatus()
-        }, 1000)
-      }
-
-      updateDBStatus()
+      this.renderConnections()
     },
 
     beforeRouteLeave: function(from, to, next) {
@@ -281,6 +332,7 @@ module.exports = function () {
 
     watch: {
       stagedPeers: function(oldValue, newValue) {
+        [ err, SSB ] = ssbSingleton.getSSB()
         var self = this
         for (x in this.stagedPeers) {
           (function(p) {
@@ -289,7 +341,7 @@ module.exports = function () {
               self.stagedPeers[p].name = suggestNamesForPeer[0].name
             else if (self.stagedPeers[p].data && self.stagedPeers[p].data.type == 'room-endpoint') {
               var key = self.stagedPeers[p].data.key
-              const name = SSB.getProfileName(key)
+              const name = (SSB && SSB.getProfileName ? SSB.getProfileName(key) : key)
               // See if we have a room name in our suggestions list.
               var roomName = self.stagedPeers[p].data.roomName
               var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {
@@ -306,6 +358,7 @@ module.exports = function () {
         }
       },
       peers: function(oldValue, newValue) {
+        [ err, SSB ] = ssbSingleton.getSSB()
         var self = this
         for (x in this.peers) {
           (function(p) {
@@ -314,7 +367,7 @@ module.exports = function () {
               self.peers[p].name = suggestNamesForPeer[0].name
             else if (self.peers[p].data && self.peers[p].data.type == 'room-endpoint') {
               var key = self.peers[p].data.key
-              const name = SSB.getProfileName(key)
+              const name = (SSB && SSB.getProfileName ? SSB.getProfileName(key) : key)
               // See if we have a room name in our suggestions list.
               var roomName = self.peers[p].data.roomName
               var suggestNamesForRoom = defaultPrefs.suggestPeers.filter((x) => {

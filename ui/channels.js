@@ -1,7 +1,7 @@
 module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const localPrefs = require('../localprefs')
-  const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -39,6 +39,13 @@ module.exports = function (componentsState) {
 
     methods: {
       load: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          setTimeout(this.load, 3000)
+          return
+        }
+
+        const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
         // Get favorite channels from preferences.

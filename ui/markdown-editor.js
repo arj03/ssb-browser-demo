@@ -1,6 +1,5 @@
 const helpers = require('./helpers')
 const ref = require('ssb-ref')
-const { and, not, isPublic, type, channel, toCallback } = SSB.dbOperators
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">

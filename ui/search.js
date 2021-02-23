@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -27,6 +27,15 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.search) {
+          // Try again later.
+          setTimeout(this.loadMore, 3000)
+          return
+        }
+
+        const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
+        this.searchDepth = SSB.search.depth
         try {
           SSB.search.fullTextSearch(this.search, (err, results) => {
             if (results && results.length > 0) {
@@ -58,7 +67,6 @@ module.exports = function () {
     },
 
     created: function () {
-      this.searchDepth = SSB.search.depth
       this.render()
     },
 

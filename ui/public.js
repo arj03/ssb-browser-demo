@@ -4,11 +4,12 @@ module.exports = function (componentsState) {
   const ssbMentions = require('ssb-mentions')
   const localPrefs = require('../localprefs')
   const userGroups = require('../usergroups')
-  const { and, or, not, channel, isRoot, isPublic, type, author, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
-  function getQuery(onlyDirectFollow, onlyThreads, onlyChannels,
+  function getQuery(SSB, onlyDirectFollow, onlyThreads, onlyChannels,
                     channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb) {
 
+  const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.dbOperators
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.getGraphSync()
@@ -138,9 +139,17 @@ module.exports = function (componentsState) {
       },
 
       loadMore: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          // Try again later.
+          setTimeout(self.loadMore, 3000)
+          return
+        }
+
         var self = this
 
-        getQuery(this.onlyDirectFollow, this.onlyThreads,
+        const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        getQuery(SSB, this.onlyDirectFollow, this.onlyThreads,
           this.onlyChannels, this.onlyChannelsList,
           this.hideChannels, this.hideChannelsList,
           this.onlyGroups, this.onlyGroupsList,
@@ -151,9 +160,11 @@ module.exports = function (componentsState) {
             paginate(self.pageSize),
             descending(),
             toCallback((err, answer) => {
-              self.messages = self.messages.concat(answer.results)
-              self.displayPageEnd = self.offset + self.pageSize
-              self.offset += self.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+              if (answer && answer.results) {
+                self.messages = self.messages.concat(answer.results)
+                self.displayPageEnd = self.offset + self.pageSize
+                self.offset += self.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
+              }
             })
           )
         })
@@ -167,8 +178,16 @@ module.exports = function (componentsState) {
       },
 
       renderPublic: function () {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          // Try again later.
+          setTimeout(self.renderPublic, 3000)
+          return
+        }
+
         var self = this
 
+        const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
         componentsState.newPublicMessages = false
 
         this.isRefreshing = true
@@ -176,7 +195,7 @@ module.exports = function (componentsState) {
 
         console.time("latest messages")
 
-        getQuery(this.onlyDirectFollow, this.onlyThreads,
+        getQuery(SSB, this.onlyDirectFollow, this.onlyThreads,
           this.onlyChannels, this.onlyChannelsList,
           this.hideChannels, this.hideChannelsList,
           this.onlyGroups, this.onlyGroupsList,
@@ -195,7 +214,7 @@ module.exports = function (componentsState) {
                 self.messages = []
                 alert("An exception was encountered trying to read the messages database.  Please report this so we can try to fix it: " + err)
                 throw err
-              } else {
+              } else if (answer && answer.results) {
                 self.messages = self.messages.concat(answer.results)
                 self.displayPageEnd = self.offset + self.pageSize
                 self.offset += self.pageSize // If we go by result length and we have filtered out all messages, we can never get more.
@@ -241,6 +260,11 @@ module.exports = function (componentsState) {
       },
 
       loadChannels: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          setTimeout(this.loadChannels, 3000)
+          return
+        }
         const allChannels = SSB.db.getIndex("channels").getChannels()
         const sortFunc = (new Intl.Collator()).compare
         const filteredChannels = allChannels.sort(sortFunc)
@@ -303,6 +327,12 @@ module.exports = function (componentsState) {
       },
 
       confirmPost: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't post right now.  Couldn't lock database.  Please make sure you only have one instance off ssb-browser running.")
+          return
+        }
+
         var self = this
 
         var postData = this.buildPostData()
@@ -337,6 +367,10 @@ module.exports = function (componentsState) {
       var self = this
 
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
+
+      window.updateFirstTimeLoading = function() {
+        self.showOnboarding = window.firstTimeLoading
+      }
 
       // Pull preferences for filters.
       const filterNamesSeparatedByPipes = localPrefs.getPublicFilters();

@@ -1,7 +1,7 @@
 module.exports = function (state) {
-  const { and, type, live, toPullStream } = SSB.dbOperators
   const pull = require('pull-stream')  
   const localPrefs = require('../localprefs')
+  const ssbSingleton = require('../ssb-singleton')
 
   var loaded = false
 
@@ -29,44 +29,62 @@ module.exports = function (state) {
           this.$route.matched[0].instances.default.refresh()
         else
           this.$router.push({ path: '/public'})
+      },
+
+      tryLoading: function () {
+        var self = this
+  
+        if (loaded) return // is loaded twice?
+        loaded = true
+  
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (err) {
+          setTimeout(self.tryLoading, 3000)
+          return
+        }
+
+        // This should only be done once, and only after we've already gotten an SSB running, which is why it's done here.
+        if (!self.registeredSSBChange) {
+          ssbSingleton.onChangeSSB(self.tryLoading)
+          self.registeredSSBChange = true
+        }
+  
+        const { and, type, live, toPullStream } = SSB.dbOperators
+  
+        pull(
+          SSB.db.query(
+            and(type('post')),
+            live(),
+            toPullStream(),
+            pull.drain((msg) => {
+              if (!msg.value.meta) {
+                self.newPublicMessages = true
+  
+                // If we're scrolled to the top of the page and autorefresh is on, refresh.
+                if (self.publicRefreshTimer == 0 && localPrefs.getAutorefresh()) {
+                  // Only allow refreshing every 30 seconds, but at the end of that, check once again if we have queued messages.
+                  self.publicRefreshTimer = setTimeout(function() {
+                    console.log("Checking for new data via timer...")
+                    self.refreshIfConfigured()
+  
+                    // After another few seconds, clear the blocking timer.
+                    self.publicRefreshTimer = 0
+                    console.log("Autorefresh blocking timer cleared.  Autorefreshing is allowed to proceed.")
+                  }, 30000)
+  
+                  // Refresh now.
+                  console.log("Autorefreshing blocked for 30 seconds.  Refreshing via event...")
+                  self.refreshIfConfigured()
+                }
+              }
+            })
+          )
+        )
       }
     },
 
-    created: function () {
-      var self = this
-
-      if (loaded) return // is loaded twice?
-      loaded = true
-
-      pull(
-        SSB.db.query(
-          and(type('post')),
-          live(),
-          toPullStream(),
-          pull.drain((msg) => {
-            if (!msg.value.meta) {
-              self.newPublicMessages = true
-
-              // If we're scrolled to the top of the page and autorefresh is on, refresh.
-              if (self.publicRefreshTimer == 0 && localPrefs.getAutorefresh()) {
-                // Only allow refreshing every 30 seconds, but at the end of that, check once again if we have queued messages.
-                self.publicRefreshTimer = setTimeout(function() {
-                  console.log("Checking for new data via timer...")
-                  self.refreshIfConfigured()
-
-                  // After another few seconds, clear the blocking timer.
-                  self.publicRefreshTimer = 0
-                  console.log("Autorefresh blocking timer cleared.  Autorefreshing is allowed to proceed.")
-                }, 30000)
-
-                // Refresh now.
-                console.log("Autorefreshing blocked for 30 seconds.  Refreshing via event...")
-                self.refreshIfConfigured()
-              }
-            }
-          })
-        )
-      )
+    created: function() {
+      this.tryLoading()
     }
   })
 }

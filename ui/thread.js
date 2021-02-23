@@ -3,8 +3,7 @@ module.exports = function () {
   const helpers = require('./helpers')
   const ssbMentions = require('ssb-mentions')
   const sort = require('ssb-sort')
-
-  const { and, hasRoot, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   let initialState = function(self, rootId) {
     return {
@@ -74,6 +73,12 @@ module.exports = function () {
       },
 
       buildPostData: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.box) {
+          alert("Can't post right now.  Couldn't lock the database.  Please make sure you have only one running instance of ssb-browser.")
+          return
+        }
+
         var mentions = ssbMentions(this.postText)
         var content = { type: 'post', text: this.postText, root: this.fixedRootId, branch: this.latestMsgIdInThread, mentions }
 
@@ -86,6 +91,12 @@ module.exports = function () {
       },
 
       confirmPost: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't post right now.  Couldn't lock the database.  Please make sure you have only one running instance of ssb-browser.")
+          return
+        }
+
         var self = this
 
         content = this.buildPostData()
@@ -102,7 +113,9 @@ module.exports = function () {
         })
       },
 
-      render: function(rootMsg) {
+      render: function(SSB, rootMsg) {
+        const { and, hasRoot, toCallback } = SSB.dbOperators
+
         var self = this
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
         this.recipients = rootMsg.content.recps
@@ -182,6 +195,13 @@ module.exports = function () {
       },
 
       renderThread: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          // Try again later.
+          setTimeout(this.renderThread, 3000)
+          return
+        }
+
         var self = this
         SSB.db.get(self.fixedRootId, (err, rootMsg) => {
           if (err || rootMsg === undefined) { // FIXME: make this configurable
@@ -191,13 +211,13 @@ module.exports = function () {
               SSB.db.get(self.fixedRootId, (err, rootMsg) => {
                 if (err || rootMsg === undefined) {
                   console.error(err)
-                  self.render({ content: { text: self.$root.$t('common.unknownMessage') }})
+                  self.render(SSB, { content: { text: self.$root.$t('common.unknownMessage') }})
                 } else
-                  self.render(rootMsg)
+                  self.render(SSB, rootMsg)
               })
             })
           } else
-            self.render(rootMsg)
+            self.render(SSB, rootMsg)
         })
       }
     },

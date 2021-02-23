@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -40,6 +40,14 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db || !SSB.dbOperators) {
+          // Try again later.
+          setTimeout(this.loadMore, 3000)
+          return
+        }
+
+        const { and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         SSB.db.query(
           and(or(channel(this.channel), channel("#" + this.channel)), isPublic()),
           and(type('post')),
@@ -118,6 +126,12 @@ module.exports = function () {
       },
 
       confirmPost: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't post right now.  Couldn't lock the database.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         var self = this
 
         var postData = this.buildPostData()

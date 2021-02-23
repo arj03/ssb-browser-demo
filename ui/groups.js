@@ -2,7 +2,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const localPrefs = require('../localprefs')
   const userGroups = require('../usergroups')
-  const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -51,6 +51,15 @@ module.exports = function (componentsState) {
       },
 
       fetchLatestMessage: function(groupId) {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db || !SSB.dbOperators) {
+          // This is an async call anyway - try again later.
+          setTimeout(function() {
+            this.fetchLatestMessage(groupId)
+          }, 3000)
+        }
+
+        const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
         for (g in this.groups) {
           if (this.groups[g].id == groupId) {
