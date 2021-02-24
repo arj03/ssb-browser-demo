@@ -7,6 +7,7 @@ module.exports = function () {
 
   let initialState = function(self, rootId) {
     return {
+      componentStillLoaded: false,
       fixedRootId: rootId,
       title: rootId,
       latestMsgIdInThread: rootId,
@@ -195,13 +196,12 @@ module.exports = function () {
       },
 
       renderThread: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db) {
-          // Try again later.
-          setTimeout(this.renderThread, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.renderThreadCallback)
+      },
 
+      renderThreadCallback: function(err, SSB) {
         var self = this
         SSB.db.get(self.fixedRootId, (err, rootMsg) => {
           if (err || rootMsg === undefined) { // FIXME: make this configurable
@@ -229,9 +229,15 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('thread.title', { title: this.title })
 
       this.renderThread()
     },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
+    }
   }
 }
