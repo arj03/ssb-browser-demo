@@ -27,6 +27,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         postMessageVisible: false,
         postText: "",
         offset: 0,
@@ -40,13 +41,12 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db || !SSB.dbOperators) {
-          // Try again later.
-          setTimeout(this.loadMore, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+      },
 
+      loadMoreCallback: function(err, SSB) {
         const { and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         SSB.db.query(
           and(or(channel(this.channel), channel("#" + this.channel)), isPublic()),
@@ -156,6 +156,8 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('channel.title', { name: this.channel })
 
       window.addEventListener('scroll', this.onScroll)
@@ -164,6 +166,7 @@ module.exports = function () {
     },
 
     destroyed: function() {
+      this.componentStillLoaded = false
       window.removeEventListener('scroll', this.onScroll)
     }
   }
