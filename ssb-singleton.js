@@ -130,13 +130,13 @@ module.exports.getSSBEventually = function(timeout, isRelevantCB, ssbCheckCB, re
   // If the caller no longer needs a result, return right away before processing anything.
   if (isRelevantCB && !isRelevantCB()) return;
 
-  [ err, SSB ] = this.getSSB()
+  [ err, maybeSSB ] = this.getSSB()
 
   // Do this here so that if we time out and return, SSB is set to null if it doesn't pass.
   // That way a simple if(SSB) is all it takes on the client end.
-  SSB = (!err && ssbCheckCB(SSB) ? SSB : null)
+  maybeSSB = (!err && ssbCheckCB(maybeSSB) ? maybeSSB : null)
 
-  if (!SSB) {
+  if (!maybeSSB) {
     if (timeout != 0) {
       // Try again.
       var self = this
@@ -149,5 +149,5 @@ module.exports.getSSBEventually = function(timeout, isRelevantCB, ssbCheckCB, re
       err = "Could not lock database"
     }
   }
-  resultCB(err, SSB)
+  resultCB(err, maybeSSB)
 }
