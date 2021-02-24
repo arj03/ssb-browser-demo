@@ -7,6 +7,7 @@ module.exports = function () {
   
   let initialState = function(self) {
     return {
+      componentStillLoaded: false,
       isSelf: false,
       following: false,
       blocking: false,
@@ -420,64 +421,73 @@ module.exports = function () {
       },
 
       downloadMessages: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.connectedWithData) {
-          // Not going to hurt to try again later.
-          setTimeout(this.downloadMessages, 3000)
+        var self = this
+        ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.isConnectedWithData() }, self.downloadFollowingCallback)
+      },
+
+      downloadMessagesCallback: function(err, SSB) {
+        if (err) {
+          alert("Can't download right now.  Reason: " + err)
           return
         }
-        SSB.connectedWithData(() => {
-          if (this.feedId == SSB.net.id)
-            SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
-          else {
-            SSB.syncFeedFromLatest(this.feedId, () => {
-              SSB.partial.updateState(this.feedId, { syncedMessages: true }, () => {
-                SSB.db.onDrain(this.renderProfile)
-              })
+
+        if (this.feedId == SSB.net.id)
+          SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
+        else {
+          SSB.syncFeedFromLatest(this.feedId, () => {
+            SSB.partial.updateState(this.feedId, { syncedMessages: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
-          }
-        })
+          })
+        }
       },
       
       downloadProfile: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.connectedWithData) {
-          // Try again later.
-          setTimeout(this.downloadProfile, 3000)
+        var self = this
+        ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.isConnectedWithData() }, self.downloadFollowingCallback)
+      },
+
+      downloadProfileCallback: function(err, SSB) {
+        if (err) {
+          alert("Can't download right now.  Reason: " + err)
           return
         }
 
-        SSB.connectedWithData(() => {
-          let rpc = SSB.getPeer()
-          if (!rpc) {
-            console.log("No remote connection, unable to download profile")
-            return
-          }
+        let rpc = SSB.getPeer()
+        if (!rpc) {
+          console.log("No remote connection, unable to download profile")
+          return
+        }
   
-          console.time("syncing profile")
+        console.time("syncing profile")
   
-          pull(
-            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-            pull.asyncMap(SSB.db.addOOO),
-            pull.collect((err, msgs) => {
-              if (err) alert(err.message)
+        pull(
+          rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
+          pull.asyncMap(SSB.db.addOOO),
+          pull.collect((err, msgs) => {
+            if (err) alert(err.message)
   
-              console.timeEnd("syncing profile")
-              console.log(msgs.length)
+            console.timeEnd("syncing profile")
+            console.log(msgs.length)
   
-              SSB.partial.updateState(this.feedId, { syncedProfile: true }, () => {
-                SSB.db.onDrain(this.renderProfile)
-              })
+            SSB.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
-          )
-        })
+          })
+        )
       },
 
       downloadFollowing: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.connectedWithData) {
-          // Try again later.
-          setTimeout(this.downloadFollowing, 3000)
+        var self = this
+        ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.downloadFollowingCallback)
+      },
+
+      downloadFollowingCallback: function(err, SSB) {
+        if (err) {
+          alert("Can't download right now.  Reason: " + err)
           return
         }
 
@@ -508,13 +518,7 @@ module.exports = function () {
         })
       },
 
-      updateFollowers: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.net.friends) {
-          // Try again later.
-          setTimeout(this.updateFollowers, 3000)
-          return
-        }
+      updateFollowers: function(err, SSB) {
         var self = this
         var opts = {
           start: this.feedId,
@@ -531,13 +535,7 @@ module.exports = function () {
         })
       },
 
-      updateBlockingUs: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.net.friends) {
-          // Try again later.
-          setTimeout(this.updateBlockingUs, 3000)
-          return
-        }
+      updateBlockingUs: function(err, SSB) {
         var self = this
         var opts = {
           start: this.feedId,
@@ -555,13 +553,12 @@ module.exports = function () {
       },
 
       loadMore: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db) {
-          // Try again later.
-          setTimeout(this.loadMore, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+      },
 
+      loadMoreCallback: function (err, SSB) {
         SSB.db.query(
           and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
           startFrom(this.offset),
@@ -574,7 +571,7 @@ module.exports = function () {
         )
       },
 
-      renderProfileUsingSSB: function (SSB) {
+      renderFollowsCallback: function (err, SSB) {
         const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
 
@@ -624,10 +621,14 @@ module.exports = function () {
           })
         )
 
-        this.updateFollowers()
-        this.updateBlockingUs()
-
-        function showProfile(profile) {
+        this.updateFollowers(err, SSB)
+        this.updateBlockingUs(err, SSB)
+      },
+      
+      renderProfileCallback: function (err, SSB) {
+        var self = this
+        const profile = SSB.getProfile(self.feedId)
+        if (Object.keys(profile).length > 0) {
           if (profile.name)
             self.name = profile.name
           
@@ -672,45 +673,35 @@ module.exports = function () {
             })
           }
         }
-
-        function tryToLoadProfile() {
-          const profile = SSB.getProfile(self.feedId)
-          if (Object.keys(profile).length > 0) {
-            showProfile(profile)
-            return true
-          }
-          return false
-        }
-
-        if (!tryToLoadProfile()) {
-          // No profile - we might have just been refreshed.  Try again after the profile index has had a few seconds to load.
-          setTimeout(() => {
-            if (!tryToLoadProfile())
-              SSB.connectedWithData(tryToLoadProfile)
-          }, 3000)
-        }
       },
 
       renderProfile() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (SSB && SSB.net && SSB.db)
-          this.renderProfileUsingSSB(SSB)
-        else
-          setTimeout(this.renderProfile, 3000)
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.net && SSB.dbOperators && SSB.getGraphForFeed }, self.renderFollowsCallback)
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.net && SSB.getProfile && SSB.getProfile(self.feedId) }, self.renderProfileCallback)
       }
     },
 
     beforeRouteUpdate(to, from, next) {
       this.feedId = to.params.feedId
       Object.assign(this.$data, initialState(this))
+      this.componentStillLoaded = true
       this.renderProfile()
       next()
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('profile.title', { name: this.feedId })
 
       this.renderProfile()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {
