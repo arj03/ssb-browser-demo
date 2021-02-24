@@ -29,6 +29,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         groupName: "Loading...",
         groupMembers: [],
         postMessageVisible: false,
@@ -45,13 +46,12 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db || !SSB.dbOperators) {
-          // This is async anyway - try again later.
-          setTimeout(this.loadMore, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+      },
 
+      loadMoreCallback: function(err, SSB) {
         const { and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         try {
           SSB.db.query(
@@ -149,6 +149,8 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('group.title', { name: this.groupName })
 
       var self = this
@@ -162,6 +164,10 @@ module.exports = function () {
         self.groupMembers = members
         this.render()
       })
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {
