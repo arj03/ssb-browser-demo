@@ -53,6 +53,7 @@ module.exports = function () {
         type: 'room',
         address: '',
 
+        componentStillLoaded: false,
         statusHTML: '',
         running: true,
         connected: false,
@@ -200,13 +201,11 @@ module.exports = function () {
         this.updateSuggestedPeers()
       },
       renderConnections: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
-          // This is async anyway - try again later.
-          setTimeout(this.renderConnections, 3000)
-          return
-        }
-
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.net }, self.renderConnectionsCallback)
+      },
+      renderConnectionsCallback: function(err, SSB) {
         var self = this
 
         document.title = this.$root.appTitle + " - " + this.$root.$t('connections.title')
@@ -272,7 +271,11 @@ module.exports = function () {
         function updateDBStatus() {
           // This is a long-running process, so we need to make sure we're re-acquiring SSB in case the one we've been using goes away (parent window closed, for example).
           [ err, SSB ] = ssbSingleton.getSSB()
-          if (!self.running || !SSB || !SSB.db || !SSB.feedSyncer) return
+          if (!self.running) return
+          if (!SSB || !SSB.db || !SSB.feedSyncer) {
+            setTimeout(updateDBStatus, 5000)
+            return
+          }
 
           setTimeout(() => {
             const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
@@ -322,12 +325,17 @@ module.exports = function () {
     },
 
     created: function() {
+      this.componentStillLoaded = true
       this.renderConnections()
     },
 
     beforeRouteLeave: function(from, to, next) {
       this.running = false
       next()
+    },
+
+    destroyed: function() {
+      this.componentStillLoaded = false
     },
 
     watch: {
