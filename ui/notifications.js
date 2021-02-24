@@ -51,13 +51,12 @@ module.exports = function () {
       },
 
       render: function () {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db || !SSB.net) {
-          // This is async - try again later.
-          setTimeout(this.render, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.net }, self.renderCallback)
+      },
 
+      renderCallback: function (err, SSB) {
         const { and, mentions, contact, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
 
         var self = this
