@@ -187,7 +187,7 @@
         if (SSB && SSB.net && SSB.net.id)
           app.$data.feedId = SSB.net.id
         else
-          setTimeout(updateFeedId, 3000)
+          setTimeout(updateFeedId, 500)
       }
     }
     updateFeedId()
