@@ -123,6 +123,7 @@ module.exports = function (componentsState) {
         displayPageEnd: 50,
         autorefreshTimer: 0,
         isRefreshing: false,
+        componentStillLoaded: false,
 
         showOnboarding: window.firstTimeLoading,
         showPreview: false
@@ -139,13 +140,12 @@ module.exports = function (componentsState) {
       },
 
       loadMore: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db) {
-          // Try again later.
-          setTimeout(self.loadMore, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+      },
 
+      loadMoreCallback: function(err, SSB) {
         var self = this
 
         const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
@@ -178,13 +178,12 @@ module.exports = function (componentsState) {
       },
 
       renderPublic: function () {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db) {
-          // Try again later.
-          setTimeout(this.renderPublic, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.renderPublicCallback)
+      },
 
+      renderPublicCallback: function(err, SSB) {
         var self = this
 
         const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
@@ -260,11 +259,12 @@ module.exports = function (componentsState) {
       },
 
       loadChannels: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db) {
-          setTimeout(this.loadChannels, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.loadChannelsCallback)
+      },
+
+      loadChannelsCallback: function(err, SSB) {
         const allChannels = SSB.db.getIndex("channels").getChannels()
         const sortFunc = (new Intl.Collator()).compare
         const filteredChannels = allChannels.sort(sortFunc)
@@ -365,6 +365,7 @@ module.exports = function (componentsState) {
 
     created: function () {
       var self = this
+      this.componentStillLoaded = true
 
       document.title = this.$root.appTitle + " - " + this.$root.$t('public.title')
 
@@ -405,6 +406,7 @@ module.exports = function (componentsState) {
     },
 
     destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {

@@ -33,18 +33,19 @@ module.exports = function (componentsState) {
       return {
         channels: [],
         favoriteChannels: [],
+        componentStillLoaded: false,
         sortMode: "recent"
       }
     },
 
     methods: {
       load: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db) {
-          setTimeout(this.load, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.renderChannelsCallback)
+      },
 
+      renderChannelsCallback: function(err, SSB) {
         const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
@@ -141,9 +142,15 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('channels.title')
 
       this.load()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     }
   }
 }

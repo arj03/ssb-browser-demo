@@ -32,6 +32,7 @@ module.exports = function (componentsState) {
 
     data: function() {
       return {
+        componentStillLoaded: false,
         groups: [],
         groupName: ''
       }
@@ -51,14 +52,12 @@ module.exports = function (componentsState) {
       },
 
       fetchLatestMessage: function(groupId) {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.db || !SSB.dbOperators) {
-          // This is an async call anyway - try again later.
-          setTimeout(function() {
-            this.fetchLatestMessage(groupId)
-          }, 3000)
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.dbOperators }, (err, SSB) => { self.fetchLatestMessageCallback(err, SSB, groupId) })
+      },
 
+      fetchLatestMessageCallback: function(err, SSB, groupId) {
         const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
         for (g in this.groups) {
@@ -182,9 +181,15 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('groups.title')
 
       this.load()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     }
   }
 }

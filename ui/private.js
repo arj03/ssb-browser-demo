@@ -35,6 +35,7 @@ module.exports = function (componentsState) {
         people: [],
         recipients: [],
         messages: [],
+        componentStillLoaded: false,
 
         showPreview: false
       }
@@ -67,13 +68,12 @@ module.exports = function (componentsState) {
       },
 
       recipientsOpen: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.searchProfiles) {
-          // Try again later.
-          setTimeout(this.recipientsOpen, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.searchProfiles }, self.recipientsOpenCallback)
+      },
 
+      recipientsOpenCallback: function (err, SSB) {
         const matches = SSB.searchProfiles("")
         var unsortedPeople = []
         matches.forEach(match => {
@@ -88,13 +88,12 @@ module.exports = function (componentsState) {
       },
 
       renderPrivate: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.getProfileName || !SSB.db) {
-          // Try again later.
-          setTimeout(this.renderPrivate, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.getProfileName && SSB.db }, self.renderPrivateCallback)
+      },
 
+      renderPrivateCallback: function(err, SSB) {
         const { and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
@@ -222,9 +221,15 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('private.title')
 
       this.renderPrivate()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     }
   }
 }

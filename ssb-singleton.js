@@ -11,6 +11,7 @@ var lastSSB = null
 
 function ssbLoaded() {
   // add helper methods
+  SSB = window.singletonSSB
   require('./net')
   require('./profile')
   require('./search')
@@ -123,4 +124,30 @@ module.exports.getSSB = function() {
   const err = "Acquiring database lock - Only one instance of ssb-browser is allowed to run at a time."
   runOnError(err)
   return [ err, null ]
+}
+
+module.exports.getSSBEventually = function(timeout, isRelevantCB, ssbCheckCB, resultCB) {
+  // If the caller no longer needs a result, return right away before processing anything.
+  if (isRelevantCB && !isRelevantCB()) return;
+
+  [ err, SSB ] = this.getSSB()
+
+  // Do this here so that if we time out and return, SSB is set to null if it doesn't pass.
+  // That way a simple if(SSB) is all it takes on the client end.
+  SSB = (!err && ssbCheckCB(SSB) ? SSB : null)
+
+  if (!SSB) {
+    if (timeout != 0) {
+      // Try again.
+      var self = this
+      setTimeout(function() {
+        self.getSSBEventually((timeout > 0 ? Math.max(0, timeout - 500) : timeout), isRelevantCB, ssbCheckCB, resultCB)
+      }, 500)
+      return
+    } else if (!err) {
+      // We timed out but don't have an error, so we should set one before the callback below runs.
+      err = "Could not lock database"
+    }
+  }
+  resultCB(err, SSB)
 }
