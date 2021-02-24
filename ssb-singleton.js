@@ -103,6 +103,7 @@ module.exports.getSSB = function() {
       delete window.singletonSSB
     }
   }
+  var err = "Acquiring database lock - Only one instance of ssb-browser is allowed to run at a time."
   if (windowController.isMaster) {
     // We've been elected as the SSB holder window but have no SSB yet.  Initialize an SSB object.
     initSSB()
@@ -111,17 +112,19 @@ module.exports.getSSB = function() {
     return [ null, window.singletonSSB ]
   } else {
     // We're not supposed to be running an SSB.  But there might be another window with one.
-    if (window.opener && window.opener.singletonSSB) {
+    if (window.opener && window.opener.getSSBSingleton) {
       // See if they're still alive.
       if (window.windowController.others && window.windowController.others[window.opener.windowController.id]) {
         // They're still responding to pings.
-        runOnChangeIfNeeded(window.opener.singletonSSB)
-        runOnSuccess()
-        return [ null, window.opener.singletonSSB ]
+        [ err, openerSSB ] = window.opener.getSSBSingleton().getSSB()
+        if (openerSSB) {
+          runOnChangeIfNeeded(openerSSB)
+          runOnSuccess()
+          return [ null, openerSSB ]
+        }
       }
     }
   }
-  const err = "Acquiring database lock - Only one instance of ssb-browser is allowed to run at a time."
   runOnError(err)
   return [ err, null ]
 }
@@ -151,3 +154,5 @@ module.exports.getSSBEventually = function(timeout, isRelevantCB, ssbCheckCB, re
   }
   resultCB(err, maybeSSB)
 }
+
+window.getSSBSingleton = function() { return module.exports }
