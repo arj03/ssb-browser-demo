@@ -15,6 +15,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         messages: []
       }
     },
@@ -113,9 +114,15 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('notifications.title')
 
       this.render()
     },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
+    }
   }
 }
