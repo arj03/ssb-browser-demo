@@ -1,6 +1,7 @@
 const nodeEmoji = require('node-emoji')
 const md = require('ssb-markdown')
 const ref = require('ssb-ref')
+const ssbSingleton = require('../ssb-singleton')
 
 const mdOpts = {
   toUrl: (id) => {
@@ -8,6 +9,15 @@ const mdOpts = {
       // markdown doesn't support async, so we have to modify the DOM afterwards, see:
       // https://github.com/markdown-it/markdown-it/blob/master/docs/development.md#i-need-async-rule-how-to-do-it
       function replaceLink(err, newLink) {
+        [ ssbErr, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.isConnectedWithData) {
+          // Couldn't lock the database or not fully initialized.  Try again later.
+          setTimeout(function() {
+            replaceLink(err, newLink)
+          }, 3000)
+          return
+        }
+
         if (err) {
           // We probably can't display this because we're not connected to a peer we can download it from.
           if (!SSB.isConnectedWithData()) {
@@ -39,8 +49,9 @@ const mdOpts = {
     var self = this
     var link = ref.parseLink(id)
     if (link && ref.isBlob(link.link)) {
-      var imageURL = SSB.net.blobs.remoteURL(link.link)
-      if (!imageURL || imageURL == '') {
+      // This has to be done synchronously, so this poses a bit of a challenge for concurrency support.
+      [ err, SSB ] = ssbSingleton.getSSB()
+      if (!SSB || !(imageURL = SSB.net.blobs.remoteURL(link.link)) || imageURL == '') {
         // We're not connected to a peer - generate a unique ID so at least we have something to replace.
         imageURL = '/blobs/get/' + link.link
       }
