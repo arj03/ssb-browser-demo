@@ -18,6 +18,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         triedToLoadMessages: false,
         searchDepth: 10000,
         pageSize: 50,
@@ -27,13 +28,12 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
-        [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.search) {
-          // Try again later.
-          setTimeout(this.loadMore, 3000)
-          return
-        }
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.search }, self.loadMoreCallback)
+      },
 
+      loadMoreCallback: function(err, SSB) {
         const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
         this.searchDepth = SSB.search.depth
         try {
@@ -67,7 +67,12 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
       this.render()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {
