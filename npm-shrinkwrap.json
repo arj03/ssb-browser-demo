@@ -10,6 +10,7 @@
       "license": "Beerware",
       "dependencies": {
         "@toast-ui/vue-editor": "^2.5.1",
+        "clipboard-copy": "^4.0.1",
         "human-time": "0.0.2",
         "minisearch": "^3.0.2",
         "node-emoji": "^1.10.0",
@@ -2426,6 +2427,25 @@
         "inherits": "^2.0.1",
         "safe-buffer": "^5.0.1"
       }
+    },
+    "node_modules/clipboard-copy": {
+      "version": "4.0.1",
+      "resolved": "https://registry.npmjs.org/clipboard-copy/-/clipboard-copy-4.0.1.tgz",
+      "integrity": "sha512-wOlqdqziE/NNTUJsfSgXmBMIrYmfd5V0HCGsR8uAKHcg+h9NENWINcfRjtWGU77wDHC8B8ijV4hMTGYbrKovng==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/feross"
+        },
+        {
+          "type": "patreon",
+          "url": "https://www.patreon.com/feross"
+        },
+        {
+          "type": "consulting",
+          "url": "https://feross.org/support"
+        }
+      ]
     },
     "node_modules/cliui": {
       "version": "5.0.0",
@@ -11140,6 +11160,11 @@
         "inherits": "^2.0.1",
         "safe-buffer": "^5.0.1"
       }
+    },
+    "clipboard-copy": {
+      "version": "4.0.1",
+      "resolved": "https://registry.npmjs.org/clipboard-copy/-/clipboard-copy-4.0.1.tgz",
+      "integrity": "sha512-wOlqdqziE/NNTUJsfSgXmBMIrYmfd5V0HCGsR8uAKHcg+h9NENWINcfRjtWGU77wDHC8B8ijV4hMTGYbrKovng=="
     },
     "cliui": {
       "version": "5.0.0",

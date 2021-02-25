@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^2.5.1",
+    "clipboard-copy": "^4.0.1",
     "human-time": "0.0.2",
     "minisearch": "^3.0.2",
     "node-emoji": "^1.10.0",

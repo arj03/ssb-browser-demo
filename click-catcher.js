@@ -1,4 +1,5 @@
 const ssbSingleton = require("./ssb-singleton")
+const copy = require("clipboard-copy")
 
 const MutationObserver = window.MutationObserver || window.WebKitMutationObserver
 
@@ -25,6 +26,13 @@ function onContextMenu(e) {
   var options = [
     { name: "Open in new tab", cb: openInNewTab }
   ]
+  if (href.startsWith("#/profile/")) {
+    var id = decodeURIComponent(href.substring(("#/profile/").length))
+    options.push({
+      name: "Copy ID",
+      cb: () => { copy(id) }
+    })
+  }
 
   console.log("Caught right click")
   const contextMenu = a.__vue__.$root.$refs.linkContextMenu
