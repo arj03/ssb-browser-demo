@@ -246,6 +246,32 @@ body.refreshing .refresher {
   height: 100px;
 }
 
+body.ssbError .modalError {
+  display: table;
+}
+.modalError {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+}
+.modalError > div {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+.modalError > div > div {
+  display: inline-block;
+  padding: 3em;
+  background: #fff;
+  color: #000;
+}
+
 body, html {
   overscroll-behavior-y: contain; /* disable pull to refresh, keeps glow effects */
 }

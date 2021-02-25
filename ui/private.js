@@ -3,7 +3,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
   const ref = require('ssb-ref')
-  const { and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `<div id="private">
@@ -35,6 +35,7 @@ module.exports = function (componentsState) {
         people: [],
         recipients: [],
         messages: [],
+        componentStillLoaded: false,
 
         showPreview: false
       }
@@ -42,6 +43,12 @@ module.exports = function (componentsState) {
 
     methods: {
       suggest: function(searchString, loading) {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.getProfile) {
+          // This isn't important enough to try again or wait.
+          return
+        }
+
         var self = this
         loading(true)
 
@@ -61,6 +68,10 @@ module.exports = function (componentsState) {
       },
 
       recipientsOpen: function() {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.recipientsOpenCB)
+      },
+
+      recipientsOpenCB: function (err, SSB) {
         const matches = SSB.searchProfiles("")
         var unsortedPeople = []
         matches.forEach(match => {
@@ -75,19 +86,23 @@ module.exports = function (componentsState) {
       },
 
       renderPrivate: function() {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderPrivateCB)
+      },
+
+      renderPrivateCB: function(err, SSB) {
+        const { and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
         var self = this
         if (this.feedId && this.feedId != '') {
           this.postMessageVisible = true
-          SSB.getProfileNameAsync(this.feedId, (err, name) => {
-            if (self.people.length == 0)
-              self.people = [{ id: self.feedId, name: (name || self.feedId) }]
-            self.recipients = [{ id: self.feedId, name: (name || self.feedId) }]
+          var name = SSB.getProfileName(this.feedId)
+          if (self.people.length == 0)
+            self.people = [{ id: self.feedId, name: (name || self.feedId) }]
+          self.recipients = [{ id: self.feedId, name: (name || self.feedId) }]
     
-            // Done connecting and loading the box, so now we can take down the refreshing indicator
-            document.body.classList.remove('refreshing')
-          })
+          // Done connecting and loading the box, so now we can take down the refreshing indicator
+          document.body.classList.remove('refreshing')
         }
 
         componentsState.newPrivateMessages = false
@@ -142,6 +157,12 @@ module.exports = function (componentsState) {
       },
 
       buildPostData: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net || !SSB.box) {
+          alert("Can't post right now.  Couldn't lock database.  Please make sure there's only one instance of ssb-browser running.")
+          return
+        }
+
         if (this.recipients.length == 0) {
           alert(this.$root.$t('private.noRecipientError'))
           return
@@ -169,6 +190,12 @@ module.exports = function (componentsState) {
       },
 
       confirmPost: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net || !SSB.box) {
+          alert("Can't post right now.  Couldn't lock database.  Please make sure there's only one instance of ssb-browser running.")
+          return
+        }
+
         var self = this
 
         var content = this.buildPostData()
@@ -190,9 +217,15 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('private.title')
 
       this.renderPrivate()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     }
   }
 }

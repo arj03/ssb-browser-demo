@@ -1,7 +1,7 @@
 {
   "name": "ssb-browser-demo",
   "description": "",
-  "version": "5.1.1",
+  "version": "5.2.0",
   "homepage": "https://github.com/arj03/ssb-browser-demo",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^2.5.1",
+    "clipboard-copy": "^4.0.1",
     "human-time": "0.0.2",
     "minisearch": "^3.0.2",
     "node-emoji": "^1.10.0",
@@ -16,15 +17,14 @@
     "pull-cat": "^1.1.11",
     "pull-stream": "^3.6.14",
     "rimraf": "^3.0.2",
-    "ssb-browser-core": "^8.3.0",
-    "ssb-contact-msg": "^1.1.0",
+    "ssb-browser-core": "^8.3.2",
+    "ssb-caps": "^1.1.0",
     "ssb-keys": "^8.0.2",
     "ssb-keys-mnemonic": "^1.0.1",
     "ssb-markdown": "^6.0.7",
     "ssb-mentions": "^0.5.2",
     "ssb-ref": "^2.14.3",
     "ssb-sort": "^1.1.3",
-    "tweetnacl": "^1.0.3",
     "vue": "^2.6.12",
     "vue-i18n": "^8.22.4",
     "vue-router": "^3.5.1",
@@ -33,10 +33,8 @@
   },
   "devDependencies": {
     "browserify": "^17.0.0",
-    "deep-object-diff": "^1.1.0",
     "esmify": "^2.1.1",
     "inline-source-cli": "^2.0.0",
-    "ssb-client": "^4.9.0",
     "terser": "^5.6.0",
     "uglifyify": "^5.0.2",
     "workbox-build": "^6.1.0"

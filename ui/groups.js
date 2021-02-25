@@ -2,7 +2,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const localPrefs = require('../localprefs')
   const userGroups = require('../usergroups')
-  const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -32,13 +32,14 @@ module.exports = function (componentsState) {
 
     data: function() {
       return {
+        componentStillLoaded: false,
         groups: [],
         groupName: ''
       }
     },
 
     methods: {
-      groupMemberInfoCallback: function(err, groupId, members) {
+      groupMemberInfoCB: function(err, groupId, members) {
         for (g in this.groups) {
           if (this.groups[g].id == groupId) {
             this.groups[g].members = members
@@ -51,6 +52,11 @@ module.exports = function (componentsState) {
       },
 
       fetchLatestMessage: function(groupId) {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.fetchLatestMessageCB)
+      },
+
+      fetchLatestMessageCB: function(err, SSB, groupId) {
+        const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
         for (g in this.groups) {
           if (this.groups[g].id == groupId) {
@@ -109,7 +115,7 @@ module.exports = function (componentsState) {
             }
             if (fetchMembers) {
               (function(groupId) {
-                userGroups.getMembers(groupId, self.groupMemberInfoCallback)
+                userGroups.getMembers(groupId, self.groupMemberInfoCB)
               })(groups[g].id)
             } else if (fetchMessage) {
               // Already fetched members, but don't have a message, so we need to fetch it here because the membership callback won't do it.
@@ -173,9 +179,15 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('groups.title')
 
       this.load()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     }
   }
 }

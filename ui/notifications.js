@@ -2,9 +2,8 @@ module.exports = function () {
   const pull = require('pull-stream')
   const asyncFilter = require('pull-async-filter')
   const cat = require('pull-cat')
+  const ssbSingleton = require('../ssb-singleton')
 
-  const { and, mentions, contact, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
-  
   return {
     template: `
        <div id="channel">
@@ -16,38 +15,49 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         messages: []
       }
     },
 
     methods: {
-      getSameRoot: function(read) {
-        return function readable (end, cb) {
-          read(end, function(end, data) {
-            if (data) {
-              const root = data.value.content.root ? data.value.content.root : data.key
-              // Get all messages with the same root, but only the ones after the user's most recent post.
-              SSB.db.query(
-                and(hasRoot(root), type('post')),
-                toCallback((err, results) => {
-                  // Look through the results from the end backwards and look for a post from the user.
-                  // If we find one, stop passing along results, so we only have the posts since the user last replied.
-                  for (var r = results.length - 1; r >= 0; --r) {
-                    if (results[r].value.author == SSB.net.id) break
-
-                    cb(false, results[r])
-                  }
-                })
-              )
-            }
-            
-            // Place the original message back in the queue.
-            cb(end, data)
-          })
+      createGetSameRoot: function(SSB) {
+        const { and, author, type, toCallback, hasRoot } = SSB.dbOperators
+  
+        return function(read) {
+          return function readable (end, cb) {
+            read(end, function(end, data) {
+              if (data) {
+                const root = data.value.content.root ? data.value.content.root : data.key
+                // Get all messages with the same root, but only the ones after the user's most recent post.
+                SSB.db.query(
+                  and(hasRoot(root), type('post')),
+                  toCallback((err, results) => {
+                    // Look through the results from the end backwards and look for a post from the user.
+                    // If we find one, stop passing along results, so we only have the posts since the user last replied.
+                    for (var r = results.length - 1; r >= 0; --r) {
+                      if (results[r].value.author == SSB.net.id) break
+  
+                      cb(false, results[r])
+                    }
+                  })
+                )
+              }
+              
+              // Place the original message back in the queue.
+              cb(end, data)
+            })
+          }
         }
       },
 
       render: function () {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderCB)
+      },
+
+      renderCB: function (err, SSB) {
+        const { and, mentions, contact, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
+
         var self = this
 
         console.time("notifications")
@@ -87,7 +97,7 @@ module.exports = function () {
               pull.flatten()
             )
           ]),
-          self.getSameRoot,
+          self.createGetSameRoot(SSB),
           pull.unique('key'),
           asyncFilter((msg, cb) => {
             if (msg.value.author === SSB.net.id) return cb(null, true)
@@ -102,9 +112,15 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('notifications.title')
 
       this.render()
     },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
+    }
   }
 }

@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -27,6 +27,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         postMessageVisible: false,
         postText: "",
         offset: 0,
@@ -40,6 +41,11 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.loadMoreCB)
+      },
+
+      loadMoreCB: function(err, SSB) {
+        const { and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         SSB.db.query(
           and(or(channel(this.channel), channel("#" + this.channel)), isPublic()),
           and(type('post')),
@@ -118,6 +124,12 @@ module.exports = function () {
       },
 
       confirmPost: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't post right now.  Couldn't lock the database.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         var self = this
 
         var postData = this.buildPostData()
@@ -142,6 +154,8 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('channel.title', { name: this.channel })
 
       window.addEventListener('scroll', this.onScroll)
@@ -150,6 +164,7 @@ module.exports = function () {
     },
 
     destroyed: function() {
+      this.componentStillLoaded = false
       window.removeEventListener('scroll', this.onScroll)
     }
   }

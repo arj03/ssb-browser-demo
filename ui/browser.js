@@ -1,36 +1,12 @@
-const localPrefs = require('../localprefs')
-const optionsForCore = {
-  caps: { shs: Buffer.from(localPrefs.getCaps(), 'base64') },
-  friends: {
-    hops: localPrefs.getHops(),
-    hookReplicate: false
-  },
-  hops: localPrefs.getHops(),
-  core: {
-    startOffline: localPrefs.getOfflineMode()
-  },
-  conn: {
-    autostart: false,
-    hops: localPrefs.getHops(),
-    populatePubs: false
-  }
-}
-// Before we start up ssb-browser-core, let's check to see if we do not yet have an id, since this would mean that we need to display the onboarding screen.
-const ssbKeys = require('ssb-keys')
-window.firstTimeLoading = false
-try {
-  ssbKeys.loadSync('/.ssb-lite/secret')
-} catch(err) {
-  window.firstTimeLoading = true
-}
-require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
-
 (function() {
   const componentsState = require('./components')()
   const VueI18n = require('vue-i18n').default
   const i18nMessages = require('../messages.json')
   const helpers = require('./helpers')
   const pull = require('pull-stream')
+  const ssbSingleton = require('../ssb-singleton')
+  const localPrefs = require('../localprefs')
+  const clickCatcher = require('../click-catcher')
 
   // Load local preferences.
   localPrefs.updateStateFromSettings();
@@ -41,9 +17,12 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     })
   }
 
-  function ssbLoaded() {
+  function loadVue() {
     // Make sure settings have been applied.
     localPrefs.updateStateFromSettings();
+
+    // Start this before Vue so that it gets first dibs on events.
+    clickCatcher.start()
 
     const Public = require('./public')(componentsState)
     const Profile = require('./profile')()
@@ -58,16 +37,6 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
     const Connections = require('./connections')()
     const Settings = require('./settings')()
     const Search = require('./search')()
-
-    // add helper methods
-    require('../net')
-    require('../profile')
-    require('../search')
-
-    pull(SSB.net.conn.hub().listen(), pull.drain((ev) => {
-      if (ev.type.indexOf("failed") >= 0)
-        console.warn("Connection error: ", ev)
-    }))
 
     const routes = [
       { name: 'public', path: '/public', component: Public },
@@ -116,6 +85,7 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
         return {
           appTitle: localPrefs.getAppTitle(),
           suggestions: [],
+          feedId: "",
           goToTargetText: ""
         }
       },
@@ -130,6 +100,8 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
         },
 
         suggestTarget: function() {
+          [ err, SSB ] = ssbSingleton.getSSB()
+
           if (this.goToTargetText.startsWith('@')) {
             const profiles = SSB.searchProfiles(this.goToTargetText.substring(1), 5)
             // For consistency with the Markdown editor.
@@ -157,6 +129,8 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
         },
 
         goToTarget: function() {
+          [ err, SSB ] = ssbSingleton.getSSB()
+
           if (this.goToTargetText != '' && this.goToTargetText.startsWith('%')) {
             router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
             this.goToTargetText = ""
@@ -207,10 +181,30 @@ require('ssb-browser-core/core').init("/.ssb-lite", optionsForCore);
       }
 
     }).$mount('#app')
+
+    function updateFeedId() {
+      if (app.$data.feedId == "") {
+        [ err, SSB ] = ssbSingleton.getSSB()
+
+        if (SSB && SSB.net && SSB.net.id)
+          app.$data.feedId = SSB.net.id
+        else
+          setTimeout(updateFeedId, 500)
+      }
+    }
+    updateFeedId()
   }
 
-  if (SSB.events._events["SSB: loaded"])
-    ssbLoaded()
-  else
-    SSB.events.once('SSB: loaded', ssbLoaded)
+  ssbSingleton.onError(function(err) {
+    document.body.classList.add('ssbError')
+    document.getElementById("modalErrorMessage").innerHTML = err
+  })
+  ssbSingleton.onSuccess(function() {
+    document.body.classList.remove('ssbError')
+  });
+
+  // Attempt to start SSB.
+  [ err, SSB ] = ssbSingleton.getSSB()
+
+  loadVue()
 })()

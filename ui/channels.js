@@ -1,7 +1,7 @@
 module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const localPrefs = require('../localprefs')
-  const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -33,12 +33,18 @@ module.exports = function (componentsState) {
       return {
         channels: [],
         favoriteChannels: [],
+        componentStillLoaded: false,
         sortMode: "recent"
       }
     },
 
     methods: {
       load: function() {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderChannelsCB)
+      },
+
+      renderChannelsCB: function(err, SSB) {
+        const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
         // Get favorite channels from preferences.
@@ -134,9 +140,15 @@ module.exports = function (componentsState) {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('channels.title')
 
       this.load()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     }
   }
 }

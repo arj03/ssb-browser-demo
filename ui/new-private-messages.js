@@ -1,8 +1,6 @@
 module.exports = function (state) {
-  const { and, isPrivate, type, live, toPullStream } = SSB.dbOperators
   const pull = require('pull-stream')  
-
-  var loaded = false
+  const ssbSingleton = require('../ssb-singleton')
 
   Vue.component('new-private-messages', {
     template: `
@@ -20,25 +18,40 @@ module.exports = function (state) {
           this.$route.matched[0].instances.default.renderPrivate()
         else
           this.$router.push({ path: '/private'})
+      },
+
+      tryLoading: function () {
+        var self = this;
+  
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (err) {
+          setTimeout(self.tryLoading, 3000)
+          return
+        }
+  
+        // This should only be done once, and only after we've already gotten an SSB running, which is why it's done here.
+        if (!self.registeredSSBChange) {
+          ssbSingleton.onChangeSSB(self.tryLoading)
+          self.registeredSSBChange = true
+        }
+  
+        const { and, isPrivate, type, live, toPullStream } = SSB.dbOperators
+
+        pull(
+          SSB.db.query(
+            and(isPrivate()),
+            live(),
+            toPullStream(),
+            pull.drain(() => {
+              self.newPrivateMessages = true
+            })
+          )
+        )
       }
     },
 
-    created: function () {
-      var self = this
-
-      if (loaded) return // is loaded twice?
-      loaded = true
-
-      pull(
-        SSB.db.query(
-          and(isPrivate()),
-          live(),
-          toPullStream(),
-          pull.drain(() => {
-            self.newPrivateMessages = true
-          })
-        )
-      )
+    created: function() {
+      this.tryLoading()
     }
   })
 }

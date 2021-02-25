@@ -1,3 +1,5 @@
+const ssbSingleton = require('../ssb-singleton')
+
 Vue.component('ssb-profile-name-link', {
   template: `
         <router-link :to="{name: 'profile', params: { feedId: feedId }}">
@@ -9,6 +11,7 @@ Vue.component('ssb-profile-name-link', {
 
   data: function() {
     return {
+      componentStillLoaded: false,
       isBlocked: false,
       name: ''
     }
@@ -16,37 +19,44 @@ Vue.component('ssb-profile-name-link', {
 
   methods: {
     renderProfile: function(profile) {
-      const self = this
-      if (self.feedId != SSB.net.id)
-        self.name = profile.name
+      var self = this
+      ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+        (SSB) => { return SSB && SSB.net }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
     },
 
-    refresh: function () {
+    renderProfileCallback: function (err, SSB, existingProfile) {
       const self = this
+      const profile = existingProfile || SSB.getProfile(self.feedId)
   
       if (self.feedId == SSB.net.id)
         self.name = this.$root.$t('common.selfPronoun')
-  
+      else
+        self.name = profile.name
+    },
+
+    loadBlocking: function (err, SSB) {
       SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
         if (!err) self.isBlocked = result
       })
-  
-      const profile = SSB.getProfile(self.feedId)
-      if (profile.name || profile.imageURL || profile.image) {
-        self.renderProfile(profile)
-      } else {
-        // Try one more time after the profile index has loaded.
-        setTimeout(() => {
-          const profileAgain = SSB.getProfile(self.feedId)
-          if (profileAgain)
-            self.renderProfile(profileAgain)
-        }, 3000)
-      }
+    },
+
+    refresh: function () {
+      var self = this
+      ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+        (SSB) => { return SSB && SSB.net }, self.loadBlocking)
+      ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+        (SSB) => { return SSB && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
     }
   },
 
   created: function() {
+    this.componentStillLoaded = true
+
     this.refresh()
+  },
+
+  destroyed: function() {
+    this.componentStillLoaded = false
   },
 
   watch: {
