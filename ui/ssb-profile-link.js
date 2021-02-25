@@ -20,9 +20,15 @@ Vue.component('ssb-profile-link', {
   },
 
   methods: {
-    renderProfile: function (err, SSB) {
+    renderProfile: function(profile) {
+      var self = this
+      ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+        (SSB) => { return SSB && SSB.net }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
+    },
+
+    renderProfileCallback: function (err, SSB, existingProfile) {
       const self = this
-      const profile = SSB.getProfile(self.feedId)
+      const profile = existingProfile || SSB.getProfile(self.feedId)
 
       // Set a default image to be overridden if there is an actual avatar to show.
       self.imgURL = helpers.getMissingProfileImage();
@@ -52,10 +58,12 @@ Vue.component('ssb-profile-link', {
   created: function() {
     this.componentStillLoaded = true
     var self = this
+    // Set a default image while we wait for an SSB.
+    self.imgURL = helpers.getMissingProfileImage();
     ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
       (SSB) => { return SSB && SSB.net }, self.loadBlocking)
     ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-      (SSB) => { return SSB && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfile)
+      (SSB) => { return SSB && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
   },
 
   destroyed: function() {
