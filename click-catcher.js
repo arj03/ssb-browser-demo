@@ -49,7 +49,7 @@ function onContextMenu(e) {
     })
   }
 
-  const contextMenu = vueHolder.__vue__.$root.$refs.linkContextMenu
+  const contextMenu = vueHolder.__vue__.$root.$refs.commonContextMenu
   contextMenu.showMenu(e, options, a)
 
   e.preventDefault()

@@ -1,7 +1,7 @@
-Vue.component('link-contextmenu', {
+Vue.component('common-contextmenu', {
   template: `
       <div>
-        <vue-simple-context-menu :elementId="'linkContextMenu'+Math.floor(Math.random() * 9999999999)" @option-clicked="optionClicked" ref="linkInternalContextMenu" :options="options" />
+        <vue-simple-context-menu :elementId="'commonContextMenu'+Math.floor(Math.random() * 9999999999)" @option-clicked="optionClicked" ref="internalContextMenu" :options="options" />
       </div>`,
 
   data: function() {
@@ -13,7 +13,7 @@ Vue.component('link-contextmenu', {
   methods: {
     showMenu: function(event, options, context) {
       this.options = options
-      this.$refs.linkInternalContextMenu.showMenu(event, context)
+      this.$refs.internalContextMenu.showMenu(event, context)
     },
 
     optionClicked: function(event) {
