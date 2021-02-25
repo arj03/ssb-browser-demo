@@ -5,7 +5,6 @@ const MutationObserver = window.MutationObserver || window.WebKitMutationObserve
 
 function onClick(e) {
   if (e.button == 1 || (e.button == 0 && e.ctrlKey)) {
-    console.log("Caught middle button")
     ssbSingleton.openWindow(e.currentTarget ? e.currentTarget.href : e.target.href)
     e.preventDefault()
     e.stopPropagation()
@@ -50,7 +49,6 @@ function onContextMenu(e) {
     })
   }
 
-  console.log("Caught right click")
   const contextMenu = vueHolder.__vue__.$root.$refs.linkContextMenu
   contextMenu.showMenu(e, options, a)
 
