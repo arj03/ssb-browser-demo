@@ -34,8 +34,8 @@ module.exports = function (componentsState) {
           </tbody>
         </table>
       </div>
-      <div v-if="categories.length < 1">
-        No threads found
+      <div v-if="Object.keys(categories).length < 1">
+        Searching for messages...
       </div>
     </div>`,
 
