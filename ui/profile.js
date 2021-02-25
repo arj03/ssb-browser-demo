@@ -559,6 +559,7 @@ module.exports = function () {
       },
 
       loadMoreCallback: function (err, SSB) {
+        const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         SSB.db.query(
           and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
           startFrom(this.offset),
