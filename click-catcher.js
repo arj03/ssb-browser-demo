@@ -23,7 +23,7 @@ function onContextMenu(e) {
   var href = a.getAttribute("href") // Can't just use a.href because that gets absolutized.
   var vueHolder = a
   while (!vueHolder.__vue__ && vueHolder.parentNode) vueHolder = vueHolder.parentNode
-  if (!vueHolder.__vue__ || !href || href.indexOf("://") >= 0) return
+  if (!vueHolder.__vue__ || !href || href.indexOf("://") >= 0 || href.startsWith("javascript:")) return
 
   var options = [
     { name: "Open in new tab", cb: openInNewTab }
