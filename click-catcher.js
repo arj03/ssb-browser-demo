@@ -1,9 +1,11 @@
+const ssbSingleton = require("./ssb-singleton")
+
 const MutationObserver = window.MutationObserver || window.WebKitMutationObserver
 
 function onClick(e) {
   if (e.button == 1) {
     console.log("Caught middle button")
-    window.open(e.target.href)
+    ssbSingleton.openWindow(e.target.href)
     e.preventDefault()
     e.stopPropagation()
     return false

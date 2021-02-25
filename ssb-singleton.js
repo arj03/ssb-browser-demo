@@ -4,6 +4,8 @@ const pull = require('pull-stream')
 
 window.windowController = new WindowController()
 
+window.windowList = (window.opener && window.opener.windowList ? window.opener.windowList : [ window ])
+
 var onErrorCallbacks = []
 var onSuccessCallbacks = []
 var ssbChangedCallbacks = []
@@ -112,15 +114,17 @@ module.exports.getSSB = function() {
     return [ null, window.singletonSSB ]
   } else {
     // We're not supposed to be running an SSB.  But there might be another window with one.
-    if (window.opener && window.opener.getSSBSingleton) {
-      // See if they're still alive.
-      if (window.windowController.others && window.windowController.others[window.opener.windowController.id]) {
-        // They're still responding to pings.
-        [ err, openerSSB ] = window.opener.getSSBSingleton().getSSB()
-        if (openerSSB) {
-          runOnChangeIfNeeded(openerSSB)
-          runOnSuccess()
-          return [ null, openerSSB ]
+    for (w in window.windowList) {
+      var otherWindow = window.windowList[w]
+      if (otherWindow != window && otherWindow.windowController && otherWindow.getSSBSingleton) {
+        if (window.windowController.others && window.windowController.others[otherWindow.windowController.id]) {
+          // They're still responding to pings.
+          [ err, otherSSB ] = otherWindow.getSSBSingleton().getSSB()
+          if (otherSSB) {
+            runOnChangeIfNeeded(otherSSB)
+            runOnSuccess()
+            return [ null, otherSSB ]
+          }
         }
       }
     }
@@ -153,6 +157,10 @@ module.exports.getSSBEventually = function(timeout, isRelevantCB, ssbCheckCB, re
     }
   }
   resultCB(err, maybeSSB)
+}
+
+module.exports.openWindow = function(href) {
+  window.windowList.push(window.open(href))
 }
 
 window.getSSBSingleton = function() { return module.exports }
