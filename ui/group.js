@@ -46,12 +46,10 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.loadMoreCB)
       },
 
-      loadMoreCallback: function(err, SSB) {
+      loadMoreCB: function(err, SSB) {
         const { and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         try {
           SSB.db.query(

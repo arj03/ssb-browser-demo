@@ -39,7 +39,7 @@ module.exports = function (componentsState) {
     },
 
     methods: {
-      groupMemberInfoCallback: function(err, groupId, members) {
+      groupMemberInfoCB: function(err, groupId, members) {
         for (g in this.groups) {
           if (this.groups[g].id == groupId) {
             this.groups[g].members = members
@@ -52,12 +52,10 @@ module.exports = function (componentsState) {
       },
 
       fetchLatestMessage: function(groupId) {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db && SSB.dbOperators }, (err, SSB) => { self.fetchLatestMessageCallback(err, SSB, groupId) })
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.fetchLatestMessageCB)
       },
 
-      fetchLatestMessageCallback: function(err, SSB, groupId) {
+      fetchLatestMessageCB: function(err, SSB, groupId) {
         const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
         for (g in this.groups) {
@@ -117,7 +115,7 @@ module.exports = function (componentsState) {
             }
             if (fetchMembers) {
               (function(groupId) {
-                userGroups.getMembers(groupId, self.groupMemberInfoCallback)
+                userGroups.getMembers(groupId, self.groupMemberInfoCB)
               })(groups[g].id)
             } else if (fetchMessage) {
               // Already fetched members, but don't have a message, so we need to fetch it here because the membership callback won't do it.

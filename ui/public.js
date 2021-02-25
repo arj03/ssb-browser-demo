@@ -140,12 +140,10 @@ module.exports = function (componentsState) {
       },
 
       loadMore: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.loadMoreCB)
       },
 
-      loadMoreCallback: function(err, SSB) {
+      loadMoreCB: function(err, SSB) {
         var self = this
 
         const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
@@ -178,12 +176,10 @@ module.exports = function (componentsState) {
       },
 
       renderPublic: function () {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db }, self.renderPublicCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderPublicCB)
       },
 
-      renderPublicCallback: function(err, SSB) {
+      renderPublicCB: function(err, SSB) {
         var self = this
 
         const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
@@ -259,12 +255,10 @@ module.exports = function (componentsState) {
       },
 
       loadChannels: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db }, self.loadChannelsCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.loadChannelsCB)
       },
 
-      loadChannelsCallback: function(err, SSB) {
+      loadChannelsCB: function(err, SSB) {
         const allChannels = SSB.db.getIndex("channels").getChannels()
         const sortFunc = (new Intl.Collator()).compare
         const filteredChannels = allChannels.sort(sortFunc)

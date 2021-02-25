@@ -68,12 +68,10 @@ module.exports = function (componentsState) {
       },
 
       recipientsOpen: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.searchProfiles }, self.recipientsOpenCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.recipientsOpenCB)
       },
 
-      recipientsOpenCallback: function (err, SSB) {
+      recipientsOpenCB: function (err, SSB) {
         const matches = SSB.searchProfiles("")
         var unsortedPeople = []
         matches.forEach(match => {
@@ -88,12 +86,10 @@ module.exports = function (componentsState) {
       },
 
       renderPrivate: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.getProfileName && SSB.db }, self.renderPrivateCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderPrivateCB)
       },
 
-      renderPrivateCallback: function(err, SSB) {
+      renderPrivateCB: function(err, SSB) {
         const { and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 

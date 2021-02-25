@@ -52,12 +52,10 @@ module.exports = function () {
       },
 
       render: function () {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db && SSB.net }, self.renderCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderCB)
       },
 
-      renderCallback: function (err, SSB) {
+      renderCB: function (err, SSB) {
         const { and, mentions, contact, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
 
         var self = this

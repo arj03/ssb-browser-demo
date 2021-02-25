@@ -40,12 +40,10 @@ module.exports = function (componentsState) {
 
     methods: {
       load: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db }, self.renderChannelsCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderChannelsCB)
       },
 
-      renderChannelsCallback: function(err, SSB) {
+      renderChannelsCB: function(err, SSB) {
         const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 

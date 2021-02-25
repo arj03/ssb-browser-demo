@@ -196,12 +196,10 @@ module.exports = function () {
       },
 
       renderThread: function() {
-        var self = this
-        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db }, self.renderThreadCallback)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderThreadCB)
       },
 
-      renderThreadCallback: function(err, SSB) {
+      renderThreadCB: function(err, SSB) {
         var self = this
         SSB.db.get(self.fixedRootId, (err, rootMsg) => {
           if (err || rootMsg === undefined) { // FIXME: make this configurable

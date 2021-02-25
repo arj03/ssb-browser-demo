@@ -159,6 +159,10 @@ module.exports.getSSBEventually = function(timeout, isRelevantCB, ssbCheckCB, re
   resultCB(err, maybeSSB)
 }
 
+module.exports.getSimpleSSBEventually = function(isRelevantCB, resultCB) {
+  module.exports.getSSBEventually(-1, isRelevantCB, (SSB) => { return SSB && SSB.db }, resultCB)
+}
+
 module.exports.openWindow = function(href) {
   window.windowList.push(window.open(href))
 }
