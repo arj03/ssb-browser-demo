@@ -3,10 +3,12 @@ module.exports = function () {
   const helpers = require('./helpers')
   const md = require('./markdown')
   const userGroups = require('../usergroups')
-  const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
   
   let initialState = function(self) {
     return {
+      componentStillLoaded: false,
+      isSelf: false,
       following: false,
       blocking: false,
       name: '',
@@ -178,7 +180,6 @@ module.exports = function () {
     computed: {
       followText: function() { return this.following ? this.$root.$t('profile.unfollow') : this.$root.$t('profile.follow') },
       blockText: function() { return this.blocking ? this.$root.$t('profile.unblock') : this.$root.$t('profile.block') },
-      isSelf: function() { return SSB.net.id == this.feedId },
       description: function() { return md.markdown(this.descriptionText) }
     },
     
@@ -225,7 +226,16 @@ module.exports = function () {
       },
 
       cacheImageURLForPreview: function(blobId, cb) {
-        var self = this
+        var self = this;
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net || !SSB.net.blobs) {
+          // Not going to hurt anything to try again later.
+          setTimeout(function() {
+            self.cacheImageURLForPreview(blobId, cb)
+          }, 3000)
+          return
+        }
+
         ++this.waitingForBlobURLs
         SSB.net.blobs.fsURL(blobId, (err, blobURL) => {
           if (self.$refs.markdownEditor)
@@ -243,7 +253,12 @@ module.exports = function () {
 
         if (!file) return
 
-        var self = this
+        var self = this;
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net || !SSB.net.blobs) {
+          alert("Can't add file right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
 
         file.arrayBuffer().then(function (buffer) {
           SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
@@ -283,6 +298,12 @@ module.exports = function () {
       },
 
       saveProfile: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net || !SSB.db) {
+          alert("Can't save right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         this.descriptionText = this.$refs.markdownEditor.getMarkdown()
 
         var msg = { type: 'about', about: SSB.net.id }
@@ -316,7 +337,13 @@ module.exports = function () {
       },
 
       changeFollowStatus: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
         var self = this
+        if (!SSB || !SSB.db) {
+          alert("Can't change follow status right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         if (this.following) {
           SSB.db.publish({
             type: 'contact',
@@ -342,6 +369,12 @@ module.exports = function () {
       },
 
       changeBlockStatus: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't change blocking status right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         var self = this
         if (this.blocking) {
           SSB.db.publish({
@@ -373,6 +406,12 @@ module.exports = function () {
       },
 
       deleteFeed: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't delete feed right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         var self = this
         SSB.db.deleteFeed(this.feedId, (err) => {
           if (err) return alert(self.$root.$t('profile.failedToRemoveFeed'), err)
@@ -382,47 +421,76 @@ module.exports = function () {
       },
 
       downloadMessages: function() {
-        SSB.connectedWithData(() => {
-          if (this.feedId == SSB.net.id)
-            SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
-          else {
-            SSB.syncFeedFromLatest(this.feedId, () => {
-              SSB.partial.updateState(this.feedId, { syncedMessages: true }, () => {
-                SSB.db.onDrain(this.renderProfile)
-              })
+        var self = this
+        ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.isConnectedWithData() }, self.downloadFollowingCallback)
+      },
+
+      downloadMessagesCallback: function(err, SSB) {
+        if (err) {
+          alert("Can't download right now.  Reason: " + err)
+          return
+        }
+
+        if (this.feedId == SSB.net.id)
+          SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
+        else {
+          SSB.syncFeedFromLatest(this.feedId, () => {
+            SSB.partial.updateState(this.feedId, { syncedMessages: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
-          }
-        })
+          })
+        }
       },
       
       downloadProfile: function() {
-        SSB.connectedWithData(() => {
-          let rpc = SSB.getPeer()
-          if (!rpc) {
-            console.log("No remote connection, unable to download profile")
-            return
-          }
+        var self = this
+        ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.isConnectedWithData() }, self.downloadFollowingCallback)
+      },
+
+      downloadProfileCallback: function(err, SSB) {
+        if (err) {
+          alert("Can't download right now.  Reason: " + err)
+          return
+        }
+
+        let rpc = SSB.getPeer()
+        if (!rpc) {
+          console.log("No remote connection, unable to download profile")
+          return
+        }
   
-          console.time("syncing profile")
+        console.time("syncing profile")
   
-          pull(
-            rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
-            pull.asyncMap(SSB.db.addOOO),
-            pull.collect((err, msgs) => {
-              if (err) alert(err.message)
+        pull(
+          rpc.partialReplication.getMessagesOfType({id: this.feedId, type: 'about'}),
+          pull.asyncMap(SSB.db.addOOO),
+          pull.collect((err, msgs) => {
+            if (err) alert(err.message)
   
-              console.timeEnd("syncing profile")
-              console.log(msgs.length)
+            console.timeEnd("syncing profile")
+            console.log(msgs.length)
   
-              SSB.partial.updateState(this.feedId, { syncedProfile: true }, () => {
-                SSB.db.onDrain(this.renderProfile)
-              })
+            SSB.partial.updateState(this.feedId, { syncedProfile: true }, () => {
+              SSB.db.onDrain(this.renderProfile)
             })
-          )
-        })
+          })
+        )
       },
 
       downloadFollowing: function() {
+        var self = this
+        ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.downloadFollowingCallback)
+      },
+
+      downloadFollowingCallback: function(err, SSB) {
+        if (err) {
+          alert("Can't download right now.  Reason: " + err)
+          return
+        }
+
         SSB.connectedWithData(() => {
           let rpc = SSB.getPeer()
   
@@ -450,7 +518,7 @@ module.exports = function () {
         })
       },
 
-      updateFollowers: function() {
+      updateFollowers: function(err, SSB) {
         var self = this
         var opts = {
           start: this.feedId,
@@ -467,7 +535,7 @@ module.exports = function () {
         })
       },
 
-      updateBlockingUs: function() {
+      updateBlockingUs: function(err, SSB) {
         var self = this
         var opts = {
           start: this.feedId,
@@ -485,6 +553,13 @@ module.exports = function () {
       },
 
       loadMore: function() {
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db }, self.loadMoreCallback)
+      },
+
+      loadMoreCallback: function (err, SSB) {
+        const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         SSB.db.query(
           and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
           startFrom(this.offset),
@@ -497,8 +572,11 @@ module.exports = function () {
         )
       },
 
-      renderProfile: function () {
+      renderFollowsCallback: function (err, SSB) {
+        const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
+
+        self.isSelf = (SSB.net.id == this.feedId)
 
         SSB.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
@@ -544,85 +622,85 @@ module.exports = function () {
           })
         )
 
-        this.updateFollowers()
-        this.updateBlockingUs()
-
-        function showProfile(profile) {
-          if (profile.name)
-            self.name = profile.name
+        this.updateFollowers(err, SSB)
+        this.updateBlockingUs(err, SSB)
+      },
+      
+      renderProfileCallback: function (err, SSB) {
+        var self = this
+        const profile = SSB.getProfile(self.feedId)
+        if (profile.name)
+          self.name = profile.name
           
-          if (profile.description) {
-            self.descriptionText = profile.description
+        if (profile.description) {
+          self.descriptionText = profile.description
             
-            if (self.feedId == SSB.net.id) {
-              // Editing self.
-              // Check for images.  If there are any, cache them.
-              var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
-              var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
-              for (b in blobMatches)
-                self.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
-                  // Reload the editor with the new image.
-                  // This is only triggered when the last image is loaded.
-                  // Set it to something different and back again to get it to refresh the preview.
-                  if (self.$refs.markdownEditor) {
-                    self.$refs.markdownEditor.setMarkdown(self.descriptionText + " ")
-                    self.$refs.markdownEditor.setMarkdown(self.descriptionText)
-                  }
-                })
-              
-              // Load the editor.
-              if (self.$refs.markdownEditor) {
-                if (blobMatches.length == 0) {
-                  // If we're not waiting for any images to load, load the editor right away.
+          if (self.feedId == SSB.net.id) {
+            // Editing self.
+            // Check for images.  If there are any, cache them.
+            var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
+            var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
+            for (b in blobMatches)
+              self.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
+                // Reload the editor with the new image.
+                // This is only triggered when the last image is loaded.
+                // Set it to something different and back again to get it to refresh the preview.
+                if (self.$refs.markdownEditor) {
+                  self.$refs.markdownEditor.setMarkdown(self.descriptionText + " ")
                   self.$refs.markdownEditor.setMarkdown(self.descriptionText)
                 }
+              })
+              
+            // Load the editor.
+            if (self.$refs.markdownEditor) {
+              if (blobMatches.length == 0) {
+                // If we're not waiting for any images to load, load the editor right away.
+                self.$refs.markdownEditor.setMarkdown(self.descriptionText)
               }
             }
           }
+        }
   
-          if (profile.imageURL) {
-            self.image = profile.imageURL
-            self.imageBlobId = profile.image
-          } else if (profile.image) {
-            SSB.net.blobs.localGet(profile.image, (err, url) => {
-              if (!err) {
-                self.image = url
-                self.imageBlobId = profile.image
-              }
-            })
-          }
+        if (profile.imageURL) {
+          self.image = profile.imageURL
+          self.imageBlobId = profile.image
+        } else if (profile.image) {
+          SSB.net.blobs.localGet(profile.image, (err, url) => {
+            if (!err) {
+              self.image = url
+              self.imageBlobId = profile.image
+            }
+          })
         }
+      },
 
-        function tryToLoadProfile() {
-          const profile = SSB.getProfile(self.feedId)
-          if (Object.keys(profile).length > 0) {
-            showProfile(profile)
-            return true
-          }
-          return false
-        }
-
-        if (!tryToLoadProfile()) {
-          // No profile - we might have just been refreshed.  Try again after the profile index has had a few seconds to load.
-          setTimeout(() => {
-            if (!tryToLoadProfile())
-              SSB.connectedWithData(tryToLoadProfile)
-          }, 3000)
-        }
+      renderProfile() {
+        var self = this
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.net && SSB.dbOperators && SSB.getGraphForFeed }, self.renderFollowsCallback)
+        ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+          (SSB) => { return SSB && SSB.db && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
       }
     },
 
     beforeRouteUpdate(to, from, next) {
       this.feedId = to.params.feedId
       Object.assign(this.$data, initialState(this))
+      this.componentStillLoaded = true
       this.renderProfile()
       next()
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('profile.title', { name: this.feedId })
 
       this.renderProfile()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {

@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
 
   return {
     template: `
@@ -18,6 +18,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         triedToLoadMessages: false,
         searchDepth: 10000,
         pageSize: 50,
@@ -27,6 +28,12 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.loadMoreCB)
+      },
+
+      loadMoreCB: function(err, SSB) {
+        const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
+        this.searchDepth = SSB.search.depth
         try {
           SSB.search.fullTextSearch(this.search, (err, results) => {
             if (results && results.length > 0) {
@@ -58,8 +65,12 @@ module.exports = function () {
     },
 
     created: function () {
-      this.searchDepth = SSB.search.depth
+      this.componentStillLoaded = true
       this.render()
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {

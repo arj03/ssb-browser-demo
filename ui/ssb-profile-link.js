@@ -1,4 +1,5 @@
 const helpers = require('./helpers')
+const ssbSingleton = require('../ssb-singleton')
 
 Vue.component('ssb-profile-link', {
   template: `
@@ -11,6 +12,7 @@ Vue.component('ssb-profile-link', {
 
   data: function() {
     return {
+      componentStillLoaded: false,
       imgURL: '',
       isBlocked: false,
       name: ''
@@ -19,44 +21,52 @@ Vue.component('ssb-profile-link', {
 
   methods: {
     renderProfile: function(profile) {
-      const self = this
-      if (self.feedId != SSB.net.id)
-        self.name = profile.name
+      var self = this
+      ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+        (SSB) => { return SSB && SSB.net }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
+    },
 
+    renderProfileCallback: function (err, SSB, existingProfile) {
+      const self = this
+      const profile = existingProfile || SSB.getProfile(self.feedId)
+
+      // Set a default image to be overridden if there is an actual avatar to show.
+      self.imgURL = helpers.getMissingProfileImage();
+
+      if (self.feedId == SSB.net.id)
+        self.name = this.$root.$t('common.selfPronoun')
+      else
+        self.name = profile.name
+  
       if (profile.imageURL) self.imgURL = profile.imageURL
       else if (profile.image) {
         SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
           if (err) return console.error("failed to get img", err)
-
+  
           profile.imageURL = self.imgURL = url
         })
       }
+    },
+
+    loadBlocking: function (err, SSB) {
+      SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+        if (!err) self.isBlocked = result
+      })
     }
   },
 
-  created: function () {
-    const self = this
+  created: function() {
+    this.componentStillLoaded = true
+    var self = this
+    // Set a default image while we wait for an SSB.
+    self.imgURL = helpers.getMissingProfileImage();
+    ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+      (SSB) => { return SSB && SSB.net }, self.loadBlocking)
+    ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
+      (SSB) => { return SSB && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
+  },
 
-    if (self.feedId == SSB.net.id)
-      self.name = this.$root.$t('common.selfPronoun')
-
-    // Set a default image to be overridden if there is an actual avatar to show.
-    self.imgURL = helpers.getMissingProfileImage()
-
-    SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
-      if (!err) self.isBlocked = result
-    })
-
-    const profile = SSB.getProfile(self.feedId)
-    if (profile.name || profile.imageURL || profile.image) {
-      self.renderProfile(profile)
-    } else {
-      // Try one more time after the profile index has loaded.
-      setTimeout(() => {
-        const profileAgain = SSB.getProfile(self.feedId)
-        if (profileAgain)
-          self.renderProfile(profileAgain)
-      }, 3000)
-    }
+  destroyed: function() {
+    this.componentStillLoaded = false
   }
 })

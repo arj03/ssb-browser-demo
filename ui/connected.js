@@ -1,3 +1,5 @@
+const ssbSingleton = require('../ssb-singleton')
+
 Vue.component('connected', {
   template: `
     <span class="connected-indicator">
@@ -10,6 +12,7 @@ Vue.component('connected', {
 
   data: function() {
     return {
+      initializedSSB: false,
       greenIndicator: false,
       yellowIndicator: false,
       connected: false,
@@ -38,10 +41,21 @@ Vue.component('connected', {
 
   created: function() {
     var self = this
+
+    ssbSingleton.onChangeSSB(function() {
+      self.initializedSSB = false
+    })
     setInterval(function() {
-      self.synced = SSB.feedSyncer && SSB.feedSyncer.inSync()
+      [ err, SSB ] = ssbSingleton.getSSB()
+      if (SSB && SSB.feedSyncer) {
+        if (!self.initializedSSB) {
+          self.initializedSSB = true
+          self.onDisconnected()
+        }
+        self.synced = SSB.feedSyncer && SSB.feedSyncer.inSync()
+      }
+
       self.updateIndicators()
     }, 1000)
-    this.onDisconnected()
   }
 })

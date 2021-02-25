@@ -1,4 +1,12 @@
+const ssbSingleton = require('../ssb-singleton')
+
 exports.handleFileSelectParts = function(files, isPrivate, cb) {
+  [ err, SSB ] = ssbSingleton.getSSB()
+  if (!SSB || !SSB.blobFiles) {
+    cb("SSB is not currently available")
+    return
+  }
+
   var opts = {
     stripExif: true,
     quality: 0.9,
@@ -13,6 +21,10 @@ exports.handleFileSelectParts = function(files, isPrivate, cb) {
 
 exports.handleFileSelect = function(ev, isPrivate, cb) {
   this.handleFileSelectParts(ev.target.files, isPrivate, (err, res) => {
+    if (err) {
+      cb(err)
+      return
+    }
     cb(null, " ![" + res.name + "](" + res.link + ")")
   })
 }

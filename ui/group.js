@@ -1,7 +1,7 @@
 module.exports = function () {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
-  const { and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
+  const ssbSingleton = require('../ssb-singleton')
   const userGroups = require('../usergroups')
 
   return {
@@ -29,6 +29,7 @@ module.exports = function () {
     
     data: function() {
       return {
+        componentStillLoaded: false,
         groupName: "Loading...",
         groupMembers: [],
         postMessageVisible: false,
@@ -45,6 +46,11 @@ module.exports = function () {
 
     methods: {
       loadMore: function() {
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.loadMoreCB)
+      },
+
+      loadMoreCB: function(err, SSB) {
+        const { and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         try {
           SSB.db.query(
             and(or(...this.groupMembers.map(x => author(x))), isPublic(), type('post')),
@@ -111,6 +117,12 @@ module.exports = function () {
       },
 
       confirmPost: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.db) {
+          alert("Can't post right now.  Couldn't lock the database.  Please make sure you only have one running instance of ssb-browser.")
+          return
+        }
+
         var self = this
 
         var postData = this.buildPostData()
@@ -135,6 +147,8 @@ module.exports = function () {
     },
 
     created: function () {
+      this.componentStillLoaded = true
+
       document.title = this.$root.appTitle + " - " + this.$root.$t('group.title', { name: this.groupName })
 
       var self = this
@@ -148,6 +162,10 @@ module.exports = function () {
         self.groupMembers = members
         this.render()
       })
+    },
+
+    destroyed: function () {
+      this.componentStillLoaded = false
     },
 
     watch: {
