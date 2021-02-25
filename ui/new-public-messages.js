@@ -3,8 +3,6 @@ module.exports = function (state) {
   const localPrefs = require('../localprefs')
   const ssbSingleton = require('../ssb-singleton')
 
-  var loaded = false
-
   Vue.component('new-public-messages', {
     template: `
         <span v-if="newPublicMessages" class="newPublic" title="New messages" v-on:click="reset">
@@ -32,10 +30,7 @@ module.exports = function (state) {
       },
 
       tryLoading: function () {
-        var self = this
-  
-        if (loaded) return // is loaded twice?
-        loaded = true
+        var self = this;
   
         [ err, SSB ] = ssbSingleton.getSSB()
         if (err) {

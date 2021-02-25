@@ -2,8 +2,6 @@ module.exports = function (state) {
   const pull = require('pull-stream')  
   const ssbSingleton = require('../ssb-singleton')
 
-  var loaded = false
-
   Vue.component('new-private-messages', {
     template: `
         <span v-if="newPrivateMessages" class="newPrivate" title="New messages" v-on:click="reset">
@@ -23,10 +21,7 @@ module.exports = function (state) {
       },
 
       tryLoading: function () {
-        var self = this
-  
-        if (loaded) return // is loaded twice?
-        loaded = true
+        var self = this;
   
         [ err, SSB ] = ssbSingleton.getSSB()
         if (err) {
