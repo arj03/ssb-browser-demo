@@ -32,6 +32,14 @@ function onContextMenu(e) {
       name: "Copy ID",
       cb: () => { copy(id) }
     })
+
+    [ err, SSB ] = ssbSingleton.getSSB()
+    if (SSB && (name = SSB.getProfileName(id))) {
+      options.push({
+        name: "Copy Markdown link",
+        cb: () => { copy("[@" + name + "](" + id + ")") }
+      })
+    }
   }
 
   console.log("Caught right click")
