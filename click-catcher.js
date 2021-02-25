@@ -21,7 +21,9 @@ function onContextMenu(e) {
   // Is it even an internal link?
   var a = (e.currentTarget || e.target)
   var href = a.getAttribute("href") // Can't just use a.href because that gets absolutized.
-  if (!a.__vue__ || !href || href.indexOf("://") >= 0) return
+  var vueHolder = a
+  while (!vueHolder.__vue__ && vueHolder.parentNode) vueHolder = vueHolder.parentNode
+  if (!vueHolder.__vue__ || !href || href.indexOf("://") >= 0) return
 
   var options = [
     { name: "Open in new tab", cb: openInNewTab }
@@ -40,10 +42,16 @@ function onContextMenu(e) {
         cb: () => { copy("[@" + name + "](" + id + ")") }
       })
     }
+  } else if (href.startsWith("#/thread/")) {
+    var id = decodeURIComponent(href.substring(("#/thread/").length))
+    options.push({
+      name: "Copy ID",
+      cb: () => { copy(id) }
+    })
   }
 
   console.log("Caught right click")
-  const contextMenu = a.__vue__.$root.$refs.linkContextMenu
+  const contextMenu = vueHolder.__vue__.$root.$refs.linkContextMenu
   contextMenu.showMenu(e, options, a)
 
   e.preventDefault()
