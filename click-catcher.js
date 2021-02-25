@@ -4,7 +4,7 @@ const copy = require("clipboard-copy")
 const MutationObserver = window.MutationObserver || window.WebKitMutationObserver
 
 function onClick(e) {
-  if (e.button == 1) {
+  if (e.button == 1 || (e.button == 0 && e.ctrlKey)) {
     console.log("Caught middle button")
     ssbSingleton.openWindow(e.currentTarget ? e.currentTarget.href : e.target.href)
     e.preventDefault()
