@@ -5,7 +5,7 @@ const MutationObserver = window.MutationObserver || window.WebKitMutationObserve
 function onClick(e) {
   if (e.button == 1) {
     console.log("Caught middle button")
-    ssbSingleton.openWindow(e.target.href)
+    ssbSingleton.openWindow(e.currentTarget ? e.currentTarget.href : e.target.href)
     e.preventDefault()
     e.stopPropagation()
     return false
