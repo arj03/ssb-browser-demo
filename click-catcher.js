@@ -12,12 +12,36 @@ function onClick(e) {
   }
 }
 
+function openInNewTab(a) {
+  ssbSingleton.openWindow(a.href)
+}
+
+function onContextMenu(e) {
+  // Is it even an internal link?
+  var a = (e.currentTarget || e.target)
+  var href = a.getAttribute("href") // Can't just use a.href because that gets absolutized.
+  if (!a.__vue__ || !href || href.indexOf("://") >= 0) return
+
+  var options = [
+    { name: "Open in new tab", cb: openInNewTab }
+  ]
+
+  console.log("Caught right click")
+  const contextMenu = a.__vue__.$root.$refs.linkContextMenu
+  contextMenu.showMenu(e, options, a)
+
+  e.preventDefault()
+  e.stopPropagation()
+  return false
+}
+
 function addHandlersIfNeeded(a) {
   if (a.classList.contains("click-caught"))
     return
 
   a.addEventListener("click", onClick)
   a.addEventListener("auxclick", onClick)
+  a.addEventListener("contextmenu", onContextMenu)
 
   a.classList.add("click-caught")
 }
