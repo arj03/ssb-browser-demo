@@ -3,10 +3,11 @@ const md = require('./markdown')
 const helpers = require('./helpers')
 const pull = require('pull-stream')
 const ssbSingleton = require('../ssb-singleton')
+const copy = require("clipboard-copy")
 
 Vue.component('ssb-msg', {
   template: `
-      <div class='message'>
+      <div class='message' @contextmenu="onContextMenu">
         <div class='header'>
           <span class="profile">
             <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
@@ -118,6 +119,59 @@ Vue.component('ssb-msg', {
   },
 
   methods: {
+    onContextMenu: function(e) {
+      var self = this
+      var options = [
+        {
+          name: "View whole thread",
+          cb: () => {
+            self.$root._router.push({name: 'thread', params: { rootId: self.rootId }})
+          }
+        },
+        {
+          name: "Open thread in new tab",
+          cb: () => {
+            ssbSingleton.openWindow(self.$root._router.resolve({name: 'thread', params: { rootId: self.rootId }}).href)
+          }
+        },
+        {
+          type: "divider"
+        },
+        {
+          name: "Copy message ID",
+          cb: () => {
+            copy(self.msg.key)
+          }
+        },
+        {
+          name: "Copy thread root ID",
+          cb: () => {
+            copy("%" + self.rootId)
+          }
+        },
+        {
+          type: "divider"
+        },
+        {
+          name: "View source",
+          cb: () => {
+            var json = JSON.stringify(self.msg, null, 2)
+            json = json.replace(/&/g, "&amp;")
+            json = json.replace(/</g, "&lt;")
+            json = json.replace(/>/g, "&gt;")
+            json = json.replace(/"/g, "&quot;")
+            json = json.replace(/'/g, "&#039;")
+            var sourceHtml = "<textarea class='source'>" + json + "</textarea>"
+            self.$root.openSource(sourceHtml)
+          }
+        },
+      ]
+      const contextMenu = this.$root.$refs.commonContextMenu
+      contextMenu.showMenu(e, options, self)
+      e.preventDefault()
+      e.stopPropagation()
+      return false
+    },
     smallText: function(msg) {
       if (msg.value.content && msg.value.content.text)
         return msg.value.content.text.substring(0,50)

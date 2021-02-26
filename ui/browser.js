@@ -82,6 +82,8 @@
       data: function() {
         return {
           appTitle: localPrefs.getAppTitle(),
+          showSource: false,
+          sourceHtml: "",
           suggestions: [],
           feedId: "",
           goToTargetText: ""
@@ -95,6 +97,15 @@
 
         targetBlur: function() {
           document.getElementById("searchBox").className = ""
+        },
+
+        openSource: function(sourceHtml) {
+          this.sourceHtml = sourceHtml
+          this.showSource = true
+        },
+
+        closeSource: function() {
+          this.showSource = false
         },
 
         suggestTarget: function() {

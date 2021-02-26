@@ -35,7 +35,8 @@
       </div>
     </div>
     <div id="app">
-      <link-contextmenu ref="linkContextMenu"></link-contextmenu>
+      <common-contextmenu ref="commonContextMenu"></common-contextmenu>
+      <view-source ref="viewSource" :source-html="sourceHtml" :show="showSource" :on-close="closeSource"></view-source>
       <h1>{{ appTitle }}</h1>
       <p id="navigation">
         <router-link to="/public">{{ $t('pages.public') }}</router-link><new-public-messages></new-public-messages> |
