@@ -94,9 +94,9 @@ module.exports = function (componentsState) {
         pull(
           SSB.net.threads.public({
             reverse: true,
-            limit: this.pageSize,
             allowlist: ["post"]
           }),
+	  pull.take(this.pageSize),
           pull.collect((err, threads) => {
             self.categories["public"].threads = threads.map((x) => { return {
                 title: (x.messages.length > 0 ? helpers.getMessageTitle(x.messages[0].key, x.messages[0].value) : ""),
