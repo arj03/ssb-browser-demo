@@ -4,6 +4,7 @@ module.exports = function () {
   require('./ssb-msg-preview')
   require('./onboarding-dialog')
   require('./common-contextmenu')
+  require('./view-source')
   require('./connected')
   const { Editor } = require('@toast-ui/vue-editor')
   const { VueSimpleContextMenu } = require("vue-simple-context-menu")
