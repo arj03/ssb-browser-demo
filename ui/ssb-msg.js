@@ -13,7 +13,7 @@ Vue.component('ssb-msg', {
           </span>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
-            <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
+            <ssb-profile-name-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-name-link> posted
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
               in reply to <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
             </span>
