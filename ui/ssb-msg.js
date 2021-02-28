@@ -86,6 +86,7 @@ Vue.component('ssb-msg', {
     return {
       componentStillLoaded: false,
       name: this.msg.value.author,
+      humandate: human(new Date(this.msg.value.timestamp)),
       forks: [],
       mentions: [],
       reactions: [],
@@ -109,15 +110,24 @@ Vue.component('ssb-msg', {
     date: function() {
       return new Date(this.msg.value.timestamp).toLocaleString("da-DK")
     },
-    humandate: function() {
-      return human(new Date(this.msg.value.timestamp))
-    },
     isOOO: function() {
       return (this.msg.value.content.text == this.$root.$t('common.messageOutsideGraph') || this.msg.value.content.text == this.$root.$t('common.unknownMessage')) && !this.msg.value.author
     }
   },
 
   methods: {
+    updateDate: function() {
+      var cur = new Date(this.msg.value.timestamp)
+      this.humandate = human(cur)
+      const timeDiff = Date.now() - cur.getTime()
+      const minute = 60 * 1000
+      const hour = 60 * minute
+      const interval = (timeDiff < hour ? minute : (timeDiff < 12 * hour ? hour : 6 * hour))
+      if (this.componentStillLoaded) {
+        setTimeout(this.updateDate, interval)
+      }
+    },
+
     smallText: function(msg) {
       if (msg.value.content && msg.value.content.text)
         return msg.value.content.text.substring(0,50)
@@ -414,6 +424,7 @@ Vue.component('ssb-msg', {
     var self = this
     ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
       (SSB) => { return SSB && SSB.db && SSB.net }, self.renderMessage)
+    this.updateDate()
   },
 
   destroyed: function() {
