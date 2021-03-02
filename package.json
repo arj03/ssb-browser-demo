@@ -10,6 +10,7 @@
   "dependencies": {
     "@toast-ui/vue-editor": "^2.5.1",
     "clipboard-copy": "^4.0.1",
+    "envify": "^4.1.0",
     "human-time": "0.0.2",
     "minisearch": "^3.0.2",
     "node-emoji": "^1.10.0",
@@ -41,8 +42,8 @@
   },
   "scripts": {
     "postinstall": "./dedupe.sh",
-    "build": "mkdir -p build && browserify -p esmify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js",
-    "release": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --ie8 --safari10 -o build/bundle-ui.js && node write-dist.js",
+    "build": "mkdir -p build && NODE_ENV=production browserify -g envify -p esmify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js",
+    "release": "mkdir -p build && NODE_ENV=production browserify -g envify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --safari10 -o build/bundle-ui.js && node write-dist.js",
     "inline": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --ie8 --safari10 -o build/bundle-ui.js && node write-dist.js && ./convert-to-inline.sh",
     "finddupes": "npx find-duplicate-dependencies"
   },
