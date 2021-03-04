@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="css/groups.css">
     <link rel="stylesheet" type="text/css" href="css/profile.css">
     <link rel="stylesheet" type="text/css" href="css/thread.css">
+    <link rel="stylesheet" type="text/css" href="css/threads.css">
     <link rel="stylesheet" type="text/css" href="css/connections.css">
     <link rel="stylesheet" type="text/css" href="css/modal.css">
 
@@ -40,6 +41,7 @@
       <h1>{{ appTitle }}</h1>
       <p id="navigation">
         <router-link to="/public">{{ $t('pages.public') }}</router-link><new-public-messages></new-public-messages> |
+        <router-link to="/threads">{{ $t('pages.threads') }}</router-link> |
         <router-link to="/private">{{ $t('pages.private') }}</router-link><new-private-messages></new-private-messages> |
         <router-link to="/channels">{{ $t('pages.channels') }}</router-link> |
         <router-link to="/groups">{{ $t('pages.groups') }}</router-link> |

@@ -15,12 +15,20 @@
 }
 
 .theme-ethereal .message,
+.theme-ethereal #threads > div,
 .theme-ethereal #channels ol
 {
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(8px);
   color: #000;
   border-radius: 5px;
+}
+
+.theme-ethereal #threads > div,
+.theme-ethereal #threads > div th,
+.theme-ethereal #threads > div td
+{
+  color: #555;
 }
 
 .theme-ethereal .message a

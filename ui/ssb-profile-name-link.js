@@ -1,11 +1,10 @@
-const helpers = require('./helpers')
 const ssbSingleton = require('../ssb-singleton')
 
-Vue.component('ssb-profile-link', {
+Vue.component('ssb-profile-name-link', {
   template: `
-        <router-link :to="{name: 'profile', params: { feedId: feedId }}" v-bind:class="{ blockedAvatar: isBlocked }">
-          <img class='avatar' :src='imgURL' :title="name" />
+        <router-link :to="{name: 'profile', params: { feedId: feedId }}">
           <span v-if="isBlocked" class="blockedSymbol">🚫</span>
+          <span v-bind:class="{ blockedName: isBlocked }">{{ name }}</span>
         </router-link>`,
 
   props: ['feedId'],
@@ -13,7 +12,6 @@ Vue.component('ssb-profile-link', {
   data: function() {
     return {
       componentStillLoaded: false,
-      imgURL: '',
       isBlocked: false,
       name: ''
     }
@@ -29,23 +27,11 @@ Vue.component('ssb-profile-link', {
     renderProfileCallback: function (err, SSB, existingProfile) {
       const self = this
       const profile = existingProfile || SSB.getProfile(self.feedId)
-
-      // Set a default image to be overridden if there is an actual avatar to show.
-      self.imgURL = helpers.getMissingProfileImage();
-
+  
       if (self.feedId == SSB.net.id)
         self.name = this.$root.$t('common.selfPronoun')
       else
         self.name = profile.name
-  
-      if (profile.imageURL) self.imgURL = profile.imageURL
-      else if (profile.image) {
-        SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
-          if (err) return console.error("failed to get img", err)
-  
-          profile.imageURL = self.imgURL = url
-        })
-      }
     },
 
     loadBlocking: function (err, SSB) {
@@ -54,10 +40,8 @@ Vue.component('ssb-profile-link', {
       })
     },
 
-    refresh: function() {
+    refresh: function () {
       var self = this
-      // Set a default image while we wait for an SSB.
-      self.imgURL = helpers.getMissingProfileImage();
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
         (SSB) => { return SSB && SSB.net }, self.loadBlocking)
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
@@ -67,6 +51,7 @@ Vue.component('ssb-profile-link', {
 
   created: function() {
     this.componentStillLoaded = true
+
     this.refresh()
   },
 

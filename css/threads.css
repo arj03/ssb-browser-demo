@@ -1,0 +1,46 @@
+#threads table
+{
+  width: 100%;
+}
+
+#threads table tr th,
+#threads table tr td
+{
+  padding: 0.5em;
+}
+
+#threads table tr th
+{
+  text-align: left;
+}
+
+#threads table tr td
+{
+  border-top: 1px solid rgba(0, 0, 0, 0.25)
+}
+
+#threads table tr:nth-of-type(even) td
+{
+  background: rgba(0, 0, 0, 0.03)
+}
+
+#threads table tr td:nth-of-type(2)
+{
+  background: rgba(0, 0, 0, 0.05)
+}
+
+#threads table tr th:last-of-type,
+#threads table tr td:last-of-type
+{
+  max-width: 10em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#threads img.avatar
+{
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+}

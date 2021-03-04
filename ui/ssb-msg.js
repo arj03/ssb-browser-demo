@@ -14,7 +14,7 @@ Vue.component('ssb-msg', {
           </span>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
-            <router-link :to="{name: 'profile', params: { feedId: msg.value.author }}">{{ name }}</router-link> posted
+            <ssb-profile-name-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-name-link> posted
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
               in reply to <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
             </span>
@@ -87,6 +87,7 @@ Vue.component('ssb-msg', {
     return {
       componentStillLoaded: false,
       name: this.msg.value.author,
+      humandate: human(new Date(this.msg.value.timestamp)),
       forks: [],
       mentions: [],
       reactions: [],
@@ -110,15 +111,24 @@ Vue.component('ssb-msg', {
     date: function() {
       return new Date(this.msg.value.timestamp).toLocaleString("da-DK")
     },
-    humandate: function() {
-      return human(new Date(this.msg.value.timestamp))
-    },
     isOOO: function() {
       return (this.msg.value.content.text == this.$root.$t('common.messageOutsideGraph') || this.msg.value.content.text == this.$root.$t('common.unknownMessage')) && !this.msg.value.author
     }
   },
 
   methods: {
+    updateDate: function() {
+      var cur = new Date(this.msg.value.timestamp)
+      this.humandate = human(cur)
+      const timeDiff = Date.now() - cur.getTime()
+      const minute = 60 * 1000
+      const hour = 60 * minute
+      const interval = (timeDiff < hour ? minute : (timeDiff < 12 * hour ? hour : 6 * hour))
+      if (this.componentStillLoaded) {
+        setTimeout(this.updateDate, interval)
+      }
+    },
+
     onContextMenu: function(e) {
       var self = this
       var options = [
@@ -468,6 +478,7 @@ Vue.component('ssb-msg', {
     var self = this
     ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
       (SSB) => { return SSB && SSB.db && SSB.net }, self.renderMessage)
+    this.updateDate()
   },
 
   destroyed: function() {

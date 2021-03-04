@@ -11,7 +11,8 @@
       "profile": "Profile",
       "public": "Public",
       "settings": "Settings",
-      "thread": "Thread"
+      "thread": "Thread",
+      "threads": "Threads"
     },
     "common": {
       "refreshMessages": "Refresh messages",
@@ -205,6 +206,9 @@
       "postReply": "Post reply",
       "blankFieldError": "Please provide a message to publish.",
       "blockingReplies": "These people are blocking you and will not see your reply:"
+    },
+    "threads": {
+      "title": "Threads"
     }
   },
   "en-GB": {
@@ -309,7 +313,8 @@
       "profile": "プロフィール",
       "public": "公衆のメッセージ",
       "settings": "設定",
-      "thread": "スレッド"
+      "thread": "スレッド",
+      "threads": "スレッド"
     },
     "common": {
       "refreshMessages": "リフレッシュ",
@@ -503,6 +508,9 @@
       "postReply": "掲示します",
       "blankFieldError": "公開するメッセージを入力してください。",
       "blockingReplies": "これらの人々はあなたをブロックしていて、あなたの返事を見ることはありません："
+    },
+    "threads": {
+      "title": "スレッド"
     }
   }
 }

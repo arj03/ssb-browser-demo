@@ -59,12 +59,25 @@
 }
 
 .theme-pirateship .message,
+.theme-pirateship #threads > div,
 .theme-pirateship #channels ol
 {
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(8px);
   color: #000;
   border-radius: 5px;
+}
+
+.theme-pirateship #threads > div,
+.theme-pirateship #threads > div th,
+.theme-pirateship #threads > div td
+{
+  color: #333;
+}
+
+.theme-pirateship #threads > div td a
+{
+  color: #111;
 }
 
 .theme-pirateship .message a
