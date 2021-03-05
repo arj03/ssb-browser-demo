@@ -35,6 +35,9 @@ function initSSB() {
     core: {
       startOffline: localPrefs.getOfflineMode()
     },
+    ebt: {
+      logging: localPrefs.getDetailedLogging()
+    },
     conn: {
       autostart: false,
       hops: localPrefs.getHops(),

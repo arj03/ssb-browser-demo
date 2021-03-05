@@ -59,6 +59,11 @@ module.exports = function () {
          <small>{{ $t('settings.capsKeyWarning') }}</small>
          </p>
 
+         <p>
+         <input type="checkbox" id="detailedLogging" v-model="detailedLogging" />
+         <label for="detailedLogging"><strong>{{ $t('settings.advanced') }}</strong> - {{ $t('settings.detailedLogging') }}</label>
+         </p>
+
          <button class="clickButton" v-on:click="save()">{{ $t('common.save') }}</button>
        <div>`,
 
@@ -72,6 +77,7 @@ module.exports = function () {
         locale: 'en',
         localeOptions: [],
         autorefresh: false,
+        detailedLogging: false,
         searchDepth: 10000,
         hops: 2
       }
@@ -89,6 +95,7 @@ module.exports = function () {
           this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
         this.autorefresh = localPrefs.getAutorefresh()
         this.searchDepth = localPrefs.getSearchDepth()
+        this.detailedLogging = localPrefs.getDetailedLogging()
       },
 
       save: function () {
@@ -112,6 +119,8 @@ module.exports = function () {
           SSB.search.depth = this.searchDepth
           SSB.search.resetIndex()
         }
+
+        localPrefs.setDetailedLogging(this.detailedLogging)
 
         localPrefs.updateStateFromSettings()
 
