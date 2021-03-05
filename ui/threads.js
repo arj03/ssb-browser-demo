@@ -8,6 +8,9 @@ module.exports = function (componentsState) {
   return {
     template: `
     <div id="threads">
+      <h2>{{ $t('common.lastXThreads', { count: pageSize }) }}
+        <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
+      </h2>
       <div v-for="category in categories">
         <table>
           <thead><tr><th>{{ category.title }}</th><th>Replies</th><th>Last post</th></tr></thead>
@@ -77,6 +80,11 @@ module.exports = function (componentsState) {
         })
 
         return numOutsideFollow
+      },
+
+      refresh: function() {
+        this.categories = {}
+        this.renderPublic()
       },
 
       renderPublic: function() {
