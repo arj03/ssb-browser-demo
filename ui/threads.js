@@ -104,8 +104,10 @@ module.exports = function (componentsState) {
             reverse: true,
             allowlist: ["post"]
           }),
-	  pull.take(this.pageSize),
+          pull.take(this.pageSize),
           pull.collect((err, threads) => {
+            componentsState.newPublicMessages = false
+
             self.categories["public"].threads = threads.map((x) => { return {
                 title: (x.messages.length > 0 ? helpers.getMessageTitle(x.messages[0].key, x.messages[0].value) : ""),
                 msgs: x.messages,

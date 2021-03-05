@@ -19,6 +19,9 @@ module.exports = function (state) {
         if (this.newPublicMessages && scrollTop == 0 && this.$route.path == "/public" && localPrefs.getAutorefresh()) {
           this.$route.matched[0].instances.default.refresh()
         }
+        if (this.newPublicMessages && scrollTop == 0 && this.$route.path == "/threads" && localPrefs.getAutorefresh()) {
+          this.$route.matched[0].instances.default.refresh()
+        }
       },
 
       reset() {

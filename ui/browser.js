@@ -32,7 +32,7 @@
     const Channels = require('./channels')()
     const Groups = require('./groups')()
     const Thread = require('./thread')()
-    const Threads = require('./threads')()
+    const Threads = require('./threads')(componentsState)
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
     const Settings = require('./settings')()
