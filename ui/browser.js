@@ -4,7 +4,8 @@
   const i18nMessages = require('../messages.json')
   const helpers = require('./helpers')
   const pull = require('pull-stream')
-  const ssbSingleton = require('../ssb-singleton')
+  require('../ssb-singleton-setup')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
   const localPrefs = require('../localprefs')
   const clickCatcher = require('../click-catcher')
 

@@ -1,7 +1,7 @@
 const nodeEmoji = require('node-emoji')
 const md = require('ssb-markdown')
 const ref = require('ssb-ref')
-const ssbSingleton = require('../ssb-singleton')
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
 const mdOpts = {
   toUrl: (id) => {

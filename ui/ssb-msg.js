@@ -2,7 +2,7 @@ const human = require('human-time')
 const md = require('./markdown')
 const helpers = require('./helpers')
 const pull = require('pull-stream')
-const ssbSingleton = require('../ssb-singleton')
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 const copy = require("clipboard-copy")
 
 Vue.component('ssb-msg', {

@@ -3,7 +3,7 @@ module.exports = function (componentsState) {
   const helpers = require('./helpers')
   const localPrefs = require('../localprefs')
   const sort = require('ssb-sort')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   return {
     template: `

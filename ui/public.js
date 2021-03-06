@@ -4,7 +4,7 @@ module.exports = function (componentsState) {
   const ssbMentions = require('ssb-mentions')
   const localPrefs = require('../localprefs')
   const userGroups = require('../usergroups')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   function getQuery(SSB, onlyDirectFollow, onlyThreads, onlyChannels,
                     channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb) {

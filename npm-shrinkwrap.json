@@ -19,14 +19,14 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^8.4.0",
+        "ssb-browser-core": "^9.0.0",
         "ssb-caps": "^1.1.0",
-        "ssb-keys": "^8.0.2",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
         "ssb-mentions": "^0.5.2",
         "ssb-ref": "^2.14.3",
         "ssb-sort": "^1.1.3",
+        "ssb-threads": "^7.0.0",
         "vue": "^2.6.12",
         "vue-i18n": "^8.22.4",
         "vue-router": "^3.5.1",
@@ -7206,9 +7206,9 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "8.4.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.4.0.tgz",
-      "integrity": "sha512-AdTJb1tiXdPs1K5OLbiQgeTho2IocWj/5t+6MbiBI857Gnxf+QXFpgi0AkAN0nBl0ZpUHLNPfSONYoPTNHuMTA==",
+      "version": "9.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.0.0.tgz",
+      "integrity": "sha512-B6bRCFSAEcVNCi7mQTyo/7JilCpTobcJUkRfcSTOzUEhRQfT3eT7Ii1LoxJFHc/TleeM4jEy8lqjmcGloFdm6g==",
       "dependencies": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
@@ -7236,7 +7236,6 @@
         "ssb-ref": "^2.14.3",
         "ssb-room": "^1.3.0",
         "ssb-sort": "^1.1.3",
-        "ssb-threads": "^7.0.0",
         "ssb-validate": "^4.1.3",
         "ssb-ws": "^6.2.3"
       }
@@ -15150,9 +15149,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "8.4.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-8.4.0.tgz",
-      "integrity": "sha512-AdTJb1tiXdPs1K5OLbiQgeTho2IocWj/5t+6MbiBI857Gnxf+QXFpgi0AkAN0nBl0ZpUHLNPfSONYoPTNHuMTA==",
+      "version": "9.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.0.0.tgz",
+      "integrity": "sha512-B6bRCFSAEcVNCi7mQTyo/7JilCpTobcJUkRfcSTOzUEhRQfT3eT7Ii1LoxJFHc/TleeM4jEy8lqjmcGloFdm6g==",
       "requires": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
@@ -15180,7 +15179,6 @@
         "ssb-ref": "^2.14.3",
         "ssb-room": "^1.3.0",
         "ssb-sort": "^1.1.3",
-        "ssb-threads": "^7.0.0",
         "ssb-validate": "^4.1.3",
         "ssb-ws": "^6.2.3"
       }

@@ -1,6 +1,6 @@
 module.exports = function (state) {
   const pull = require('pull-stream')  
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   Vue.component('new-private-messages', {
     template: `

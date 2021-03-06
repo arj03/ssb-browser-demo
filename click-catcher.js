@@ -1,4 +1,4 @@
-const ssbSingleton = require("./ssb-singleton")
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 const copy = require("clipboard-copy")
 
 const MutationObserver = window.MutationObserver || window.WebKitMutationObserver

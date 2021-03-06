@@ -2,7 +2,7 @@ module.exports = function () {
   const pull = require('pull-stream')
   const asyncFilter = require('pull-async-filter')
   const cat = require('pull-cat')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   return {
     template: `

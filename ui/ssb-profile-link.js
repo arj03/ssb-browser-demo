@@ -1,5 +1,5 @@
 const helpers = require('./helpers')
-const ssbSingleton = require('../ssb-singleton')
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
 Vue.component('ssb-profile-link', {
   template: `
