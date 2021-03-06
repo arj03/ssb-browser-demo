@@ -8,6 +8,9 @@ module.exports = function (componentsState) {
   return {
     template: `
     <div id="threads">
+      <h2>{{ $t('common.lastXThreads', { count: pageSize }) }}
+        <a href="javascript:void(0);" :title="$t('common.refreshMessages')" id="refresh" class="refresh" v-on:click="refresh">&#8635;</a>
+      </h2>
       <div v-for="category in categories">
         <table>
           <thead><tr><th>{{ category.title }}</th><th>Replies</th><th>Last post</th></tr></thead>
@@ -79,6 +82,11 @@ module.exports = function (componentsState) {
         return numOutsideFollow
       },
 
+      refresh: function() {
+        this.categories = {}
+        this.renderPublic()
+      },
+
       renderPublic: function() {
         ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.renderPublicCB)
       },
@@ -96,8 +104,10 @@ module.exports = function (componentsState) {
             reverse: true,
             allowlist: ["post"]
           }),
-	  pull.take(this.pageSize),
+          pull.take(this.pageSize),
           pull.collect((err, threads) => {
+            componentsState.newPublicMessages = false
+
             self.categories["public"].threads = threads.map((x) => { return {
                 title: (x.messages.length > 0 ? helpers.getMessageTitle(x.messages[0].key, x.messages[0].value) : ""),
                 msgs: x.messages,
