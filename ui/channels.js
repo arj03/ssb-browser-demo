@@ -1,7 +1,7 @@
 module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const localPrefs = require('../localprefs')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   return {
     template: `

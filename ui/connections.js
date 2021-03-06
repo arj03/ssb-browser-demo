@@ -1,7 +1,7 @@
 const pull = require('pull-stream')
 const defaultPrefs = require("../defaultprefs.json")
 const localPrefs = require("../localprefs")
-const ssbSingleton = require("../ssb-singleton")
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
 module.exports = function () {
   return {

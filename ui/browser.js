@@ -4,7 +4,8 @@
   const i18nMessages = require('../messages.json')
   const helpers = require('./helpers')
   const pull = require('pull-stream')
-  const ssbSingleton = require('../ssb-singleton')
+  require('../ssb-singleton-setup')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
   const localPrefs = require('../localprefs')
   const clickCatcher = require('../click-catcher')
 
@@ -32,7 +33,7 @@
     const Channels = require('./channels')()
     const Groups = require('./groups')()
     const Thread = require('./thread')()
-    const Threads = require('./threads')()
+    const Threads = require('./threads')(componentsState)
     const Private = require('./private')(componentsState)
     const Connections = require('./connections')()
     const Settings = require('./settings')()

@@ -1,4 +1,4 @@
-const ssbSingleton = require('../ssb-singleton')
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
 exports.handleFileSelectParts = function(files, isPrivate, cb) {
   [ err, SSB ] = ssbSingleton.getSSB()

@@ -3,7 +3,7 @@ module.exports = function () {
   const helpers = require('./helpers')
   const md = require('./markdown')
   const userGroups = require('../usergroups')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
   
   let initialState = function(self) {
     return {

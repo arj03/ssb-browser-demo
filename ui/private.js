@@ -3,7 +3,7 @@ module.exports = function (componentsState) {
   const pull = require('pull-stream')
   const ssbMentions = require('ssb-mentions')
   const ref = require('ssb-ref')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   return {
     template: `<div id="private">

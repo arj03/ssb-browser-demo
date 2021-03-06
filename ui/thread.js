@@ -3,7 +3,7 @@ module.exports = function () {
   const helpers = require('./helpers')
   const ssbMentions = require('ssb-mentions')
   const sort = require('ssb-sort')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   let initialState = function(self, rootId) {
     return {

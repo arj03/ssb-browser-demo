@@ -1,7 +1,7 @@
 module.exports = function (state) {
   const pull = require('pull-stream')  
   const localPrefs = require('../localprefs')
-  const ssbSingleton = require('../ssb-singleton')
+  const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   Vue.component('new-public-messages', {
     template: `
@@ -17,6 +17,9 @@ module.exports = function (state) {
       refreshIfConfigured() {
         const scrollTop = (typeof document.body.scrollTop != 'undefined' ? document.body.scrollTop : window.scrollY)
         if (this.newPublicMessages && scrollTop == 0 && this.$route.path == "/public" && localPrefs.getAutorefresh()) {
+          this.$route.matched[0].instances.default.refresh()
+        }
+        if (this.newPublicMessages && scrollTop == 0 && this.$route.path == "/threads" && localPrefs.getAutorefresh()) {
           this.$route.matched[0].instances.default.refresh()
         }
       },
