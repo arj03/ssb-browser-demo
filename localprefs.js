@@ -51,7 +51,7 @@ exports.getLocale = function() { return getPref('locale', (defaultPrefs.locale |
 
 exports.setLocale = function(locale) { setPref('locale', locale) }
 
-exports.getAutorefresh = function() { return (getPref('autorefresh', (typeof defaultPrefs.autorefresh != 'undefined' ? (defaultPrefs.autorefresh ? 'true' : 'false') : 'true')) != 'false') }
+exports.getAutorefresh = function() { return (getPref('autorefresh', (typeof defaultPrefs.autorefresh != 'undefined' ? (defaultPrefs.autorefresh ? 'true' : 'false') : 'false')) != 'false') }
 
 exports.setAutorefresh = function(isOn) { setPref('autorefresh', (isOn ? 'true' : 'false')) }
 
@@ -66,6 +66,10 @@ exports.setOfflineMode = function(isOn) { setPref('offlineMode', (isOn ? 'true' 
 exports.getUserGroups = function() { return JSON.parse(getPref('userGroups', JSON.stringify(defaultPrefs.userGroups || []))) }
 
 exports.setUserGroups = function(userGroupArray) { setPref('userGroups', JSON.stringify(userGroupArray)) }
+
+exports.getDetailedLogging = function() { return (getPref('detailedLogging', (typeof defaultPrefs.detailedLogging != 'undefined' ? (defaultPrefs.detailedLogging ? 'true' : 'false') : 'false')) != 'false') }
+
+exports.setDetailedLogging = function(isOn) { setPref('detailedLogging', (isOn ? 'true' : 'false')) }
 
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.

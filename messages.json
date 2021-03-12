@@ -197,6 +197,7 @@
       "capsKey": "Caps key (leave blank to use default):",
       "capsKeyPlaceholder": "(Use default)",
       "capsKeyWarning": "(Only change this if you really, really know what you're doing.)",
+      "detailedLogging": "Enable detailed logging",
       "refreshForChanges": "You may have to refresh your browser for these changes to take effect."
     },
     "ssb-msg": {
@@ -500,6 +501,7 @@
       "capsKey": "「Caps key」（デフォルトを使用するには空白のままにします）：",
       "capsKeyPlaceholder": "（デフォルトを使用します）",
       "capsKeyWarning": "（これを変更するのは、自分が何をしているかを本当に知っている場合のみにしてください。）",
+      "detailedLogging": "詳細なロギングを有効にする",
       "refreshForChanges": "これらの変更を有効にするには、ブラウザを更新する必要がある場合があります。"
     },
     "ssb-msg": {
