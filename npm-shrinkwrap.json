@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^9.0.0",
+        "ssb-browser-core": "^9.2.0",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -6735,9 +6735,9 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "9.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.1.0.tgz",
-      "integrity": "sha512-u4HcwBNQnaWk2Zeqw+vlwWWXtGkjf2gKCvipLygzTTdMTviS4rjJrBoon0bvRN1gBpr7Ds64f/M6QuJgYFkY7Q==",
+      "version": "9.2.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.2.0.tgz",
+      "integrity": "sha512-s1QHo03sA3dJzB7sbZw731RfFCYyK7AB6dJFucn4vCudxLOWUPdeRsHY3cosL9KSUGZimBHnjLT1qyFy/iw/bw==",
       "dependencies": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
@@ -6757,7 +6757,7 @@
         "secret-stack": "^6.3.2",
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
-        "ssb-conn": "^1.0.0",
+        "ssb-conn": "^2.0.2",
         "ssb-db2": "^1.17.0",
         "ssb-friends": "^4.4.4",
         "ssb-keys": "^8.0.2",
@@ -6775,11 +6775,11 @@
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
     },
     "node_modules/ssb-conn": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-1.0.0.tgz",
-      "integrity": "sha512-hFJS+VZIiQHToN/GuhKdOAG8BLnb93mKQGY74uj03cY8Dz89kAjcq17+KYRlnJL5bgcvczYl04ewOzm9MjfV0A==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-2.0.2.tgz",
+      "integrity": "sha512-ZwV7dKXX3PxHYKRr/HGJZX7SfbI+J6UoMTSxgpr6UXPbFQV/9+hosLXkMTpnKL7m3bL/tbKwTrPqKhKJeXxtdQ==",
       "dependencies": {
-        "debug": "~4.2.0",
+        "debug": "^4.3.0",
         "has-network2": ">=0.0.3",
         "ip": "^1.1.5",
         "on-change-network-strict": "1.0.0",
@@ -6789,38 +6789,29 @@
         "pull-ping": "^2.0.3",
         "pull-stream": "^3.6.14",
         "secret-stack-decorators": "1.1.0",
-        "ssb-conn-db": "~0.3.3",
-        "ssb-conn-hub": "~0.2.7",
-        "ssb-conn-query": "~0.4.6",
-        "ssb-conn-staging": "~0.1.0",
-        "ssb-ref": "^2.14.2",
-        "ssb-typescript": "^2.1.0",
+        "ssb-conn-db": "~1.0.1",
+        "ssb-conn-hub": "~1.0.0",
+        "ssb-conn-query": "~1.0.0",
+        "ssb-conn-staging": "~1.0.0",
+        "ssb-ref": "^2.14.3",
+        "ssb-typescript": "^2.2.0",
         "statistics": "^3.3.0",
-        "zii": "~1.1.0"
+        "ziii": "~1.0.2"
       },
       "peerDependencies": {
         "secret-stack": ">=6.2.0"
       }
     },
     "node_modules/ssb-conn-db": {
-      "version": "0.3.3",
-      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-0.3.3.tgz",
-      "integrity": "sha512-N2C/PweOlzEnrcfhGusnFhrZusfGyEMqip2WpQR/dgLAwHHQK8Wxn9KkC0457AHYlIO3UDH4Q1Mewsz8RLweMw==",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-1.0.1.tgz",
+      "integrity": "sha512-lTXhHmJ9La7S+YFotLnvn+4uxX5lP+zDNS3N4zPnDDy/3f1AQI6jxEnRDmbhfWqrAEI2gy7Yu6LcgC5rX+MRDA==",
       "dependencies": {
         "atomic-file": "^2.1.1",
-        "debug": "~4.1.1",
+        "debug": "^4.3.1",
         "multiserver-address": "~1.0.1",
         "pull-notify": "~0.1.1",
         "ssb-ref": "~2.13.9"
-      }
-    },
-    "node_modules/ssb-conn-db/node_modules/debug": {
-      "version": "4.1.1",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.1.tgz",
-      "integrity": "sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==",
-      "deprecated": "Debug versions >=3.2.0 <3.2.7 || >=4 <4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)",
-      "dependencies": {
-        "ms": "^2.1.1"
       }
     },
     "node_modules/ssb-conn-db/node_modules/ssb-ref": {
@@ -6835,9 +6826,9 @@
       }
     },
     "node_modules/ssb-conn-hub": {
-      "version": "0.2.7",
-      "resolved": "https://registry.npmjs.org/ssb-conn-hub/-/ssb-conn-hub-0.2.7.tgz",
-      "integrity": "sha512-fvX7HK44V65C8uMQhTK9B4SHZE7K5P0AU/cHVuDciKPNagEFV0QHKk//JnrrMKHKKvz1msKUxhA0S0iH0S4gqQ==",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn-hub/-/ssb-conn-hub-1.0.0.tgz",
+      "integrity": "sha512-YVtQqWmmfT/rDmlCzalP52DsYPF0nUGyADa2Tmvd3gXPS65WnwOA8rtkiDEcTs52OPM+yTO8uG7qLkW534KkKA==",
       "dependencies": {
         "debug": "^4.1.1",
         "ip": "^1.1.5",
@@ -6862,42 +6853,25 @@
       }
     },
     "node_modules/ssb-conn-query": {
-      "version": "0.4.6",
-      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-0.4.6.tgz",
-      "integrity": "sha512-qwa0xYK4r3DwbJQQ/K5umw4VAt3aGTkRbFN0E43Mb33+M94jnXMhDIxZWrPoX1vVQSRZLlCb+laXQiGlxW32AQ==",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-1.0.0.tgz",
+      "integrity": "sha512-sAxy+nJ6B5S9mYuEGT/aMFkPzDKuABdM1eC9XEAvIK8MS3nssjlKe216Tgo63ds4hyK/dghr5D4gd+o5WMcaQA==",
       "dependencies": {
-        "ssb-conn-db": "~0.3.3",
-        "ssb-conn-hub": "~0.2.7",
-        "ssb-conn-staging": "~0.1.0"
+        "ssb-conn-db": "~1.0.0",
+        "ssb-conn-hub": "~1.0.0",
+        "ssb-conn-staging": "~1.0.0"
       }
     },
     "node_modules/ssb-conn-staging": {
-      "version": "0.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn-staging/-/ssb-conn-staging-0.1.0.tgz",
-      "integrity": "sha512-bFtArSUiF3QrJ9LJ1auonC40pxJd58eBzozBiWsburwbZLUuxqrnW/kCaoyu+PYwTvc0FvMzZR/g4yL2wcE4Yw==",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn-staging/-/ssb-conn-staging-1.0.0.tgz",
+      "integrity": "sha512-NOy1qZoBkhH0XNzLteaaKKePXigEJSCntD4RPRU6vWLMlQ10+SzlIz4TWKgvEVx0LfCe6tEx/vhQf6vBWO/Ylw==",
       "dependencies": {
         "debug": "^4.1.1",
         "multiserver-address": "~1.0.1",
         "pull-cat": "~1.1.11",
         "pull-notify": "~0.1.1",
         "pull-stream": "^3.6.9"
-      }
-    },
-    "node_modules/ssb-conn/node_modules/debug": {
-      "version": "4.2.0",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-4.2.0.tgz",
-      "integrity": "sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==",
-      "deprecated": "Debug versions >=3.2.0 <3.2.7 || >=4 <4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)",
-      "dependencies": {
-        "ms": "2.1.2"
-      },
-      "engines": {
-        "node": ">=6.0"
-      },
-      "peerDependenciesMeta": {
-        "supports-color": {
-          "optional": true
-        }
       }
     },
     "node_modules/ssb-db2": {
@@ -8483,10 +8457,10 @@
         "node": ">=4"
       }
     },
-    "node_modules/zii": {
-      "version": "1.1.1",
-      "resolved": "https://registry.npmjs.org/zii/-/zii-1.1.1.tgz",
-      "integrity": "sha512-nOC9WLdEOvBFoxbuc/iHZ0bsudW/nUBOLQK3hQRfp/TD3/pyQoWpBKJlmd11GgHLQEVRp2KemIeHQcBHQJx/DA=="
+    "node_modules/ziii": {
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/ziii/-/ziii-1.0.2.tgz",
+      "integrity": "sha512-q1FogtBIchy1W0fkxUpe6A4n4WUvAM+hAHN1J6LjBNCV42ZegeC5JSz0mcNv4qxnI0V4cL4FNeEhPMm97Ed0kA=="
     }
   },
   "dependencies": {
@@ -14087,9 +14061,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "9.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.1.0.tgz",
-      "integrity": "sha512-u4HcwBNQnaWk2Zeqw+vlwWWXtGkjf2gKCvipLygzTTdMTviS4rjJrBoon0bvRN1gBpr7Ds64f/M6QuJgYFkY7Q==",
+      "version": "9.2.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.2.0.tgz",
+      "integrity": "sha512-s1QHo03sA3dJzB7sbZw731RfFCYyK7AB6dJFucn4vCudxLOWUPdeRsHY3cosL9KSUGZimBHnjLT1qyFy/iw/bw==",
       "requires": {
         "atomically-universal": "^0.1.1",
         "bipf": "^1.4.0",
@@ -14109,7 +14083,7 @@
         "secret-stack": "^6.3.2",
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
-        "ssb-conn": "^1.0.0",
+        "ssb-conn": "^2.0.2",
         "ssb-db2": "^1.17.0",
         "ssb-friends": "^4.4.4",
         "ssb-keys": "^8.0.2",
@@ -14127,11 +14101,11 @@
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
     },
     "ssb-conn": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-1.0.0.tgz",
-      "integrity": "sha512-hFJS+VZIiQHToN/GuhKdOAG8BLnb93mKQGY74uj03cY8Dz89kAjcq17+KYRlnJL5bgcvczYl04ewOzm9MjfV0A==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-2.0.2.tgz",
+      "integrity": "sha512-ZwV7dKXX3PxHYKRr/HGJZX7SfbI+J6UoMTSxgpr6UXPbFQV/9+hosLXkMTpnKL7m3bL/tbKwTrPqKhKJeXxtdQ==",
       "requires": {
-        "debug": "~4.2.0",
+        "debug": "^4.3.0",
         "has-network2": ">=0.0.3",
         "ip": "^1.1.5",
         "on-change-network-strict": "1.0.0",
@@ -14141,46 +14115,28 @@
         "pull-ping": "^2.0.3",
         "pull-stream": "^3.6.14",
         "secret-stack-decorators": "1.1.0",
-        "ssb-conn-db": "~0.3.3",
-        "ssb-conn-hub": "~0.2.7",
-        "ssb-conn-query": "~0.4.6",
-        "ssb-conn-staging": "~0.1.0",
-        "ssb-ref": "^2.14.2",
-        "ssb-typescript": "^2.1.0",
+        "ssb-conn-db": "~1.0.1",
+        "ssb-conn-hub": "~1.0.0",
+        "ssb-conn-query": "~1.0.0",
+        "ssb-conn-staging": "~1.0.0",
+        "ssb-ref": "^2.14.3",
+        "ssb-typescript": "^2.2.0",
         "statistics": "^3.3.0",
-        "zii": "~1.1.0"
-      },
-      "dependencies": {
-        "debug": {
-          "version": "4.2.0",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-4.2.0.tgz",
-          "integrity": "sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==",
-          "requires": {
-            "ms": "2.1.2"
-          }
-        }
+        "ziii": "~1.0.2"
       }
     },
     "ssb-conn-db": {
-      "version": "0.3.3",
-      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-0.3.3.tgz",
-      "integrity": "sha512-N2C/PweOlzEnrcfhGusnFhrZusfGyEMqip2WpQR/dgLAwHHQK8Wxn9KkC0457AHYlIO3UDH4Q1Mewsz8RLweMw==",
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-1.0.1.tgz",
+      "integrity": "sha512-lTXhHmJ9La7S+YFotLnvn+4uxX5lP+zDNS3N4zPnDDy/3f1AQI6jxEnRDmbhfWqrAEI2gy7Yu6LcgC5rX+MRDA==",
       "requires": {
         "atomic-file": "^2.1.1",
-        "debug": "~4.1.1",
+        "debug": "^4.3.1",
         "multiserver-address": "~1.0.1",
         "pull-notify": "~0.1.1",
         "ssb-ref": "~2.13.9"
       },
       "dependencies": {
-        "debug": {
-          "version": "4.1.1",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.1.tgz",
-          "integrity": "sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==",
-          "requires": {
-            "ms": "^2.1.1"
-          }
-        },
         "ssb-ref": {
           "version": "2.13.9",
           "resolved": "https://registry.npmjs.org/ssb-ref/-/ssb-ref-2.13.9.tgz",
@@ -14195,9 +14151,9 @@
       }
     },
     "ssb-conn-hub": {
-      "version": "0.2.7",
-      "resolved": "https://registry.npmjs.org/ssb-conn-hub/-/ssb-conn-hub-0.2.7.tgz",
-      "integrity": "sha512-fvX7HK44V65C8uMQhTK9B4SHZE7K5P0AU/cHVuDciKPNagEFV0QHKk//JnrrMKHKKvz1msKUxhA0S0iH0S4gqQ==",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn-hub/-/ssb-conn-hub-1.0.0.tgz",
+      "integrity": "sha512-YVtQqWmmfT/rDmlCzalP52DsYPF0nUGyADa2Tmvd3gXPS65WnwOA8rtkiDEcTs52OPM+yTO8uG7qLkW534KkKA==",
       "requires": {
         "debug": "^4.1.1",
         "ip": "^1.1.5",
@@ -14224,19 +14180,19 @@
       }
     },
     "ssb-conn-query": {
-      "version": "0.4.6",
-      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-0.4.6.tgz",
-      "integrity": "sha512-qwa0xYK4r3DwbJQQ/K5umw4VAt3aGTkRbFN0E43Mb33+M94jnXMhDIxZWrPoX1vVQSRZLlCb+laXQiGlxW32AQ==",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-1.0.0.tgz",
+      "integrity": "sha512-sAxy+nJ6B5S9mYuEGT/aMFkPzDKuABdM1eC9XEAvIK8MS3nssjlKe216Tgo63ds4hyK/dghr5D4gd+o5WMcaQA==",
       "requires": {
-        "ssb-conn-db": "~0.3.3",
-        "ssb-conn-hub": "~0.2.7",
-        "ssb-conn-staging": "~0.1.0"
+        "ssb-conn-db": "~1.0.0",
+        "ssb-conn-hub": "~1.0.0",
+        "ssb-conn-staging": "~1.0.0"
       }
     },
     "ssb-conn-staging": {
-      "version": "0.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn-staging/-/ssb-conn-staging-0.1.0.tgz",
-      "integrity": "sha512-bFtArSUiF3QrJ9LJ1auonC40pxJd58eBzozBiWsburwbZLUuxqrnW/kCaoyu+PYwTvc0FvMzZR/g4yL2wcE4Yw==",
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn-staging/-/ssb-conn-staging-1.0.0.tgz",
+      "integrity": "sha512-NOy1qZoBkhH0XNzLteaaKKePXigEJSCntD4RPRU6vWLMlQ10+SzlIz4TWKgvEVx0LfCe6tEx/vhQf6vBWO/Ylw==",
       "requires": {
         "debug": "^4.1.1",
         "multiserver-address": "~1.0.1",
@@ -15617,10 +15573,10 @@
         "decamelize": "^1.2.0"
       }
     },
-    "zii": {
-      "version": "1.1.1",
-      "resolved": "https://registry.npmjs.org/zii/-/zii-1.1.1.tgz",
-      "integrity": "sha512-nOC9WLdEOvBFoxbuc/iHZ0bsudW/nUBOLQK3hQRfp/TD3/pyQoWpBKJlmd11GgHLQEVRp2KemIeHQcBHQJx/DA=="
+    "ziii": {
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/ziii/-/ziii-1.0.2.tgz",
+      "integrity": "sha512-q1FogtBIchy1W0fkxUpe6A4n4WUvAM+hAHN1J6LjBNCV42ZegeC5JSz0mcNv4qxnI0V4cL4FNeEhPMm97Ed0kA=="
     }
   }
 }
