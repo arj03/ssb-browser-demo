@@ -53,6 +53,15 @@ exports.getMessageTitle = function(msgId, msg) {
   return msgId
 }
 
+exports.getMessagePreview = function(msg, maxLength) {
+  if (!msg || !msg.content || !msg.content.text)
+    return ""
+  else if (msg.content.text.length > maxLength)
+    return msg.content.text.substring(0, maxLength - 3) + "..."
+  else
+    return msg.content.text.substring(0, maxLength)
+}
+
 exports.getMissingProfileImage = function() {
   // This is centralized here so that when building to a single inlined HTML file,
   // we're only swapping in the base64-encoded version once.
