@@ -17,7 +17,7 @@ module.exports = function (componentsState) {
           <tbody>
             <tr v-for="thread in category.threads">
               <td>
-                <router-link :to="{name: 'thread', params: { rootId: thread.msgs[0].key.substring(1) }}">{{ thread.title }}</router-link><br />
+                <router-link :to="{name: 'thread', params: { rootId: thread.msgs[0].key.substring(1) }}" v-bind:title="thread.preview">{{ thread.title }}</router-link><br />
                 <small>
                   Started by
                   <ssb-profile-link v-bind:feedId="thread.msgs[0].value.author"></ssb-profile-link>
@@ -110,6 +110,7 @@ module.exports = function (componentsState) {
 
             self.categories["public"].threads = threads.map((x) => { return {
                 title: (x.messages.length > 0 ? helpers.getMessageTitle(x.messages[0].key, x.messages[0].value) : ""),
+                preview: (x.messages.length > 0 ? helpers.getMessagePreview(x.messages[0].value, 500) : ""),
                 msgs: x.messages,
                 outsideFollow: self.findOutsideFollow(x.messages)
               } })
