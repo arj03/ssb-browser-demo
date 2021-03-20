@@ -62,7 +62,7 @@ Vue.component('ssb-msg', {
         <div class='reactions'>
           <span class='reactions-existing'>
             <span v-for="reaction in reactions">
-              <span v-bind:title="reaction.author">{{ reaction.expression }}</span>
+              <router-link :to="{name: 'profile', params: { feedId: reaction.authorId }}" v-bind:title="reaction.author">{{ reaction.expression }}</router-link>
             </span>
           </span>
           <span class='reactions-mine' v-if="myReactions.length > 0">
@@ -434,6 +434,7 @@ Vue.component('ssb-msg', {
 
               authorToReaction[msg.value.author] = {
                 author: SSB.getProfileName(msg.value.author),
+                authorId: msg.value.author,
                 expression
               } 
             }

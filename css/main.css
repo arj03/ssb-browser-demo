@@ -392,6 +392,7 @@ body, html {
 }
 
 .reactions .reactions-mine a,
+.reactions .reactions-existing a,
 .reactions .reactions-new a
 {
   text-decoration: none;
