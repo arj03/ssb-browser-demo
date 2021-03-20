@@ -110,6 +110,8 @@ module.exports = function () {
           if (self.$refs.markdownEditor)
             self.$refs.markdownEditor.setMarkdown(self.descriptionText)
 
+          // Display it right away for now, and then refresh to see if we have any other new messages.
+          self.messages.push({ key: null, value: { content: content } })
           self.renderThread()
         })
       },

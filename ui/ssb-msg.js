@@ -27,7 +27,7 @@ Vue.component('ssb-msg', {
           </span>
         </div>
 
-        <h2 v-if="msg.value.content.subject || msg.value.content.title">
+        <h2 v-if="(msg.value.content.subject || msg.value.content.title) && msg.key">
           <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ msg.value.content.subject || msg.value.content.title }}</router-link>
         </h2>
 
@@ -70,7 +70,7 @@ Vue.component('ssb-msg', {
               <a title='Remove reaction' href="javascript:void(0);" v-on:click="unlike()">{{ reaction.expression }}</a> 
             </span>
           </span>
-          <span class='reactions-new' v-if="myReactions.length == 0">
+          <span class='reactions-new' v-if="myReactions.length == 0 && msg.key">
             <span class='reactions-label'>Add: </span>
             <span v-for="emoji in emojiOptionsFavorite">
               <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
@@ -106,7 +106,7 @@ Vue.component('ssb-msg', {
       if (this.msg.value.content.root)
         return this.msg.value.content.root.substring(1)
       else
-        return this.msg.key.substring(1)
+        return (this.msg.key ? this.msg.key.substring(1) : "")
     },
     date: function() {
       return new Date(this.msg.value.timestamp).toLocaleString("da-DK")
@@ -254,8 +254,6 @@ Vue.component('ssb-msg', {
         this.react('Unlike')
     },
     renderMessage: function (err, SSB) {
-      if (!this.msg.key) return
-
       const { and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
 
       this.emojiOptionsFavorite = this.emojiOptions.slice(0, 3)
@@ -405,6 +403,8 @@ Vue.component('ssb-msg', {
           self.body = md.markdown(this.msg.value.content.text)
         }
       }
+      
+      if (!this.msg.key) return
 
       SSB.db.query(
         and(votesFor(this.msg.key)),
