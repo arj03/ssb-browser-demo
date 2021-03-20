@@ -31,7 +31,7 @@ module.exports = function (componentsState) {
               <td>
                 <ssb-profile-link v-bind:feedId="thread.msgs[thread.msgs.length - 1].value.author"></ssb-profile-link>
                 <ssb-profile-name-link v-bind:feedId="thread.msgs[thread.msgs.length - 1].value.author"></ssb-profile-name-link><br />
-                <small>{{ (new Date(thread.msgs[thread.msgs.length - 1].value.timestamp)).toLocaleString() }}</small>
+                <small v-bind:title="thread.lastMsgPreview">{{ (new Date(thread.msgs[thread.msgs.length - 1].value.timestamp)).toLocaleString() }}</small>
               </td>
             </tr>
           </tbody>
@@ -111,6 +111,7 @@ module.exports = function (componentsState) {
             self.categories["public"].threads = threads.map((x) => { return {
                 title: (x.messages.length > 0 ? helpers.getMessageTitle(x.messages[0].key, x.messages[0].value) : ""),
                 preview: (x.messages.length > 0 ? helpers.getMessagePreview(x.messages[0].value, 500) : ""),
+                lastMsgPreview: (x.messages.length > 0 ? helpers.getMessagePreview(x.messages[x.messages.length - 1].value, 500) : ""),
                 msgs: x.messages,
                 outsideFollow: self.findOutsideFollow(x.messages)
               } })
