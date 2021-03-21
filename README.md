@@ -42,6 +42,7 @@ Things that work:
  - blocking
  - channels
  - groups
+ - forum like view
  - notifications
  - themes
  - translations
