@@ -24,7 +24,7 @@ module.exports = function (state) {
         var self = this;
   
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (err) {
+        if (err || !SSB.db) {
           setTimeout(self.tryLoading, 3000)
           return
         }
