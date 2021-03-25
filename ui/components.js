@@ -3,6 +3,7 @@ module.exports = function () {
   require('./ssb-profile-name-link')
   require('./ssb-msg')
   require('./ssb-msg-preview')
+  require('./dht-invite')
   require('./onboarding-dialog')
   require('./common-contextmenu')
   require('./view-source')

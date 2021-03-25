@@ -28,6 +28,7 @@ module.exports = function () {
           <select v-model="type" v-on:change="onTypeChange(this.value)">
              <option value='room'>Room</option>
              <option value='pub'>Pub</option>
+             <option value='dht'>DHT Peer invite</option>
           </select>
           <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
           <button class="clickButton" v-on:click="add">{{ $t('connections.addPeerButton') }}</button>
@@ -45,6 +46,8 @@ module.exports = function () {
           <span v-if="peer.lastUpdate"><small>{{ $t('connections.lastUpdateReceived', { datetime: peer.lastUpdate }) }}</small><br /></span>
         </div>
       </div>
+      <button class="clickButton" v-on:click="createInvite">Create invite</button>
+      <dht-invite v-bind:show="showInvite" v-bind:inviteCode="inviteCode" v-bind:onClose="closeInvite"></dht-invite>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
 
@@ -66,7 +69,10 @@ module.exports = function () {
         extendedProgress: 0,
         suggestedPeers: [],
         stagedPeers: [],
-        peers: []
+        peers: [],
+
+        inviteCode: '',
+        showInvite: false
       }
     },
 
@@ -133,10 +139,15 @@ module.exports = function () {
           alert(this.$root.$t('connections.unsupportedConnectionTypeX', { connType: s[0] }))
           return
         }
-        SSB.net.connectAndRemember(this.address, {
-          key: '@' + s[s.length-1] + '.ed25519',
-          type: this.type
-        })
+        if (s[0] == 'dht') {
+          SSB.net.dhtInvite.start(() => {});
+          SSB.net.dhtInvite.accept(this.address, () => {});
+        }
+        else
+          SSB.net.connectAndRemember(this.address, {
+            key: '@' + s[s.length-1] + '.ed25519',
+            type: this.type
+          })
       },
       connectSuggested: function(suggestedPeer) {
         [ err, SSB ] = ssbSingleton.getSSB()
@@ -199,6 +210,33 @@ module.exports = function () {
         SSB.net.conn.forget(peer.address)
         SSB.net.conn.disconnect(peer.address)
         this.updateSuggestedPeers()
+      },
+      createInvite: function() {
+        [ err, SSB ] = ssbSingleton.getSSB()
+        if (!SSB || !SSB.net) {
+          alert("Can't create an invite right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
+          return
+        }
+
+        if(SSB.net.dhtInvite) {
+          this.inviteCode = "(Generating invite code...)";
+          SSB.net.dhtInvite.start(() => {});
+          var connectionsScreen = this;
+          SSB.net.dhtInvite.create((err, inviteCode) => {
+            if(err) {
+              connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Please try again.";
+            } else {
+              connectionsScreen.inviteCode = inviteCode;
+            }
+          });
+        } else {
+          this.inviteCode = "The version of ssb-browser-core you have does not support DHT.  Please upgrade it to the latest version.";
+        }
+
+        this.showInvite = true
+      },
+      closeInvite: function() {
+        this.showInvite = false
       },
       renderConnections: function() {
         var self = this
