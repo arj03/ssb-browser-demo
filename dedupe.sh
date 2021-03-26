@@ -18,19 +18,6 @@ rm -rf node_modules/tweetnacl-auth/node_modules/tweetnacl
 sed -i 's/0.x.x/1.0.3/' node_modules/ed2curve/package.json
 rm -rf node_modules/ed2curve/node_modules/tweetnacl
 
-# Dedupe ssb-client.
-sed -i 's/~4.7.8/^4.9.0/' node_modules/ssb-room/package.json
-rm -rf node_modules/ssb-room/node_modules/ssb-client
-
-# Dedupe ssb-config.
-sed -i 's/~3.3.2/^3.4.5/' node_modules/ssb-room/package.json
-rm -rf node_modules/ssb-room/node_modules/ssb-config
-
 # Dedupe ssb-keys.
 sed -i 's/7.0.7/8.0.2/' node_modules/ssb-validate/package.json
 rm -rf node_modules/ssb-validate/node_modules/ssb-keys
-rm -rf node_modules/ssb-room/node_modules/ssb-keys
-
-# Dedupe secret-stack.
-sed -i 's/6.3.0/^6.3.2/' node_modules/ssb-room/package.json
-rm -rf node_modules/ssb-room/node_modules/secret-stack
