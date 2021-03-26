@@ -140,8 +140,12 @@ module.exports = function () {
           return
         }
         if (s[0] == 'dht') {
-          SSB.net.dhtInvite.start(() => {});
-          SSB.net.dhtInvite.accept(this.address, () => {});
+          SSB.net.dhtInvite.start((err, success) => {
+            if (err)
+              alert("Unable to accept this invite - could not start the DHT connection system.")
+            else
+              SSB.net.dhtInvite.accept(this.address, () => {});
+          })
         }
         else
           SSB.net.connectAndRemember(this.address, {
@@ -220,15 +224,19 @@ module.exports = function () {
 
         if(SSB.net.dhtInvite) {
           this.inviteCode = "(Generating invite code...)";
-          SSB.net.dhtInvite.start(() => {});
           var connectionsScreen = this;
-          SSB.net.dhtInvite.create((err, inviteCode) => {
-            if(err) {
-              connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Please try again.";
-            } else {
-              connectionsScreen.inviteCode = inviteCode;
-            }
-          });
+          SSB.net.dhtInvite.start((err, success) => {
+            if (err)
+              connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Could not start the DHT connection system.  Please try again.";
+            else
+              SSB.net.dhtInvite.create((err, inviteCode) => {
+                if(err) {
+                  connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Please try again.";
+                } else {
+                  connectionsScreen.inviteCode = inviteCode;
+                }
+              })
+          })
         } else {
           this.inviteCode = "The version of ssb-browser-core you have does not support DHT.  Please upgrade it to the latest version.";
         }
