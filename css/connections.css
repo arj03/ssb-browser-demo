@@ -25,3 +25,11 @@
   /* Default to 1% filled so there's a little sliver there */
   width: 1%;
 }
+
+#connections div > div > input {
+  padding: 5px;
+}
+
+#connections div > div > select {
+  padding: 5px;
+}
