@@ -203,6 +203,7 @@ Vue.component('ssb-msg', {
         if (err) return alert("Failed to get msg " + err)
 
         this.msg = { key: this.msg.key, value: msgValue }
+        this.renderMessage(null, SSB)
 
         SSB.net.friends.isBlocking({ source: SSB.net.id, dest: msgValue.author }, (err, result) => {
           if (result) this.msg.value.content.text = "Blocked user"
