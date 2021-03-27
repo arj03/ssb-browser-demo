@@ -71,6 +71,10 @@ exports.getDetailedLogging = function() { return (getPref('detailedLogging', (ty
 
 exports.setDetailedLogging = function(isOn) { setPref('detailedLogging', (isOn ? 'true' : 'false')) }
 
+exports.getDHTEnabled = function() { return (getPref('dhtEnabled', (typeof defaultPrefs.dhtEnabled != 'undefined' ? (defaultPrefs.dhtEnabled ? 'true' : 'false') : 'false')) != 'false') }
+
+exports.setDHTEnabled = function(isEnabled) { setPref('dhtEnabled', (isEnabled ? 'true' : 'false')) }
+
 exports.updateStateFromSettings = function() {
   // Update the running state to match the stored settings.
   document.body.classList.add('theme-' + this.getTheme())

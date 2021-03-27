@@ -49,6 +49,11 @@ module.exports = function () {
          </p>
 
          <p>
+         <input type="checkbox" id="dhtEnabled" v-model="dhtEnabled" />
+         <label for="dhtEnabled">{{ $t('settings.dhtEnabled') }}</label>
+         </p>
+
+         <p>
          <label for="searchDepth">{{ $t('settings.searchDepth') }}</label><br />
          <input type="number" id="searchDepth" v-model="searchDepth" min="1000" max="1000000" step="1000" />
          </p>
@@ -77,6 +82,7 @@ module.exports = function () {
         locale: 'en',
         localeOptions: [],
         autorefresh: false,
+        dhtEnabled: false,
         detailedLogging: false,
         searchDepth: 10000,
         hops: 2
@@ -94,6 +100,7 @@ module.exports = function () {
         for (var l in i18nMessages)
           this.localeOptions.push({ locale: l, name: i18nMessages[l].language })
         this.autorefresh = localPrefs.getAutorefresh()
+        this.dhtEnabled = localPrefs.getDHTEnabled()
         this.searchDepth = localPrefs.getSearchDepth()
         this.detailedLogging = localPrefs.getDetailedLogging()
       },
@@ -113,6 +120,7 @@ module.exports = function () {
           this.$i18n.locale = 'en'
 
         localPrefs.setAutorefresh(this.autorefresh)
+        localPrefs.setDHTEnabled(this.dhtEnabled)
 
         localPrefs.setSearchDepth(this.searchDepth)
         if (SSB.search.depth != this.searchDepth) {

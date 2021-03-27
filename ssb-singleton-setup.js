@@ -7,6 +7,28 @@ const config = {
     hops: localPrefs.getHops(),
     hookReplicate: false
   },
+  connections: (localPrefs.getDHTEnabled() ? {
+      incoming: {
+        tunnel: [{ scope: 'public', transform: 'shs' }],
+        dht: [{ scope: 'public', transform: 'shs' }]
+      },
+      outgoing: {
+        net: [{ transform: 'shs' }],
+        ws: [{ transform: 'shs' }, { transform: 'noauth' }],
+        tunnel: [{ transform: 'shs' }],
+        dht: [{ transform: 'shs' }]
+      }
+    } : {
+      incoming: {
+        tunnel: [{ scope: 'public', transform: 'shs' }]
+      },
+      outgoing: {
+        net: [{ transform: 'shs' }],
+        ws: [{ transform: 'shs' }, { transform: 'noauth' }],
+        tunnel: [{ transform: 'shs' }]
+      }
+    }
+  ),
   hops: localPrefs.getHops(),
   core: {
     startOffline: localPrefs.getOfflineMode()

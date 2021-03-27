@@ -6,6 +6,7 @@
   "hiddenChannels": [],
   "autorefresh": false,
   "offlineMode": false,
+  "dhtEnabled": false,
   "detailedLogging": false,
   "suggestPeers": [
     { "name": "Between Two Worlds Pub", "type": "pub", "address": "wss:between-two-worlds.dk:8989~shs:lbocEWqF2Fg6WMYLgmfYvqJlMfL7hiqVAV6ANjHWNw8=" },
