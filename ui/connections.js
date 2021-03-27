@@ -28,7 +28,7 @@ module.exports = function () {
           <select v-model="type" v-on:change="onTypeChange(this.value)">
              <option value='room'>Room</option>
              <option value='pub'>Pub</option>
-             <option value='dht'>DHT Peer invite</option>
+             <option v-if='dhtEnabled' value='dht'>DHT Peer invite</option>
           </select>
           <input type="text" placeholder="remote address" v-model="address" v-on:keyup.enter="add" id="remoteAddress" />
           <button class="clickButton" v-on:click="add">{{ $t('connections.addPeerButton') }}</button>
@@ -46,8 +46,8 @@ module.exports = function () {
           <span v-if="peer.lastUpdate"><small>{{ $t('connections.lastUpdateReceived', { datetime: peer.lastUpdate }) }}</small><br /></span>
         </div>
       </div>
-      <button class="clickButton" v-on:click="createInvite">Create invite</button>
-      <dht-invite v-bind:show="showInvite" v-bind:inviteCode="inviteCode" v-bind:onClose="closeInvite"></dht-invite>
+      <button v-if="dhtEnabled" class="clickButton" v-on:click="createInvite">Create invite</button>
+      <dht-invite v-if="dhtEnabled" v-bind:show="showInvite" v-bind:inviteCode="inviteCode" v-bind:onClose="closeInvite"></dht-invite>
       <div id="status" v-html="statusHTML"></div>
     </div>`,
 
@@ -72,6 +72,7 @@ module.exports = function () {
         peers: [],
 
         inviteCode: '',
+        dhtEnabled: false,
         showInvite: false
       }
     },
@@ -372,6 +373,7 @@ module.exports = function () {
 
     created: function() {
       this.componentStillLoaded = true
+      this.dhtEnabled = localPrefs.getDHTEnabled()
       this.renderConnections()
     },
 
