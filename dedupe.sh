@@ -17,7 +17,3 @@ sed -i 's/0.x.x/1.0.3/' node_modules/tweetnacl-auth/package.json
 rm -rf node_modules/tweetnacl-auth/node_modules/tweetnacl
 sed -i 's/0.x.x/1.0.3/' node_modules/ed2curve/package.json
 rm -rf node_modules/ed2curve/node_modules/tweetnacl
-
-# Dedupe ssb-keys.
-sed -i 's/7.0.7/8.0.2/' node_modules/ssb-validate/package.json
-rm -rf node_modules/ssb-validate/node_modules/ssb-keys
