@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^9.3.3",
+        "ssb-browser-core": "^9.3.4",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -2085,9 +2085,9 @@
       }
     },
     "node_modules/bipf": {
-      "version": "1.4.0",
-      "resolved": "https://registry.npmjs.org/bipf/-/bipf-1.4.0.tgz",
-      "integrity": "sha512-8b2T/OWIRI73kcPXhI+jqK+0QyxRlZ6HIzQBK8tRxIZ2NO0dBxJ4T9eeX6XsYEHy2cqM69n+rOZyVjhvRUGRig==",
+      "version": "1.5.0",
+      "resolved": "https://registry.npmjs.org/bipf/-/bipf-1.5.0.tgz",
+      "integrity": "sha512-EjpRVanEn4/Z2ilD2OeTfkWnogvxe+PZ8Gxzt7m+2xRT9rg6g1pETAdYy2vmJhNNZYX9axiV3Zf8HxuaYb0W3w==",
       "dependencies": {
         "varint": "^5.0.0"
       }
@@ -7665,13 +7665,12 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "9.3.3",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.3.3.tgz",
-      "integrity": "sha512-2pI3ftzkKa/Re7J6Qp0umBXymcVeXI3odXRmqJPlOBZpOft7i63iUvOVP1Z7/IR50PWCdxZbWuhGCWd8m5anKg==",
+      "version": "9.3.4",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.3.4.tgz",
+      "integrity": "sha512-mqxrfoL4sIdroN6Wng+8higHDRgVEHBcc/F0qwvL91Ay2Uo+y2DVu5u9PiUdgMw6OU3PvYmnJs0K91Ygv4gW8Q==",
       "hasInstallScript": true,
       "dependencies": {
         "atomically-universal": "^0.1.1",
-        "bipf": "^1.4.0",
         "epidemic-broadcast-trees": "^8.0.1",
         "gossip-query": "^2.0.2",
         "obz": "^1.0.3",
@@ -7689,7 +7688,7 @@
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^2.0.2",
-        "ssb-db2": "^1.17.0",
+        "ssb-db2": "^1.18.7",
         "ssb-dht-invite": "^2.0.0",
         "ssb-friends": "^4.4.4",
         "ssb-keys": "^8.0.2",
@@ -7796,14 +7795,14 @@
       }
     },
     "node_modules/ssb-db2": {
-      "version": "1.18.6",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.18.6.tgz",
-      "integrity": "sha512-Z6dkEhpwJbKWV5v28s2sFj2Nu8FAF/ANX24lrTlpr1ltLAb4Us1mtp1y6cZQhlXlmy+ILxDuhs51/hhbjKfpmA==",
+      "version": "1.18.7",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.18.7.tgz",
+      "integrity": "sha512-sTHdEMGMaQl0ysxwwiH+aUcoPtSXcSDbCBT3/K/wU7pjWctWSpDjZj2ZIE7AfSmIAcakILN1xOGj2kEmtR5caA==",
       "dependencies": {
         "async-append-only-log": "^3.0.7",
         "atomically-universal": "^0.1.1",
         "binary-search-bounds": "^2.0.4",
-        "bipf": "~1.4.0",
+        "bipf": "~1.5.0",
         "debug": "~4.3.1",
         "fastintcompression": "0.0.4",
         "flumecodec": "0.0.1",
@@ -11313,9 +11312,9 @@
       }
     },
     "bipf": {
-      "version": "1.4.0",
-      "resolved": "https://registry.npmjs.org/bipf/-/bipf-1.4.0.tgz",
-      "integrity": "sha512-8b2T/OWIRI73kcPXhI+jqK+0QyxRlZ6HIzQBK8tRxIZ2NO0dBxJ4T9eeX6XsYEHy2cqM69n+rOZyVjhvRUGRig==",
+      "version": "1.5.0",
+      "resolved": "https://registry.npmjs.org/bipf/-/bipf-1.5.0.tgz",
+      "integrity": "sha512-EjpRVanEn4/Z2ilD2OeTfkWnogvxe+PZ8Gxzt7m+2xRT9rg6g1pETAdYy2vmJhNNZYX9axiV3Zf8HxuaYb0W3w==",
       "requires": {
         "varint": "^5.0.0"
       }
@@ -15937,12 +15936,11 @@
       }
     },
     "ssb-browser-core": {
-      "version": "9.3.3",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.3.3.tgz",
-      "integrity": "sha512-2pI3ftzkKa/Re7J6Qp0umBXymcVeXI3odXRmqJPlOBZpOft7i63iUvOVP1Z7/IR50PWCdxZbWuhGCWd8m5anKg==",
+      "version": "9.3.4",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-9.3.4.tgz",
+      "integrity": "sha512-mqxrfoL4sIdroN6Wng+8higHDRgVEHBcc/F0qwvL91Ay2Uo+y2DVu5u9PiUdgMw6OU3PvYmnJs0K91Ygv4gW8Q==",
       "requires": {
         "atomically-universal": "^0.1.1",
-        "bipf": "^1.4.0",
         "epidemic-broadcast-trees": "^8.0.1",
         "gossip-query": "^2.0.2",
         "obz": "^1.0.3",
@@ -15960,7 +15958,7 @@
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^2.0.2",
-        "ssb-db2": "^1.17.0",
+        "ssb-db2": "^1.18.7",
         "ssb-dht-invite": "^2.0.0",
         "ssb-friends": "^4.4.4",
         "ssb-keys": "^8.0.2",
@@ -16066,14 +16064,14 @@
       }
     },
     "ssb-db2": {
-      "version": "1.18.6",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.18.6.tgz",
-      "integrity": "sha512-Z6dkEhpwJbKWV5v28s2sFj2Nu8FAF/ANX24lrTlpr1ltLAb4Us1mtp1y6cZQhlXlmy+ILxDuhs51/hhbjKfpmA==",
+      "version": "1.18.7",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-1.18.7.tgz",
+      "integrity": "sha512-sTHdEMGMaQl0ysxwwiH+aUcoPtSXcSDbCBT3/K/wU7pjWctWSpDjZj2ZIE7AfSmIAcakILN1xOGj2kEmtR5caA==",
       "requires": {
         "async-append-only-log": "^3.0.7",
         "atomically-universal": "^0.1.1",
         "binary-search-bounds": "^2.0.4",
-        "bipf": "~1.4.0",
+        "bipf": "~1.5.0",
         "debug": "~4.3.1",
         "fastintcompression": "0.0.4",
         "flumecodec": "0.0.1",
