@@ -522,7 +522,7 @@
   "pt-BR": {
     "channel": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
-      "postNewMessage": "Poste nova mensagem",
+      "postNewMessage": "Poste uma nova mensagem",
       "title": "Nome do ${channel}"
     },
     "channels": {
@@ -543,7 +543,7 @@
       "loadXMore": "Carregar mais {count}",
       "messageOutsideGraph": "Mensagem fora de acompanhamento gráfico",
       "noMessages": "(Sem mensagens para exibir)",
-      "postTooLarge": "Seu post é muito grande.Cada post só pode ser 8kib.Por favor encurte sua postagem ou divida-a em vários posts.",
+      "postTooLarge": "Seu post é muito grande. Cada post pode ter até 8KiB. Por favor, encurte a sua postagem ou divida-a em vários posts.",
       "profileUpdateOther": "{user} postou uma atualização de perfil para o perfil de outra pessoa",
       "profileUpdateSelf": "{user} Atualizou seu perfil",
       "refreshMessages": "Atualizar mensagens",
@@ -568,7 +568,7 @@
       "dbStatus": "Status do DB.",
       "ebtStatus": "Status do EBT.",
       "existingConnections": "Conexões",
-      "followNewConnection": "Você quer seguir também esta pessoa para que eles sejam autoconectados e sincronizam no futuro?",
+      "followNewConnection": "Você quer seguir também esta pessoa para que sejam conectados(as) e sincronizem no futuro?",
       "goOffline": "Use offline",
       "goOnline": "Conecte-se online.",
       "lastUpdateReceived": "(Última atualização recebida {datetime})",
@@ -581,7 +581,7 @@
       "statusSyncComplete": "Sincronização está completa",
       "statusWaitingForConnection": "(Aguardando conexão)",
       "title": "Conexões",
-      "unsupportedConnectionTypeX": "Este cliente SSB não suporta conexões do tipo '{conntype}'.\n\nInfelizmente, os navegadores colocam muitas restrições sobre como podemos nos conectar.A maioria das comunicações precisa ser feita sobre WebSockets, e o código de convite que você está usando não parece suportá-los.Desculpa!"
+      "unsupportedConnectionTypeX": "Este cliente SSB não suporta conexões do tipo '{conntype}'.\n\nInfelizmente, os navegadores colocam muitas restrições sobre como podemos nos conectar. A maioria das comunicações precisa ser feita sobre WebSockets, e o código de convite que você está usando não parece suportá-los. Desculpas!"
     },
     "group": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
@@ -616,7 +616,7 @@
       "suggestedFollows": "E aqui estão algumas pessoas com quem você gostaria de seguir:",
       "suggestedPeers": "Aqui estão alguns servidores predefinidos que você pode se conectar:",
       "title": "Novo usuário",
-      "welcomeMessage": "Bem-vinda!Parece que você é novo aqui.Toda esta informação é <strong> inteiramente opcional </ strong>, mas tende a ajudar a levá-lo e funcionando com rapidez e facilidade."
+      "welcomeMessage": "Bem-vind@! Parece que você é nov@ aqui. Toda esta informação é inteiramente opcional , mas tende a ajudar a ter tudo funcionando com rapidez e facilidade."
     },
     "pages": {
       "channel": "Canal",
@@ -634,7 +634,7 @@
     "private": {
       "badRecipientError": "Os destinatários devem começar com @",
       "blankFieldError": "Por favor, forneça o assunto e o texto em mensagens privadas",
-      "noRecipientError": "Você deve especificar pelo menos um destinatário válido da lista - endereçando os destinatários exclusivamente pelo nome não é suportado.",
+      "noRecipientError": "Você deve especificar pelo menos um destinatário válido da lista. Escrevendo os destinatários exclusivamente pelo nome não é suportado.",
       "postPrivateMessage": "Postar mensagem privada",
       "privateMessages": "Mensagens privadas",
       "title": "Mensagens privadas"
@@ -677,7 +677,7 @@
       "unblock": "Desbloquear",
       "unblocked": "Desbloquead@!",
       "unfollow": "Deixar de seguir",
-      "unfollowed": "Descondosa!"
+      "unfollowed": "Desseguido"
     },
     "public": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
