@@ -16,10 +16,10 @@ Vue.component('ssb-msg', {
             <div class='date' :title='date'>{{ humandate }}</div>
             <ssb-profile-name-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-name-link> posted
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
-              in reply to <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
+              {{ $t('common.inReplyTo') }} <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
             </span>
             <span v-else>
-              a <router-link :to="{name: 'thread', params: { rootId: rootId }}">thread</router-link>
+              a <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ $t('pages.thread') }}</router-link>
             </span>
           </span>
           <span class='channel' v-if="msg.value.content.channel">
@@ -48,17 +48,17 @@ Vue.component('ssb-msg', {
           </p>
         </div>
 
-        <span v-if="forks.length > 0"><b>Forks:</b>
+        <span v-if="forks.length > 0"><b>{{ $t('common.Forks') }}:</b>
           <li v-for="msg in forks">
             <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>
         </span>
-        <span v-if="mentions.length > 0"><b>Mentions:</b>
+        <span v-if="mentions.length > 0"><b>{{ $t('common.Mentions') }}:</b>
           <li v-for="msg in mentions">
             <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>
         </span>
-        <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">get msg</a></span>
+        <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">{{ $t('common.getMsg') }}</a></span>
         <div class='reactions'>
           <span class='reactions-existing'>
             <span v-for="reaction in reactions">
@@ -71,7 +71,7 @@ Vue.component('ssb-msg', {
             </span>
           </span>
           <span class='reactions-new' v-if="myReactions.length == 0 && msg.key">
-            <span class='reactions-label'>Add: </span>
+            <span class='reactions-label'>{{ $t('common.Add') }}: </span>
             <span v-for="emoji in emojiOptionsFavorite">
               <a href="javascript:void(0);" v-on:click="react(emoji)">{{ emoji }}</a> 
             </span>

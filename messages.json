@@ -33,7 +33,11 @@
       "startedFollowing": "Started following",
       "stoppedFollowing": "Stopped following",
       "close": "Close",
-      "save": "Save"
+      "save": "Save",
+      "inReplyTo": "in reply to",
+      "Forks": "Forks",
+      "getMsg": "get msg",
+      "Add": "Add"
     },
     "public": {
       "title": "Public messages",
