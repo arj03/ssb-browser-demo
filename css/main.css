@@ -52,7 +52,7 @@ a {
 
 #goTo {
   float: right;
-  width: 150px;
+  width: 160px;
   padding: 5px;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   transition: width 0.5s, box-shadow 0.5s;

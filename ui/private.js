@@ -8,13 +8,13 @@ module.exports = function (componentsState) {
   return {
     template: `<div id="private">
         <span v-if="postMessageVisible">
-        <v-select placeholder="recipients" multiple v-model="recipients" :options="people" label="name" @search="suggest" @open="recipientsOpen">
+        <v-select :placeholder="$t('private.recipients')" multiple v-model="recipients" :options="people" label="name" @search="suggest" @open="recipientsOpen">
           <template #option="{ name, image }">
             <img v-if='image' class="tinyAvatar" :src='image' />
             <span>{{ name }}</span>
           </template>
         </v-select>
-        <input type="text" id="subject" v-model="subject" placeholder="subject" />
+        <input type="text" id="subject" v-model="subject" :placeholder="$t('private.subject')" />
         <markdown-editor :initialValue="postText" ref="markdownEditor" :privateBlobs="true" />
         </span>
         <button class="clickButton" v-on:click="onPost">{{ $t('private.postPrivateMessage') }}</button>

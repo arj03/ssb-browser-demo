@@ -34,10 +34,13 @@
       "stoppedFollowing": "Stopped following",
       "close": "Close",
       "save": "Save",
+      "posted": "posted",
+      "a": "a",
       "inReplyTo": "in reply to",
       "Forks": "Forks",
       "getMsg": "get msg",
-      "Add": "Add"
+      "Add": "Add",
+      "goToSearch": "Go to msg/feed/channel"
     },
     "public": {
       "title": "Public messages",
@@ -139,7 +142,9 @@
       "privateMessages": "Private messages",
       "blankFieldError": "Please provide both subject and text in private messages",
       "noRecipientError": "You must specify at least one valid recipient from the list - addressing recipients solely by name is not supported.",
-      "badRecipientError": "Recipients must start with @"
+      "badRecipientError": "Recipients must start with @",
+      "recipients": "recipients",
+      "subject": "subject"
     },
     "profile": {
       "title": "Profile {name}",

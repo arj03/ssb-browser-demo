@@ -51,7 +51,7 @@
         <router-link class="iconButton" to="/settings" :title="$t('pages.settings')">&#9881;</router-link>
       </p>
       <div id="searchBox">
-        <input type="text" placeholder="thread msg id / feedId" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur" />
+        <input type="text" :placeholder="$t('common.goToSearch')" id="goTo" v-model="goToTargetText" v-on:keyup="suggestTarget" v-on:keyup.enter="goToTarget" @focus="targetFocus" @blur="targetBlur" />
         <div id="suggestionPositioning" v-if="suggestions.length > 0">
           <div class="suggestion-box tui-popup-wrapper te-heading-add">
             <div class="tui-popup-body">

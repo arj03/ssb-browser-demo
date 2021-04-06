@@ -14,12 +14,12 @@ Vue.component('ssb-msg', {
           </span>
           <span class='text'>
             <div class='date' :title='date'>{{ humandate }}</div>
-            <ssb-profile-name-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-name-link> posted
+            <ssb-profile-name-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-name-link> {{ $t('common.posted') }}
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
               {{ $t('common.inReplyTo') }} <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ parentThreadTitle }}</router-link>
             </span>
             <span v-else>
-              a <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ $t('pages.thread') }}</router-link>
+              {{ $t('common.a') }} <router-link :to="{name: 'thread', params: { rootId: rootId }}">{{ $t('pages.thread') }}</router-link>
             </span>
           </span>
           <span class='channel' v-if="msg.value.content.channel">
