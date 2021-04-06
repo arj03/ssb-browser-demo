@@ -523,7 +523,7 @@
     "channel": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
       "postNewMessage": "Poste uma nova mensagem",
-      "title": "Nome do ${channel}"
+      "title": "Canal #{name}"
     },
     "channels": {
       "favoriteChannels": "Canais favoritos",
@@ -531,68 +531,68 @@
       "otherChannels": "Outros canais",
       "showChannels": "Mostrar:",
       "showChannelsAll": "Todos os canais por ordem alfabética",
-      "showChannelsPopular": "Canais globais populares",
-      "showChannelsRecent": "Canais recentes (500 postagens mais recentes) populares",
+      "showChannelsPopular": "Canais populares gerais",
+      "showChannelsRecent": "Canais populares recentes (últimas 500 postagens)",
       "title": "Canais"
     },
     "common": {
       "close": "Fechar",
-      "genericUsername": "Usuário",
+      "genericUsername": "Pessoa",
       "lastXMessages": "Últimas {count} mensagens",
-      "lastXThreads": "Últimas {count} conversas",
-      "loadXMore": "Carregar mais {count}",
-      "messageOutsideGraph": "Mensagem fora de acompanhamento gráfico",
+      "lastXThreads": "Últimos {count} tópicos",
+      "loadXMore": "Carregar mais {count}de acompanhamento gráfico",
+      "messageOutsideGraph": "Mensagem fora da rede de seguidores",
       "noMessages": "(Sem mensagens para exibir)",
       "postTooLarge": "Seu post é muito grande. Cada post pode ter até 8KiB. Por favor, encurte a sua postagem ou divida-a em vários posts.",
       "profileUpdateOther": "{user} postou uma atualização de perfil para o perfil de outra pessoa",
-      "profileUpdateSelf": "{user} Atualizou seu perfil",
+      "profileUpdateSelf": "{user} atualizou seu perfil",
       "refreshMessages": "Atualizar mensagens",
       "save": "Salvar",
       "searchingForMessages": "(Procurando por mensagens ...)",
-      "selfPronoun": "Vocês",
+      "selfPronoun": "Você",
       "showingMessagesFrom": "Mostrando mensagens de",
       "startedFollowing": "Começou a seguir",
       "stoppedFollowing": "Parou de seguir",
       "unableToFindProfile": "Não conseguimos encontrar ninguém com esse nome, mas tentaremos encontrá-los na rede.",
-      "unknownMessage": "Tipo de mensagem desconhecido ou mensagem fora de acompanhamento gráfico"
+      "unknownMessage": "Tipo de mensagem desconhecido ou mensagem fora da rede de seguidores"
     },
     "connected": {
       "connectedNotSynced": "Conectado, mas ainda não sincronizado",
       "connectedToPeer": "Conectado ao par remoto"
     },
     "connections": {
-      "addPeer": "Adicionar servidor ou sala de pub",
+      "addPeer": "Adicionar servidor de pub ou sala",
       "addPeerButton": "Adicionar",
       "connectionStatus": "Status da conexão",
       "connectToX": "Conecte-se a {peer}",
       "dbStatus": "Status do DB.",
       "ebtStatus": "Status do EBT.",
       "existingConnections": "Conexões",
-      "followNewConnection": "Você quer seguir também esta pessoa para que sejam conectados(as) e sincronizem no futuro?",
+      "followNewConnection": "Você quer seguir também esta pessoa assim ela conectará automaticamente e sincronizará no futuro?",
       "goOffline": "Use offline",
       "goOnline": "Conecte-se online.",
       "lastUpdateReceived": "(Última atualização recebida {datetime})",
       "possibleConnections": "Conexões possíveis",
       "statusConnected": "Conectado a um par",
-      "statusConnectedWithData": "Pelo menos um par tem dados (não apenas um quarto)",
-      "statusExtendedSyncComplete": "Sincronização estendida (Saltos > 1) Completo",
-      "statusFollowedSyncComplete": "Seguido Sync (Saltos == 1) Completo",
-      "statusOnline": "Correndo no modo online",
+      "statusConnectedWithData": "Pelo menos um par tem dados (não apenas uma sala)",
+      "statusExtendedSyncComplete": "Sincronização estendida (Saltos > 1) completa",
+      "statusFollowedSyncComplete": "Sincronização de seguidores (Saltos == 1) completa",
+      "statusOnline": "Executando no modo online",
       "statusSyncComplete": "Sincronização está completa",
       "statusWaitingForConnection": "(Aguardando conexão)",
       "title": "Conexões",
-      "unsupportedConnectionTypeX": "Este cliente SSB não suporta conexões do tipo '{conntype}'.\n\nInfelizmente, os navegadores colocam muitas restrições sobre como podemos nos conectar. A maioria das comunicações precisa ser feita sobre WebSockets, e o código de convite que você está usando não parece suportá-los. Desculpas!"
+      "unsupportedConnectionTypeX": "Este cliente SSB não suporta conexões do tipo '{conntype}'.\n\nInfelizmente, os navegadores colocam muitas restrições sobre como podemos nos conectar. A maioria das comunicações precisa ser feita através de WebSockets, e o código de convite que você está usando não parece suportá-los. Desculpas!"
     },
     "group": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
       "postNewMessage": "Postar mensagem pública geral",
-      "title": "Nome do {group}}\""
+      "title": "\"{name}\" do grupo"
     },
     "groups": {
       "addGroup": "Adicionar grupo",
       "confirmDeleteGroup": "Tem certeza de que deseja excluir o grupo \"{group}\"?",
       "deleteGroup": "Excluir grupo",
-      "enterGroupName": "O que você quer renomear \"{group}\" para?",
+      "enterGroupName": "Como você quer renomear \"{group}\"?",
       "newGroupName": "Novo nome do grupo",
       "renameGroup": "Renomear grupo",
       "title": "Grupos",
@@ -601,7 +601,7 @@
     "language": "Português",
     "messagePreview": {
       "postMessage": "Postar mensagem",
-      "postPreview": "Postar visualização"
+      "postPreview": "Visualização da postagem"
     },
     "notifications": {
       "title": "Notificações"
@@ -609,14 +609,14 @@
     "onboarding": {
       "getStarted": "Iniciar!",
       "manualSetup": "Configuração manual",
-      "profileDescription": "Se você quiser, você pode digitar uma biografia curta:",
+      "profileDescription": "Se você quiser, você pode digitar uma breve biografia:",
       "profileDescriptionPlaceholder": "(Uma breve biografia sobre você - formatação de markdown é suportada)",
-      "profileName": "Escolha um nome para si mesmo (você pode alterar isso mais tarde sob o perfil):",
+      "profileName": "Escolha um nome (você pode alterar isso mais tarde em Perfil):",
       "profileNamePlaceholder": "(Seu nome / apelido)",
-      "suggestedFollows": "E aqui estão algumas pessoas com quem você gostaria de seguir:",
+      "suggestedFollows": "E aqui estão algumas pessoas que talvez você gostaria de seguir:",
       "suggestedPeers": "Aqui estão alguns servidores predefinidos que você pode se conectar:",
-      "title": "Novo usuário",
-      "welcomeMessage": "Bem-vind@! Parece que você é nov@ aqui. Toda esta informação é inteiramente opcional , mas tende a ajudar a ter tudo funcionando com rapidez e facilidade."
+      "title": "Nova pessoa",
+      "welcomeMessage": "Bem-vind@! Parece que você é nov@ aqui. Toda esta informação é <strong>inteiramente opcional</strong>, mas tende a ajudar a ter tudo funcionando com rapidez e facilidade."
     },
     "pages": {
       "channel": "Canal",
@@ -628,13 +628,13 @@
       "profile": "Perfil",
       "public": "Público",
       "settings": "Definições",
-      "thread": "Conversas",
-      "threads": "Conversas"
+      "thread": "Tópico",
+      "threads": "Tópicos"
     },
     "private": {
-      "badRecipientError": "Os destinatários devem começar com @",
-      "blankFieldError": "Por favor, forneça o assunto e o texto em mensagens privadas",
-      "noRecipientError": "Você deve especificar pelo menos um destinatário válido da lista. Escrevendo os destinatários exclusivamente pelo nome não é suportado.",
+      "badRecipientError": "Destinatári@s devem começar com @",
+      "blankFieldError": "Por favor, forneça o assunto e o texto nas mensagens privadas",
+      "noRecipientError": "Você deve especificar pelo menos uma pessoa destinatária da lista. Escrevendo as destinatárias exclusivamente pelo nome não é suportado.",
       "postPrivateMessage": "Postar mensagem privada",
       "privateMessages": "Mensagens privadas",
       "title": "Mensagens privadas"
@@ -642,18 +642,18 @@
     "profile": {
       "addToGroup": "Adicionar ao grupo",
       "block": "Bloquear e excluir",
-      "blocked": "Bloqueados e mensagens excluídas!",
-      "blockedButNotDeleted": "Falha ao excluir mensagens, mas o usuário está bloqueado.",
+      "blocked": "Bloquead@ e mensagens excluídas!",
+      "blockedButNotDeleted": "Falha ao excluir mensagens, mas a pessoa está bloqueado.",
       "blocking": "Bloqueados",
       "blockingUs": "Bloqueando {name}",
-      "chooseGroupFirst": "Por favor, escolha um grupo primeiro",
+      "chooseGroupFirst": "Por favor, primeiro escolha um grupo",
       "downloadFollowing": "Baixar lista de amigos",
       "downloadLatestMessages": "Baixe as últimas mensagens para o usuário",
       "downloadProfile": "Baixar perfil",
       "enterMnemonicCodeAbout": "Digite o código mnemônico abaixo para restaurar sua chave de feed.",
       "enterMnemonicCodePlaceholder": "Código Mnemônico",
       "enterMnemonicCodeWarning": "AVISO: Isso sobrescreverá sua chave de feed atual!",
-      "exportKey": "Exportar chave de alimentação para o código mnemônico",
+      "exportKey": "Exportar a chave de feed para o código mnemônico",
       "failedToRemoveFeed": "Falha ao remover feed",
       "follow": "Seguir",
       "followed": "Seguid@!",
@@ -661,9 +661,9 @@
       "following": "Seguindo",
       "groupDropdownPlaceholder": "Adicionar ao grupo",
       "lastXMessagesFor": "Últimas {count} mensagens para",
-      "loadKey": "Carregar a chave de alimentação do código mnemônico",
+      "loadKey": "Carregar a chave de feed do código mnemônico",
       "loadMore": "Carregue mais",
-      "profileDescriptionPlaceholder": "Descrição (comparação é suportada)",
+      "profileDescriptionPlaceholder": "Descrição (markdown é suportado)",
       "profileNamePlaceholder": "Seu nome / apelido",
       "reloadAfterImport": "Por favor recarregue a janela para começar a usar o feed restaurado",
       "removeFeed": "Remover feed",
@@ -671,13 +671,13 @@
       "restoreFeed": "Restaurar feed",
       "saveProfile": "Salvar perfil",
       "sendMessage": "Enviar mensagem",
-      "showMnemonicCodeAbout": "Um código mnemônico foi gerado a partir da sua chave de alimentação privada.",
-      "showMnemonicCodeWarning": "Este código pode ser usado para restaurar sua identidade mais tarde. Armazene este um lugar seguro.",
-      "title": "Nome do {profile}",
+      "showMnemonicCodeAbout": "Um código mnemônico foi gerado a partir da sua chave privada de feed.",
+      "showMnemonicCodeWarning": "Este código pode ser usado para restaurar sua identidade mais tarde. Armazene-a em um lugar seguro.",
+      "title": "{name} do perfil",
       "unblock": "Desbloquear",
       "unblocked": "Desbloquead@!",
       "unfollow": "Deixar de seguir",
-      "unfollowed": "Desseguido"
+      "unfollowed": "Desseguid@!"
     },
     "public": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
@@ -688,7 +688,7 @@
       "filterOnlyChannels": "Mostrar apenas estes canais:",
       "filterOnlyDirectFollow": "Só mostrar postagens de pessoas que você segue",
       "filterOnlyGroups": "Mostrar apenas estes grupos:",
-      "filterOnlyThreads": "Ocultar respostas (mostre apenas a primeira mensagem de uma conversa)",
+      "filterOnlyThreads": "Ocultar respostas (mostre apenas a primeira mensagem de um tópico)",
       "filters": "Filtros",
       "groupsOptional": "Grupos (opcional)",
       "hideFilters": "Ocultar filtros",
@@ -699,39 +699,39 @@
     },
     "search": {
       "searchLimitNote": "Pesquisando as {depth} postagens mais recentes, classificados pelo mais recente, até {results} resultados",
-      "title": "Resultados da pesquisa para \"{search}"
+      "title": "Resultados da pesquisa para \"{search}\""
     },
     "settings": {
       "advanced": "AVANÇADO",
-      "appTitle": "Título do Aplicativo",
+      "appTitle": "Título do Aplicativo:",
       "appTitlePlaceholder": "(Use o padrão)",
-      "autorefresh": "Atualizar automaticamente mensagens ao percorrer até o topo",
-      "capsKey": "Key Caps (deixe em branco para usar o padrão):",
+      "autorefresh": "Atualizar as mensagens automaticamente quando rolar até o topo",
+      "capsKey": "Tecla Caps (deixe em branco para usar o padrão):",
       "capsKeyPlaceholder": "(Use o padrão)",
       "capsKeyWarning": "(Apenas mude isso se você realmente sabe o que está fazendo.)",
       "colorTheme": "Tema de cor:",
       "detailedLogging": "Ativar registro detalhado",
       "dhtEnabled": "Ativar conexões diretas de DHT (Distributed Hash Table)",
       "directFollows": "(apenas pessoas que você segue)",
-      "highHopCountWarning": "AVISO: Um salto maior que 2 provavelmente vão diminuir esse aplicativo até o ponto que é inutilizável.Use por sua conta e risco.",
+      "highHopCountWarning": "AVISO: Um salto maior que 2 provavelmente deixará esse aplicativo devagar até o ponto que será inutilizável. Use por sua conta e risco.",
       "language": "Idioma:",
-      "refreshForChanges": "Você pode ter que atualizar seu navegador para que essas alterações entrem em vigor.",
+      "refreshForChanges": "Talvez você tenha que atualizar seu navegador para que essas alterações entrem em vigor.",
       "replicateHops": "Número de saltos para replicar:",
       "searchDepth": "Quantas mensagens para indexar ao procurar:",
       "title": "Definições",
       "useSystemDefault": "(Use o padrão do sistema)"
     },
     "ssb-msg": {
-      "threadTitlePlaceholder": "uma conversa"
+      "threadTitlePlaceholder": "um tópico"
     },
     "thread": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
       "blockingReplies": "Essas pessoas estão bloqueando você e não verão sua resposta:",
-      "postReply": "Resposta a postagem",
-      "title": "Conversa \"{title}\""
+      "postReply": "Postar resposta",
+      "title": "Tópico \"{title}\""
     },
     "threads": {
-      "title": "Conversas"
+      "title": "Tópicos"
     }
   }
 }
