@@ -9,7 +9,7 @@ module.exports = function (componentsState) {
   function getQuery(SSB, onlyDirectFollow, onlyThreads, onlyChannels,
                     channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb) {
 
-  const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.dbOperators
+    const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.dbOperators
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.getGraphSync()
@@ -27,7 +27,9 @@ module.exports = function (componentsState) {
 
     let groupFilter = null
     if (onlyGroups && onlyGroupsList.length > 0) {
-      // Groups are asynchronous, so we've got as many async calls to make as we have groups to look for, so this is going to take some work.
+      // Groups are asynchronous, so we've got as many async calls to
+      // make as we have groups to look for, so this is going to take
+      // some work.
       let needGroupMembersFor = onlyGroupsList.length
       let allMembers = []
       for (g in onlyGroupsList) {
@@ -46,7 +48,6 @@ module.exports = function (componentsState) {
         })
       }
     } else {
-      // No groups, so nothing asynchronous - return immediately.
       if (onlyThreads)
         cb(null, and(or(type('post'), type('about')), isRoot(), isPublic(), feedFilter, channelFilter, hideChannelFilter))
       else
@@ -146,14 +147,14 @@ module.exports = function (componentsState) {
       loadMoreCB: function(err, SSB) {
         var self = this
 
-        const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         getQuery(SSB, this.onlyDirectFollow, this.onlyThreads,
           this.onlyChannels, this.onlyChannelsList,
           this.hideChannels, this.hideChannelsList,
           this.onlyGroups, this.onlyGroupsList,
           (err, query) => {
           SSB.db.query(
-            query,
+            where(query),
             startFrom(self.offset),
             paginate(self.pageSize),
             descending(),
@@ -182,7 +183,7 @@ module.exports = function (componentsState) {
       renderPublicCB: function(err, SSB) {
         var self = this
 
-        const { startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         componentsState.newPublicMessages = false
 
         this.isRefreshing = true
@@ -196,7 +197,7 @@ module.exports = function (componentsState) {
           this.onlyGroups, this.onlyGroupsList,
           (err, query) => {
           SSB.db.query(
-            query,
+            where(query),
             startFrom(self.offset),
             paginate(self.pageSize),
             descending(),

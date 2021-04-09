@@ -559,9 +559,19 @@ module.exports = function () {
       },
 
       loadMoreCallback: function (err, SSB) {
-        const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         SSB.db.query(
-          and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
+          where(
+            and(
+              author(this.feedId),
+              or(
+                type('post'),
+                type('about'),
+                type('contact')
+              ),
+              isPublic()
+            )
+          ),
           startFrom(this.offset),
           paginate(25),
           descending(),
@@ -573,7 +583,7 @@ module.exports = function () {
       },
 
       renderFollowsCallback: function (err, SSB) {
-        const { and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         var self = this
 
         self.isSelf = (SSB.net.id == this.feedId)
@@ -602,7 +612,17 @@ module.exports = function () {
 
         console.time("latest 25 profile messages")
         SSB.db.query(
-          and(author(this.feedId), or(type('post'), type('about'), type('contact')), isPublic()),
+          where(
+            and(
+              author(this.feedId),
+              or(
+                type('post'),
+                type('about'),
+                type('contact')
+              ),
+              isPublic()
+            )
+          ),
           startFrom(this.offset),
           paginate(25),
           descending(),

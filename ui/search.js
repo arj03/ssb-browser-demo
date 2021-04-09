@@ -32,13 +32,15 @@ module.exports = function () {
       },
 
       loadMoreCB: function(err, SSB) {
-        const { and, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
+        const { where, or, author, isPublic, type, key, descending, paginate, toCallback } = SSB.dbOperators
         this.searchDepth = SSB.search.depth
         try {
           SSB.search.fullTextSearch(this.search, (err, results) => {
             if (results && results.length > 0) {
               SSB.db.query(
-                and(or(...results.slice(0, 50).map(x => key(x.id)))),
+                where(
+                  or(...results.slice(0, 50).map(x => key(x.id)))
+                ),
                 descending(),
                 paginate(this.pageSize),
                 toCallback((err, answer) => {

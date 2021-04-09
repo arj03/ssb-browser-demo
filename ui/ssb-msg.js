@@ -255,7 +255,7 @@ Vue.component('ssb-msg', {
         this.react('Unlike')
     },
     renderMessage: function (err, SSB) {
-      const { and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
+      const { where, and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
 
       this.emojiOptionsFavorite = this.emojiOptions.slice(0, 3)
       this.emojiOptionsMore = this.emojiOptions.slice(3, this.emojiOptions.length).map((x) => { return { name: x } })
@@ -274,7 +274,12 @@ Vue.component('ssb-msg', {
 
           // Try to find the next-to-latest profile update so we can show what changed.
           SSB.db.query(
-            and(author(this.msg.value.content.about), about(this.msg.value.content.about)),
+            where(
+              and(
+                author(this.msg.value.content.about),
+                about(this.msg.value.content.about)
+              )
+            ),
             descending(),
             toCallback((err, msgs) => {
               var foundOurMsg = false
@@ -408,7 +413,7 @@ Vue.component('ssb-msg', {
       if (!this.msg.key) return
 
       SSB.db.query(
-        and(votesFor(this.msg.key)),
+        where(votesFor(this.msg.key)),
         toCallback((err, msgs) => {    
           if (err) {
             console.log("Error getting votes: " + err)
@@ -448,7 +453,7 @@ Vue.component('ssb-msg', {
 
       if (this.msg.key != this.thread) {
         SSB.db.query(
-          and(hasRoot(this.msg.key)),
+          where(hasRoot(this.msg.key)),
           toCallback((err, msgs) => {
             if (err) return console.error("error getting root", err)
             this.forks = msgs.filter(m => m.value.content.type == 'post' && m.value.content.fork == this.msg.value.content.root)
@@ -467,7 +472,7 @@ Vue.component('ssb-msg', {
       }
 
       SSB.db.query(
-        and(mentions(this.msg.key)),
+        where(mentions(this.msg.key)),
         toCallback((err, results) => {
           this.mentions = results
         })

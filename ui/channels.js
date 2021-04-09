@@ -44,7 +44,7 @@ module.exports = function (componentsState) {
       },
 
       renderChannelsCB: function(err, SSB) {
-        const { and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
         // Get favorite channels from preferences.
@@ -52,7 +52,6 @@ module.exports = function (componentsState) {
 
         console.time("channel list")
 
-        
         const resultCallback = toCallback((err, answer) => {
           if (!err) {
             var newChannels = {}
@@ -100,7 +99,13 @@ module.exports = function (componentsState) {
         if(this.sortMode == "recent") {
           // Only look at the most recent posts.
           SSB.db.query(
-            and(not(channel('')), type('post'), isPublic()),
+            where(
+              and(
+                not(channel('')),
+                type('post'),
+                isPublic()
+              )
+            ),
             descending(),
             startFrom(0),
             paginate(500),
