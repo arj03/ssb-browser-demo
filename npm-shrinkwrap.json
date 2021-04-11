@@ -4732,9 +4732,9 @@
       }
     },
     "node_modules/jitdb": {
-      "version": "3.0.1",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.1.tgz",
-      "integrity": "sha512-q9Wl1vRNumFNVPpDbpWwSVO1V4BUHxdN1gGMsPMSTzTZ344qwsAg9ZBo0Xe0BVxdxhAjco5qpVWyoeMUnc6fEg==",
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.2.tgz",
+      "integrity": "sha512-8wsv+QlJNaYPH6RHb3HlwheqAKAxsTlFezhF3oTpYLyvrWroX2XDWbXdLOmDb27JviHvjwDV4CXw9mlL/q1new==",
       "dependencies": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -13515,9 +13515,9 @@
       }
     },
     "jitdb": {
-      "version": "3.0.1",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.1.tgz",
-      "integrity": "sha512-q9Wl1vRNumFNVPpDbpWwSVO1V4BUHxdN1gGMsPMSTzTZ344qwsAg9ZBo0Xe0BVxdxhAjco5qpVWyoeMUnc6fEg==",
+      "version": "3.0.2",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.2.tgz",
+      "integrity": "sha512-8wsv+QlJNaYPH6RHb3HlwheqAKAxsTlFezhF3oTpYLyvrWroX2XDWbXdLOmDb27JviHvjwDV4CXw9mlL/q1new==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
