@@ -50,10 +50,16 @@ module.exports = function () {
       },
 
       loadMoreCB: function(err, SSB) {
-        const { and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
+        const { where, and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         try {
           SSB.db.query(
-            and(or(...this.groupMembers.map(x => author(x))), isPublic(), type('post')),
+            where(
+              and(
+                or(...this.groupMembers.map(x => author(x))),
+                isPublic(),
+                type('post')
+              )
+            ),
             descending(),
             startFrom(this.offset),
             paginate(this.pageSize),

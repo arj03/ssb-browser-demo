@@ -117,7 +117,7 @@ module.exports = function () {
       },
 
       render: function(SSB, rootMsg) {
-        const { and, hasRoot, toCallback } = SSB.dbOperators
+        const { where, and, hasRoot, toCallback } = SSB.dbOperators
 
         var self = this
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
@@ -127,8 +127,10 @@ module.exports = function () {
         document.title = this.$root.appTitle + " - " + this.$root.$t('thread.title', { title: this.title })
 
         SSB.db.query(
-          and(hasRoot(this.fixedRootId)),
+          where(hasRoot(this.fixedRootId)),
           toCallback((err, msgs) => {
+            if (err) return console.error(err)
+
             var allMessages = []
             if (msgs.length > 0) {
               this.latestMsgIdInThread = msgs[msgs.length-1].key

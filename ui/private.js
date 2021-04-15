@@ -90,7 +90,7 @@ module.exports = function (componentsState) {
       },
 
       renderPrivateCB: function(err, SSB) {
-        const { and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
+        const { where, and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
         document.body.classList.add('refreshing')
 
         var self = this
@@ -110,7 +110,13 @@ module.exports = function (componentsState) {
         console.time("private messages")
 
         SSB.db.query(
-          and(isPrivate(), isRoot(), type('post')),
+          where(
+            and(
+              isPrivate(),
+              isRoot(),
+              type('post')
+            )
+          ),
           descending(),
           toCallback((err, results) => {
             this.messages = results

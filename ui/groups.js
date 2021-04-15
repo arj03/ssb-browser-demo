@@ -56,13 +56,21 @@ module.exports = function (componentsState) {
       },
 
       fetchLatestMessageCB: function(err, SSB, groupId) {
-        const { and, or, author, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, or, author, not, isPublic, type, channel,
+                startFrom, paginate, descending, toCallback } = SSB.dbOperators
+
         var self = this
         for (g in this.groups) {
           if (this.groups[g].id == groupId) {
             try {
               SSB.db.query(
-                and(or(...this.groups[g].members.map(x => author(x))), isPublic(), type('post')),
+                where(
+                  and(
+                    or(...this.groups[g].members.map(x => author(x))),
+                    isPublic(),
+                    type('post')
+                  )
+                ),
                 descending(),
                 paginate(1),
                 toCallback((err, answer) => {

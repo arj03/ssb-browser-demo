@@ -22,7 +22,7 @@ module.exports = function () {
 
     methods: {
       createGetSameRoot: function(SSB) {
-        const { and, author, type, toCallback, hasRoot } = SSB.dbOperators
+        const { where, and, author, type, toCallback, hasRoot } = SSB.dbOperators
   
         return function(read) {
           return function readable (end, cb) {
@@ -31,7 +31,12 @@ module.exports = function () {
                 const root = data.value.content.root ? data.value.content.root : data.key
                 // Get all messages with the same root, but only the ones after the user's most recent post.
                 SSB.db.query(
-                  and(hasRoot(root), type('post')),
+                  where(
+                    and(
+                      hasRoot(root),
+                      type('post')
+                    )
+                  ),
                   toCallback((err, results) => {
                     // Look through the results from the end backwards and look for a post from the user.
                     // If we find one, stop passing along results, so we only have the posts since the user last replied.
@@ -56,7 +61,8 @@ module.exports = function () {
       },
 
       renderCB: function (err, SSB) {
-        const { and, mentions, contact, author, type, toCallback, toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
+        const { where, and, mentions, contact, author, type, toCallback,
+                toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
 
         var self = this
 
@@ -67,7 +73,7 @@ module.exports = function () {
             // Messages directly mentioning the user.
             pull(
               SSB.db.query(
-                and(mentions(SSB.net.id)),
+                where(mentions(SSB.net.id)),
                 descending(),
                 paginate(25),
                 toPullStream()
@@ -78,7 +84,12 @@ module.exports = function () {
             // Messages the user has posted.
             pull(
               SSB.db.query(
-                and(author(SSB.net.id), type('post')),
+                where(
+                  and(
+                    author(SSB.net.id),
+                    type('post')
+                  )
+                ),
                 descending(),
                 paginate(25),
                 toPullStream()
@@ -88,7 +99,7 @@ module.exports = function () {
             ),
             pull(
               SSB.db.query(
-                contact(SSB.net.id),
+                where(contact(SSB.net.id)),
                 descending(),
                 paginate(25),
                 toPullStream()

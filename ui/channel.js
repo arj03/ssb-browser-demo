@@ -45,10 +45,18 @@ module.exports = function () {
       },
 
       loadMoreCB: function(err, SSB) {
-        const { and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
+        const { where, and, or, channel, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
         SSB.db.query(
-          and(or(channel(this.channel), channel("#" + this.channel)), isPublic()),
-          and(type('post')),
+          where(
+            and(
+              or(
+                channel(this.channel),
+                channel("#" + this.channel)
+              ),
+              type('post'),
+              isPublic()
+            )
+          ),
           descending(),
           startFrom(this.offset),
           paginate(this.pageSize),
