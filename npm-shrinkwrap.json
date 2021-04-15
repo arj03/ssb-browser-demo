@@ -3693,6 +3693,11 @@
         "node": ">=0.8.x"
       }
     },
+    "node_modules/events-to-array": {
+      "version": "1.1.2",
+      "resolved": "https://registry.npmjs.org/events-to-array/-/events-to-array-1.1.2.tgz",
+      "integrity": "sha1-LUH1Y+H+QA7Uli/hpNXGp1Od9/Y="
+    },
     "node_modules/evp_bytestokey": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/evp_bytestokey/-/evp_bytestokey-1.0.3.tgz",
@@ -4732,9 +4737,9 @@
       }
     },
     "node_modules/jitdb": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.2.tgz",
-      "integrity": "sha512-8wsv+QlJNaYPH6RHb3HlwheqAKAxsTlFezhF3oTpYLyvrWroX2XDWbXdLOmDb27JviHvjwDV4CXw9mlL/q1new==",
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.3.tgz",
+      "integrity": "sha512-BTXAauBdig83EUkBFdWY9dzdf8wB5DlJ4aa/uCMwmf2eki7DhQBT7rrJFuscR/Mkmqt00G1oxiqa4gnA+oPJ6Q==",
       "dependencies": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -4754,6 +4759,7 @@
         "push-stream": "^11.0.0",
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
+        "tap-bail": "^1.0.0",
         "traverse": "^0.6.6",
         "typedarray-to-buffer": "^4.0.0",
         "typedfastbitset": "~0.2.1"
@@ -4780,7 +4786,6 @@
       "version": "3.14.1",
       "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz",
       "integrity": "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==",
-      "dev": true,
       "dependencies": {
         "argparse": "^1.0.7",
         "esprima": "^4.0.0"
@@ -7795,9 +7800,9 @@
       }
     },
     "node_modules/ssb-db2": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.0.0.tgz",
-      "integrity": "sha512-xDl3GyhLNC62KDfzGa+ueCLUL0uIvu92n282E5vVnPTG+pJg1qCDSqVG6tZBbcVKLrSgar6j0yLcT9QjrKR2VQ==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.0.2.tgz",
+      "integrity": "sha512-ylN4uqh18gJjDrkaYWsuEEMV4rCLcKuYIkL26hgtAVJm9AfuOTBIdhZZHdfeAMd2ZkcqAmIR62XUeQL3czvOsA==",
       "dependencies": {
         "async-append-only-log": "^3.0.8",
         "atomically-universal": "^0.1.1",
@@ -7808,7 +7813,7 @@
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
         "hoox": "0.0.1",
-        "jitdb": "^3.0.0",
+        "jitdb": "^3.0.3",
         "level": "^6.0.1",
         "level-codec": "^9.0.2",
         "lodash.debounce": "^4.0.8",
@@ -8559,6 +8564,32 @@
       "dev": true,
       "dependencies": {
         "acorn-node": "^1.2.0"
+      }
+    },
+    "node_modules/tap-bail": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/tap-bail/-/tap-bail-1.0.0.tgz",
+      "integrity": "sha1-xajMcRkfA3k4zVZ/l72jypcAGZo=",
+      "dependencies": {
+        "tap-parser": "^5.3.3"
+      },
+      "bin": {
+        "tap-bail": "bin/tap-bail.js"
+      }
+    },
+    "node_modules/tap-parser": {
+      "version": "5.4.0",
+      "resolved": "https://registry.npmjs.org/tap-parser/-/tap-parser-5.4.0.tgz",
+      "integrity": "sha512-BIsIaGqv7uTQgTW1KLTMNPSEQf4zDDPgYOBRdgOfuB+JFOLRBfEu6cLa/KvMvmqggu1FKXDfitjLwsq4827RvA==",
+      "dependencies": {
+        "events-to-array": "^1.0.1",
+        "js-yaml": "^3.2.7"
+      },
+      "bin": {
+        "tap-parser": "bin/cmd.js"
+      },
+      "optionalDependencies": {
+        "readable-stream": "^2"
       }
     },
     "node_modules/temp-dir": {
@@ -12674,6 +12705,11 @@
       "integrity": "sha512-/46HWwbfCX2xTawVfkKLGxMifJYQBWMwY1mjywRtb4c9x8l5NP3KoJtnIOiL1hfdRkIuYhETxQlo62IF8tcnlg==",
       "dev": true
     },
+    "events-to-array": {
+      "version": "1.1.2",
+      "resolved": "https://registry.npmjs.org/events-to-array/-/events-to-array-1.1.2.tgz",
+      "integrity": "sha1-LUH1Y+H+QA7Uli/hpNXGp1Od9/Y="
+    },
     "evp_bytestokey": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/evp_bytestokey/-/evp_bytestokey-1.0.3.tgz",
@@ -13515,9 +13551,9 @@
       }
     },
     "jitdb": {
-      "version": "3.0.2",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.2.tgz",
-      "integrity": "sha512-8wsv+QlJNaYPH6RHb3HlwheqAKAxsTlFezhF3oTpYLyvrWroX2XDWbXdLOmDb27JviHvjwDV4CXw9mlL/q1new==",
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.0.3.tgz",
+      "integrity": "sha512-BTXAauBdig83EUkBFdWY9dzdf8wB5DlJ4aa/uCMwmf2eki7DhQBT7rrJFuscR/Mkmqt00G1oxiqa4gnA+oPJ6Q==",
       "requires": {
         "atomically-universal": "^0.1.0",
         "binary-search-bounds": "^2.0.4",
@@ -13537,6 +13573,7 @@
         "push-stream": "^11.0.0",
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
+        "tap-bail": "^1.0.0",
         "traverse": "^0.6.6",
         "typedarray-to-buffer": "^4.0.0",
         "typedfastbitset": "~0.2.1"
@@ -13559,7 +13596,6 @@
       "version": "3.14.1",
       "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.1.tgz",
       "integrity": "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==",
-      "dev": true,
       "requires": {
         "argparse": "^1.0.7",
         "esprima": "^4.0.0"
@@ -16063,9 +16099,9 @@
       }
     },
     "ssb-db2": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.0.0.tgz",
-      "integrity": "sha512-xDl3GyhLNC62KDfzGa+ueCLUL0uIvu92n282E5vVnPTG+pJg1qCDSqVG6tZBbcVKLrSgar6j0yLcT9QjrKR2VQ==",
+      "version": "2.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.0.2.tgz",
+      "integrity": "sha512-ylN4uqh18gJjDrkaYWsuEEMV4rCLcKuYIkL26hgtAVJm9AfuOTBIdhZZHdfeAMd2ZkcqAmIR62XUeQL3czvOsA==",
       "requires": {
         "async-append-only-log": "^3.0.8",
         "atomically-universal": "^0.1.1",
@@ -16076,7 +16112,7 @@
         "flumecodec": "0.0.1",
         "flumelog-offset": "3.4.4",
         "hoox": "0.0.1",
-        "jitdb": "^3.0.0",
+        "jitdb": "^3.0.3",
         "level": "^6.0.1",
         "level-codec": "^9.0.2",
         "lodash.debounce": "^4.0.8",
@@ -16732,6 +16768,24 @@
       "dev": true,
       "requires": {
         "acorn-node": "^1.2.0"
+      }
+    },
+    "tap-bail": {
+      "version": "1.0.0",
+      "resolved": "https://registry.npmjs.org/tap-bail/-/tap-bail-1.0.0.tgz",
+      "integrity": "sha1-xajMcRkfA3k4zVZ/l72jypcAGZo=",
+      "requires": {
+        "tap-parser": "^5.3.3"
+      }
+    },
+    "tap-parser": {
+      "version": "5.4.0",
+      "resolved": "https://registry.npmjs.org/tap-parser/-/tap-parser-5.4.0.tgz",
+      "integrity": "sha512-BIsIaGqv7uTQgTW1KLTMNPSEQf4zDDPgYOBRdgOfuB+JFOLRBfEu6cLa/KvMvmqggu1FKXDfitjLwsq4827RvA==",
+      "requires": {
+        "events-to-array": "^1.0.1",
+        "js-yaml": "^3.2.7",
+        "readable-stream": "^2"
       }
     },
     "temp-dir": {
