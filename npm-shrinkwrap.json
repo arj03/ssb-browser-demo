@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "https://github.com/arj03/ssb-browser-core#db2-2",
+        "ssb-browser-core": "^10.0.0",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -7670,10 +7670,10 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "9.3.4",
-      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#7a1476f6e56c92eb2dd500cc8a72d9d7d7cc3332",
+      "version": "10.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.0.tgz",
+      "integrity": "sha512-lhyiQeHu98WS9XuNBK0if2OKaRjiN72768/SLvPqNWzOFefztX18BqYWA7F4w6IC1VPdGjHwYiv+6vPIDd89pg==",
       "hasInstallScript": true,
-      "license": "Beerware",
       "dependencies": {
         "atomically-universal": "^0.1.1",
         "epidemic-broadcast-trees": "^8.0.1",
@@ -7690,7 +7690,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-blob-files": "https://github.com/ssbc/ssb-blob-files#browser-support",
+        "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^3.0.0",
         "ssb-db2": "^2.0.0",
@@ -15960,7 +15960,7 @@
     },
     "ssb-blob-files": {
       "version": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#a9d8b02fa64eee4209266446bf0d0c879d141966",
-      "from": "ssb-blob-files@https://github.com/ssbc/ssb-blob-files#browser-support",
+      "from": "ssb-blob-files@git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
       "requires": {
         "piexifjs": "^1.0.6",
         "pull-box-stream": "^1.0.13",
@@ -15972,8 +15972,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#7a1476f6e56c92eb2dd500cc8a72d9d7d7cc3332",
-      "from": "ssb-browser-core@https://github.com/arj03/ssb-browser-core#db2-2",
+      "version": "10.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.0.tgz",
+      "integrity": "sha512-lhyiQeHu98WS9XuNBK0if2OKaRjiN72768/SLvPqNWzOFefztX18BqYWA7F4w6IC1VPdGjHwYiv+6vPIDd89pg==",
       "requires": {
         "atomically-universal": "^0.1.1",
         "epidemic-broadcast-trees": "^8.0.1",
@@ -15990,7 +15991,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-blob-files": "https://github.com/ssbc/ssb-blob-files#browser-support",
+        "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^3.0.0",
         "ssb-db2": "^2.0.0",
