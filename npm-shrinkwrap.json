@@ -26,7 +26,7 @@
         "ssb-mentions": "^0.5.2",
         "ssb-ref": "^2.14.3",
         "ssb-sort": "^1.1.3",
-        "ssb-threads": "^7.0.0",
+        "ssb-threads": "^8.0.0",
         "vue": "^2.6.12",
         "vue-i18n": "^8.22.4",
         "vue-router": "^3.5.1",
@@ -7666,7 +7666,7 @@
     },
     "node_modules/ssb-browser-core": {
       "version": "9.3.4",
-      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#845ff368bee7b8af43adcde3be2634ef6c3121a5",
+      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#7a1476f6e56c92eb2dd500cc8a72d9d7d7cc3332",
       "hasInstallScript": true,
       "license": "Beerware",
       "dependencies": {
@@ -7687,7 +7687,7 @@
         "secret-stack": "^6.3.2",
         "ssb-blob-files": "https://github.com/ssbc/ssb-blob-files#browser-support",
         "ssb-caps": "^1.1.0",
-        "ssb-conn": "^2.0.2",
+        "ssb-conn": "^3.0.0",
         "ssb-db2": "^2.0.0",
         "ssb-dht-invite": "^2.0.0",
         "ssb-friends": "^4.4.5",
@@ -7706,9 +7706,9 @@
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
     },
     "node_modules/ssb-conn": {
-      "version": "2.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-2.1.0.tgz",
-      "integrity": "sha512-cs3AVZ0QVvhbLkSuP2LIAoJv/6t5pMtri8aD/F1rmSFarz81RC0nks//uuziH4R2946mH3SHb02G3ExAyzvl1g==",
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-3.0.0.tgz",
+      "integrity": "sha512-OU/HbTFplTHN5uop4sp4H6HN5tu59ZkrR3F772wqqs0BfcW26+iKnWPT2nVd3DsFPhIsbthqwzwnxRO0o7OlbQ==",
       "dependencies": {
         "debug": "^4.3.0",
         "has-network2": ">=0.0.3",
@@ -8073,9 +8073,9 @@
       }
     },
     "node_modules/ssb-threads": {
-      "version": "7.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-threads/-/ssb-threads-7.0.0.tgz",
-      "integrity": "sha512-/skrjR360Ltimw//PRJS5tgCJIYzYa7guhzxaDQ4aBJeVrVnI9KKl0yJE3bjtcPUx4XefSbfEdbXvuJaEaLIfg==",
+      "version": "8.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-threads/-/ssb-threads-8.0.0.tgz",
+      "integrity": "sha512-xhFVoXKGbQHnO1KS+SDqBRJep+zEhsHTn//KQnRlXR3wCofCVA9oKjfry2JIrMdKdUwB8xt7yS5cnT5GOVURXQ==",
       "dependencies": {
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.2",
@@ -15936,7 +15936,7 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#845ff368bee7b8af43adcde3be2634ef6c3121a5",
+      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#7a1476f6e56c92eb2dd500cc8a72d9d7d7cc3332",
       "from": "ssb-browser-core@https://github.com/arj03/ssb-browser-core#db2-2",
       "requires": {
         "atomically-universal": "^0.1.1",
@@ -15956,7 +15956,7 @@
         "secret-stack": "^6.3.2",
         "ssb-blob-files": "https://github.com/ssbc/ssb-blob-files#browser-support",
         "ssb-caps": "^1.1.0",
-        "ssb-conn": "^2.0.2",
+        "ssb-conn": "^3.0.0",
         "ssb-db2": "^2.0.0",
         "ssb-dht-invite": "^2.0.0",
         "ssb-friends": "^4.4.5",
@@ -15975,9 +15975,9 @@
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
     },
     "ssb-conn": {
-      "version": "2.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-2.1.0.tgz",
-      "integrity": "sha512-cs3AVZ0QVvhbLkSuP2LIAoJv/6t5pMtri8aD/F1rmSFarz81RC0nks//uuziH4R2946mH3SHb02G3ExAyzvl1g==",
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-3.0.0.tgz",
+      "integrity": "sha512-OU/HbTFplTHN5uop4sp4H6HN5tu59ZkrR3F772wqqs0BfcW26+iKnWPT2nVd3DsFPhIsbthqwzwnxRO0o7OlbQ==",
       "requires": {
         "debug": "^4.3.0",
         "has-network2": ">=0.0.3",
@@ -16311,9 +16311,9 @@
       }
     },
     "ssb-threads": {
-      "version": "7.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-threads/-/ssb-threads-7.0.0.tgz",
-      "integrity": "sha512-/skrjR360Ltimw//PRJS5tgCJIYzYa7guhzxaDQ4aBJeVrVnI9KKl0yJE3bjtcPUx4XefSbfEdbXvuJaEaLIfg==",
+      "version": "8.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-threads/-/ssb-threads-8.0.0.tgz",
+      "integrity": "sha512-xhFVoXKGbQHnO1KS+SDqBRJep+zEhsHTn//KQnRlXR3wCofCVA9oKjfry2JIrMdKdUwB8xt7yS5cnT5GOVURXQ==",
       "requires": {
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.2",
