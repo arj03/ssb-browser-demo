@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Dedupe pull-stream.
 sed -i 's/2.26.0/3.6.14/' node_modules/pull-async-filter/package.json
 rm -rf node_modules/pull-async-filter/node_modules/pull-stream

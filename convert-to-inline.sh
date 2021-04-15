@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 node node_modules/inline-source-cli/dist/index.js --compress false --attribute '' --root dist/ dist/index.html dist/index-inlined.html
 echo "Starting size is $(du dist/index-inlined.html | cut -f 1)k"
 for SVG in assets/*.svg; do
