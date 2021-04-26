@@ -1,11 +1,11 @@
 {
   "name": "ssb-browser-demo",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "version": "5.5.0",
+      "version": "5.5.1",
       "hasInstallScript": true,
       "license": "Beerware",
       "dependencies": {
@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^10.0.3",
+        "ssb-browser-core": "^10.0.4",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -7686,9 +7686,9 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "10.0.3",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.3.tgz",
-      "integrity": "sha512-Y6pxGhnl1/BsFCas8XLXCTnghhOT22jtjdv3S8zyjBdmgr+AbGK/3FtO4q7pPtKdYrVRITu1wwxUkZgRSd3J7w==",
+      "version": "10.0.4",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.4.tgz",
+      "integrity": "sha512-dIxnPnOYI+quoJ1+58H4RWMKlNAwJE+gDXdIw+9VXd8mKzPq7oDEw5Dn/1lInsjwK6chnfCh/7ryXcmPhQ8xGw==",
       "hasInstallScript": true,
       "dependencies": {
         "atomic-file-rw": "^0.2.1",
@@ -7715,7 +7715,7 @@
         "ssb-keys": "^8.0.2",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
-        "ssb-room-client": "^0.12.0",
+        "ssb-room-client": "^0.13.0",
         "ssb-sort": "^1.1.3",
         "ssb-validate": "^4.1.4",
         "ssb-ws": "^6.2.3"
@@ -7816,9 +7816,9 @@
       }
     },
     "node_modules/ssb-db2": {
-      "version": "2.1.1",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.1.1.tgz",
-      "integrity": "sha512-6A2vLmDpz454ttFV3iVEI0qCIPYgsOlBtM3PCKn0arRvBKQ86e3Grr1/gCcx68fz8yT4fTC1o9ikWiZ/uUGIdg==",
+      "version": "2.1.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.1.2.tgz",
+      "integrity": "sha512-FrH++v1qyoCVq9ykuyjvzvsjNEX8mpqY8DRt0bOvIENOeWTWHCA6AXlP8d6LU39CGlwjw6ftlZr4ObizYH4zSQ==",
       "dependencies": {
         "async-append-only-log": "^3.0.8",
         "atomic-file-rw": "^0.2.1",
@@ -8069,9 +8069,9 @@
       }
     },
     "node_modules/ssb-room-client": {
-      "version": "0.12.0",
-      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.12.0.tgz",
-      "integrity": "sha512-1VK9XpCvZU1E4hg0w0POYtOqfGtLyxaipMWI2Sruzii4p0nALTZ5B9GiI6JpBTSNIkRsfKJ+bScX3u3keCjrmQ==",
+      "version": "0.13.0",
+      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.13.0.tgz",
+      "integrity": "sha512-jQPv0D6M3mIsfIEyZYdDUfhaN+zj3xQMvaCdCxFmSVimiNlBbeKyu1YlbfqFlabex48Hnh/84kIVheQwnc9a0Q==",
       "dependencies": {
         "@minireq/browser": "^2.0.0",
         "@minireq/node": "^2.0.0",
@@ -15968,9 +15968,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "10.0.3",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.3.tgz",
-      "integrity": "sha512-Y6pxGhnl1/BsFCas8XLXCTnghhOT22jtjdv3S8zyjBdmgr+AbGK/3FtO4q7pPtKdYrVRITu1wwxUkZgRSd3J7w==",
+      "version": "10.0.4",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.4.tgz",
+      "integrity": "sha512-dIxnPnOYI+quoJ1+58H4RWMKlNAwJE+gDXdIw+9VXd8mKzPq7oDEw5Dn/1lInsjwK6chnfCh/7ryXcmPhQ8xGw==",
       "requires": {
         "atomic-file-rw": "^0.2.1",
         "epidemic-broadcast-trees": "^8.0.1",
@@ -15996,7 +15996,7 @@
         "ssb-keys": "^8.0.2",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
-        "ssb-room-client": "^0.12.0",
+        "ssb-room-client": "^0.13.0",
         "ssb-sort": "^1.1.3",
         "ssb-validate": "^4.1.4",
         "ssb-ws": "^6.2.3"
@@ -16096,9 +16096,9 @@
       }
     },
     "ssb-db2": {
-      "version": "2.1.1",
-      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.1.1.tgz",
-      "integrity": "sha512-6A2vLmDpz454ttFV3iVEI0qCIPYgsOlBtM3PCKn0arRvBKQ86e3Grr1/gCcx68fz8yT4fTC1o9ikWiZ/uUGIdg==",
+      "version": "2.1.2",
+      "resolved": "https://registry.npmjs.org/ssb-db2/-/ssb-db2-2.1.2.tgz",
+      "integrity": "sha512-FrH++v1qyoCVq9ykuyjvzvsjNEX8mpqY8DRt0bOvIENOeWTWHCA6AXlP8d6LU39CGlwjw6ftlZr4ObizYH4zSQ==",
       "requires": {
         "async-append-only-log": "^3.0.8",
         "atomic-file-rw": "^0.2.1",
@@ -16319,9 +16319,9 @@
       }
     },
     "ssb-room-client": {
-      "version": "0.12.0",
-      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.12.0.tgz",
-      "integrity": "sha512-1VK9XpCvZU1E4hg0w0POYtOqfGtLyxaipMWI2Sruzii4p0nALTZ5B9GiI6JpBTSNIkRsfKJ+bScX3u3keCjrmQ==",
+      "version": "0.13.0",
+      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.13.0.tgz",
+      "integrity": "sha512-jQPv0D6M3mIsfIEyZYdDUfhaN+zj3xQMvaCdCxFmSVimiNlBbeKyu1YlbfqFlabex48Hnh/84kIVheQwnc9a0Q==",
       "requires": {
         "@minireq/browser": "^2.0.0",
         "@minireq/node": "^2.0.0",
