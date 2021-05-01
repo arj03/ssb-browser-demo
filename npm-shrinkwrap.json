@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^10.0.4",
+        "ssb-browser-core": "^10.0.6",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -1819,9 +1819,9 @@
       }
     },
     "node_modules/atomic-file-rw": {
-      "version": "0.2.1",
-      "resolved": "https://registry.npmjs.org/atomic-file-rw/-/atomic-file-rw-0.2.1.tgz",
-      "integrity": "sha512-73oEZ7tkhd/7QjvsNts9saHY9BYJQWD4izzI/bKJmwVl/BGT7J6wBFUC5qxNlQZlFORguqfsTQwvJA1lm3RoFw==",
+      "version": "0.2.2",
+      "resolved": "https://registry.npmjs.org/atomic-file-rw/-/atomic-file-rw-0.2.2.tgz",
+      "integrity": "sha512-XZOcMIc32aIDxKFJGpYIPZ7H0p+Zmu3xAYyKDMmRgSQMNR97E8byl4tQa9vkYv4x8dNcYRQV8tw+KvtiKua0xQ==",
       "dependencies": {
         "idb-kv-store": "^4.5.0",
         "mutexify": "^1.3.1"
@@ -7686,12 +7686,12 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "10.0.4",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.4.tgz",
-      "integrity": "sha512-dIxnPnOYI+quoJ1+58H4RWMKlNAwJE+gDXdIw+9VXd8mKzPq7oDEw5Dn/1lInsjwK6chnfCh/7ryXcmPhQ8xGw==",
+      "version": "10.0.6",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.6.tgz",
+      "integrity": "sha512-ctqqcTQtoPGHgMEVsLDPeLmsBmVffxqptX5m+JWdyC8zhDGz1xiwUYa1dgSlYMPzNVvpp3tUC02uAH3c4jNVpQ==",
       "hasInstallScript": true,
       "dependencies": {
-        "atomic-file-rw": "^0.2.1",
+        "atomic-file-rw": "^0.2.2",
         "epidemic-broadcast-trees": "^8.0.1",
         "gossip-query": "^2.0.2",
         "obz": "^1.0.3",
@@ -7708,14 +7708,14 @@
         "secret-stack": "^6.3.2",
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
-        "ssb-conn": "^3.1.0",
+        "ssb-conn": "^3.2.1",
         "ssb-db2": "^2.1.1",
         "ssb-dht-invite": "^2.0.0",
         "ssb-friends": "^4.4.5",
         "ssb-keys": "^8.0.2",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
-        "ssb-room-client": "^0.13.0",
+        "ssb-room-client": "^0.14.0",
         "ssb-sort": "^1.1.3",
         "ssb-validate": "^4.1.4",
         "ssb-ws": "^6.2.3"
@@ -7727,9 +7727,9 @@
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
     },
     "node_modules/ssb-conn": {
-      "version": "3.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-3.1.0.tgz",
-      "integrity": "sha512-iehMfgcomhC51palOMgDXwmmXTwhuXbX8oOUdaoT6e25NviK+IBO47P2olmR7WrKUjEJ+MaPNHINgPa/qM3vLg==",
+      "version": "3.2.1",
+      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-3.2.1.tgz",
+      "integrity": "sha512-5Cv7kHeEdoDWzRaC3vHo8joSWQRB1Ckfmj9HhDfbIPTRQaA43HXWAiaH5c+kTBwW1IGP5JV1akNhcXTSLk5CIw==",
       "dependencies": {
         "debug": "^4.3.0",
         "has-network2": ">=0.0.3",
@@ -7741,9 +7741,9 @@
         "pull-ping": "^2.0.3",
         "pull-stream": "^3.6.14",
         "secret-stack-decorators": "1.1.0",
-        "ssb-conn-db": "~1.0.1",
+        "ssb-conn-db": "~1.0.2",
         "ssb-conn-hub": "~1.2.0",
-        "ssb-conn-query": "~1.2.0",
+        "ssb-conn-query": "~1.2.1",
         "ssb-conn-staging": "~1.0.0",
         "ssb-ref": "^2.14.3",
         "ssb-typescript": "^2.2.0",
@@ -7755,26 +7755,15 @@
       }
     },
     "node_modules/ssb-conn-db": {
-      "version": "1.0.1",
-      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-1.0.1.tgz",
-      "integrity": "sha512-lTXhHmJ9La7S+YFotLnvn+4uxX5lP+zDNS3N4zPnDDy/3f1AQI6jxEnRDmbhfWqrAEI2gy7Yu6LcgC5rX+MRDA==",
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-1.0.2.tgz",
+      "integrity": "sha512-P1YiK6RkUiKUgGRw/VjTMnNlm38e2uieRABVNtgZGAa0Gv3Lx5wIxKPcNLXLmgORlJQuhwLP3oAnx2dHZaVJhg==",
       "dependencies": {
-        "atomic-file": "^2.1.1",
+        "atomic-file-rw": "^0.2.1",
         "debug": "^4.3.1",
         "multiserver-address": "~1.0.1",
         "pull-notify": "~0.1.1",
-        "ssb-ref": "~2.13.9"
-      }
-    },
-    "node_modules/ssb-conn-db/node_modules/ssb-ref": {
-      "version": "2.13.9",
-      "resolved": "https://registry.npmjs.org/ssb-ref/-/ssb-ref-2.13.9.tgz",
-      "integrity": "sha512-TfatNqLvoP+eW/pMIbCmNcaoDq4R2k8jCtWkwDKx4AtluN/LwtyP931d5Mh+2gmzA04W7kxkr6f5ENGgdadMYg==",
-      "dependencies": {
-        "ip": "^1.1.3",
-        "is-canonical-base64": "^1.1.1",
-        "is-valid-domain": "~0.0.1",
-        "multiserver-address": "^1.0.1"
+        "ssb-ref": ">=2.13.9"
       }
     },
     "node_modules/ssb-conn-hub": {
@@ -7794,11 +7783,11 @@
       }
     },
     "node_modules/ssb-conn-query": {
-      "version": "1.2.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-1.2.0.tgz",
-      "integrity": "sha512-HPDsqzAq4NihV4IDIQ/sFV/kJ5ysiM9iV405SHHSfxHF9aGVmiduBnkH0YdqzynluHn4+Lfd59Od4FKErgGoSA==",
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-1.2.1.tgz",
+      "integrity": "sha512-mlJe2XBXODb1hXu/t+v8d9O7KCmGKcgIpk/xy+ogaGTILvPWSHxKzSuNe0X6DdSF7TDCaECNCRy5unJuNMK+4A==",
       "dependencies": {
-        "ssb-conn-db": "~1.0.1",
+        "ssb-conn-db": "~1.0.2",
         "ssb-conn-hub": "~1.2.0",
         "ssb-conn-staging": "~1.0.0"
       }
@@ -8069,9 +8058,9 @@
       }
     },
     "node_modules/ssb-room-client": {
-      "version": "0.13.0",
-      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.13.0.tgz",
-      "integrity": "sha512-jQPv0D6M3mIsfIEyZYdDUfhaN+zj3xQMvaCdCxFmSVimiNlBbeKyu1YlbfqFlabex48Hnh/84kIVheQwnc9a0Q==",
+      "version": "0.14.0",
+      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.14.0.tgz",
+      "integrity": "sha512-EMDMdk5INB373Zm3YaNnCx/lkGzgCEwEVqMOguM/dlk32MRo2VXkP0Bcgu1G+rZndgD70lnXDfaxp1yHy3SB7Q==",
       "dependencies": {
         "@minireq/browser": "^2.0.0",
         "@minireq/node": "^2.0.0",
@@ -11110,9 +11099,9 @@
       }
     },
     "atomic-file-rw": {
-      "version": "0.2.1",
-      "resolved": "https://registry.npmjs.org/atomic-file-rw/-/atomic-file-rw-0.2.1.tgz",
-      "integrity": "sha512-73oEZ7tkhd/7QjvsNts9saHY9BYJQWD4izzI/bKJmwVl/BGT7J6wBFUC5qxNlQZlFORguqfsTQwvJA1lm3RoFw==",
+      "version": "0.2.2",
+      "resolved": "https://registry.npmjs.org/atomic-file-rw/-/atomic-file-rw-0.2.2.tgz",
+      "integrity": "sha512-XZOcMIc32aIDxKFJGpYIPZ7H0p+Zmu3xAYyKDMmRgSQMNR97E8byl4tQa9vkYv4x8dNcYRQV8tw+KvtiKua0xQ==",
       "requires": {
         "idb-kv-store": "^4.5.0",
         "mutexify": "^1.3.1"
@@ -15968,11 +15957,11 @@
       }
     },
     "ssb-browser-core": {
-      "version": "10.0.4",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.4.tgz",
-      "integrity": "sha512-dIxnPnOYI+quoJ1+58H4RWMKlNAwJE+gDXdIw+9VXd8mKzPq7oDEw5Dn/1lInsjwK6chnfCh/7ryXcmPhQ8xGw==",
+      "version": "10.0.6",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.6.tgz",
+      "integrity": "sha512-ctqqcTQtoPGHgMEVsLDPeLmsBmVffxqptX5m+JWdyC8zhDGz1xiwUYa1dgSlYMPzNVvpp3tUC02uAH3c4jNVpQ==",
       "requires": {
-        "atomic-file-rw": "^0.2.1",
+        "atomic-file-rw": "^0.2.2",
         "epidemic-broadcast-trees": "^8.0.1",
         "gossip-query": "^2.0.2",
         "obz": "^1.0.3",
@@ -15989,14 +15978,14 @@
         "secret-stack": "^6.3.2",
         "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
-        "ssb-conn": "^3.1.0",
+        "ssb-conn": "^3.2.1",
         "ssb-db2": "^2.1.1",
         "ssb-dht-invite": "^2.0.0",
         "ssb-friends": "^4.4.5",
         "ssb-keys": "^8.0.2",
         "ssb-no-auth": "^1.0.0",
         "ssb-ref": "^2.14.3",
-        "ssb-room-client": "^0.13.0",
+        "ssb-room-client": "^0.14.0",
         "ssb-sort": "^1.1.3",
         "ssb-validate": "^4.1.4",
         "ssb-ws": "^6.2.3"
@@ -16008,9 +15997,9 @@
       "integrity": "sha512-qe3qpvchJ+gnH8M/ge4rpL+7eRbSmsEAzNwHkDdrW06OBcziQ6/KuAdmcR6joxCbNeoAXAZF+inkefgE16okXA=="
     },
     "ssb-conn": {
-      "version": "3.1.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-3.1.0.tgz",
-      "integrity": "sha512-iehMfgcomhC51palOMgDXwmmXTwhuXbX8oOUdaoT6e25NviK+IBO47P2olmR7WrKUjEJ+MaPNHINgPa/qM3vLg==",
+      "version": "3.2.1",
+      "resolved": "https://registry.npmjs.org/ssb-conn/-/ssb-conn-3.2.1.tgz",
+      "integrity": "sha512-5Cv7kHeEdoDWzRaC3vHo8joSWQRB1Ckfmj9HhDfbIPTRQaA43HXWAiaH5c+kTBwW1IGP5JV1akNhcXTSLk5CIw==",
       "requires": {
         "debug": "^4.3.0",
         "has-network2": ">=0.0.3",
@@ -16022,9 +16011,9 @@
         "pull-ping": "^2.0.3",
         "pull-stream": "^3.6.14",
         "secret-stack-decorators": "1.1.0",
-        "ssb-conn-db": "~1.0.1",
+        "ssb-conn-db": "~1.0.2",
         "ssb-conn-hub": "~1.2.0",
-        "ssb-conn-query": "~1.2.0",
+        "ssb-conn-query": "~1.2.1",
         "ssb-conn-staging": "~1.0.0",
         "ssb-ref": "^2.14.3",
         "ssb-typescript": "^2.2.0",
@@ -16033,28 +16022,15 @@
       }
     },
     "ssb-conn-db": {
-      "version": "1.0.1",
-      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-1.0.1.tgz",
-      "integrity": "sha512-lTXhHmJ9La7S+YFotLnvn+4uxX5lP+zDNS3N4zPnDDy/3f1AQI6jxEnRDmbhfWqrAEI2gy7Yu6LcgC5rX+MRDA==",
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-conn-db/-/ssb-conn-db-1.0.2.tgz",
+      "integrity": "sha512-P1YiK6RkUiKUgGRw/VjTMnNlm38e2uieRABVNtgZGAa0Gv3Lx5wIxKPcNLXLmgORlJQuhwLP3oAnx2dHZaVJhg==",
       "requires": {
-        "atomic-file": "^2.1.1",
+        "atomic-file-rw": "^0.2.1",
         "debug": "^4.3.1",
         "multiserver-address": "~1.0.1",
         "pull-notify": "~0.1.1",
-        "ssb-ref": "~2.13.9"
-      },
-      "dependencies": {
-        "ssb-ref": {
-          "version": "2.13.9",
-          "resolved": "https://registry.npmjs.org/ssb-ref/-/ssb-ref-2.13.9.tgz",
-          "integrity": "sha512-TfatNqLvoP+eW/pMIbCmNcaoDq4R2k8jCtWkwDKx4AtluN/LwtyP931d5Mh+2gmzA04W7kxkr6f5ENGgdadMYg==",
-          "requires": {
-            "ip": "^1.1.3",
-            "is-canonical-base64": "^1.1.1",
-            "is-valid-domain": "~0.0.1",
-            "multiserver-address": "^1.0.1"
-          }
-        }
+        "ssb-ref": ">=2.13.9"
       }
     },
     "ssb-conn-hub": {
@@ -16074,11 +16050,11 @@
       }
     },
     "ssb-conn-query": {
-      "version": "1.2.0",
-      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-1.2.0.tgz",
-      "integrity": "sha512-HPDsqzAq4NihV4IDIQ/sFV/kJ5ysiM9iV405SHHSfxHF9aGVmiduBnkH0YdqzynluHn4+Lfd59Od4FKErgGoSA==",
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/ssb-conn-query/-/ssb-conn-query-1.2.1.tgz",
+      "integrity": "sha512-mlJe2XBXODb1hXu/t+v8d9O7KCmGKcgIpk/xy+ogaGTILvPWSHxKzSuNe0X6DdSF7TDCaECNCRy5unJuNMK+4A==",
       "requires": {
-        "ssb-conn-db": "~1.0.1",
+        "ssb-conn-db": "~1.0.2",
         "ssb-conn-hub": "~1.2.0",
         "ssb-conn-staging": "~1.0.0"
       }
@@ -16319,9 +16295,9 @@
       }
     },
     "ssb-room-client": {
-      "version": "0.13.0",
-      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.13.0.tgz",
-      "integrity": "sha512-jQPv0D6M3mIsfIEyZYdDUfhaN+zj3xQMvaCdCxFmSVimiNlBbeKyu1YlbfqFlabex48Hnh/84kIVheQwnc9a0Q==",
+      "version": "0.14.0",
+      "resolved": "https://registry.npmjs.org/ssb-room-client/-/ssb-room-client-0.14.0.tgz",
+      "integrity": "sha512-EMDMdk5INB373Zm3YaNnCx/lkGzgCEwEVqMOguM/dlk32MRo2VXkP0Bcgu1G+rZndgD70lnXDfaxp1yHy3SB7Q==",
       "requires": {
         "@minireq/browser": "^2.0.0",
         "@minireq/node": "^2.0.0",
