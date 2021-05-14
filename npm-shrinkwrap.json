@@ -1,11 +1,11 @@
 {
   "name": "ssb-browser-demo",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "version": "5.5.1",
+      "version": "5.5.2",
       "hasInstallScript": true,
       "license": "Beerware",
       "dependencies": {
@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "^10.0.6",
+        "ssb-browser-core": "^10.0.7",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -6597,23 +6597,18 @@
       "dev": true
     },
     "node_modules/push-stream": {
-      "version": "11.0.0",
-      "resolved": "https://registry.npmjs.org/push-stream/-/push-stream-11.0.0.tgz",
-      "integrity": "sha512-rDVD2f3wOztI/59/fukGLwZkUOC55674hncsSwgKF/yLlkkL594AoWTlkF6SGF0x8O5o1j92ObXk8Cxc1llhYg=="
+      "version": "11.0.1",
+      "resolved": "https://registry.npmjs.org/push-stream/-/push-stream-11.0.1.tgz",
+      "integrity": "sha512-Cb5aOY6Z6JxjAKBmpmmzoJ+8I6pJlRjJ5WYoM2Vw3kSlClojmIXzA+FP0yglJ4ELokrqLX223frxJTnxUx0dpw=="
     },
     "node_modules/push-stream-to-pull-stream": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/push-stream-to-pull-stream/-/push-stream-to-pull-stream-1.0.3.tgz",
-      "integrity": "sha512-pdE/OKi/jnp9DqGgNRzLY0oVHffn/8TXJmBPzv+ikdvpkeA0J//l5d7TZk1yWwZj9P0JcOIEVDOuHzhXaeBlmw==",
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/push-stream-to-pull-stream/-/push-stream-to-pull-stream-1.0.4.tgz",
+      "integrity": "sha512-W1ysxl25uU6410OGipJM0/FvlNoXvuZqIgSLGELkZ6+MaXPAp/wr2EvAYKrs1o4blzhYssv/cFXiiRJkMnnhrA==",
       "dependencies": {
         "pull-looper": "^1.0.0",
-        "push-stream": "^10.0.3"
+        "push-stream": "^11.0.1"
       }
-    },
-    "node_modules/push-stream-to-pull-stream/node_modules/push-stream": {
-      "version": "10.1.2",
-      "resolved": "https://registry.npmjs.org/push-stream/-/push-stream-10.1.2.tgz",
-      "integrity": "sha512-wCDN1KkAWOMXsiV0XxH/CggHqOYeXvyn00t9Zjp5RKsLZ2rzg/lLJIMAVxYLyh79T168W3fBYcG5TRRJAlQr6g=="
     },
     "node_modules/q": {
       "version": "1.5.1",
@@ -7686,9 +7681,9 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "10.0.6",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.6.tgz",
-      "integrity": "sha512-ctqqcTQtoPGHgMEVsLDPeLmsBmVffxqptX5m+JWdyC8zhDGz1xiwUYa1dgSlYMPzNVvpp3tUC02uAH3c4jNVpQ==",
+      "version": "10.0.7",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.7.tgz",
+      "integrity": "sha512-j6el1W+epZbdBCU9C1hrH0C9j3Cpct/1EqXgwdCcY5pDPIhIqfJ1wzKxWD7D8aL7HwMm7/xURV/zrq8+2ydDFw==",
       "hasInstallScript": true,
       "dependencies": {
         "atomic-file-rw": "^0.2.2",
@@ -15080,24 +15075,17 @@
       "dev": true
     },
     "push-stream": {
-      "version": "11.0.0",
-      "resolved": "https://registry.npmjs.org/push-stream/-/push-stream-11.0.0.tgz",
-      "integrity": "sha512-rDVD2f3wOztI/59/fukGLwZkUOC55674hncsSwgKF/yLlkkL594AoWTlkF6SGF0x8O5o1j92ObXk8Cxc1llhYg=="
+      "version": "11.0.1",
+      "resolved": "https://registry.npmjs.org/push-stream/-/push-stream-11.0.1.tgz",
+      "integrity": "sha512-Cb5aOY6Z6JxjAKBmpmmzoJ+8I6pJlRjJ5WYoM2Vw3kSlClojmIXzA+FP0yglJ4ELokrqLX223frxJTnxUx0dpw=="
     },
     "push-stream-to-pull-stream": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/push-stream-to-pull-stream/-/push-stream-to-pull-stream-1.0.3.tgz",
-      "integrity": "sha512-pdE/OKi/jnp9DqGgNRzLY0oVHffn/8TXJmBPzv+ikdvpkeA0J//l5d7TZk1yWwZj9P0JcOIEVDOuHzhXaeBlmw==",
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/push-stream-to-pull-stream/-/push-stream-to-pull-stream-1.0.4.tgz",
+      "integrity": "sha512-W1ysxl25uU6410OGipJM0/FvlNoXvuZqIgSLGELkZ6+MaXPAp/wr2EvAYKrs1o4blzhYssv/cFXiiRJkMnnhrA==",
       "requires": {
         "pull-looper": "^1.0.0",
-        "push-stream": "^10.0.3"
-      },
-      "dependencies": {
-        "push-stream": {
-          "version": "10.1.2",
-          "resolved": "https://registry.npmjs.org/push-stream/-/push-stream-10.1.2.tgz",
-          "integrity": "sha512-wCDN1KkAWOMXsiV0XxH/CggHqOYeXvyn00t9Zjp5RKsLZ2rzg/lLJIMAVxYLyh79T168W3fBYcG5TRRJAlQr6g=="
-        }
+        "push-stream": "^11.0.1"
       }
     },
     "q": {
@@ -15957,9 +15945,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "10.0.6",
-      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.6.tgz",
-      "integrity": "sha512-ctqqcTQtoPGHgMEVsLDPeLmsBmVffxqptX5m+JWdyC8zhDGz1xiwUYa1dgSlYMPzNVvpp3tUC02uAH3c4jNVpQ==",
+      "version": "10.0.7",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-10.0.7.tgz",
+      "integrity": "sha512-j6el1W+epZbdBCU9C1hrH0C9j3Cpct/1EqXgwdCcY5pDPIhIqfJ1wzKxWD7D8aL7HwMm7/xURV/zrq8+2ydDFw==",
       "requires": {
         "atomic-file-rw": "^0.2.2",
         "epidemic-broadcast-trees": "^8.0.1",
