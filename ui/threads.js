@@ -108,13 +108,15 @@ module.exports = function (componentsState) {
           pull.collect((err, threads) => {
             componentsState.newPublicMessages = false
 
-            self.categories["public"].threads = threads.map((x) => { return {
+            self.categories["public"].threads = threads.map((x) => {
+              return {
                 title: (x.messages.length > 0 ? helpers.getMessageTitle(x.messages[0].key, x.messages[0].value) : ""),
                 preview: (x.messages.length > 0 ? helpers.getMessagePreview(x.messages[0].value, 500) : ""),
                 lastMsgPreview: (x.messages.length > 0 ? helpers.getMessagePreview(x.messages[x.messages.length - 1].value, 500) : ""),
                 msgs: x.messages,
                 outsideFollow: self.findOutsideFollow(x.messages)
-              } })
+              }
+            })
             self.categories = Object.assign({}, this.categories)
           })
         )
