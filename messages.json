@@ -37,7 +37,7 @@
       "posted": "posted",
       "a": "a",
       "inReplyTo": "in reply to",
-      "Forks": "Forks",
+      "forkedreplies": "replies in a forked thread",
       "getMsg": "get msg",
       "Add": "Add",
       "goToSearch": "Go to msg/feed/channel"
