@@ -52,7 +52,8 @@ module.exports = function (componentsState) {
       },
 
       fetchLatestMessage: function(groupId) {
-        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded, this.fetchLatestMessageCB)
+        ssbSingleton.getSimpleSSBEventually(() => this.componentStillLoaded,
+                                            (err, ssb) => this.fetchLatestMessageCB(err, ssb, groupId))
       },
 
       fetchLatestMessageCB: function(err, SSB, groupId) {
@@ -74,7 +75,9 @@ module.exports = function (componentsState) {
                 descending(),
                 paginate(1),
                 toCallback((err, answer) => {
-                  // We have to go back through this again, because it may have been sorted to a different position by the time we get results.
+                  // We have to go back through this again, because it
+                  // may have been sorted to a different position by
+                  // the time we get results.
                   for (g in this.groups) {
                     if (this.groups[g].id == groupId) {
                       if (answer && answer.results && answer.results.length > 0) {
