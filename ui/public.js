@@ -12,7 +12,7 @@ module.exports = function (componentsState) {
     const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.dbOperators
     let feedFilter = null
     if (onlyDirectFollow) {
-      const graph = SSB.getGraphSync()
+      const graph = SSB.net.feedReplication.getGraph()
       if (graph.following.length > 0)
         feedFilter = or(...graph.following.map(x => author(x)))
     }

@@ -7660,7 +7660,7 @@
     },
     "node_modules/ssb-browser-core": {
       "version": "10.0.12",
-      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#9c3593c00b2e15258c3121d677be7cbd4aee5df8",
+      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#80fdfe89979b37d21d3a11bf75394c5573a0e408",
       "hasInstallScript": true,
       "license": "Beerware",
       "dependencies": {
@@ -7931,9 +7931,9 @@
       }
     },
     "node_modules/ssb-ebt": {
-      "version": "7.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.0.tgz",
-      "integrity": "sha512-xg0jt2611mIWFvyoloI3aalV8VSl4RXMOouQKcsIgrgTPRUagP7XhySlw+gMcJ8FIIN0rLVxMhbuQjU4ZkoRBw==",
+      "version": "7.0.1",
+      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.1.tgz",
+      "integrity": "sha512-6+9IFgc/D99bWOQqo1CjIo85kY4UZrSc8ImBorpAiI+oSbpdKfhaD2oZLJ5bvbSeJWLNZXawEU4K2xVwicikEw==",
       "dependencies": {
         "base64-url": "^2.2.0",
         "epidemic-broadcast-trees": "^8.0.4",
@@ -16055,7 +16055,7 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#9c3593c00b2e15258c3121d677be7cbd4aee5df8",
+      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#80fdfe89979b37d21d3a11bf75394c5573a0e408",
       "from": "ssb-browser-core@github:arj03/ssb-browser-core#unbermuda-test",
       "requires": {
         "atomic-file-rw": "^0.2.2",
@@ -16299,9 +16299,9 @@
       }
     },
     "ssb-ebt": {
-      "version": "7.0.0",
-      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.0.tgz",
-      "integrity": "sha512-xg0jt2611mIWFvyoloI3aalV8VSl4RXMOouQKcsIgrgTPRUagP7XhySlw+gMcJ8FIIN0rLVxMhbuQjU4ZkoRBw==",
+      "version": "7.0.1",
+      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.1.tgz",
+      "integrity": "sha512-6+9IFgc/D99bWOQqo1CjIo85kY4UZrSc8ImBorpAiI+oSbpdKfhaD2oZLJ5bvbSeJWLNZXawEU4K2xVwicikEw==",
       "requires": {
         "base64-url": "^2.2.0",
         "epidemic-broadcast-trees": "^8.0.4",

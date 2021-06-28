@@ -351,7 +351,9 @@ module.exports = function () {
             self.hasFollowProgress = status.totalFull
             if (status.totalFull) {
               self.followProgress = Math.round((status.fullSynced) * 100 / (status.totalFull))
-              var progressBar = document.getElementById("syncProgressFollow")
+              if (self.followProgress > 100)
+                self.followProgress = 100
+              let progressBar = document.getElementById("syncProgressFollow")
               // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasFollowProgress.
               if (progressBar)
                 progressBar.style.width = (self.followProgress * 0.99 + 1) + "%"
@@ -359,7 +361,9 @@ module.exports = function () {
             self.hasExtendedProgress = status.totalPartial
             if (status.totalPartial) {
               self.extendedProgress = Math.round((status.profilesSynced + status.contactsSynced + status.messagesSynced) * 100 / (status.totalPartial * 3))
-              var progressBar = document.getElementById("syncProgressExtended")
+              if (self.extendedProgress > 100)
+                self.extendedProgress = 100
+              let progressBar = document.getElementById("syncProgressExtended")
               // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasExtendedProgress.
               if (progressBar)
                 progressBar.style.width = (self.extendedProgress * 0.99 + 1) + "%"
