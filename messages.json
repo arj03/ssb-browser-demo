@@ -215,7 +215,7 @@
     },
     "thread": {
       "title": "Thread \"{title}\"",
-      "loading": "Loading message(s)...please wait.",
+      "loading": "Loading messages...please wait.",
       "postReply": "Post reply",
       "blankFieldError": "Please provide a message to publish.",
       "blockingReplies": "These people are blocking you and will not see your reply:"
