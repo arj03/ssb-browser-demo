@@ -25,16 +25,21 @@ module.exports = function () {
     template: `
        <div id="thread">
          <h2>{{ $t('thread.title', { title: title }) }}</h2>
-         <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg" v-bind:thread="fixedRootId"></ssb-msg>
-         <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
-         <div id="blockingReplies" v-if="participantsBlocking.length > 0">{{ $t('thread.blockingReplies') }}<br />
-           <ssb-profile-link v-for="participant in participantsBlocking" v-bind:feedId="participant"></ssb-profile-link>
-           <div class="clearingDiv"></div>
+         <div v-if='rootMsg.key != ""'>
+           <ssb-msg v-bind:key="rootMsg.key" v-bind:msg="rootMsg" v-bind:thread="fixedRootId"></ssb-msg>
+           <ssb-msg v-for="msg in messages" v-bind:key="msg.key" v-bind:msg="msg"></ssb-msg>
+           <div id="blockingReplies" v-if="participantsBlocking.length > 0">{{ $t('thread.blockingReplies') }}<br />
+             <ssb-profile-link v-for="participant in participantsBlocking" v-bind:feedId="participant"></ssb-profile-link>
+             <div class="clearingDiv"></div>
+           </div>
+           <markdown-editor :initialValue="postText" ref="markdownEditor" /><br>
+           <button class="clickButton" v-on:click="postReply">{{ $t('thread.postReply') }}</button>
+           <input type="file" class="fileInput" v-on:change="onFileSelect">
+           <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
          </div>
-         <markdown-editor :initialValue="postText" ref="markdownEditor" /><br>
-         <button class="clickButton" v-on:click="postReply">{{ $t('thread.postReply') }}</button>
-         <input type="file" class="fileInput" v-on:change="onFileSelect">
-         <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
+         <div v-if='rootMsg.key == ""'>
+           {{ $t('thread.loading') }}
+         </div>
        <div>`,
 
     props: ['rootId'],
