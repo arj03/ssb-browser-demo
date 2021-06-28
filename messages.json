@@ -221,7 +221,8 @@
       "blockingReplies": "These people are blocking you and will not see your reply:"
     },
     "threads": {
-      "title": "Threads"
+      "title": "Threads",
+      "searching": "Searching for messages..."
     }
   },
   "en-GB": {
@@ -527,7 +528,8 @@
       "blockingReplies": "これらの人々はあなたをブロックしていて、あなたの返事を見ることはありません："
     },
     "threads": {
-      "title": "スレッド"
+      "title": "スレッド",
+      "searching": "メッセージを検索しています..."
     }
   },
   "pt-BR": {
@@ -743,7 +745,8 @@
       "title": "Tópico \"{title}\""
     },
     "threads": {
-      "title": "Tópicos"
+      "title": "Tópicos",
+      "searching": "Procurando mensagens..."
     }
   }
 }
