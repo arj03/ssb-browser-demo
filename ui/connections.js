@@ -272,6 +272,7 @@ module.exports = function () {
         let lastStatus = null
         let lastEbtStatus = null
 
+        /* not working after updating to ssb-ebt 7
         function updatePeerTS() {
           // Last updated timestamp needs to be the maximum value from several sources.
           SSB.net.ebt.peerStatus((err, ebtPeers) => {
@@ -285,6 +286,7 @@ module.exports = function () {
             }
           })
         }
+        */
 
         pull(
           SSB.net.conn.stagedPeers(),
@@ -298,7 +300,7 @@ module.exports = function () {
           SSB.net.conn.peers(),
           pull.drain((entries) => {
             self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
-            updatePeerTS()
+            //updatePeerTS()
             self.updateSuggestedPeers()
           })
         )
@@ -319,16 +321,16 @@ module.exports = function () {
           // This is a long-running process, so we need to make sure we're re-acquiring SSB in case the one we've been using goes away (parent window closed, for example).
           [ err, SSB ] = ssbSingleton.getSSB()
           if (!self.running) return
-          if (!SSB || !SSB.db || !SSB.feedSyncer) {
+          if (!SSB || !SSB.db || !SSB.net.feedReplication) {
             setTimeout(updateDBStatus, 5000)
             return
           }
 
           setTimeout(() => {
-            const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
+            const status = Object.assign(SSB.db.getStatus().value, SSB.net.feedReplication.partialStatus())
             const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
 
-            updatePeerTS()
+            //updatePeerTS()
 
             if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
                 JSON.stringify(ebtStatus) == JSON.stringify(lastEbtStatus)) {

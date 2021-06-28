@@ -47,12 +47,12 @@ Vue.component('connected', {
     })
     setInterval(function() {
       [ err, SSB ] = ssbSingleton.getSSB()
-      if (SSB && SSB.feedSyncer) {
+      if (SSB && SSB.net.feedReplication) {
         if (!self.initializedSSB) {
           self.initializedSSB = true
           self.onDisconnected()
         }
-        self.synced = SSB.feedSyncer && SSB.feedSyncer.inSync()
+        self.synced = SSB.net.feedReplication.inSync()
       }
 
       self.updateIndicators()
