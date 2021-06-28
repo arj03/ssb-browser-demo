@@ -7660,7 +7660,7 @@
     },
     "node_modules/ssb-browser-core": {
       "version": "10.0.12",
-      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#80fdfe89979b37d21d3a11bf75394c5573a0e408",
+      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#6de0ba55b8ef8f5c6609de5208968d9098f850a9",
       "hasInstallScript": true,
       "license": "Beerware",
       "dependencies": {
@@ -16055,7 +16055,7 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#80fdfe89979b37d21d3a11bf75394c5573a0e408",
+      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#6de0ba55b8ef8f5c6609de5208968d9098f850a9",
       "from": "ssb-browser-core@github:arj03/ssb-browser-core#unbermuda-test",
       "requires": {
         "atomic-file-rw": "^0.2.2",
