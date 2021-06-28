@@ -15,6 +15,7 @@ module.exports = function (componentsState) {
         <table>
           <thead><tr><th>{{ category.title }}</th><th>Replies</th><th>Last post</th></tr></thead>
           <tbody>
+            <tr v-if="!category.threads || category.threads.length < 1"><td colspan="3">{{ $t('threads.searching') }}</td></tr>
             <tr v-for="thread in category.threads">
               <td>
                 <router-link :to="{name: 'thread', params: { rootId: thread.msgs[0].key.substring(1) }}" v-bind:title="thread.preview">{{ thread.title }}</router-link><br />
@@ -38,7 +39,7 @@ module.exports = function (componentsState) {
         </table>
       </div>
       <div v-if="Object.keys(categories).length < 1">
-        Searching for messages...
+        {{ $t('threads.searching') }}
       </div>
     </div>`,
 

@@ -215,12 +215,14 @@
     },
     "thread": {
       "title": "Thread \"{title}\"",
+      "loading": "Loading messages...please wait.",
       "postReply": "Post reply",
       "blankFieldError": "Please provide a message to publish.",
       "blockingReplies": "These people are blocking you and will not see your reply:"
     },
     "threads": {
-      "title": "Threads"
+      "title": "Threads",
+      "searching": "Searching for messages..."
     }
   },
   "en-GB": {
@@ -520,12 +522,14 @@
     },
     "thread": {
       "title": "スレッド 「{title}」",
+      "loading": "メッセージを読み込んでいます。 お待ちください。",
       "postReply": "掲示します",
       "blankFieldError": "公開するメッセージを入力してください。",
       "blockingReplies": "これらの人々はあなたをブロックしていて、あなたの返事を見ることはありません："
     },
     "threads": {
-      "title": "スレッド"
+      "title": "スレッド",
+      "searching": "メッセージを検索しています..."
     }
   },
   "pt-BR": {
@@ -736,11 +740,13 @@
     "thread": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
       "blockingReplies": "Essas pessoas estão bloqueando você e não verão sua resposta:",
+      "loading": "Carregando mensagens. Por favor, aguarde.",
       "postReply": "Postar resposta",
       "title": "Tópico \"{title}\""
     },
     "threads": {
-      "title": "Tópicos"
+      "title": "Tópicos",
+      "searching": "Procurando mensagens..."
     }
   }
 }
