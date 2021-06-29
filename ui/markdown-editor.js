@@ -3,7 +3,7 @@ const ref = require('ssb-ref')
 
 Vue.component('markdown-editor', {
   template: `<div class="markdown-editor">
-               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestions" />
+               <tui-editor :initialValue="postText" ref="tuiEditor" :options="editorOptions" previewStyle="tab" @change="onChange" @focus="hideSuggestions" @blur="hideSuggestionsLater" />
              </div>`,
 
   props: ['initialValue', 'privateBlobs'],
@@ -113,22 +113,19 @@ Vue.component('markdown-editor', {
 
     popupSuggestions: function(suggest, optionList, replaceStart, replaceEnd) {
       var self = this
-      const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
-      const cursorEl = editorContainerEl.getElementsByClassName("CodeMirror-cursor")[0]
-      if (!cursorEl) return
-      const cursorXY = { x: cursorEl.offsetLeft, y: cursorEl.offsetTop }
-      const cursorHeight = cursorEl.offsetHeight
-      const positionParent = cursorEl.parentNode.parentNode
+      const editorSelInfo = this.$refs.tuiEditor.editor.mdEditor.view.coordsAtPos(this.$refs.tuiEditor.editor.mdEditor.view.state.selection.head)
+      const cursorXY = { x: editorSelInfo.left, y: editorSelInfo.bottom }
+      const positionParent = document.body
       var popupEl = positionParent.getElementsByClassName("suggestion-box")[0]
       if (!popupEl) {
         popupEl = positionParent.appendChild(document.createElement("div"))
-        popupEl.className = "suggestion-box tui-popup-wrapper te-heading-add"
-        popupEl.appendChild(document.createElement("div")).className = "tui-popup-body"
+        popupEl.className = "suggestion-box toastui-editor-popup toastui-editor-popup-add-heading"
+        popupEl.appendChild(document.createElement("div")).className = "toastui-editor-popup-body"
 
         // Fix the position in place at the initial opening.
         popupEl.style.position = "absolute"
         popupEl.style.left = cursorXY.x + "px"
-        popupEl.style.top = (cursorXY.y + cursorHeight) + "px"
+        popupEl.style.top = cursorXY.y + "px"
       }
 
       // Keep it hidden until there are options to show, but we can at least initialize so the position's fixed.
@@ -161,7 +158,6 @@ Vue.component('markdown-editor', {
 
     useSuggestion: function(replaceStart, replaceEnd, suggestionMarkdown) {
       // Replace the current token with our new content.
-      const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
       const startingMarkdown = this.$refs.tuiEditor.editor.getMarkdown()
       console.log("Replacing " + startingMarkdown.substring(replaceStart, replaceEnd) + " with " + suggestionMarkdown)
       this.$refs.tuiEditor.editor.setMarkdown(startingMarkdown.substring(0, replaceStart) + suggestionMarkdown + startingMarkdown.substring(replaceEnd, startingMarkdown.length))
@@ -169,15 +165,15 @@ Vue.component('markdown-editor', {
     },
 
     hideSuggestions: function() {
-      if (this.$refs.tuiEditor && this.$refs.tuiEditor.editor && this.$refs.tuiEditor.editor.mdEditor) {
-        const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
-        if (editorContainerEl) {
-          var popupEl = editorContainerEl.getElementsByClassName("suggestion-box")[0]
-          if (popupEl) {
-            popupEl.parentNode.removeChild(popupEl)
-          }
-        }
+      var popupEl = document.body.getElementsByClassName("suggestion-box")[0]
+      if (popupEl) {
+        popupEl.parentNode.removeChild(popupEl)
       }
+    },
+
+    hideSuggestionsLater: function() {
+      // This is here because ToastUI now fires the blur event before the onclick event of the suggestion box can be fired, hiding the box before it can fire.
+      setTimeout(this.hideSuggestions, 100)
     },
 
     onChange: function() {
@@ -185,11 +181,14 @@ Vue.component('markdown-editor', {
       // Search backwards to the beginning of this token.
       var self = this
       const tokenSeparatorChars = " ,()[]{};:.'\"!"
-      const selInfo = this.$refs.tuiEditor.editor.getTextObject()
+      // Ensure editor is initialized, because onChange can happen before initialization.
+      if (!this.$refs.tuiEditor.editor) return
+      const selInfo = this.$refs.tuiEditor.editor.getSelection()
       const markdownLines = this.$refs.tuiEditor.editor.getMarkdown().split("\n")
       const editorContainerEl = this.$refs.tuiEditor.editor.mdEditor.editorContainerEl
-      if (!selInfo._start || selInfo._start.line != selInfo._end.line || selInfo._start.ch != selInfo._end.ch) return
-      const cursorPos = selInfo._start
+      // Ensure we only have a cursor and not a selection.
+      if (!selInfo[0] || selInfo[0][0] != selInfo[1][0] || selInfo[0][1] != selInfo[1][1]) return
+      const cursorPos = { line: selInfo[0][0] - 1, ch: selInfo[0][1] - 1 }
       const cursorLine = markdownLines[cursorPos.line]
       var tokenStart = cursorPos.ch - 1
       for (; tokenStart >= 0; --tokenStart) {

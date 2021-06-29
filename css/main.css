@@ -490,3 +490,8 @@ textarea.source
   height: 20em;
   white-space: nowrap;
 }
+
+.markdown-editor
+{
+  background-color: #fff;
+}
