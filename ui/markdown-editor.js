@@ -153,6 +153,8 @@ Vue.component('markdown-editor', {
           e.stopPropagation()
           return false
         } }(optionList[o].value))
+        // Something's hooking mousedown on this and cancelling it so click never fires.  This prevents the event from bubbling and getting cancelled.
+        liEl.addEventListener("mousedown", function(e) { e.stopPropagation(); e.preventDefault(); return false; } )
       }
     },
 
