@@ -7667,7 +7667,7 @@
     },
     "node_modules/ssb-blob-files": {
       "version": "1.2.1",
-      "resolved": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#a9d8b02fa64eee4209266446bf0d0c879d141966",
+      "resolved": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#c414be9d7b77a4b06df1e6225090e717fba9bcdd",
       "license": "AGPL-3.0",
       "dependencies": {
         "piexifjs": "^1.0.6",
@@ -15984,7 +15984,7 @@
       "integrity": "sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw="
     },
     "ssb-blob-files": {
-      "version": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#a9d8b02fa64eee4209266446bf0d0c879d141966",
+      "version": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#c414be9d7b77a4b06df1e6225090e717fba9bcdd",
       "from": "ssb-blob-files@git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
       "requires": {
         "piexifjs": "^1.0.6",
