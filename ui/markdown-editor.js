@@ -221,6 +221,10 @@ Vue.component('markdown-editor', {
       }
     },
 
+    insertMarkdown: function(markdown) {
+      this.$refs.tuiEditor.editor.insertText(markdown)
+    },
+
     getMarkdown: function() {
       return this.$refs.tuiEditor.invoke('getMarkdown')
     },
