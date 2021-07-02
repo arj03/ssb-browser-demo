@@ -195,13 +195,7 @@ module.exports = function () {
               type: 'contact',
               contact: peerId,
               following: true
-            }, () => {
-              SSB.connectedWithData(() => {
-                SSB.net.db.onDrain('contacts', () => {
-                  SSB.net.sync(SSB.getPeer())
-                })
-              })
-            })
+            }, () => {})
           }
         }
       },

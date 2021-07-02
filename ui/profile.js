@@ -359,11 +359,6 @@ module.exports = function () {
             following: true
           }, () => {
             alert(self.$root.$t('profile.followed')) // FIXME: proper UI
-            SSB.connectedWithData(() => {
-              SSB.net.db.onDrain('contacts', () => {
-                SSB.net.sync(SSB.getPeer())
-              })
-            })
           })
         }
       },
