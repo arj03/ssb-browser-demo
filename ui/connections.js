@@ -195,13 +195,7 @@ module.exports = function () {
               type: 'contact',
               contact: peerId,
               following: true
-            }, () => {
-              SSB.connectedWithData(() => {
-                SSB.net.db.onDrain('contacts', () => {
-                  SSB.net.sync(SSB.getPeer())
-                })
-              })
-            })
+            }, () => {})
           }
         }
       },
@@ -272,6 +266,7 @@ module.exports = function () {
         let lastStatus = null
         let lastEbtStatus = null
 
+        /* not working after updating to ssb-ebt 7
         function updatePeerTS() {
           // Last updated timestamp needs to be the maximum value from several sources.
           SSB.net.ebt.peerStatus((err, ebtPeers) => {
@@ -285,6 +280,7 @@ module.exports = function () {
             }
           })
         }
+        */
 
         pull(
           SSB.net.conn.stagedPeers(),
@@ -298,7 +294,7 @@ module.exports = function () {
           SSB.net.conn.peers(),
           pull.drain((entries) => {
             self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
-            updatePeerTS()
+            //updatePeerTS()
             self.updateSuggestedPeers()
           })
         )
@@ -319,16 +315,16 @@ module.exports = function () {
           // This is a long-running process, so we need to make sure we're re-acquiring SSB in case the one we've been using goes away (parent window closed, for example).
           [ err, SSB ] = ssbSingleton.getSSB()
           if (!self.running) return
-          if (!SSB || !SSB.db || !SSB.feedSyncer) {
+          if (!SSB || !SSB.db || !SSB.net.feedReplication) {
             setTimeout(updateDBStatus, 5000)
             return
           }
 
           setTimeout(() => {
-            const status = Object.assign(SSB.db.getStatus().value, SSB.feedSyncer.status())
+            const status = Object.assign(SSB.db.getStatus().value, SSB.net.feedReplication.partialStatus())
             const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
 
-            updatePeerTS()
+            //updatePeerTS()
 
             if (JSON.stringify(status) == JSON.stringify(lastStatus) &&
                 JSON.stringify(ebtStatus) == JSON.stringify(lastEbtStatus)) {
@@ -349,7 +345,9 @@ module.exports = function () {
             self.hasFollowProgress = status.totalFull
             if (status.totalFull) {
               self.followProgress = Math.round((status.fullSynced) * 100 / (status.totalFull))
-              var progressBar = document.getElementById("syncProgressFollow")
+              if (self.followProgress > 100)
+                self.followProgress = 100
+              let progressBar = document.getElementById("syncProgressFollow")
               // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasFollowProgress.
               if (progressBar)
                 progressBar.style.width = (self.followProgress * 0.99 + 1) + "%"
@@ -357,7 +355,9 @@ module.exports = function () {
             self.hasExtendedProgress = status.totalPartial
             if (status.totalPartial) {
               self.extendedProgress = Math.round((status.profilesSynced + status.contactsSynced + status.messagesSynced) * 100 / (status.totalPartial * 3))
-              var progressBar = document.getElementById("syncProgressExtended")
+              if (self.extendedProgress > 100)
+                self.extendedProgress = 100
+              let progressBar = document.getElementById("syncProgressExtended")
               // In case we've navigated away since the timer was set or Vue hasn't updated since we set hasExtendedProgress.
               if (progressBar)
                 progressBar.style.width = (self.extendedProgress * 0.99 + 1) + "%"

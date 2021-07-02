@@ -114,12 +114,7 @@ Vue.component('onboarding-dialog', {
             type: 'contact',
             contact: followKey,
             following: true
-          }, () => {
-            // wait for db sync
-            SSB.connectedWithData(() => {
-              SSB.net.sync(SSB.getPeer())
-            })
-          })
+          }, () => { })
         })(this.useFollows[f].key)
       }
 
