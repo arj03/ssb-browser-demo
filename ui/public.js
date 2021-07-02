@@ -247,7 +247,7 @@ module.exports = function (componentsState) {
       onFileSelect: function(ev) {
         var self = this
         helpers.handleFileSelect(ev, false, (err, text) => {
-          self.postText += text
+          self.$refs.markdownEditor.insertMarkdown(text)
         })
       },
 

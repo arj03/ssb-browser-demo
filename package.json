@@ -8,7 +8,7 @@
     "url": "git@github.com:arj03/ssb-browser-demo.git"
   },
   "dependencies": {
-    "@toast-ui/vue-editor": "^2.5.1",
+    "@toast-ui/vue-editor": "^3.0.0",
     "clipboard-copy": "^4.0.1",
     "envify": "^4.1.0",
     "human-time": "0.0.2",
