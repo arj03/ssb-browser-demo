@@ -19,7 +19,7 @@
         "pull-cat": "^1.1.11",
         "pull-stream": "^3.6.14",
         "rimraf": "^3.0.2",
-        "ssb-browser-core": "github:arj03/ssb-browser-core#unbermuda-test",
+        "ssb-browser-core": "^11.0.0",
         "ssb-caps": "^1.1.0",
         "ssb-keys-mnemonic": "^1.0.1",
         "ssb-markdown": "^6.0.7",
@@ -3078,15 +3078,14 @@
       "integrity": "sha1-44Mx8IRLukm5qctxx3FYWqsbxlo="
     },
     "node_modules/dns-packet": {
-      "version": "4.2.0",
-      "resolved": "https://registry.npmjs.org/dns-packet/-/dns-packet-4.2.0.tgz",
-      "integrity": "sha512-bn1AKpfkFbm0MIioOMHZ5qJzl2uypdBwI4nYNsqvhjsegBhcKJUlCrMPWLx6JEezRjxZmxhtIz/FkBEur2l8Cw==",
+      "version": "5.2.4",
+      "resolved": "https://registry.npmjs.org/dns-packet/-/dns-packet-5.2.4.tgz",
+      "integrity": "sha512-vgu5Bx5IV8mXmh/9cn1lzn+J7okFlXe1vBRp+kCBJXg1nBED6Z/Q4e+QaDxQRSozMr14p/VQmdXwsf/I2wGjUA==",
       "dependencies": {
-        "ip": "^1.1.5",
-        "safe-buffer": "^5.1.1"
+        "ip": "^1.1.5"
       },
       "engines": {
-        "node": ">=4"
+        "node": ">=6"
       }
     },
     "node_modules/dom-serializer": {
@@ -5483,11 +5482,11 @@
       }
     },
     "node_modules/multicast-dns": {
-      "version": "7.2.2",
-      "resolved": "https://registry.npmjs.org/multicast-dns/-/multicast-dns-7.2.2.tgz",
-      "integrity": "sha512-XqSMeO8EWV/nOXOpPV8ztIpNweVfE1dSpz6SQvDPp71HD74lMXjt4m/mWB1YBMG0kHtOodxRWc5WOb/UNN1A5g==",
+      "version": "7.2.3",
+      "resolved": "https://registry.npmjs.org/multicast-dns/-/multicast-dns-7.2.3.tgz",
+      "integrity": "sha512-TzxgGSLRLB7tqAlzjgd2x2ZE0cDsGFq4rs9W4yE5xp+7hlRXeUQGtXZsTGfGw2FwWB45rfe8DtXMYBpZGMLUng==",
       "dependencies": {
-        "dns-packet": "^4.0.0",
+        "dns-packet": "^5.2.2",
         "thunky": "^1.0.2"
       },
       "bin": {
@@ -7729,10 +7728,10 @@
       }
     },
     "node_modules/ssb-browser-core": {
-      "version": "10.0.12",
-      "resolved": "git+ssh://git@github.com/arj03/ssb-browser-core.git#6de0ba55b8ef8f5c6609de5208968d9098f850a9",
+      "version": "11.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-11.0.0.tgz",
+      "integrity": "sha512-nz56TMvz4xkt2Vx+t8ht2JGbfg0nVHTQkgkW+kmEUNe4MpJQrJjRNumxskjou+YaMrV80yAQ3xLr+gsY2vHpJA==",
       "hasInstallScript": true,
-      "license": "Beerware",
       "dependencies": {
         "atomic-file-rw": "^0.2.2",
         "fastpriorityqueue": "^0.7.1",
@@ -7749,7 +7748,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-blob-files": "https://github.com/ssbc/ssb-blob-files#browser-support",
+        "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^3.2.1",
         "ssb-db2": "^2.1.1",
@@ -12349,12 +12348,11 @@
       "integrity": "sha1-44Mx8IRLukm5qctxx3FYWqsbxlo="
     },
     "dns-packet": {
-      "version": "4.2.0",
-      "resolved": "https://registry.npmjs.org/dns-packet/-/dns-packet-4.2.0.tgz",
-      "integrity": "sha512-bn1AKpfkFbm0MIioOMHZ5qJzl2uypdBwI4nYNsqvhjsegBhcKJUlCrMPWLx6JEezRjxZmxhtIz/FkBEur2l8Cw==",
+      "version": "5.2.4",
+      "resolved": "https://registry.npmjs.org/dns-packet/-/dns-packet-5.2.4.tgz",
+      "integrity": "sha512-vgu5Bx5IV8mXmh/9cn1lzn+J7okFlXe1vBRp+kCBJXg1nBED6Z/Q4e+QaDxQRSozMr14p/VQmdXwsf/I2wGjUA==",
       "requires": {
-        "ip": "^1.1.5",
-        "safe-buffer": "^5.1.1"
+        "ip": "^1.1.5"
       }
     },
     "dom-serializer": {
@@ -14312,11 +14310,11 @@
       }
     },
     "multicast-dns": {
-      "version": "7.2.2",
-      "resolved": "https://registry.npmjs.org/multicast-dns/-/multicast-dns-7.2.2.tgz",
-      "integrity": "sha512-XqSMeO8EWV/nOXOpPV8ztIpNweVfE1dSpz6SQvDPp71HD74lMXjt4m/mWB1YBMG0kHtOodxRWc5WOb/UNN1A5g==",
+      "version": "7.2.3",
+      "resolved": "https://registry.npmjs.org/multicast-dns/-/multicast-dns-7.2.3.tgz",
+      "integrity": "sha512-TzxgGSLRLB7tqAlzjgd2x2ZE0cDsGFq4rs9W4yE5xp+7hlRXeUQGtXZsTGfGw2FwWB45rfe8DtXMYBpZGMLUng==",
       "requires": {
-        "dns-packet": "^4.0.0",
+        "dns-packet": "^5.2.2",
         "thunky": "^1.0.2"
       }
     },
@@ -16188,7 +16186,7 @@
     },
     "ssb-blob-files": {
       "version": "git+ssh://git@github.com/ssbc/ssb-blob-files.git#c414be9d7b77a4b06df1e6225090e717fba9bcdd",
-      "from": "ssb-blob-files@https://github.com/ssbc/ssb-blob-files#browser-support",
+      "from": "ssb-blob-files@git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
       "requires": {
         "piexifjs": "^1.0.6",
         "pull-box-stream": "^1.0.13",
@@ -16200,8 +16198,9 @@
       }
     },
     "ssb-browser-core": {
-      "version": "git+ssh://git@github.com/arj03/ssb-browser-core.git#6de0ba55b8ef8f5c6609de5208968d9098f850a9",
-      "from": "ssb-browser-core@github:arj03/ssb-browser-core#unbermuda-test",
+      "version": "11.0.0",
+      "resolved": "https://registry.npmjs.org/ssb-browser-core/-/ssb-browser-core-11.0.0.tgz",
+      "integrity": "sha512-nz56TMvz4xkt2Vx+t8ht2JGbfg0nVHTQkgkW+kmEUNe4MpJQrJjRNumxskjou+YaMrV80yAQ3xLr+gsY2vHpJA==",
       "requires": {
         "atomic-file-rw": "^0.2.2",
         "fastpriorityqueue": "^0.7.1",
@@ -16218,7 +16217,7 @@
         "push-stream-to-pull-stream": "^1.0.3",
         "sanitize-filename": "^1.6.3",
         "secret-stack": "^6.3.2",
-        "ssb-blob-files": "https://github.com/ssbc/ssb-blob-files#browser-support",
+        "ssb-blob-files": "git+https://github.com/ssbc/ssb-blob-files.git#browser-support",
         "ssb-caps": "^1.1.0",
         "ssb-conn": "^3.2.1",
         "ssb-db2": "^2.1.1",
