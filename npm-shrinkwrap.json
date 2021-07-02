@@ -4735,9 +4735,9 @@
       }
     },
     "node_modules/jitdb": {
-      "version": "3.1.4",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.1.4.tgz",
-      "integrity": "sha512-UEzC68eqFIQJPQnmPm2/KGirX2pE+GebhA2EZss3b0UZZca7eGgxpvQ7+sIPcwLKAcZr5rmkFhQHGIQJyf20bg==",
+      "version": "3.1.5",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.1.5.tgz",
+      "integrity": "sha512-O3z6dmk4FY+Il3zt4CEnDwgbCWP89dsGvCK1Gx7pVOSsKML31WupDJMTICZ3PUagYi52NNUhvCZHUeJVJFdgTA==",
       "dependencies": {
         "atomic-file-rw": "^0.2.1",
         "binary-search-bounds": "^2.0.4",
@@ -8000,9 +8000,9 @@
       }
     },
     "node_modules/ssb-ebt": {
-      "version": "7.0.1",
-      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.1.tgz",
-      "integrity": "sha512-6+9IFgc/D99bWOQqo1CjIo85kY4UZrSc8ImBorpAiI+oSbpdKfhaD2oZLJ5bvbSeJWLNZXawEU4K2xVwicikEw==",
+      "version": "7.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.2.tgz",
+      "integrity": "sha512-UY9avSEVKvWhQoXFEVA5IWYJD4ldgYIgegGjR4EImWOgwvjH8FqM2BJyIwXN2eY5UKHmfenxMqHMu3Url+KA5w==",
       "dependencies": {
         "base64-url": "^2.2.0",
         "epidemic-broadcast-trees": "^8.0.4",
@@ -13692,9 +13692,9 @@
       }
     },
     "jitdb": {
-      "version": "3.1.4",
-      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.1.4.tgz",
-      "integrity": "sha512-UEzC68eqFIQJPQnmPm2/KGirX2pE+GebhA2EZss3b0UZZca7eGgxpvQ7+sIPcwLKAcZr5rmkFhQHGIQJyf20bg==",
+      "version": "3.1.5",
+      "resolved": "https://registry.npmjs.org/jitdb/-/jitdb-3.1.5.tgz",
+      "integrity": "sha512-O3z6dmk4FY+Il3zt4CEnDwgbCWP89dsGvCK1Gx7pVOSsKML31WupDJMTICZ3PUagYi52NNUhvCZHUeJVJFdgTA==",
       "requires": {
         "atomic-file-rw": "^0.2.1",
         "binary-search-bounds": "^2.0.4",
@@ -16443,9 +16443,9 @@
       }
     },
     "ssb-ebt": {
-      "version": "7.0.1",
-      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.1.tgz",
-      "integrity": "sha512-6+9IFgc/D99bWOQqo1CjIo85kY4UZrSc8ImBorpAiI+oSbpdKfhaD2oZLJ5bvbSeJWLNZXawEU4K2xVwicikEw==",
+      "version": "7.0.2",
+      "resolved": "https://registry.npmjs.org/ssb-ebt/-/ssb-ebt-7.0.2.tgz",
+      "integrity": "sha512-UY9avSEVKvWhQoXFEVA5IWYJD4ldgYIgegGjR4EImWOgwvjH8FqM2BJyIwXN2eY5UKHmfenxMqHMu3Url+KA5w==",
       "requires": {
         "base64-url": "^2.2.0",
         "epidemic-broadcast-trees": "^8.0.4",
