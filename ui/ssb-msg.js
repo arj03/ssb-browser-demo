@@ -8,7 +8,7 @@ const copy = require("clipboard-copy")
 Vue.component('ssb-msg', {
   template: `
       <div class='message' @contextmenu="onContextMenu">
-        <div class='header'>
+        <div class='header' v-if="!isOOO">
           <span class="profile">
             <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
           </span>
@@ -58,7 +58,7 @@ Vue.component('ssb-msg', {
           </li>
         </span>
         <span v-if="isOOO"><a href="javascript:void(0);" v-on:click="getOOO">{{ $t('common.getMsg') }}</a></span>
-        <div class='reactions'>
+        <div class='reactions' v-if="!isOOO">
           <span class='reactions-existing'>
             <span v-for="reaction in reactions">
               <router-link :to="{name: 'profile', params: { feedId: reaction.authorId }}" v-bind:title="reaction.author">{{ reaction.expression }}</router-link>
