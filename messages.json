@@ -219,6 +219,7 @@
       "loading": "Loading messages...please wait.",
       "postReply": "Post reply",
       "blankFieldError": "Please provide a message to publish.",
+      "cantLoadOOOError": "We don't have this message in the database and are not connected to any peers who might have it.",
       "blockingReplies": "These people are blocking you and will not see your reply:"
     },
     "threads": {
@@ -527,6 +528,7 @@
       "loading": "メッセージを読み込んでいます。 お待ちください。",
       "postReply": "掲示します",
       "blankFieldError": "公開するメッセージを入力してください。",
+      "cantLoadOOOError": "このメッセージはデータベースにありません。また、このメッセージを持っている可能性のあるピアには接続されていません。",
       "blockingReplies": "これらの人々はあなたをブロックしていて、あなたの返事を見ることはありません："
     },
     "threads": {
@@ -743,6 +745,7 @@
     "thread": {
       "blankFieldError": "Por favor, forneça uma mensagem para publicar.",
       "blockingReplies": "Essas pessoas estão bloqueando você e não verão sua resposta:",
+      "cantLoadOOOError": "Não temos esta mensagem no banco de dados e não estamos conectados a nenhum par que possa tê-la.",
       "loading": "Carregando mensagens. Por favor, aguarde.",
       "postReply": "Postar resposta",
       "title": "Tópico \"{title}\""
