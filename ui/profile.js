@@ -647,14 +647,14 @@ module.exports = function () {
         if (profile.name)
           self.name = profile.name
           
-        if (profile.description) {
+        if (profile.description && typeof self.descriptionText == "string") {
           self.descriptionText = profile.description
             
           if (self.feedId == SSB.net.id) {
             // Editing self.
             // Check for images.  If there are any, cache them.
             var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
-            var blobMatches = [...this.descriptionText.matchAll(blobRegEx)]
+            var blobMatches = [...self.descriptionText.matchAll(blobRegEx)]
             for (b in blobMatches)
               self.cacheImageURLForPreview(blobMatches[b][1], (err, success) => {
                 // Reload the editor with the new image.
