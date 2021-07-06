@@ -176,11 +176,6 @@ code {
   text-align: right;
 }
 
-.message > .header > .text > .raw {
-  font-size: x-small;
-  float: right;
-}
-
 .message > .header > .text > .date {
   font-size: small;
   margin-bottom: 5px;

@@ -13,7 +13,6 @@ Vue.component('ssb-msg', {
             <ssb-profile-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-link>
           </span>
           <span class='text'>
-            <span class='raw' v-on:click="showRaw">RAW</span>
             <div class='date' :title='date'>{{ humandate }}</div>
             <ssb-profile-name-link v-bind:key="msg.value.author" v-bind:feedId="msg.value.author"></ssb-profile-name-link> {{ $t('common.posted') }}
             <span v-if="msg.value.content.root && msg.value.content.root != msg.key">
@@ -252,9 +251,6 @@ Vue.component('ssb-msg', {
     unlike: function() {
       if (confirm("Are you sure you want to remove your reaction from this post?"))
         this.react('Unlike')
-    },
-    showRaw: function() {
-      console.log(JSON.stringify(this.msg, null, 2))
     },
     renderMessage: function (err, SSB) {
       const { where, and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
