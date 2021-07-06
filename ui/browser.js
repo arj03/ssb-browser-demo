@@ -4,6 +4,7 @@
   const i18nMessages = require('../messages.json')
   const helpers = require('./helpers')
   const pull = require('pull-stream')
+  const ref = require('ssb-ref')
   require('../ssb-singleton-setup')
   const ssbSingleton = require('ssb-browser-core/ssb-singleton')
   const localPrefs = require('../localprefs')
@@ -144,9 +145,12 @@
           [ err, SSB ] = ssbSingleton.getSSB()
 
           if (this.goToTargetText != '' && this.goToTargetText.startsWith('%')) {
-            router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
-            this.goToTargetText = ""
-            this.suggestions = []
+            if (ref.isMsg(this.goToTargetText)) {
+              router.push({ name: 'thread', params: { rootId: this.goToTargetText.substring(1) } })
+              this.goToTargetText = ""
+              this.suggestions = []
+            } else
+              alert(this.$root.$t('common.searchErrorInvalidMsg'))
           } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('#')) {
             const searchForChannel = this.goToTargetText.substring(1)
             const allChannels = SSB.db.getIndex("channels").getChannels()
@@ -158,7 +162,7 @@
           } else if (this.goToTargetText != '' && this.goToTargetText.startsWith('@')) {
             // If it's not a valid profile ID, try doing a text search.
             const profiles = SSB.db.getIndex("aboutSelf")
-            const profile = profiles.getProfile(this.goToTargetText)
+            const profile = (ref.isFeed(this.goToTargetText) ? profiles.getProfile(this.goToTargetText) : null)
             if (!profile || Object.keys(profile).length == 0) {
               // We could use searchProfiles here, but this gives us a little more exact results in case the user skipped the suggestions.
               const profilesDict = profiles.profiles

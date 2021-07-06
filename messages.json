@@ -41,6 +41,7 @@
       "getMsg": "get msg",
       "Add": "Add",
       "mentions": "Mentions:",
+      "searchErrorInvalidMsg": "Invalid message ID.  Please check for typos and try again.",
       "goToSearch": "Go to msg/feed/channel"
     },
     "public": {
@@ -351,6 +352,7 @@
       "startedFollowing": "フォローを開始",
       "stoppedFollowing": "フォローをやめた",
       "mentions": "言及します：",
+      "searchErrorInvalidMsg": "メッセージIDが無効です。 タイプミスを確認して、再試行してください。",
       "close": "閉じて",
       "save": "変更を保存"
     },
@@ -566,6 +568,7 @@
       "profileUpdateSelf": "{user} atualizou seu perfil",
       "refreshMessages": "Atualizar mensagens",
       "save": "Salvar",
+      "searchErrorInvalidMsg": "ID da mensagem inválida. Verifique se há erros de digitação e tente novamente.",
       "searchingForMessages": "(Procurando por mensagens ...)",
       "selfPronoun": "Você",
       "showingMessagesFrom": "Mostrando mensagens de",
