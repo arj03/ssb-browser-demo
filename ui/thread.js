@@ -16,6 +16,7 @@ module.exports = function () {
       messages: [],
       participantsBlocking: [],
       rootMsg: { key: '', value: { content: {} } },
+      cantLoadOOOError: false,
 
       showPreview: false
     }
@@ -38,7 +39,13 @@ module.exports = function () {
            <ssb-msg-preview v-bind:show="showPreview" v-bind:text="postText" v-bind:onClose="closePreview" v-bind:confirmPost="confirmPost"></ssb-msg-preview>
          </div>
          <div v-if='rootMsg.key == ""'>
-           {{ $t('thread.loading') }}
+           <span v-if='cantLoadOOOError'>
+             {{ $t('thread.cantLoadOOOError') }}
+             <button class="clickButton" v-on:click="renderThread">{{ $t('common.getMsg') }}</button>
+           </span>
+           <span v-if='!cantLoadOOOError'>
+             {{ $t('thread.loading') }}
+           </span>
          </div>
        <div>`,
 
@@ -210,19 +217,26 @@ module.exports = function () {
 
       renderThreadCB: function(err, SSB) {
         var self = this
+        self.cantLoadOOOError = false
         SSB.db.get(self.fixedRootId, (err, rootMsg) => {
           if (err || rootMsg === undefined) { // FIXME: make this configurable
-            SSB.getThread(self.fixedRootId, (err) => {
-              if (err) console.error(err)
-
-              SSB.db.get(self.fixedRootId, (err, rootMsg) => {
-                if (err || rootMsg === undefined) {
+            if (SSB.isConnectedWithData()) {
+              SSB.getThread(self.fixedRootId, (err) => {
+                if (err) {
                   console.error(err)
-                  self.render(SSB, { content: { text: self.$root.$t('common.unknownMessage') }})
-                } else
-                  self.render(SSB, rootMsg)
+                  self.cantLoadOOOError = true
+                }
+
+                SSB.db.get(self.fixedRootId, (err, rootMsg) => {
+                  if (err || rootMsg === undefined) {
+                    console.error(err)
+                    self.cantLoadOOOError = true
+                  } else
+                    self.render(SSB, rootMsg)
+                })
               })
-            })
+            } else
+              self.cantLoadOOOError = true
           } else
             self.render(SSB, rootMsg)
         })
