@@ -52,7 +52,7 @@ Vue.component('ssb-msg', {
         <span v-if="forks.length > 0">
           <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ forks.length }} {{ $t('common.forkedreplies') }}</router-link><br><br>
         </span>
-        <span v-if="mentions.length > 0"><b>{{ $t('common.Mentions') }}:</b>
+        <span v-if="mentions.length > 0"><b>{{ $t('common.mentions') }}</b>
           <li v-for="msg in mentions">
             <router-link :to="{name: 'thread', params: { rootId: msg.key.substring(1) }}">{{ smallText(msg) }}</router-link>
           </li>

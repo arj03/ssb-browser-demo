@@ -40,6 +40,7 @@
       "forkedreplies": "replies in a forked thread",
       "getMsg": "get msg",
       "Add": "Add",
+      "mentions": "Mentions:",
       "goToSearch": "Go to msg/feed/channel"
     },
     "public": {
@@ -348,6 +349,7 @@
       "profileUpdateOther": "{user}が他の誰かのプロファイルのプロファイル更新を投稿しました",
       "startedFollowing": "フォローを開始",
       "stoppedFollowing": "フォローをやめた",
+      "mentions": "言及します：",
       "close": "閉じて",
       "save": "変更を保存"
     },
@@ -554,6 +556,7 @@
       "lastXMessages": "Últimas {count} mensagens",
       "lastXThreads": "Últimos {count} tópicos",
       "loadXMore": "Carregar mais {count}de acompanhamento gráfico",
+      "mentions": "Menções:",
       "messageOutsideGraph": "Mensagem fora da rede de seguidores",
       "noMessages": "(Sem mensagens para exibir)",
       "postTooLarge": "Seu post é muito grande. Cada post pode ter até 8KiB. Por favor, encurte a sua postagem ou divida-a em vários posts.",
