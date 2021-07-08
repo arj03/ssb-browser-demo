@@ -34,6 +34,8 @@
       "stoppedFollowing": "Stopped following",
       "close": "Close",
       "save": "Save",
+      "warning": "WARNING!",
+      "note": "NOTE:",
       "posted": "posted",
       "a": "a",
       "inReplyTo": "in reply to",
@@ -127,7 +129,9 @@
       "title": "Notifications"
     },
     "onboarding": {
-      "title": "New user",
+      "newUser": "New user",
+      "recoverExistingAccount": "Recover existing account",
+      "mnemonicInstructions": "If you've already created an account and need to recover it or move it to this device, please enter your mnemonic key here:",
       "welcomeMessage": "Welcome!  It looks like you're new here.  All of this information is <strong>entirely optional</strong>, but it does tend to help get you up and running quickly and easily.",
       "profileName": "Pick a name for yourself (you can change this later under Profile):",
       "profileNamePlaceholder": "(Your name/nickname)",
@@ -135,6 +139,9 @@
       "profileDescriptionPlaceholder": "(A short bio about you - Markdown formatting is supported)",
       "suggestedPeers": "Here are some preset servers you can connect to:",
       "suggestedFollows": "And here are some people you might like to follow:",
+      "warningSingleDevice": "Accounts should only ever be used from one device at a time.  Otherwise, you risk forking your feed.  Please make sure this account is not being used from anywhere else.",
+      "warningReloading": "We will now need to reload for this change to take effect.",
+      "noteConnectToSync": "You will need to connect to a server or peer who has a copy of your data to be able to recover your data.  We have provided some presets below.  If your data is on a different peer, please connect to them in the Settings tab and allow the sync to finish before posting anything.",
       "manualSetup": "Manual setup",
       "getStarted": "Get started!"
     },
@@ -266,7 +273,7 @@
       "postMessage": "Fire!"
     },
     "onboarding": {
-      "title": "Landlubber",
+      "newUser": "Landlubber",
       "welcomeMessage": "Ahoy, matey!  Welcome aboard!  Git yerself signed onto the register, so we know who be aboard.  It'll help ye get yer sealegs.",
       "profileName": "Yer name ('ye can change this under Profile):",
       "profileNamePlaceholder": "(Aaaaargh!)",
@@ -353,6 +360,8 @@
       "stoppedFollowing": "フォローをやめた",
       "mentions": "言及します：",
       "searchErrorInvalidMsg": "メッセージIDが無効です。 タイプミスを確認して、再試行してください。",
+      "warning": "警告！",
+      "note": "注意：",
       "close": "閉じて",
       "save": "変更を保存"
     },
@@ -439,7 +448,9 @@
       "title": "通知"
     },
     "onboarding": {
-      "title": "新しいユーザー",
+      "newUser": "新しいユーザー",
+      "recoverExistingAccount": "既存のアカウントを回復する",
+      "mnemonicInstructions": "すでにアカウントを作成していて、それを回復するか、このデバイスに移動する必要がある場合は、ここにニーモニックキーを入力してください。",
       "welcomeMessage": "ようこそ！ あなたはここで新しいようです。この情報はすべて<strong>完全にオプション</strong>ですが、すばやく簡単に開始するのに役立ちます。",
       "profileName": "自分の名前を選択してください（後で「プロファイル」で変更できます）：",
       "profileNamePlaceholder": "（あなたの名前またはニックネーム）",
@@ -447,6 +458,9 @@
       "profileDescriptionPlaceholder": "（あなたについての短い経歴。「Markdown」フォーマットがサポートされています。）",
       "suggestedPeers": "接続できるプリセットサーバーは次のとおりです：",
       "suggestedFollows": "そしてここにあなたがフォローしたいと思うかもしれない何人かの人々がいます：",
+      "warningSingleDevice": "アカウントは、一度に1つのデバイスからのみ使用する必要があります。 そうしないと、フィードをフォークするリスクがあります。 このアカウントが他の場所から使用されていないことを確認してください。",
+      "warningReloading": "この変更を有効にするには、リロードする必要があります。",
+      "noteConnectToSync": "データを回復できるようにするには、データのコピーを持っているサーバーまたはピアに接続する必要があります。 以下にいくつかのプリセットを用意しました。 データが別のピアにある場合は、[設定]タブでそれらに接続し、何かを投稿する前に同期が終了するのを待ってください。",
       "manualSetup": "キャンセル/手動セットアップ",
       "getStarted": "始めましょう！"
     },
@@ -555,6 +569,8 @@
       "title": "Canais"
     },
     "common": {
+      "warning": "AVISO!",
+      "note": "NOTA:",
       "close": "Fechar",
       "genericUsername": "Pessoa",
       "lastXMessages": "Últimas {count} mensagens",
@@ -630,13 +646,18 @@
     "onboarding": {
       "getStarted": "Iniciar!",
       "manualSetup": "Configuração manual",
+      "mnemonicInstructions": "Se você já criou uma conta e precisa recuperá-la ou movê-la para este dispositivo, insira sua chave mnemônica aqui:",
+      "noteConnectToSync": "Você precisará se conectar a um servidor ou par que tenha uma cópia dos seus dados para poder recuperá-los. Fornecemos algumas predefinições abaixo. Se seus dados estiverem em um par diferente, conecte-se a eles na guia Configurações e permita que a sincronização termine antes de postar qualquer coisa.",
       "profileDescription": "Se você quiser, você pode digitar uma breve biografia:",
       "profileDescriptionPlaceholder": "(Uma breve biografia sobre você - formatação de markdown é suportada)",
       "profileName": "Escolha um nome (você pode alterar isso mais tarde em Perfil):",
       "profileNamePlaceholder": "(Seu nome / apelido)",
       "suggestedFollows": "E aqui estão algumas pessoas que talvez você gostaria de seguir:",
       "suggestedPeers": "Aqui estão alguns servidores predefinidos que você pode se conectar:",
-      "title": "Nova pessoa",
+      "newUser": "Nova pessoa",
+      "recoverExistingAccount": "Recuperar conta existente",
+      "warningReloading": "Agora precisaremos recarregar para que essa alteração tenha efeito.",
+      "warningSingleDevice": "As contas só devem ser usadas em um dispositivo por vez. Caso contrário, você corre o risco de bifurcar seu feed. Certifique-se de que essa conta não esteja sendo usada em nenhum outro lugar.",
       "welcomeMessage": "Bem-vind@! Parece que você é nov@ aqui. Toda esta informação é <strong>inteiramente opcional</strong>, mas tende a ajudar a ter tudo funcionando com rapidez e facilidade."
     },
     "pages": {

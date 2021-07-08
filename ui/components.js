@@ -10,11 +10,14 @@ module.exports = function () {
   require('./connected')
   const { Editor } = require('@toast-ui/vue-editor')
   const { VueSimpleContextMenu } = require("vue-simple-context-menu")
+  const { Tabs, Tab } = require("vue-slim-tabs")
   require('./markdown-editor')
 
   Vue.component('v-select', VueSelect.VueSelect)
   Vue.component('vue-simple-context-menu', VueSimpleContextMenu)
   Vue.component('tui-editor', Editor)
+  Vue.component('tabs', Tabs)
+  Vue.component('tab', Tab)
 
   const state = {
     publicRefreshTimer: 0,
