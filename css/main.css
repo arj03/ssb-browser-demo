@@ -490,3 +490,49 @@ textarea.source
 {
   background-color: #fff;
 }
+
+.vue-tablist
+{
+  margin-bottom: 0;
+}
+
+.vue-tab
+{
+  background: #e6e8eb;
+}
+
+.vue-tab[aria-selected="true"],
+.vue-tabpanel
+{
+  background: #f7f9fc;
+}
+
+.vue-tabpanel
+{
+  border: 1px solid #e2e2e2;
+  border-top: none;
+  padding: 0 10px 5px 10px;
+}
+
+.tab-clear-margin
+{
+  font-size: 0;
+}
+
+p.warning,
+p.note
+{
+  padding: 5px 10px;
+}
+
+p.warning
+{
+  border: 1px solid #993333;
+  background: #ffdddd;
+}
+
+p.note
+{
+  border: 1px solid #dddd00;
+  background: #ffff99;
+}
