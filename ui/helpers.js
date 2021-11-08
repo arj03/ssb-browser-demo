@@ -36,6 +36,11 @@ exports.getMessageTitle = function(msgId, msg) {
     if (msg.content.title)
       return msg.content.title
     else if (msg.content.text) {
+      if (!msg.content.text.lastIndexOf) {
+        console.log("Encountered message with text not a string:")
+        console.log(msg)
+        return msgId
+      }
       const maxLength = 40
       const breakCharacters = ' .,/[]()#'
       var lastBreakChar = 0
