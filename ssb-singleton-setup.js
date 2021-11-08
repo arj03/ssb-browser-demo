@@ -75,4 +75,6 @@ function ssbLoaded() {
   }))
 }
 
-require('ssb-browser-core/ssb-singleton').init(config, extraModules, ssbLoaded)
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
+ssbSingleton.setup("/.ssb-lite", config, extraModules)
+ssbSingleton.getSimpleSSBEventually(function() { return true }, ssbLoaded)
