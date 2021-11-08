@@ -42,7 +42,7 @@ function onContextMenu(e) {
       })
     }
   } else if (href.startsWith("#/thread/")) {
-    var id = decodeURIComponent(href.substring(("#/thread/").length))
+    var id = "%" + decodeURIComponent(href.substring(("#/thread/").length))
     options.push({
       name: "Copy ID",
       cb: () => { copy(id) }
