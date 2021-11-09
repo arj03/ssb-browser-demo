@@ -583,7 +583,7 @@ module.exports = function () {
 
         self.isSelf = (SSB.id == this.feedId)
 
-        SSB.getGraphForFeed(self.feedId, (err, graph) => {
+        SSB.helpers.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
@@ -692,7 +692,7 @@ module.exports = function () {
       renderProfile() {
         var self = this
         ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db && SSB.db.operators && SSB.getGraphForFeed }, self.renderFollowsCallback)
+          (SSB) => { return SSB && SSB.db && SSB.db.operators && SSB.helpers.getGraphForFeed }, self.renderFollowsCallback)
         ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
           (SSB) => { return SSB && SSB.db && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
       }
