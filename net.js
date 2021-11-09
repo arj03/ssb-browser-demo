@@ -7,7 +7,7 @@ SSB.syncFeedAfterFollow = function(feedId) {
 }
 
 SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
-  let rpc = SSB.getPeer()
+  let rpc = SSB.helpers.getPeer()
 
   var seqStart = sequence - 100
   if (seqStart < 0)
@@ -31,7 +31,7 @@ SSB.syncFeedFromSequence = function(feedId, sequence, cb) {
 }
 
 SSB.syncFeedFromLatest = function(feedId, cb) {
-  let rpc = SSB.getPeer()
+  let rpc = SSB.helpers.getPeer()
 
   console.time("downloading messages")
 
@@ -60,7 +60,7 @@ syncThread = function(messages, cb) {
 // this uses https://github.com/arj03/ssb-partial-replication
 SSB.getThread = function(msgId, cb) {
   SSB.connectedWithData(() => {
-    let rpc = SSB.getPeer()
+    let rpc = SSB.helpers.getPeer()
   
     rpc.partialReplication.getTangle(msgId, (err, messages) => {
       if (err) return cb(err)
@@ -135,13 +135,13 @@ SSB.disconnected = function(cb) {
 }
 
 // Register for the connect event so we can keep track of it.
-SSB.net.on('rpc:connect', (rpc) => {
+SSB.on('rpc:connect', (rpc) => {
   // Now we're connected.  Run all the callbacks.
   ++SSB.activeConnections
   runConnectedCallbacks()
 
   // See if we're operating on a connection with actual data (not a room).
-  let connPeers = Array.from(SSB.net.conn.hub().entries())
+  let connPeers = Array.from(SSB.conn.hub().entries())
   connPeers = connPeers.filter(([,x])=>!!x.key).map(([address,data])=>({
     address,
     data
@@ -167,6 +167,6 @@ SSB.net.on('rpc:connect', (rpc) => {
 
 SSB.getOOO = function(msgId, cb) {
   SSB.connectedWithData((rpc) => {
-    SSB.net.ooo.get(msgId, cb)
+    SSB.ooo.get(msgId, cb)
   })
 }

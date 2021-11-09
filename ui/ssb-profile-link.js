@@ -23,7 +23,7 @@ Vue.component('ssb-profile-link', {
     renderProfile: function(profile) {
       var self = this
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
+        (SSB) => { return SSB }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
     },
 
     renderProfileCallback: function (err, SSB, existingProfile) {
@@ -33,14 +33,14 @@ Vue.component('ssb-profile-link', {
       // Set a default image to be overridden if there is an actual avatar to show.
       self.imgURL = helpers.getMissingProfileImage();
 
-      if (self.feedId == SSB.net.id)
+      if (self.feedId == SSB.id)
         self.name = this.$root.$t('common.selfPronoun')
       else
         self.name = profile.name
   
       if (profile.imageURL) self.imgURL = profile.imageURL
       else if (profile.image) {
-        SSB.net.blobs.localProfileGet(profile.image, (err, url) => {
+        SSB.blobs.localProfileGet(profile.image, (err, url) => {
           if (err) return console.error("failed to get img", err)
   
           profile.imageURL = self.imgURL = url
@@ -49,7 +49,7 @@ Vue.component('ssb-profile-link', {
     },
 
     loadBlocking: function (err, SSB) {
-      SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+      SSB.friends.isBlocking({ source: SSB.id, dest: self.feedId }, (err, result) => {
         if (!err) self.isBlocked = result
       })
     },
@@ -59,9 +59,9 @@ Vue.component('ssb-profile-link', {
       // Set a default image while we wait for an SSB.
       self.imgURL = helpers.getMissingProfileImage();
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net }, self.loadBlocking)
+        (SSB) => { return SSB }, self.loadBlocking)
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
+        (SSB) => { return SSB && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
     }
   },
 

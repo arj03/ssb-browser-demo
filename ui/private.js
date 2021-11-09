@@ -90,7 +90,7 @@ module.exports = function (componentsState) {
       },
 
       renderPrivateCB: function(err, SSB) {
-        const { where, and, descending, isPrivate, isRoot, type, toCallback } = SSB.dbOperators
+        const { where, and, descending, isPrivate, isRoot, type, toCallback } = SSB.db.operators
         document.body.classList.add('refreshing')
 
         var self = this
@@ -164,7 +164,7 @@ module.exports = function (componentsState) {
 
       buildPostData: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.box) {
+        if (!SSB || !SSB.box) {
           alert("Can't post right now.  Couldn't lock database.  Please make sure there's only one instance of ssb-browser running.")
           return
         }
@@ -181,8 +181,8 @@ module.exports = function (componentsState) {
           return
         }
 
-        if (!recps.includes(SSB.net.id))
-          recps.push(SSB.net.id)
+        if (!recps.includes(SSB.id))
+          recps.push(SSB.id)
 
         var mentions = ssbMentions(this.postText)
 
@@ -197,7 +197,7 @@ module.exports = function (componentsState) {
 
       confirmPost: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.box) {
+        if (!SSB || !SSB.box) {
           alert("Can't post right now.  Couldn't lock database.  Please make sure there's only one instance of ssb-browser running.")
           return
         }

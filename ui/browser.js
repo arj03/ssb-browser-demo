@@ -202,8 +202,8 @@
       if (app.$data.feedId == "") {
         [ err, SSB ] = ssbSingleton.getSSB()
 
-        if (SSB && SSB.net && SSB.net.id)
-          app.$data.feedId = SSB.net.id
+        if (SSB && SSB.id)
+          app.$data.feedId = SSB.id
         else
           setTimeout(updateFeedId, 500)
       }

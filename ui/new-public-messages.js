@@ -47,7 +47,7 @@ module.exports = function (state) {
           self.registeredSSBChange = true
         }
   
-        const { where, and, type, isPublic, author, not, live, toPullStream } = SSB.dbOperators
+        const { where, and, type, isPublic, author, not, live, toPullStream } = SSB.db.operators
   
         pull(
           SSB.db.query(
@@ -55,7 +55,7 @@ module.exports = function (state) {
               and(
                 type('post'),
                 isPublic(),
-                not(author(SSB.net.id))
+                not(author(SSB.id))
               )
             ),
             live(),

@@ -90,7 +90,7 @@ Vue.component('onboarding-dialog', {
     saveProfile: function() {
       this.descriptionText = this.$refs.markdownEditor.getMarkdown()
 
-      var msg = { type: 'about', about: SSB.net.id }
+      var msg = { type: 'about', about: SSB.id }
       if (this.name)
         msg.name = this.name
       if (this.descriptionText)
@@ -121,7 +121,7 @@ Vue.component('onboarding-dialog', {
           (function(x) {
             const suggestedPeer = x
             var s = suggestedPeer.address.split(":")
-            SSB.net.connectAndRemember(suggestedPeer.address, {
+            SSB.helpers.connectAndRemember(suggestedPeer.address, {
               key: '@' + s[s.length-1] + '.ed25519',
               type: suggestedPeer.type
             })
@@ -152,7 +152,7 @@ Vue.component('onboarding-dialog', {
           (function(x) {
             const suggestedPeer = x
             var s = suggestedPeer.address.split(":")
-            SSB.net.conn.remember(suggestedPeer.address, {
+            SSB.conn.remember(suggestedPeer.address, {
               key: '@' + s[s.length-1] + '.ed25519',
               type: suggestedPeer.type,
               autoconnect: true

@@ -93,7 +93,7 @@ module.exports = function (componentsState) {
       },
 
       renderPublicCB: function (err, SSB) {
-        const { and, or, not, channel, isRoot, hasRoot, isPublic, type, author, key, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { and, or, not, channel, isRoot, hasRoot, isPublic, type, author, key, startFrom, paginate, descending, toCallback } = SSB.db.operators
         var self = this
 
         self.categories["public"] = {
@@ -101,7 +101,7 @@ module.exports = function (componentsState) {
           threads: {}
         }
         pull(
-          SSB.net.threads.public({
+          SSB.threads.public({
             reverse: true,
             allowlist: ["post"]
           }),

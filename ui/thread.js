@@ -129,7 +129,7 @@ module.exports = function () {
       },
 
       render: function(SSB, rootMsg) {
-        const { where, and, hasRoot, toCallback } = SSB.dbOperators
+        const { where, and, hasRoot, toCallback } = SSB.db.operators
 
         var self = this
         this.rootMsg = { key: this.fixedRootId, value: rootMsg }
@@ -203,7 +203,7 @@ module.exports = function () {
         this.participantsBlocking = []
         for (a in allAuthors) {
           (function(author) {
-            SSB.net.friends.isBlocking({ source: author, dest: SSB.net.id}, (err, blocking) => {
+            SSB.friends.isBlocking({ source: author, dest: SSB.id}, (err, blocking) => {
               if (blocking)
                 self.participantsBlocking.push(author)
             })

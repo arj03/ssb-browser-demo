@@ -9,7 +9,7 @@ module.exports = function (componentsState) {
   function getQuery(SSB, onlyDirectFollow, onlyThreads, onlyChannels,
                     channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb) {
 
-    const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.dbOperators
+    const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.db.operators
     let feedFilter = null
     if (onlyDirectFollow) {
       const graph = SSB.net.feedReplication.getGraph()
@@ -147,7 +147,7 @@ module.exports = function (componentsState) {
       loadMoreCB: function(err, SSB) {
         var self = this
 
-        const { where, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, startFrom, paginate, descending, toCallback } = SSB.db.operators
         getQuery(SSB, this.onlyDirectFollow, this.onlyThreads,
           this.onlyChannels, this.onlyChannelsList,
           this.hideChannels, this.hideChannelsList,
@@ -183,7 +183,7 @@ module.exports = function (componentsState) {
       renderPublicCB: function(err, SSB) {
         var self = this
 
-        const { where, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, startFrom, paginate, descending, toCallback } = SSB.db.operators
         componentsState.newPublicMessages = false
 
         this.isRefreshing = true

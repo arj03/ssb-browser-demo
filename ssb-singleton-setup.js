@@ -69,7 +69,7 @@ function ssbLoaded() {
   require('./profile')
   require('./search')
 
-  pull(SSB.net.conn.hub().listen(), pull.drain((ev) => {
+  pull(SSB.conn.hub().listen(), pull.drain((ev) => {
     if (ev.type.indexOf("failed") >= 0)
       console.warn("Connection error: ", ev)
   }))

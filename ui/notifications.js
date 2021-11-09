@@ -22,7 +22,7 @@ module.exports = function () {
 
     methods: {
       createGetSameRoot: function(SSB) {
-        const { where, and, author, type, toCallback, hasRoot } = SSB.dbOperators
+        const { where, and, author, type, toCallback, hasRoot } = SSB.db.operators
   
         return function(read) {
           return function readable (end, cb) {
@@ -41,7 +41,7 @@ module.exports = function () {
                     // Look through the results from the end backwards and look for a post from the user.
                     // If we find one, stop passing along results, so we only have the posts since the user last replied.
                     for (var r = results.length - 1; r >= 0; --r) {
-                      if (results[r].value.author == SSB.net.id) break
+                      if (results[r].value.author == SSB.id) break
   
                       cb(false, results[r])
                     }
@@ -62,7 +62,7 @@ module.exports = function () {
 
       renderCB: function (err, SSB) {
         const { where, and, mentions, contact, author, type, toCallback,
-                toPullStream, hasRoot, paginate, descending } = SSB.dbOperators
+                toPullStream, hasRoot, paginate, descending } = SSB.db.operators
 
         var self = this
 
@@ -73,7 +73,7 @@ module.exports = function () {
             // Messages directly mentioning the user.
             pull(
               SSB.db.query(
-                where(mentions(SSB.net.id)),
+                where(mentions(SSB.id)),
                 descending(),
                 paginate(25),
                 toPullStream()
@@ -86,7 +86,7 @@ module.exports = function () {
               SSB.db.query(
                 where(
                   and(
-                    author(SSB.net.id),
+                    author(SSB.id),
                     type('post')
                   )
                 ),
@@ -99,7 +99,7 @@ module.exports = function () {
             ),
             pull(
               SSB.db.query(
-                where(contact(SSB.net.id)),
+                where(contact(SSB.id)),
                 descending(),
                 paginate(25),
                 toPullStream()
@@ -111,8 +111,8 @@ module.exports = function () {
           self.createGetSameRoot(SSB),
           pull.unique('key'),
           asyncFilter((msg, cb) => {
-            if (msg.value.author === SSB.net.id) return cb(null, true)
-            else SSB.net.friends.isBlocking({source: SSB.net.id, dest: msg.value.author }, cb)
+            if (msg.value.author === SSB.id) return cb(null, true)
+            else SSB.friends.isBlocking({source: SSB.id, dest: msg.value.author }, cb)
           }),
           pull.collect((err, msgs) => {
             console.timeEnd("notifications")
