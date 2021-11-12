@@ -64,7 +64,7 @@ function extraModules(secretStack) {
 
 function ssbLoaded() {
   // add helper methods
-  SSB = window.singletonSSB
+  SSB = window.singletonSSB.SSB
   require('./net')
   require('./profile')
   require('./search')
