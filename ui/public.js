@@ -7,14 +7,22 @@ module.exports = function (componentsState) {
   const ssbSingleton = require('ssb-browser-core/ssb-singleton')
 
   function getQuery(SSB, onlyDirectFollow, onlyThreads, onlyChannels,
-                    channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb) {
+                    channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb, feedFilterFromGraph) {
 
-    const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.dbOperators
+    const { and, or, not, channel, isRoot, isPublic, type, author } = SSB.db.operators
     let feedFilter = null
-    if (onlyDirectFollow) {
-      const graph = SSB.net.feedReplication.getGraph()
-      if (graph.following.length > 0)
-        feedFilter = or(...graph.following.map(x => author(x)))
+    if (feedFilterFromGraph) {
+      // So that it's not just undefined but null.
+      feedFilter = feedFilterFromGraph
+    } else if (onlyDirectFollow) {
+      SSB.helpers.getGraphForFeed(SSB.id, (err, graph) => {
+        let feedFilter = null
+        if (graph && graph.following && graph.following.length > 0) {
+          feedFilter = or(...graph.following.map(x => author(x)))
+        }
+        getQuery(SSB, false, onlyThreads, onlyChannels, channelList, hideChannels, hideChannelsList, onlyGroups, onlyGroupsList, cb, feedFilter)
+      })
+      return
     }
 
     let channelFilter = null
@@ -147,7 +155,7 @@ module.exports = function (componentsState) {
       loadMoreCB: function(err, SSB) {
         var self = this
 
-        const { where, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, startFrom, paginate, descending, toCallback } = SSB.db.operators
         getQuery(SSB, this.onlyDirectFollow, this.onlyThreads,
           this.onlyChannels, this.onlyChannelsList,
           this.hideChannels, this.hideChannelsList,
@@ -183,7 +191,7 @@ module.exports = function (componentsState) {
       renderPublicCB: function(err, SSB) {
         var self = this
 
-        const { where, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, startFrom, paginate, descending, toCallback } = SSB.db.operators
         componentsState.newPublicMessages = false
 
         this.isRefreshing = true

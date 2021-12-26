@@ -44,7 +44,7 @@ module.exports = function (componentsState) {
       },
 
       renderChannelsCB: function(err, SSB) {
-        const { where, and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, not, isPublic, type, channel, startFrom, paginate, descending, toCallback } = SSB.db.operators
         document.body.classList.add('refreshing')
 
         // Get favorite channels from preferences.

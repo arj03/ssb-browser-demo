@@ -39,10 +39,10 @@ const mdOpts = {
       }
 
       if (link.query && link.query.unbox) { // private
-        SSB.net.blobs.privateGet(link.link, link.query.unbox, replaceLink)
+        SSB.blobs.privateGet(link.link, link.query.unbox, replaceLink)
       }
       else {
-        SSB.net.blobs.localGet(link.link, replaceLink)
+        SSB.blobs.localGet(link.link, replaceLink)
       }
     }
 
@@ -51,7 +51,7 @@ const mdOpts = {
     if (link && ref.isBlob(link.link)) {
       // This has to be done synchronously, so this poses a bit of a challenge for concurrency support.
       [ err, SSB ] = ssbSingleton.getSSB()
-      if (!SSB || !(imageURL = SSB.net.blobs.remoteURL(link.link)) || imageURL == '') {
+      if (!SSB || !(imageURL = SSB.blobs.remoteURL(link.link)) || imageURL == '') {
         // We're not connected to a peer - generate a unique ID so at least we have something to replace.
         imageURL = '/blobs/get/' + link.link
       }

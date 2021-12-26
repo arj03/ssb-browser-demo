@@ -189,7 +189,7 @@ Vue.component('ssb-msg', {
     getOOO: function() {
       var self = this
       ssbSingleton.getSSBEventually(5000, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net && SSB.getOOO && SSB.isConnected() }, self.getOOOCallback)
+        (SSB) => { return SSB && SSB.getOOO && SSB.isConnected() }, self.getOOOCallback)
     },
     getOOOCallback: function(err, SSB) {
       if (err) {
@@ -203,7 +203,7 @@ Vue.component('ssb-msg', {
         this.msg = { key: this.msg.key, value: msgValue }
         this.renderMessage(null, SSB)
 
-        SSB.net.friends.isBlocking({ source: SSB.net.id, dest: msgValue.author }, (err, result) => {
+        SSB.friends.isBlocking({ source: SSB.id, dest: msgValue.author }, (err, result) => {
           if (result) this.msg.value.content.text = "Blocked user"
         })
       })
@@ -253,14 +253,14 @@ Vue.component('ssb-msg', {
         this.react('Unlike')
     },
     renderMessage: function (err, SSB) {
-      const { where, and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.dbOperators
+      const { where, and, author, about, type, votesFor, hasRoot, descending, mentions, toCallback } = SSB.db.operators
 
       this.emojiOptionsFavorite = this.emojiOptions.slice(0, 3)
       this.emojiOptionsMore = this.emojiOptions.slice(3, this.emojiOptions.length).map((x) => { return { name: x } })
 
       var self = this
 
-      if (this.msg.value.author == SSB.net.id)
+      if (this.msg.value.author == SSB.id)
         self.name = "You"
       else
         self.name = SSB.getProfileName(this.msg.value.author)
@@ -307,11 +307,11 @@ Vue.component('ssb-msg', {
                     changes += "<li>Changed image</li>"
                     const newProfile = SSB.getProfile(self.msg.value.author)
                     if (oldImage) {
-                      SSB.net.blobs.localProfileGet(oldImage, (err, oldImageURL) => {
+                      SSB.blobs.localProfileGet(oldImage, (err, oldImageURL) => {
                         if (err) return console.error("failed to get img", err)
                         if (newProfile.image) {
                           // Fetch their current image.
-                          SSB.net.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
+                          SSB.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
                             if (err) return console.error("failed to get img", err)
                             var newImageHTML = "<img class='avatar' src='" + oldImageURL + "' /> ⇉ <img class='avatar' src='" + newImageURL + "'/>"
                             newInfo = newInfo.replace("Changed image", newImageHTML)
@@ -328,7 +328,7 @@ Vue.component('ssb-msg', {
                       })
                     } else if (newProfile.image) {
                       // They didn't have an image before, and they do now.
-                      SSB.net.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
+                      SSB.blobs.localProfileGet(newProfile.image, (err, newImageURL) => {
                         if (err) return console.error("failed to get img", err)
                         var newImageHTML = "<img class='avatar' src='" + helpers.getMissingProfileImage() + "' /> ⇉ <img class='avatar' src='" + newImageURL + "'/>"
                         newInfo = newInfo.replace("Changed image", newImageHTML)
@@ -374,7 +374,7 @@ Vue.component('ssb-msg', {
         case "blog": {
           function fetchBlogContent() {
             pull(
-              SSB.net.blobs.get({ key: self.msg.value.content.blog }),
+              SSB.blobs.get({ key: self.msg.value.content.blog }),
               pull.take(1),
               pull.collect((err, blobContent) => {
                 self.body = md.markdown((new TextDecoder("utf-8")).decode(blobContent[0]))
@@ -382,12 +382,12 @@ Vue.component('ssb-msg', {
             )
           }
 
-          SSB.net.blobs.localGet(this.msg.value.content.blog, (err, url) => {
+          SSB.blobs.localGet(this.msg.value.content.blog, (err, url) => {
             if (err) {
               if (!SSB.isConnectedWithData()) {
                 // Likely don't have it locally and not connected.  So wait until we are connected, then try to fetch it, then parse it.
                 SSB.connectedWithData(() => {
-                  SSB.net.blobs.localGet(self.msg.value.content.blog, (err, url) => {
+                  SSB.blobs.localGet(self.msg.value.content.blog, (err, url) => {
                     if (err)
                       self.body = err
                     else
@@ -444,8 +444,8 @@ Vue.component('ssb-msg', {
             }
           })
 
-          this.reactions = Object.entries(authorToReaction).filter(([k,v]) => k != SSB.net.id).map(([k,v]) => v)
-          this.myReactions = authorToReaction[SSB.net.id] ? [authorToReaction[SSB.net.id]] : []
+          this.reactions = Object.entries(authorToReaction).filter(([k,v]) => k != SSB.id).map(([k,v]) => v)
+          this.myReactions = authorToReaction[SSB.id] ? [authorToReaction[SSB.id]] : []
         })
       )
 
@@ -482,7 +482,7 @@ Vue.component('ssb-msg', {
     this.componentStillLoaded = true
     var self = this
     ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-      (SSB) => { return SSB && SSB.db && SSB.net }, self.renderMessage)
+      (SSB) => { return SSB && SSB.db }, self.renderMessage)
     this.updateDate()
   },
 

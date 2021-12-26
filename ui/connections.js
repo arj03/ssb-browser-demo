@@ -83,26 +83,26 @@ module.exports = function () {
 
       goOffline: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't go offline right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
 
         localPrefs.setOfflineMode(true)
         this.online = false
-        SSB.net.conn.stop()
+        SSB.conn.stop()
       },
 
       goOnline: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't go online right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
 
         localPrefs.setOfflineMode(false)
         this.online = true
-        SSB.net.conn.start()
+        SSB.conn.start()
       },
 
       onConnected: function() {
@@ -130,7 +130,7 @@ module.exports = function () {
 
       add: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't add peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
@@ -141,28 +141,28 @@ module.exports = function () {
           return
         }
         if (s[0] == 'dht') {
-          SSB.net.dhtInvite.start((err, success) => {
+          SSB.dhtInvite.start((err, success) => {
             if (err)
               alert("Unable to accept this invite - could not start the DHT connection system.")
             else
-              SSB.net.dhtInvite.accept(this.address, () => {});
+              SSB.dhtInvite.accept(this.address, () => {});
           })
         }
         else
-          SSB.net.connectAndRemember(this.address, {
+          SSB.helpers.connectAndRemember(this.address, {
             key: '@' + s[s.length-1] + '.ed25519',
             type: this.type
           })
       },
       connectSuggested: function(suggestedPeer) {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't add peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
 
         var s = suggestedPeer.address.split(":")
-        SSB.net.connectAndRemember(suggestedPeer.address, {
+        SSB.helpers.connectAndRemember(suggestedPeer.address, {
           key: '@' + s[s.length-1] + '.ed25519',
           type: suggestedPeer.type
         })
@@ -177,12 +177,12 @@ module.exports = function () {
       },
       connect: function(stagedPeer) {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't add peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
 
-        SSB.net.connectAndRemember(stagedPeer.address, stagedPeer.data)
+        SSB.helpers.connectAndRemember(stagedPeer.address, stagedPeer.data)
         this.updateSuggestedPeers()
 
         // Ask about following.
@@ -201,30 +201,30 @@ module.exports = function () {
       },
       disconnect: function(peer) {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't disconnect peers right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
 
-        SSB.net.conn.forget(peer.address)
-        SSB.net.conn.disconnect(peer.address)
+        SSB.conn.forget(peer.address)
+        SSB.conn.disconnect(peer.address)
         this.updateSuggestedPeers()
       },
       createInvite: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net) {
+        if (!SSB) {
           alert("Can't create an invite right now.  Couldn't lock database.  Please make sure you're only running one instance of ssb-browser.")
           return
         }
 
-        if(SSB.net.dhtInvite) {
+        if(SSB.dhtInvite) {
           this.inviteCode = "(Generating invite code...)";
           var connectionsScreen = this;
-          SSB.net.dhtInvite.start((err, success) => {
+          SSB.dhtInvite.start((err, success) => {
             if (err)
               connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Could not start the DHT connection system.  Please try again.";
             else
-              SSB.net.dhtInvite.create((err, inviteCode) => {
+              SSB.dhtInvite.create((err, inviteCode) => {
                 if(err) {
                   connectionsScreen.inviteCode = "Sorry.  An invite code could not be generated.  Please try again.";
                 } else {
@@ -244,7 +244,7 @@ module.exports = function () {
       renderConnections: function() {
         var self = this
         ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.net }, self.renderConnectionsCallback)
+          (SSB) => { return SSB }, self.renderConnectionsCallback)
       },
       renderConnectionsCallback: function(err, SSB) {
         var self = this
@@ -269,7 +269,7 @@ module.exports = function () {
         /* not working after updating to ssb-ebt 7
         function updatePeerTS() {
           // Last updated timestamp needs to be the maximum value from several sources.
-          SSB.net.ebt.peerStatus((err, ebtPeers) => {
+          SSB.ebt.peerStatus((err, ebtPeers) => {
             for (p in self.peers) {
               var ts = (self.peers[p].data.hubUpdated || 0)
               ts = Math.max(ts, (self.peers[p].data.stateChange || 0))
@@ -283,7 +283,7 @@ module.exports = function () {
         */
 
         pull(
-          SSB.net.conn.stagedPeers(),
+          SSB.conn.stagedPeers(),
           pull.drain((entries) => {
             self.stagedPeers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
             self.updateSuggestedPeers()
@@ -291,7 +291,7 @@ module.exports = function () {
         )
 
         pull(
-          SSB.net.conn.peers(),
+          SSB.conn.peers(),
           pull.drain((entries) => {
             self.peers = entries.filter(([, x]) => !!x.key).map(([address, data]) => ({ address, data }))
             //updatePeerTS()
@@ -315,14 +315,14 @@ module.exports = function () {
           // This is a long-running process, so we need to make sure we're re-acquiring SSB in case the one we've been using goes away (parent window closed, for example).
           [ err, SSB ] = ssbSingleton.getSSB()
           if (!self.running) return
-          if (!SSB || !SSB.db || !SSB.net.feedReplication) {
+          if (!SSB || !SSB.db || !SSB.net || !SSB.net.feedReplication) {
             setTimeout(updateDBStatus, 5000)
             return
           }
 
           setTimeout(() => {
             const status = Object.assign(SSB.db.getStatus().value, SSB.net.feedReplication.partialStatus())
-            const ebtStatus = SSB.net.ebt.peerStatus(SSB.net.id)
+            const ebtStatus = SSB.ebt.peerStatus(SSB.id)
 
             //updatePeerTS()
 

@@ -47,7 +47,7 @@ Vue.component('connected', {
     })
     setInterval(function() {
       [ err, SSB ] = ssbSingleton.getSSB()
-      if (SSB && SSB.net.feedReplication) {
+      if (SSB && SSB.net && SSB.net.feedReplication) {
         if (!self.initializedSSB) {
           self.initializedSSB = true
           self.onDisconnected()

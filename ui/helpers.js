@@ -14,7 +14,7 @@ exports.handleFileSelectParts = function(files, isPrivate, cb) {
     isPrivate
   }
 
-  SSB.blobFiles(files, SSB.net, opts, (err, res) => {
+  SSB.blobFiles(files, SSB, opts, (err, res) => {
     cb(null, res)
   })
 }

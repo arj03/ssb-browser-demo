@@ -50,7 +50,7 @@ module.exports = function () {
       },
 
       loadMoreCB: function(err, SSB) {
-        const { where, and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.dbOperators
+        const { where, and, or, author, isPublic, type, descending, startFrom, paginate, toCallback } = SSB.db.operators
         try {
           SSB.db.query(
             where(

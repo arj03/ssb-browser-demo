@@ -21,21 +21,21 @@ Vue.component('ssb-profile-name-link', {
     renderProfile: function(profile) {
       var self = this
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
+        (SSB) => { return SSB }, (err, SSB) => { self.renderProfileCallback(err, SSB, profile) } )
     },
 
     renderProfileCallback: function (err, SSB, existingProfile) {
       const self = this
       const profile = existingProfile || SSB.getProfile(self.feedId)
   
-      if (self.feedId == SSB.net.id)
+      if (self.feedId == SSB.id)
         self.name = this.$root.$t('common.selfPronoun')
       else
         self.name = profile.name
     },
 
     loadBlocking: function (err, SSB) {
-      SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+      SSB.friends.isBlocking({ source: SSB.id, dest: self.feedId }, (err, result) => {
         if (!err) self.isBlocked = result
       })
     },
@@ -43,9 +43,9 @@ Vue.component('ssb-profile-name-link', {
     refresh: function () {
       var self = this
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net }, self.loadBlocking)
+        (SSB) => { return SSB }, self.loadBlocking)
       ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-        (SSB) => { return SSB && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
+        (SSB) => { return SSB && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
     }
   },
 

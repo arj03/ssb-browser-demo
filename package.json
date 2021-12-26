@@ -18,7 +18,7 @@
     "pull-cat": "^1.1.11",
     "pull-stream": "^3.6.14",
     "rimraf": "^3.0.2",
-    "ssb-browser-core": "^11.2.0",
+    "ssb-browser-core": "github:arj03/ssb-browser-core#vanilla",
     "ssb-caps": "^1.1.0",
     "ssb-keys-mnemonic": "^1.0.1",
     "ssb-markdown": "^6.0.7",
@@ -42,7 +42,7 @@
     "workbox-build": "^6.1.0"
   },
   "scripts": {
-    "postinstall": "./dedupe.sh",
+    "postinstall": "./dedupe.sh && ./fixdeps.sh",
     "build": "mkdir -p build && NODE_ENV=production browserify -g envify -p esmify --full-paths ui/browser.js > build/bundle-ui.js && node write-dist.js",
     "release": "mkdir -p build && NODE_ENV=production browserify -g envify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --safari10 -o build/bundle-ui.js && node write-dist.js",
     "inline": "mkdir -p build && browserify -g uglifyify -p esmify ui/browser.js | terser -c passes=2 --ie8 --safari10 -o build/bundle-ui.js && node write-dist.js && ./convert-to-inline.sh",

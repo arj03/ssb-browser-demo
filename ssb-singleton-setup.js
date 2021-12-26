@@ -64,15 +64,17 @@ function extraModules(secretStack) {
 
 function ssbLoaded() {
   // add helper methods
-  SSB = window.singletonSSB
+  SSB = window.singletonSSB.SSB
   require('./net')
   require('./profile')
   require('./search')
 
-  pull(SSB.net.conn.hub().listen(), pull.drain((ev) => {
+  pull(SSB.conn.hub().listen(), pull.drain((ev) => {
     if (ev.type.indexOf("failed") >= 0)
       console.warn("Connection error: ", ev)
   }))
 }
 
-require('ssb-browser-core/ssb-singleton').init(config, extraModules, ssbLoaded)
+const ssbSingleton = require('ssb-browser-core/ssb-singleton')
+ssbSingleton.setup("/.ssb-lite", config, extraModules)
+ssbSingleton.getSimpleSSBEventually(function() { return true }, ssbLoaded)

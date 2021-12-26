@@ -228,7 +228,7 @@ module.exports = function () {
       cacheImageURLForPreview: function(blobId, cb) {
         var self = this;
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.net.blobs) {
+        if (!SSB || !SSB.blobs) {
           // Not going to hurt anything to try again later.
           setTimeout(function() {
             self.cacheImageURLForPreview(blobId, cb)
@@ -237,7 +237,7 @@ module.exports = function () {
         }
 
         ++this.waitingForBlobURLs
-        SSB.net.blobs.fsURL(blobId, (err, blobURL) => {
+        SSB.blobs.fsURL(blobId, (err, blobURL) => {
           if (self.$refs.markdownEditor)
             self.$refs.markdownEditor.addBlobURLToCache(blobId, blobURL)
 
@@ -255,18 +255,18 @@ module.exports = function () {
 
         var self = this;
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.net.blobs) {
+        if (!SSB || !SSB.blobs) {
           alert("Can't add file right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
           return
         }
 
         file.arrayBuffer().then(function (buffer) {
-          SSB.net.blobs.hash(new Uint8Array(buffer), (err, digest) => {
+          SSB.blobs.hash(new Uint8Array(buffer), (err, digest) => {
             var blobId = "&" + digest
-            SSB.net.blobs.add(blobId, file, (err) => {
+            SSB.blobs.add(blobId, file, (err) => {
               if (!err) {
-                SSB.net.blobs.push(blobId, (err) => {
-                  SSB.net.blobs.localGet(blobId, (err, url) => {
+                SSB.blobs.push(blobId, (err) => {
+                  SSB.blobs.localGet(blobId, (err, url) => {
                     if (!err) {
                       self.image = url
                       self.imageBlobId = blobId
@@ -299,14 +299,14 @@ module.exports = function () {
 
       saveProfile: function() {
         [ err, SSB ] = ssbSingleton.getSSB()
-        if (!SSB || !SSB.net || !SSB.db) {
+        if (!SSB || !SSB.db) {
           alert("Can't save right now.  Database couldn't be locked.  Please make sure you only have one running instance of ssb-browser.")
           return
         }
 
         this.descriptionText = this.$refs.markdownEditor.getMarkdown()
 
-        var msg = { type: 'about', about: SSB.net.id }
+        var msg = { type: 'about', about: SSB.id }
         if (this.name)
           msg.name = this.name
         if (this.descriptionText)
@@ -427,7 +427,7 @@ module.exports = function () {
           return
         }
 
-        if (this.feedId == SSB.net.id)
+        if (this.feedId == SSB.id)
           SSB.syncFeedFromSequence(this.feedId, 0, this.renderProfile)
         else {
           SSB.syncFeedFromLatest(this.feedId, () => {
@@ -450,7 +450,7 @@ module.exports = function () {
           return
         }
 
-        let rpc = SSB.getPeer()
+        let rpc = SSB.helpers.getPeer()
         if (!rpc) {
           console.log("No remote connection, unable to download profile")
           return
@@ -487,7 +487,7 @@ module.exports = function () {
         }
 
         SSB.connectedWithData(() => {
-          let rpc = SSB.getPeer()
+          let rpc = SSB.helpers.getPeer()
   
           if (!rpc) {
             console.log("No remote connection, unable to download profile")
@@ -520,7 +520,7 @@ module.exports = function () {
           max: 1,
           reverse: true
         }
-        SSB.net.friends.hops(opts, (err, feeds) => {
+        SSB.friends.hops(opts, (err, feeds) => {
           var newFollowers = []
           for(f in feeds) {
             if (feeds[f] > 0)
@@ -537,7 +537,7 @@ module.exports = function () {
           max: 0,
           reverse: true
         }
-        SSB.net.friends.hops(opts, (err, feeds) => {
+        SSB.friends.hops(opts, (err, feeds) => {
           var newBlocks = []
           for(f in feeds) {
             if (Math.round(feeds[f]) == -1)
@@ -554,7 +554,7 @@ module.exports = function () {
       },
 
       loadMoreCallback: function (err, SSB) {
-        const { where, and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.db.operators
         SSB.db.query(
           where(
             and(
@@ -578,20 +578,20 @@ module.exports = function () {
       },
 
       renderFollowsCallback: function (err, SSB) {
-        const { where, and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.dbOperators
+        const { where, and, or, author, type, isPublic, startFrom, paginate, descending, toCallback } = SSB.db.operators
         var self = this
 
-        self.isSelf = (SSB.net.id == this.feedId)
+        self.isSelf = (SSB.id == this.feedId)
 
-        SSB.getGraphForFeed(self.feedId, (err, graph) => {
+        SSB.helpers.getGraphForFeed(self.feedId, (err, graph) => {
           self.friends = graph.following
           self.blocked = graph.blocking
 
-          SSB.net.friends.isFollowing({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+          SSB.friends.isFollowing({ source: SSB.id, dest: self.feedId }, (err, result) => {
             self.following = result
           })
 
-          SSB.net.friends.isBlocking({ source: SSB.net.id, dest: self.feedId }, (err, result) => {
+          SSB.friends.isBlocking({ source: SSB.id, dest: self.feedId }, (err, result) => {
             self.blocking = result
           })
         })
@@ -650,7 +650,7 @@ module.exports = function () {
         if (profile.description && typeof self.descriptionText == "string") {
           self.descriptionText = profile.description
             
-          if (self.feedId == SSB.net.id) {
+          if (self.feedId == SSB.id) {
             // Editing self.
             // Check for images.  If there are any, cache them.
             var blobRegEx = /!\[[^\]]*\]\((&[^\.]+\.sha256)\)/g
@@ -680,7 +680,7 @@ module.exports = function () {
           self.image = profile.imageURL
           self.imageBlobId = profile.image
         } else if (profile.image) {
-          SSB.net.blobs.localGet(profile.image, (err, url) => {
+          SSB.blobs.localGet(profile.image, (err, url) => {
             if (!err) {
               self.image = url
               self.imageBlobId = profile.image
@@ -692,9 +692,9 @@ module.exports = function () {
       renderProfile() {
         var self = this
         ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db && SSB.net && SSB.dbOperators && SSB.getGraphForFeed }, self.renderFollowsCallback)
+          (SSB) => { return SSB && SSB.db && SSB.db.operators && SSB.helpers.getGraphForFeed }, self.renderFollowsCallback)
         ssbSingleton.getSSBEventually(-1, () => { return self.componentStillLoaded },
-          (SSB) => { return SSB && SSB.db && SSB.net && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
+          (SSB) => { return SSB && SSB.db && SSB.getProfile && (profile = SSB.getProfile(self.feedId)) && Object.keys(profile).length > 0 }, self.renderProfileCallback)
       }
     },
 

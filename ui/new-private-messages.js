@@ -35,14 +35,14 @@ module.exports = function (state) {
           self.registeredSSBChange = true
         }
   
-        const { where, and, isPrivate, not, author, type, live, toPullStream } = SSB.dbOperators
+        const { where, and, isPrivate, not, author, type, live, toPullStream } = SSB.db.operators
 
         pull(
           SSB.db.query(
             where(
               and(
                 isPrivate(),
-                not(author(SSB.net.id))
+                not(author(SSB.id))
               )
             ),
             live(),

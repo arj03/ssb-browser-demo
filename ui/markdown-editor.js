@@ -50,19 +50,19 @@ Vue.component('markdown-editor', {
           var link = ref.parseLink(res.link)
           if (link.query && link.query.unbox) {
             // Have to unbox it first.
-            SSB.net.blobs.privateGet(link.link, link.query.unbox, (err, newLink) => {
+            SSB.blobs.privateGet(link.link, link.query.unbox, (err, newLink) => {
               self.blobUrlCache[res.link] = newLink
               cb(res.link, res.name)
             })
           } else {
-            SSB.net.blobs.privateFsURL(res.link, (err, blobURL) => {
+            SSB.blobs.privateFsURL(res.link, (err, blobURL) => {
               self.blobUrlCache[res.link] = blobURL
               cb(res.link, res.name)
             })
           }
         } else {
           // Public blob.
-          SSB.net.blobs.fsURL(res.link, (err, blobURL) => {
+          SSB.blobs.fsURL(res.link, (err, blobURL) => {
             self.blobUrlCache[res.link] = blobURL
             cb(res.link, res.name)
           })
